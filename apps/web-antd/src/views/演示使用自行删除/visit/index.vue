@@ -14,7 +14,7 @@ const TabPane = Tabs.TabPane;
 const activeKey = ref<number>(1);
 </script>
 <template>
-  <div>
+  <div class="pt-[16px]">
     <Tabs v-model:activeKey="activeKey" class="h-full" tab-position="left">
       <TabPane :key="1" tab="访问量数据"> <VisitMap /> </TabPane>
       <TabPane :key="2" tab="使用设备"><Device /></TabPane>
