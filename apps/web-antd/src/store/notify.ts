@@ -50,7 +50,7 @@ export const useNotifyStore = defineStore(
           message: '收到新消息',
         });
 
-        notificationList.value.push({
+        notificationList.value.unshift({
           // 随机头像
           avatar: `https://api.multiavatar.com/${random(0, 10_000)}.png`,
           date: dayjs().format('YYYY-MM-DD HH:mm:ss'),
