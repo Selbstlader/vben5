@@ -4,7 +4,6 @@ import type { EChartsOption } from 'echarts';
 import { defineComponent, onMounted, ref, watch } from 'vue';
 
 import { EchartsUI, type EchartsUIType, useEcharts } from '@vben/chart-ui';
-import { preferences } from '@vben/preferences';
 
 export default defineComponent({
   components: { EchartsUI },
@@ -32,13 +31,6 @@ export default defineComponent({
     onMounted(() => {
       setEchartsOption(props.data);
     });
-
-    watch(
-      () => preferences.theme.mode,
-      () => {
-        setEchartsOption(props.data);
-      },
-    );
 
     function setEchartsOption(data: any[]) {
       const option: EChartsOption = {
