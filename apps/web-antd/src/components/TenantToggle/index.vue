@@ -56,7 +56,7 @@ async function onSelected(tenantId: any, option: any) {
   }
   await tenantDynamicToggle(tenantId);
   lastSelected.value = tenantId;
-  message.success(`切换当前租户为: ${option.title}`);
+  message.success(`切换当前租户为: ${option.companyName}`);
   close(true);
 }
 
