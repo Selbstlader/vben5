@@ -8,7 +8,6 @@ import { preferences } from '@vben/preferences';
 
 export default defineComponent({
   components: { EchartsUI },
-  name: 'MemoryChart',
   props: {
     data: {
       default: '0',
@@ -90,9 +89,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="flex h-[400px] w-full items-center justify-center">
-    <EchartsUI ref="memoryHtmlRef" />
-  </div>
+  <EchartsUI ref="memoryHtmlRef" height="400px" width="100%" />
 </template>
 
 <style scoped></style>
