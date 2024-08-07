@@ -3,7 +3,7 @@ import type { NotificationItem } from '@vben/layouts';
 import { computed, ref, watch } from 'vue';
 
 import { useAppConfig } from '@vben/hooks';
-import { useAccessStore } from '@vben/stores';
+import { useAccessStore, useUserStore } from '@vben/stores';
 
 import { useEventSource } from '@vueuse/core';
 import { notification } from 'ant-design-vue';
@@ -19,7 +19,21 @@ const { apiURL, clientId } = useAppConfig(
 export const useNotifyStore = defineStore(
   'app-notify',
   () => {
+    /**
+     * return才会被持久化 存储全部消息
+     */
     const notificationList = ref<NotificationItem[]>([]);
+
+    const userStore = useUserStore();
+    const userId = computed(() => {
+      return userStore.userInfo?.userId || '0';
+    });
+
+    const notifications = computed(() => {
+      return notificationList.value.filter(
+        (item) => item.userId === userId.value,
+      );
+    });
 
     /**
      * 开始监听sse消息
@@ -57,6 +71,7 @@ export const useNotifyStore = defineStore(
           isRead: false,
           message,
           title: '消息',
+          userId: userId.value,
         });
 
         data.value = null;
@@ -67,9 +82,11 @@ export const useNotifyStore = defineStore(
      * 设置全部已读
      */
     function setAllRead() {
-      notificationList.value.forEach((item) => {
-        item.isRead = true;
-      });
+      notificationList.value
+        .filter((item) => item.userId === userId.value)
+        .forEach((item) => {
+          item.isRead = true;
+        });
     }
 
     /**
@@ -84,7 +101,9 @@ export const useNotifyStore = defineStore(
      * 清空全部消息
      */
     function clearAllMessage() {
-      notificationList.value = [];
+      notificationList.value = notificationList.value.filter(
+        (item) => item.userId !== userId.value,
+      );
     }
 
     /**
@@ -98,13 +117,16 @@ export const useNotifyStore = defineStore(
      * 显示小圆点
      */
     const showDot = computed(() =>
-      notificationList.value.some((item) => !item.isRead),
+      notificationList.value
+        .filter((item) => item.userId === userId.value)
+        .some((item) => !item.isRead),
     );
 
     return {
       $reset,
       clearAllMessage,
       notificationList,
+      notifications,
       setAllRead,
       setRead,
       showDot,

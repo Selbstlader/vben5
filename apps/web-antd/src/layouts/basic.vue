@@ -94,7 +94,7 @@ function handleViewAll() {
     <template #notification>
       <Notification
         :dot="notifyStore.showDot"
-        :notifications="notifyStore.notificationList"
+        :notifications="notifyStore.notifications"
         @clear="notifyStore.clearAllMessage"
         @make-all="notifyStore.setAllRead"
         @read="notifyStore.setRead"
