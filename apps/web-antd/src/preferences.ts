@@ -13,6 +13,12 @@ export const overridesPreferences = defineOverridesPreferences({
     accessMode: 'backend',
     name: import.meta.env.VITE_APP_TITLE,
   },
+  footer: {
+    /**
+     * 不显示footer
+     */
+    enable: false,
+  },
   tabbar: {
     /**
      * 标签tab 持久化 关闭
