@@ -19,6 +19,10 @@ const customConfig: Linter.Config[] = [
     files: ['apps/**/**'],
     ignores: restrictedImportIgnores,
     rules: {
+      // 允许使用void类型
+      '@typescript-eslint/no-invalid-void-type': 'off',
+      // 关闭 不允许使用console
+      'no-console': 'off',
       'no-restricted-imports': [
         'error',
         {
@@ -46,6 +50,7 @@ const customConfig: Linter.Config[] = [
           ],
         },
       ],
+      'regexp/no-unused-capturing-group': 'off',
     },
   },
   {
@@ -84,6 +89,13 @@ const customConfig: Linter.Config[] = [
           ],
         },
       ],
+    },
+  },
+  {
+    files: ['packages/effects/access/**/**'],
+    ignores: restrictedImportIgnores,
+    rules: {
+      'regexp/no-unused-capturing-group': 'off',
     },
   },
   {

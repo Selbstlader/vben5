@@ -1,0 +1,94 @@
+<script setup lang="ts">
+import { onMounted, reactive, ref } from 'vue';
+
+import { Button, Card, Col, Row } from 'ant-design-vue';
+
+import { redisCacheInfo, type RedisInfo } from '#/api/monitor/cache';
+
+import CommandChart from './components/CommandChart.vue';
+import MemoryChart from './components/MemoryChart.vue';
+import RedisDescription from './components/RedisDescription.vue';
+
+const baseSpan = { lg: 12, md: 24, sm: 24, xl: 12, xs: 24 };
+
+const chartData = reactive<{ command: any[]; memory: string }>({
+  command: [],
+  memory: '0',
+});
+
+interface IRedisInfo extends RedisInfo {
+  dbSize: string;
+}
+const redisInfo = ref<IRedisInfo>();
+
+onMounted(async () => {
+  await loadInfo();
+});
+
+async function loadInfo() {
+  try {
+    const ret = await redisCacheInfo();
+
+    // 单位MB 保留两位小数
+    const usedMemory = (
+      Number.parseInt(ret.info.used_memory!) /
+      1024 /
+      1024
+    ).toFixed(2);
+    chartData.memory = usedMemory;
+    // 命令统计
+    chartData.command = ret.commandStats;
+    // redis信息
+    redisInfo.value = { ...ret.info, dbSize: String(ret.dbSize) };
+  } catch (error) {
+    console.warn(error);
+  }
+}
+</script>
+
+<template>
+  <div class="m-[16px]">
+    <Row :gutter="[15, 15]">
+      <Col :span="24">
+        <Card size="small">
+          <template #title>
+            <div class="flex items-center justify-start gap-[6px]">
+              <span class="icon-[logos--redis]"></span>
+              <span>redis信息</span>
+            </div>
+          </template>
+          <template #extra>
+            <Button size="small" @click="loadInfo">
+              <div class="flex">
+                <span class="icon-[charm--refresh]"></span>
+              </div>
+            </Button>
+          </template>
+          <RedisDescription v-if="redisInfo" :data="redisInfo" />
+        </Card>
+      </Col>
+      <Col v-bind="baseSpan">
+        <Card size="small">
+          <template #title>
+            <div class="flex items-center gap-[6px]">
+              <span class="icon-[flat-color-icons--command-line]"></span>
+              <span>命令统计</span>
+            </div>
+          </template>
+          <CommandChart :data="chartData.command" />
+        </Card>
+      </Col>
+      <Col v-bind="baseSpan">
+        <Card size="small">
+          <template #title>
+            <div class="flex items-center justify-start gap-[6px]">
+              <span class="icon-[la--memory]"></span>
+              <span>内存占用</span>
+            </div>
+          </template>
+          <MemoryChart :data="chartData.memory" />
+        </Card>
+      </Col>
+    </Row>
+  </div>
+</template>

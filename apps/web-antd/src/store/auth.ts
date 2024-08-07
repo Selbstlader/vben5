@@ -10,7 +10,7 @@ import { resetAllStores, useAccessStore, useUserStore } from '@vben/stores';
 import { notification } from 'ant-design-vue';
 import { defineStore } from 'pinia';
 
-import { getAccessCodes, getUserInfo, login } from '#/api';
+import { doLogout, getUserInfo, login } from '#/api';
 import { $t } from '#/locales';
 
 export const useAuthStore = defineStore('auth', () => {
@@ -33,40 +33,35 @@ export const useAuthStore = defineStore('auth', () => {
     let userInfo: null | UserInfo = null;
     try {
       loginLoading.value = true;
-      const { accessToken, refreshToken } = await login(params);
+      const { access_token } = await login(params);
 
-      // 如果成功获取到 accessToken
-      if (accessToken) {
-        // 将 accessToken 存储到 accessStore 中
-        accessStore.setAccessToken(accessToken);
-        accessStore.setRefreshToken(refreshToken);
+      // 将 accessToken 存储到 accessStore 中
+      accessStore.setAccessToken(access_token);
+      accessStore.setRefreshToken(access_token);
 
-        // 获取用户信息并存储到 accessStore 中
-        const [fetchUserInfoResult, accessCodes] = await Promise.all([
-          fetchUserInfo(),
-          getAccessCodes(),
-        ]);
+      // 获取用户信息并存储到 accessStore 中
+      userInfo = await fetchUserInfo();
+      /**
+       * 设置用户信息
+       */
+      userStore.setUserInfo(userInfo);
+      /**
+       * 在这里设置权限
+       */
+      accessStore.setAccessCodes(userInfo.permissions);
 
-        userInfo = fetchUserInfoResult;
+      if (accessStore.loginExpired) {
+        accessStore.setLoginExpired(false);
+      } else {
+        onSuccess ? await onSuccess?.() : await router.push(DEFAULT_HOME_PATH);
+      }
 
-        userStore.setUserInfo(userInfo);
-        accessStore.setAccessCodes(accessCodes);
-
-        if (accessStore.loginExpired) {
-          accessStore.setLoginExpired(false);
-        } else {
-          onSuccess
-            ? await onSuccess?.()
-            : await router.push(userInfo.homePath || DEFAULT_HOME_PATH);
-        }
-
-        if (userInfo?.realName) {
-          notification.success({
-            description: `${$t('authentication.loginSuccessDesc')}:${userInfo?.realName}`,
-            duration: 3,
-            message: $t('authentication.loginSuccess'),
-          });
-        }
+      if (userInfo?.realName) {
+        notification.success({
+          description: `${$t('authentication.loginSuccessDesc')}:${userInfo?.realName}`,
+          duration: 3,
+          message: $t('authentication.loginSuccess'),
+        });
       }
     } finally {
       loginLoading.value = false;
@@ -78,21 +73,38 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function logout() {
-    resetAllStores();
-    accessStore.setLoginExpired(false);
+    try {
+      await doLogout();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      resetAllStores();
+      accessStore.setLoginExpired(false);
 
-    // 回登陆页带上当前路由地址
-    await router.replace({
-      path: LOGIN_PATH,
-      query: {
-        redirect: encodeURIComponent(router.currentRoute.value.fullPath),
-      },
-    });
+      // 回登陆页带上当前路由地址
+      await router.replace({
+        path: LOGIN_PATH,
+        query: {
+          redirect: encodeURIComponent(router.currentRoute.value.fullPath),
+        },
+      });
+    }
   }
 
   async function fetchUserInfo() {
-    let userInfo: null | UserInfo = null;
-    userInfo = await getUserInfo();
+    const { permissions = [], roles = [], user } = await getUserInfo();
+
+    /**
+     * 从后台user -> vben user转换
+     */
+    const userInfo: UserInfo = {
+      avatar: user.avatar ?? '',
+      permissions,
+      realName: user.nickName,
+      roles,
+      userId: user.userId,
+      username: user.userName,
+    };
     userStore.setUserInfo(userInfo);
     return userInfo;
   }

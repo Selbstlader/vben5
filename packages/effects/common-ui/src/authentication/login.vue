@@ -1,11 +1,17 @@
 <script setup lang="ts">
 import type { AuthenticationProps, LoginEmits } from './typings';
 
-import { computed, reactive } from 'vue';
+import { computed, reactive, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { $t } from '@vben/locales';
 import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
   VbenButton,
   VbenCheckbox,
   VbenInput,
@@ -15,13 +21,31 @@ import {
 import Title from './auth-title.vue';
 import ThirdPartyLogin from './third-party-login.vue';
 
-interface Props extends AuthenticationProps {}
+interface Props extends AuthenticationProps {
+  /**
+   * @zh_CN 验证码图片base64
+   */
+  captchaBase64?: string;
+  /**
+   * 租户信息options
+   */
+  tenantOptions?: { companyName: string; domain?: string; tenantId: string }[];
+  /**
+   * @zh_CN 是否启用验证码
+   */
+  useCaptcha?: boolean;
+  /**
+   * @zh_CN 是否启用租户
+   */
+  useTenant?: boolean;
+}
 
 defineOptions({
   name: 'AuthenticationLogin',
 });
 
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
+  captchaBase64: '',
   codeLoginPath: '/auth/code-login',
   forgetPasswordPath: '/auth/forget-password',
   loading: false,
@@ -35,11 +59,16 @@ withDefaults(defineProps<Props>(), {
   showRememberMe: true,
   showThirdPartyLogin: true,
   subTitle: '',
+  tenantOptions: () => [],
   title: '',
   usernamePlaceholder: '',
 });
 
 const emit = defineEmits<{
+  /**
+   * 验证码点击
+   */
+  captchaClick: [];
   submit: LoginEmits['submit'];
 }>();
 
@@ -47,13 +76,26 @@ const router = useRouter();
 
 const REMEMBER_ME_KEY = `REMEMBER_ME_USERNAME_${location.hostname}`;
 
-const localUsername = localStorage.getItem(REMEMBER_ME_KEY) || '';
+const localUsername = localStorage.getItem(REMEMBER_ME_KEY) || 'admin';
 
 const formState = reactive({
-  password: '',
+  code: '',
+  password: 'admin123',
   rememberMe: !!localUsername,
   submitted: false,
+  // 默认租户
+  tenantId: '000000',
   username: localUsername,
+});
+
+/**
+ * 默认选中第一项租户
+ */
+const stop = watch(props.tenantOptions, (options) => {
+  if (options.length > 0) {
+    formState.tenantId = options[0]!.tenantId;
+    stop();
+  }
 });
 
 const usernameStatus = computed(() => {
@@ -62,6 +104,10 @@ const usernameStatus = computed(() => {
 
 const passwordStatus = computed(() => {
   return formState.submitted && !formState.password ? 'error' : 'default';
+});
+
+const captchaStatus = computed(() => {
+  return formState.submitted && !formState.code ? 'error' : 'default';
 });
 
 function handleSubmit() {
@@ -74,13 +120,21 @@ function handleSubmit() {
     return;
   }
 
+  // 验证码
+  if (props.useCaptcha && captchaStatus.value !== 'default') {
+    return;
+  }
+
   localStorage.setItem(
     REMEMBER_ME_KEY,
     formState.rememberMe ? formState.username : '',
   );
 
   emit('submit', {
+    code: formState.code,
+    grantType: 'password',
     password: formState.password,
+    tenantId: formState.tenantId,
     username: formState.username,
   });
 }
@@ -88,6 +142,18 @@ function handleSubmit() {
 function handleGo(path: string) {
   router.push(path);
 }
+
+/**
+ * 重置验证码
+ */
+function resetCaptcha() {
+  emit('captchaClick');
+  formState.code = '';
+  // todo 获取焦点
+  // VbenInput并没有提供focus方法
+}
+
+defineExpose({ resetCaptcha });
 </script>
 
 <template>
@@ -100,6 +166,26 @@ function handleGo(path: string) {
         </span>
       </template>
     </Title>
+
+    <!-- 租户 -->
+    <div v-if="useTenant" class="mb-6">
+      <Select v-model="formState.tenantId">
+        <SelectTrigger>
+          <SelectValue placeholder="选择公司" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectItem
+              v-for="item in tenantOptions"
+              :key="item.tenantId"
+              :value="item.tenantId"
+            >
+              {{ item.companyName }}
+            </SelectItem>
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+    </div>
 
     <VbenInput
       v-model="formState.username"
@@ -122,6 +208,27 @@ function handleGo(path: string) {
       required
       type="password"
     />
+
+    <!-- 图片验证码 -->
+    <div v-if="useCaptcha" class="flex">
+      <div class="flex-1">
+        <VbenInput
+          v-model="formState.code"
+          :error-tip="$t('authentication.captchaTip')"
+          :label="$t('authentication.captcha')"
+          :placeholder="$t('authentication.captcha')"
+          :status="captchaStatus"
+          name="code"
+          required
+          type="text"
+        />
+      </div>
+      <img
+        :src="captchaBase64"
+        class="h-[38px] w-[115px] rounded-r-md"
+        @click="emit('captchaClick')"
+      />
+    </div>
 
     <div class="mb-6 mt-4 flex justify-between">
       <div v-if="showRememberMe" class="flex-center">

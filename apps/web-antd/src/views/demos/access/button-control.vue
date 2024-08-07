@@ -41,11 +41,9 @@ async function changeAccount(role: string) {
 
   const account = accounts[role];
   resetAllStores();
-  if (account) {
-    await authStore.authLogin(account, async () => {
-      router.go(0);
-    });
-  }
+  await authStore.authLogin(account, async () => {
+    router.go(0);
+  });
 }
 </script>
 

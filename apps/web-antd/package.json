@@ -42,9 +42,17 @@
     "@vben/utils": "workspace:*",
     "@vueuse/core": "^10.11.0",
     "ant-design-vue": "^4.2.3",
+    "crypto-js": "^4.2.0",
     "dayjs": "^1.11.12",
+    "echarts": "^5.5.1",
+    "jsencrypt": "^3.3.2",
+    "lodash-es": "^4.17.21",
     "pinia": "2.2.0",
     "vue": "^3.4.35",
     "vue-router": "^4.4.2"
+  },
+  "devDependencies": {
+    "@types/crypto-js": "^4.2.2",
+    "@types/lodash-es": "^4.17.12"
   }
 }

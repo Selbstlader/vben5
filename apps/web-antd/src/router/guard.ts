@@ -62,20 +62,14 @@ function setupAccessGuard(router: Router) {
     const userStore = useUserStore();
     const authStore = useAuthStore();
 
-    // 基本路由，这些路由不需要进入权限拦截
-    if (coreRouteNames.includes(to.name as string)) {
-      if (to.path === LOGIN_PATH && accessStore.accessToken) {
-        return decodeURIComponent(
-          (to.query?.redirect as string) || DEFAULT_HOME_PATH,
-        );
-      }
-      return true;
-    }
-
     // accessToken 检查
     if (!accessStore.accessToken) {
-      // 明确声明忽略权限访问权限，则可以访问
-      if (to.meta.ignoreAccess) {
+      if (
+        // 基本路由，这些路由不需要进入权限拦截
+        coreRouteNames.includes(to.name as string) ||
+        // 明确声明忽略权限访问权限，则可以访问
+        to.meta.ignoreAccess
+      ) {
         return true;
       }
 
@@ -93,6 +87,15 @@ function setupAccessGuard(router: Router) {
     }
 
     const accessRoutes = accessStore.accessRoutes;
+    /**
+     * 已经登录 前往登录页 跳转到首页
+     */
+    if (to.path === LOGIN_PATH) {
+      return {
+        path: DEFAULT_HOME_PATH,
+        replace: true,
+      };
+    }
 
     // 是否已经生成过动态路由
     if (accessRoutes && accessRoutes.length > 0) {

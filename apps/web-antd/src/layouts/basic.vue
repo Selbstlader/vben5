@@ -1,11 +1,8 @@
 <script lang="ts" setup>
-import type { NotificationItem } from '@vben/layouts';
-
-import { computed, ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { computed, onMounted } from 'vue';
 
 import { AuthenticationLoginExpiredModal } from '@vben/common-ui';
-import { LOGIN_PATH, VBEN_DOC_URL, VBEN_GITHUB_URL } from '@vben/constants';
+import { VBEN_DOC_URL, VBEN_GITHUB_URL } from '@vben/constants';
 import { BookOpenText, CircleHelp, MdiGithub } from '@vben/icons';
 import {
   BasicLayout,
@@ -14,55 +11,18 @@ import {
   UserDropdown,
 } from '@vben/layouts';
 import { preferences } from '@vben/preferences';
-import {
-  resetAllStores,
-  storeToRefs,
-  useAccessStore,
-  useUserStore,
-} from '@vben/stores';
+import { storeToRefs, useAccessStore, useUserStore } from '@vben/stores';
 import { openWindow } from '@vben/utils';
+
+import { message } from 'ant-design-vue';
 
 import { $t } from '#/locales';
 import { resetRoutes } from '#/router';
-import { useAuthStore } from '#/store';
-
-const notifications = ref<NotificationItem[]>([
-  {
-    avatar: 'https://avatar.vercel.sh/vercel.svg?text=VB',
-    date: '3小时前',
-    isRead: true,
-    message: '描述信息描述信息描述信息',
-    title: '收到了 14 份新周报',
-  },
-  {
-    avatar: 'https://avatar.vercel.sh/1',
-    date: '刚刚',
-    isRead: false,
-    message: '描述信息描述信息描述信息',
-    title: '朱偏右 回复了你',
-  },
-  {
-    avatar: 'https://avatar.vercel.sh/1',
-    date: '2024-01-01',
-    isRead: false,
-    message: '描述信息描述信息描述信息',
-    title: '曲丽丽 评论了你',
-  },
-  {
-    avatar: 'https://avatar.vercel.sh/satori',
-    date: '1天前',
-    isRead: false,
-    message: '描述信息描述信息描述信息',
-    title: '代办提醒',
-  },
-]);
+import { useAuthStore, useNotifyStore } from '#/store';
 
 const userStore = useUserStore();
 const authStore = useAuthStore();
 const accessStore = useAccessStore();
-const showDot = computed(() =>
-  notifications.value.some((item) => !item.isRead),
-);
 
 const menus = computed(() => [
   {
@@ -100,20 +60,18 @@ const avatar = computed(() => {
   return userStore.userInfo?.avatar ?? preferences.app.defaultAvatar;
 });
 
-const router = useRouter();
-
 async function handleLogout() {
-  resetAllStores();
+  // resetAllStores();
   resetRoutes();
-  await router.replace(LOGIN_PATH);
+  // await router.replace(LOGIN_PATH);
+  authStore.logout();
 }
 
-function handleNoticeClear() {
-  notifications.value = [];
-}
+const notifyStore = useNotifyStore();
+onMounted(() => notifyStore.startListeningMessage());
 
-function handleMakeAll() {
-  notifications.value.forEach((item) => (item.isRead = true));
+function handleViewAll() {
+  message.warning('暂未开放');
 }
 </script>
 
@@ -131,10 +89,12 @@ function handleMakeAll() {
     </template>
     <template #notification>
       <Notification
-        :dot="showDot"
-        :notifications="notifications"
-        @clear="handleNoticeClear"
-        @make-all="handleMakeAll"
+        :dot="notifyStore.showDot"
+        :notifications="notifyStore.notificationList"
+        @clear="notifyStore.clearAllMessage"
+        @make-all="notifyStore.setAllRead"
+        @read="notifyStore.setRead"
+        @view-all="handleViewAll"
       />
     </template>
     <template #extra>

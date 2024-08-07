@@ -61,6 +61,11 @@ function convertRoutes(
             ? normalizePath
             : `${normalizePath}.vue`
         ];
+      if (!route.component) {
+        console.error(`未找到对应组件: ${component}`);
+        // 默认为404页面
+        route.component = layoutMap.NotFoundComponent;
+      }
     }
 
     return route;

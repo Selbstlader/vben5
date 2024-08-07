@@ -3,6 +3,7 @@ interface AuthenticationProps {
    * @zh_CN 验证码登录路径
    */
   codeLoginPath?: string;
+
   /**
    * @zh_CN 忘记密码路径
    */
@@ -32,6 +33,7 @@ interface AuthenticationProps {
    * @zh_CN 是否显示验证码登录
    */
   showCodeLogin?: boolean;
+
   /**
    * @zh_CN 是否显示忘记密码
    */
@@ -66,7 +68,6 @@ interface AuthenticationProps {
    * @zh_CN 登录框标题
    */
   title?: string;
-
   /**
    * @zh_CN 用户名占位符
    */
@@ -74,8 +75,12 @@ interface AuthenticationProps {
 }
 
 interface LoginAndRegisterParams {
+  code?: string;
+  grantType: string;
   password: string;
+  tenantId: string;
   username: string;
+  uuid?: string;
 }
 
 interface LoginCodeParams {

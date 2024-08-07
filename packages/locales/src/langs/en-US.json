@@ -51,7 +51,12 @@
       "unauthorized": "Unauthorized. Please log in to continue.",
       "forbidden": "Forbidden. You do not have permission to access this resource.",
       "notFound": "Not Found. The requested resource could not be found.",
-      "internalServerError": "Internal Server Error. Something went wrong on our end. Please try again later."
+      "internalServerError": "Internal Server Error. Something went wrong on our end. Please try again later.",
+      "apiRequestFailed": "The interface request failed, please try again later!",
+      "operationSuccess": "Operation Success",
+      "operationFailed": "Operation failed",
+      "errorTip": "Error Tip",
+      "successTip": "Success Tip"
     }
   },
   "widgets": {
@@ -95,8 +100,10 @@
     "loginSubtitle": "Enter your account details to manage your projects",
     "username": "Username",
     "password": "Password",
+    "captcha": "Captcha",
     "usernameTip": "Please enter username",
     "passwordTip": "Please enter password",
+    "captchaTip": "Please enter captcha",
     "rememberMe": "Remember Me",
     "createAnAccount": "Create an Account",
     "createAccount": "Create Account",
