@@ -17,3 +17,11 @@ export const MdiPinOff = createIconifyIcon('mdi:pin-off');
 export const MdiMenuClose = createIconifyIcon('mdi:menu-close');
 
 export const MdiMenuOpen = createIconifyIcon('mdi:menu-open');
+
+export const EosSystem = createIconifyIcon('eos-icons:system-group');
+// 缓存监控使用
+export const RedisIcon = createIconifyIcon('logos:redis');
+export const CommandLineIcon = createIconifyIcon(
+  'flat-color-icons:command-line',
+);
+export const MemoryIcon = createIconifyIcon('la:memory');
