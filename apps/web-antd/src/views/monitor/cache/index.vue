@@ -77,7 +77,10 @@ async function loadInfo() {
               <span>命令统计</span>
             </div>
           </template>
-          <CommandChart :data="chartData.command" />
+          <CommandChart
+            v-if="chartData.command.length > 0"
+            :data="chartData.command"
+          />
         </Card>
       </Col>
       <Col v-bind="baseSpan">
@@ -88,7 +91,10 @@ async function loadInfo() {
               <span>内存占用</span>
             </div>
           </template>
-          <MemoryChart :data="chartData.memory" />
+          <MemoryChart
+            v-if="chartData.memory !== '0'"
+            :data="chartData.memory"
+          />
         </Card>
       </Col>
     </Row>
