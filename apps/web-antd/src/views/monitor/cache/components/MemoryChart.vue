@@ -1,13 +1,13 @@
 <script lang="ts">
 import type { EChartsOption } from 'echarts';
 
-import { defineComponent, onMounted, ref, shallowRef, watch } from 'vue';
+import { defineComponent, onMounted, ref, watch } from 'vue';
 
+import { EchartsUI, type EchartsUIType, useEcharts } from '@vben/chart-ui';
 import { preferences } from '@vben/preferences';
 
-import * as echarts from 'echarts';
-
 export default defineComponent({
+  components: { EchartsUI },
   name: 'MemoryChart',
   props: {
     data: {
@@ -18,8 +18,8 @@ export default defineComponent({
   setup(props, { expose }) {
     expose({});
 
-    const memoryHtmlRef = ref<HTMLDivElement>();
-    const echartsInstance = shallowRef<echarts.ECharts | null>(null);
+    const memoryHtmlRef = ref<EchartsUIType>();
+    const { renderEcharts } = useEcharts(memoryHtmlRef);
 
     watch(
       () => props.data,
@@ -31,18 +31,12 @@ export default defineComponent({
     );
 
     onMounted(() => {
-      echartsInstance.value = echarts.init(
-        memoryHtmlRef.value,
-        preferences.theme.mode,
-      );
       setEchartsOption(props.data);
     });
 
     watch(
       () => preferences.theme.mode,
-      (mode) => {
-        echartsInstance.value?.dispose();
-        echartsInstance.value = echarts.init(memoryHtmlRef.value, mode);
+      () => {
         setEchartsOption(props.data);
       },
     );
@@ -85,7 +79,7 @@ export default defineComponent({
           formatter: `{b} <br/>{a} : ${value}M`,
         },
       };
-      echartsInstance.value?.setOption(options);
+      renderEcharts(options);
     }
 
     return {
@@ -96,7 +90,9 @@ export default defineComponent({
 </script>
 
 <template>
-  <div ref="memoryHtmlRef" class="h-[400px] w-full"></div>
+  <div class="flex h-[400px] w-full items-center justify-center">
+    <EchartsUI ref="memoryHtmlRef" />
+  </div>
 </template>
 
 <style scoped></style>
