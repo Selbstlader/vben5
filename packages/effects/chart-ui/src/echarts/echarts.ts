@@ -16,6 +16,7 @@ import {
   BarChart,
   GaugeChart,
   LineChart,
+  MapChart,
   PieChart,
   RadarChart,
 } from 'echarts/charts';
@@ -29,6 +30,7 @@ import {
   TooltipComponent,
   // 内置数据转换器组件 (filter, sort)
   TransformComponent,
+  VisualMapComponent,
 } from 'echarts/components';
 import * as echarts from 'echarts/core';
 import { LabelLayout, UniversalTransition } from 'echarts/features';
@@ -61,6 +63,8 @@ echarts.use([
   LegendComponent,
   ToolboxComponent,
   GaugeChart,
+  VisualMapComponent,
+  MapChart,
 ]);
 
 export default echarts;
