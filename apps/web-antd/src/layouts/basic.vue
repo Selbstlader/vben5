@@ -16,6 +16,7 @@ import { openWindow } from '@vben/utils';
 
 import { message } from 'ant-design-vue';
 
+import TenantToggle from '#/components/TenantToggle/index.vue';
 import { $t } from '#/locales';
 import { resetRoutes } from '#/router';
 import { useAuthStore, useNotifyStore } from '#/store';
@@ -77,6 +78,9 @@ function handleViewAll() {
 
 <template>
   <BasicLayout @clear-preferences-and-logout="handleLogout">
+    <template #header-right-1>
+      <TenantToggle />
+    </template>
     <template #user-dropdown>
       <UserDropdown
         :avatar
