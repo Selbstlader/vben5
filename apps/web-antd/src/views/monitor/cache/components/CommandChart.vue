@@ -1,13 +1,13 @@
 <script lang="ts">
 import type { EChartsOption } from 'echarts';
 
-import { defineComponent, onMounted, ref, shallowRef, watch } from 'vue';
+import { defineComponent, onMounted, ref, watch } from 'vue';
 
+import { EchartsUI, type EchartsUIType, useEcharts } from '@vben/chart-ui';
 import { preferences } from '@vben/preferences';
 
-import * as echarts from 'echarts';
-
 export default defineComponent({
+  components: { EchartsUI },
   name: 'CommandChart',
   props: {
     data: {
@@ -18,31 +18,25 @@ export default defineComponent({
   setup(props, { expose }) {
     expose({});
 
-    const commandHtmlRef = ref<HTMLDivElement>();
-    const echartsInstance = shallowRef<echarts.ECharts | null>(null);
+    const chartRef = ref<EchartsUIType>();
+    const { renderEcharts } = useEcharts(chartRef);
 
     watch(
       () => props.data,
       () => {
-        if (!commandHtmlRef.value) return;
+        if (!chartRef.value) return;
         setEchartsOption(props.data);
       },
       { immediate: true },
     );
 
     onMounted(() => {
-      echartsInstance.value = echarts.init(
-        commandHtmlRef.value,
-        preferences.theme.mode,
-      );
       setEchartsOption(props.data);
     });
 
     watch(
       () => preferences.theme.mode,
-      (mode) => {
-        echartsInstance.value?.dispose();
-        echartsInstance.value = echarts.init(commandHtmlRef.value, mode);
+      () => {
         setEchartsOption(props.data);
       },
     );
@@ -53,7 +47,7 @@ export default defineComponent({
           {
             animationDuration: 1000,
             animationEasing: 'cubicInOut',
-            center: ['50%', '38%'],
+            center: ['50%', '50%'],
             data,
             name: '命令',
             radius: [15, 95],
@@ -66,18 +60,20 @@ export default defineComponent({
           trigger: 'item',
         },
       };
-      echartsInstance.value?.setOption(option);
+      renderEcharts(option);
     }
 
     return {
-      commandHtmlRef,
+      chartRef,
     };
   },
 });
 </script>
 
 <template>
-  <div ref="commandHtmlRef" class="h-[400px] w-full"></div>
+  <div class="flex h-[400px] w-full items-center justify-center">
+    <EchartsUI ref="chartRef" />
+  </div>
 </template>
 
 <style scoped></style>
