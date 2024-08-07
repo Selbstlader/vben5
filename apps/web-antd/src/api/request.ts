@@ -141,7 +141,6 @@ function createRequestClient(baseURL: string) {
         }
       }
     }
-    console.log('请求参数', config);
     // 全局开启 && 该请求开启 && 是post/put请求
     if (
       enableEncrypt &&
