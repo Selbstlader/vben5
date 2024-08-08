@@ -3,7 +3,14 @@ import { onBeforeUnmount, onMounted, ref } from 'vue';
 
 import { preferences } from '@vben/preferences';
 
-import { Tag as ATag, Button, Card, Select } from 'ant-design-vue';
+import {
+  Tag as ATag,
+  Button,
+  Card,
+  RadioButton,
+  RadioGroup,
+  Select,
+} from 'ant-design-vue';
 
 import { DictTag } from '#/components/Dict';
 import { useDictStore } from '#/store/dict';
@@ -26,6 +33,8 @@ onBeforeUnmount(() => intervalId && clearInterval(intervalId));
 
 const sexOptions = getDictOptions('sys_user_sex');
 const disabledDict = getDict('sys_normal_disable');
+const select = ref('pc');
+const deviceOptions = getDictOptions('sys_device_type');
 
 const dictStore = useDictStore();
 onMounted(() => {
@@ -52,8 +61,19 @@ onMounted(() => {
           class="w-[200px]"
           placeholder="请选择性别"
         />
-        <DictTag :dicts="disabledDict" value="0" />
-        <DictTag :dicts="disabledDict" value="1" />
+        <div class="flex gap-[6px]">
+          <DictTag :dicts="disabledDict" value="0" />
+          <DictTag :dicts="disabledDict" value="1" />
+        </div>
+        <RadioGroup v-model:value="select" button-style="solid">
+          <RadioButton
+            v-for="item in deviceOptions"
+            :key="item.value"
+            :value="item.value"
+          >
+            {{ item.label }}
+          </RadioButton>
+        </RadioGroup>
       </div>
     </Card>
     <Card title="tag测试: (processing有问题)">
