@@ -35,9 +35,9 @@ const sortableInstance = ref<null | Sortable>(null);
 // 可能会找到拖拽的子元素，这里需要确保拖拽的dom时tab元素
 function findParentElement(element: HTMLElement) {
   const parentCls = 'group';
-  return element.classList.contains(parentCls)
+  return element?.classList?.contains(parentCls)
     ? element
-    : element.closest(`.${parentCls}`);
+    : element?.closest(`.${parentCls}`);
 }
 
 async function initTabsSortable() {
