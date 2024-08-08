@@ -141,7 +141,7 @@ async function generateAccess(options: GenerateMenuAndRoutesOptions) {
         meta: {
           // 当前路由不在菜单显示 但是可以通过链接访问
           // 不可访问的路由由后端控制隐藏(不返回对应路由)
-          hideMenu: menu.hidden,
+          hideInMenu: menu.hidden,
           icon: menu.meta?.icon,
           keepAlive: !menu.meta?.noCache,
           title: menu.meta?.title,
