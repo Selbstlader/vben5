@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { TenantOption } from '#/api';
+
 import { computed, onMounted, ref, unref } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -66,6 +68,15 @@ async function onDeselect() {
   lastSelected.value = '';
   close(false);
 }
+
+/**
+ * select搜索使用
+ * @param input 输入内容
+ * @param option 选项
+ */
+function filterOption(input: string, option: TenantOption) {
+  return option.companyName.toLowerCase().includes(input.toLowerCase());
+}
 </script>
 
 <template>
@@ -73,10 +84,12 @@ async function onDeselect() {
     <Select
       v-model:value="selected"
       :field-names="{ label: 'companyName', value: 'tenantId' }"
+      :filter-option="filterOption"
       :options="tenantList"
       allow-clear
       class="w-60"
       placeholder="选择租户"
+      show-search
       @deselect="onDeselect"
       @select="onSelected"
     >
