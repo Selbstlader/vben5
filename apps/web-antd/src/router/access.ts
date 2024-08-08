@@ -205,7 +205,6 @@ async function generateAccess(options: GenerateMenuAndRoutesOptions) {
             vbenRoute.meta.hideChildrenInMenu = true;
           }
           vbenRoute.component = 'BasicLayout';
-          console.log('RootMenu', vbenRoute);
           break;
         }
         /**

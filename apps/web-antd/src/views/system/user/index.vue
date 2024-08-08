@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue';
 
-import { preferences } from '@vben/preferences';
-
 import {
   Tag as ATag,
   Button,
@@ -13,14 +11,9 @@ import {
 } from 'ant-design-vue';
 
 import { DictTag } from '#/components/Dict';
-import { useDictStore } from '#/store/dict';
 import { getDict, getDictOptions } from '#/utils/dict';
 
 import TableTest from './table';
-
-onMounted(() => {
-  console.log('keepAlive测试 -> 挂载了');
-});
 
 const count = ref(0);
 let intervalId: number = 0;
@@ -37,13 +30,6 @@ const sexOptions = getDictOptions('sys_user_sex');
 const disabledDict = getDict('sys_normal_disable');
 const select = ref('pc');
 const deviceOptions = getDictOptions('sys_device_type');
-
-const dictStore = useDictStore();
-onMounted(() => {
-  console.log(dictStore.dictMap);
-  console.log(dictStore.dictOptionsMap);
-  console.log(preferences.theme.colorPrimary);
-});
 </script>
 
 <template>
