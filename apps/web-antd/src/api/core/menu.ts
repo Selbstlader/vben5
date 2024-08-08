@@ -40,6 +40,6 @@ export interface Menu {
 /**
  * 获取用户所有菜单
  */
-export async function getAllMenus() {
+export async function getAllMenusApi() {
   return requestClient.get<Menu[]>('/system/menu/getRouters');
 }

@@ -1,7 +1,6 @@
-import { TinyColor } from '@ctrl/tinycolor';
 import { getColors } from 'theme-colors';
 
-import { convertToHslCssVar } from './convert';
+import { convertToHslCssVar, TinyColor } from './convert';
 
 interface ColorItem {
   alias?: string;

@@ -10,7 +10,7 @@ import { preferences } from '@vben/preferences';
 import { message } from 'ant-design-vue';
 import { cloneDeep } from 'lodash-es';
 
-import { getAllMenus, type Menu } from '#/api';
+import { getAllMenusApi, type Menu } from '#/api';
 import { BasicLayout, IFrameView } from '#/layouts';
 import { $t } from '#/locales';
 
@@ -110,7 +110,8 @@ async function generateAccess(options: GenerateMenuAndRoutesOptions) {
       // 根目录为菜单形式
       // 固定有一个children  children为当前菜单
       if (menu.path === '/' && menu.children && menu.children.length === 1) {
-        menu.meta = menu.children[0].meta;
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        menu.meta = menu.children[0]!.meta;
         /**
          * todo 先写死 后续再优化
          */
@@ -241,7 +242,7 @@ async function generateAccess(options: GenerateMenuAndRoutesOptions) {
         duration: 1,
       });
       // 后台返回路由/菜单
-      const backMenuList = await getAllMenus();
+      const backMenuList = await getAllMenusApi();
       // 转换为vben能用的路由
       const vbenMenuList = backMenuToVbenMenu(backMenuList);
       // 特别注意 这里要深拷贝

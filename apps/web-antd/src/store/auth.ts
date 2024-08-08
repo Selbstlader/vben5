@@ -10,7 +10,7 @@ import { resetAllStores, useAccessStore, useUserStore } from '@vben/stores';
 import { notification } from 'ant-design-vue';
 import { defineStore } from 'pinia';
 
-import { doLogout, getUserInfo, login } from '#/api';
+import { doLogout, getUserInfoApi, loginApi } from '#/api';
 import { $t } from '#/locales';
 
 export const useAuthStore = defineStore('auth', () => {
@@ -33,7 +33,7 @@ export const useAuthStore = defineStore('auth', () => {
     let userInfo: null | UserInfo = null;
     try {
       loginLoading.value = true;
-      const { access_token } = await login(params);
+      const { access_token } = await loginApi(params);
 
       // 将 accessToken 存储到 accessStore 中
       accessStore.setAccessToken(access_token);
@@ -92,7 +92,7 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function fetchUserInfo() {
-    const { permissions = [], roles = [], user } = await getUserInfo();
+    const { permissions = [], roles = [], user } = await getUserInfoApi();
 
     /**
      * 从后台user -> vben user转换

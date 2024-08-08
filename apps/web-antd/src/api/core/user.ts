@@ -40,6 +40,6 @@ export interface UserInfoResp {
 /**
  * 获取用户信息
  */
-export async function getUserInfo() {
+export async function getUserInfoApi() {
   return requestClient.get<UserInfoResp>('/system/user/getInfo');
 }

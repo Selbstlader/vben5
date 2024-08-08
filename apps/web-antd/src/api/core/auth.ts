@@ -26,7 +26,7 @@ export namespace AuthApi {
 /**
  * 登录
  */
-export async function login(data: AuthApi.LoginParams) {
+export async function loginApi(data: AuthApi.LoginParams) {
   return requestClient.post<AuthApi.LoginResult>(
     '/auth/login',
     { ...data, clientId },
@@ -69,4 +69,8 @@ export interface TenantResp {
  */
 export function tenantList() {
   return requestClient.get<TenantResp>('/auth/tenant/list');
+}
+
+export async function getAccessCodesApi() {
+  return requestClient.get<string[]>('/auth/codes');
 }
