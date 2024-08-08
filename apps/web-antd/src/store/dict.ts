@@ -83,8 +83,7 @@ export const useDictStore = defineStore('app-dict', () => {
   }
 
   function $reset() {
-    dictMap.clear();
-    dictOptionsMap.clear();
+    resetCache();
   }
 
   return {

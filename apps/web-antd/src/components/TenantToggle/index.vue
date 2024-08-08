@@ -12,6 +12,7 @@ import { message, Select } from 'ant-design-vue';
 import { storeToRefs } from 'pinia';
 
 import { tenantDynamicClear, tenantDynamicToggle } from '#/api/system/tenant';
+import { useDictStore } from '#/store/dict';
 import { useTenantStore } from '#/store/tenant';
 
 const { hasAccessByRoles } = useAccess();
@@ -48,6 +49,7 @@ function close(checked: boolean) {
   router.push(DEFAULT_HOME_PATH);
 }
 
+const dictStore = useDictStore();
 /**
  * 为什么要用any ide报错😅 实际类型为string
  */
@@ -58,12 +60,14 @@ async function onSelected(tenantId: any, option: any) {
   }
   await tenantDynamicToggle(tenantId);
   lastSelected.value = tenantId;
+  dictStore.resetCache();
   message.success(`切换当前租户为: ${option.companyName}`);
   close(true);
 }
 
 async function onDeselect() {
   await tenantDynamicClear();
+  dictStore.resetCache();
   message.success('还原为默认租户');
   lastSelected.value = '';
   close(false);
