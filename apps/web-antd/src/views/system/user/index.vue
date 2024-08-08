@@ -16,6 +16,8 @@ import { DictTag } from '#/components/Dict';
 import { useDictStore } from '#/store/dict';
 import { getDict, getDictOptions } from '#/utils/dict';
 
+import TableTest from './table';
+
 onMounted(() => {
   console.log('keepAlive测试 -> 挂载了');
 });
@@ -92,6 +94,9 @@ onMounted(() => {
       <ATag :bordered="false" color="blue">blue</ATag>
       <ATag :bordered="false" color="geekblue">geekblue</ATag>
       <ATag :bordered="false" color="purple">purple</ATag>
+    </Card>
+    <Card title="table测试">
+      <TableTest />
     </Card>
   </div>
 </template>
