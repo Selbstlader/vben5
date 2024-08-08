@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue';
 
-import { Button, Card, Select } from 'ant-design-vue';
+import { preferences } from '@vben/preferences';
+
+import { Tag as ATag, Button, Card, Select } from 'ant-design-vue';
 
 import { DictTag } from '#/components/Dict';
 import { useDictStore } from '#/store/dict';
@@ -29,6 +31,7 @@ const dictStore = useDictStore();
 onMounted(() => {
   console.log(dictStore.dictMap);
   console.log(dictStore.dictOptionsMap);
+  console.log(preferences.theme.colorPrimary);
 });
 </script>
 
@@ -52,6 +55,23 @@ onMounted(() => {
         <DictTag :dicts="disabledDict" value="0" />
         <DictTag :dicts="disabledDict" value="1" />
       </div>
+    </Card>
+    <Card title="tag测试: (processing有问题)">
+      <ATag :bordered="false" color="processing">processing</ATag>
+      <ATag :bordered="false" color="success">success</ATag>
+      <ATag :bordered="false" color="error">error</ATag>
+      <ATag :bordered="false" color="warning">warning</ATag>
+      <ATag :bordered="false" color="magenta">magenta</ATag>
+      <ATag :bordered="false" color="red">red</ATag>
+      <ATag :bordered="false" color="volcano">volcano</ATag>
+      <ATag :bordered="false" color="orange">orange</ATag>
+      <ATag :bordered="false" color="gold">gold</ATag>
+      <ATag :bordered="false" color="lime">lime</ATag>
+      <ATag :bordered="false" color="green">green</ATag>
+      <ATag :bordered="false" color="cyan">cyan</ATag>
+      <ATag :bordered="false" color="blue">blue</ATag>
+      <ATag :bordered="false" color="geekblue">geekblue</ATag>
+      <ATag :bordered="false" color="purple">purple</ATag>
     </Card>
   </div>
 </template>
