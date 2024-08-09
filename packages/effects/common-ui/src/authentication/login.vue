@@ -229,7 +229,7 @@ defineExpose({ resetCaptcha });
       </div>
       <img
         :src="captchaBase64"
-        class="h-[38px] w-[115px] rounded-r-md"
+        class="h-[40px] w-[115px] rounded-r-md"
         @click="emit('captchaClick')"
       />
     </div>
@@ -292,10 +292,23 @@ defineExpose({ resetCaptcha });
 
 <style lang="scss">
 /**
-tenant-picker 跟下面的输入框样式保持一致
+  tenant-picker 跟下面的输入框样式保持一致
 */
 .tenant-picker > button[role='combobox'] {
   height: 40px;
   background-color: hsl(var(--input-background));
+
+  &:focus {
+    @apply border-primary;
+  }
+}
+
+/**
+  验证码输入框样式
+  去除右边的圆角
+*/
+input[id='code'] {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
 }
 </style>
