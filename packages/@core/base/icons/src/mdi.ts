@@ -25,3 +25,5 @@ export const CommandLineIcon = createIconifyIcon(
   'flat-color-icons:command-line',
 );
 export const MemoryIcon = createIconifyIcon('la:memory');
+
+export const GiteeIcon = createIconifyIcon('simple-icons:gitee');

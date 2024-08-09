@@ -69,6 +69,10 @@ const emit = defineEmits<{
    * 验证码点击
    */
   captchaClick: [];
+  /**
+   * 第三方登录 platfrom 对应平台的string
+   */
+  oauthLogin: [plateform: string];
   submit: LoginEmits['submit'];
 }>();
 
@@ -269,7 +273,10 @@ defineExpose({ resetCaptcha });
     </div>
 
     <!-- 第三方登录 -->
-    <ThirdPartyLogin v-if="showThirdPartyLogin" />
+    <ThirdPartyLogin
+      v-if="showThirdPartyLogin"
+      @oauth-login="(e) => emit('oauthLogin', e)"
+    />
 
     <div v-if="showRegister" class="text-center text-sm">
       {{ $t('authentication.accountTip') }}
