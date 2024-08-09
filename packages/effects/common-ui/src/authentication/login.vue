@@ -172,7 +172,7 @@ defineExpose({ resetCaptcha });
     </Title>
 
     <!-- 租户 -->
-    <div v-if="useTenant" class="mb-6">
+    <div v-if="useTenant" class="tenant-picker mb-6">
       <Select v-model="formState.tenantId">
         <SelectTrigger>
           <SelectValue placeholder="选择公司" />
@@ -289,3 +289,13 @@ defineExpose({ resetCaptcha });
     </div>
   </div>
 </template>
+
+<style lang="scss">
+/**
+tenant-picker 跟下面的输入框样式保持一致
+*/
+.tenant-picker > button[role='combobox'] {
+  height: 40px;
+  background-color: hsl(var(--input-background));
+}
+</style>
