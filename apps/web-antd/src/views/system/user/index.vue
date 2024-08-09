@@ -64,7 +64,7 @@ const deviceOptions = getDictOptions('sys_device_type');
         </RadioGroup>
       </div>
     </Card>
-    <Card title="tag测试: (processing有问题)">
+    <Card title="tag测试">
       <ATag :bordered="false" color="processing">processing</ATag>
       <ATag :bordered="false" color="success">success</ATag>
       <ATag :bordered="false" color="error">error</ATag>

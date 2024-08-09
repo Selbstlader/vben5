@@ -16,10 +16,7 @@ export const tagTypes: TagType = {
   orange: { color: 'orange', label: 'orange' },
   /** 自定义预设 color可以为16进制颜色 */
   pink: { color: 'pink', label: 'pink' },
-  /**
-   * 新版processing参数有问题 暂时用blue代替
-   */
-  primary: { color: 'blue', label: '主要(primary)' },
+  primary: { color: 'processing', label: '主要(primary)' },
   purple: { color: 'purple', label: 'purple' },
   red: { color: 'red', label: 'red' },
   success: { color: 'success', label: '成功(success)' },
