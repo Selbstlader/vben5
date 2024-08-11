@@ -1,18 +1,18 @@
 <script setup lang="ts">
 import type { TooltipContentProps } from 'radix-vue';
 
-import type { HTMLAttributes } from 'vue';
+import type { StyleValue } from 'vue';
 
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@vben-core/shadcn-ui/components/ui/tooltip';
+} from '../ui/tooltip';
 
 interface Props {
-  contentClass?: HTMLAttributes['class'];
-  contentStyle?: HTMLAttributes['style'];
+  contentClass?: any;
+  contentStyle?: StyleValue;
   delayDuration?: number;
   side: TooltipContentProps['side'];
 }
