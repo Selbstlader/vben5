@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue';
 
+import { Page } from '@vben/common-ui';
 import { CommandLineIcon, MemoryIcon, RedisIcon } from '@vben/icons';
 
 import { Button, Card, Col, Row } from 'ant-design-vue';
@@ -49,7 +50,7 @@ async function loadInfo() {
 </script>
 
 <template>
-  <div class="m-[16px]">
+  <Page title="缓存监控">
     <Row :gutter="[15, 15]">
       <Col :span="24">
         <Card size="small">
@@ -98,5 +99,5 @@ async function loadInfo() {
         </Card>
       </Col>
     </Row>
-  </div>
+  </Page>
 </template>
