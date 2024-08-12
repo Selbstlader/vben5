@@ -58,7 +58,6 @@ const customConfig: Linter.Config[] = [
         },
       ],
       'perfectionist/sort-interfaces': 'off',
-      'regexp/no-unused-capturing-group': 'off',
     },
   },
   {
@@ -97,13 +96,6 @@ const customConfig: Linter.Config[] = [
           ],
         },
       ],
-    },
-  },
-  {
-    files: ['packages/effects/access/**/**'],
-    ignores: restrictedImportIgnores,
-    rules: {
-      'regexp/no-unused-capturing-group': 'off',
     },
   },
   {

@@ -27,7 +27,7 @@ async function generateAccessible(
     /**
      * 外链不应该被添加到路由 由menu处理
      */
-    if (/^http(s)?:\/\//.test(route.path)) {
+    if (/^https?:\/\//.test(route.path)) {
       return;
     }
     router.addRoute(route);

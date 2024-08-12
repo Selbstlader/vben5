@@ -121,7 +121,7 @@ async function generateAccess(options: GenerateMenuAndRoutesOptions) {
       // 外链: http开头 & 组件为Layout || ParentView
       // 正则判断是否为http://或者https://开头
       if (
-        /^http(s)?:\/\//.test(menu.path) &&
+        /^https?:\/\//.test(menu.path) &&
         (menu.component === 'Layout' || menu.component === 'ParentView')
       ) {
         menu.component = 'Link';
