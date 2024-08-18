@@ -48,7 +48,7 @@
     "jsencrypt": "^3.3.2",
     "lodash-es": "^4.17.21",
     "pinia": "2.2.2",
-    "vue": "^3.4.37",
+    "vue": "^3.4.38",
     "vue-router": "^4.4.3"
   },
   "devDependencies": {
