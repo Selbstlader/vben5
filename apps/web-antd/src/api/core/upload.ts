@@ -1,6 +1,6 @@
 import { requestClient } from '#/api/request';
 
-export function uploadApi(file: Blob | File) {
+export function commonUploadApi(file: Blob | File) {
   return requestClient.upload('/resource/oss/upload', file);
 }
 /**
