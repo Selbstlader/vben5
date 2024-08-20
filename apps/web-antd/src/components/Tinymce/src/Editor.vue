@@ -57,10 +57,6 @@ const props = defineProps({
     default: defaultToolbar,
     type: String,
   },
-  value: {
-    default: '',
-    type: String,
-  },
   width: {
     default: 'auto',
     required: false,
@@ -72,6 +68,9 @@ const emit = defineEmits(['change']);
 
 type InitOptions = IPropTypes['init'];
 
+/**
+ * 外部使用 v-model 绑定值
+ */
 const modelValue = defineModel('modelValue', { default: '', type: String });
 /**
  * https://www.jianshu.com/p/59a9c3802443
@@ -139,7 +138,6 @@ const langName = computed(() => {
 
 const initOptions = computed((): InitOptions => {
   const { height, options, plugins, toolbar } = props;
-  console.log(height);
   return {
     auto_focus: true,
     branding: false, // 显示右下角的'使用 TinyMCE 构建'
@@ -290,16 +288,6 @@ function bindModelHandlers(editor: any) {
     },
   );
 
-  watch(
-    () => props.value,
-    (val, prevVal) => {
-      setValue(editor, val, prevVal);
-    },
-    {
-      immediate: true,
-    },
-  );
-
   editor.on(normalizedEvents || 'change keyup undo redo', () => {
     const content = editor.getContent({ format: attrs.outputFormat });
     emit('change', content);
@@ -310,7 +298,15 @@ function bindModelHandlers(editor: any) {
   });
 }
 
-const disabled = computed(() => props.options.readonly ?? false);
+/**
+ * disabled
+ * 可使用:options="{readonly: true}"
+ * 或者:disabled="true"
+ */
+const disabled = computed(
+  () =>
+    (props.options.readonly ?? false) || ((attrs.disabled as boolean) ?? false),
+);
 
 function getUploadingImgName(name: string) {
   return `[uploading:${name}]`;
