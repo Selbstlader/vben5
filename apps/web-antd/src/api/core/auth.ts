@@ -21,6 +21,11 @@ export namespace AuthApi {
     client_id: string;
     expire_in: number;
   }
+
+  export interface RefreshTokenResult {
+    data: string;
+    status: number;
+  }
 }
 
 /**
