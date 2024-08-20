@@ -95,11 +95,15 @@ const containerWidth = computed(() => {
 });
 
 const skinName = computed(() => {
-  return preferences.theme.mode === 'light' ? 'oxide' : 'oxide-dark';
+  const theme =
+    preferences.theme.mode === 'auto' ? 'light' : preferences.theme.mode;
+  return theme === 'light' ? 'oxide' : 'oxide-dark';
 });
 
 const contentCss = computed(() => {
-  return preferences.theme.mode === 'light' ? 'default' : 'dark';
+  const theme =
+    preferences.theme.mode === 'auto' ? 'light' : preferences.theme.mode;
+  return theme === 'light' ? 'default' : 'dark';
 });
 
 /**
