@@ -132,6 +132,9 @@ importers:
 
   apps/web-antd:
     dependencies:
+      '@tinymce/tinymce-vue':
+        specifier: ^6.0.1
+        version: 6.0.1(vue@3.4.38(typescript@5.5.4))
       '@vben/access':
         specifier: workspace:*
         version: link:../../packages/effects/access
@@ -198,6 +201,9 @@ importers:
       pinia:
         specifier: 2.2.2
         version: 2.2.2(typescript@5.5.4)(vue@3.4.38(typescript@5.5.4))
+      tinymce:
+        specifier: ^7.3.0
+        version: 7.3.0
       vue:
         specifier: 3.4.38
         version: 3.4.38(typescript@5.5.4)
@@ -3410,6 +3416,7 @@ packages:
 
   '@ls-lint/ls-lint@2.2.3':
     resolution: {integrity: sha512-ekM12jNm/7O2I/hsRv9HvYkRdfrHpiV1epVuI2NP+eTIcEgdIdKkKCs9KgQydu/8R5YXTov9aHdOgplmCHLupw==}
+    cpu: [x64, arm64, s390x]
     os: [darwin, linux, win32]
     hasBin: true
 
@@ -3875,6 +3882,11 @@ packages:
 
   '@tanstack/vue-virtual@3.8.5':
     resolution: {integrity: sha512-JBHw3xFUslYgrbvNlCYtTWwFo8zjzRs7c2rs6B4JKFXWyP5yHuoeivgQgeZ34t6O6lJTNqc/K4ccmmcmKqpMPA==}
+    peerDependencies:
+      vue: 3.4.38
+
+  '@tinymce/tinymce-vue@6.0.1':
+    resolution: {integrity: sha512-VzjI8AKlNrrsosIk3WuBez6kubqPsPMeaButkRLuts77uo4e2EwPRFX+VyB6fHbMGHwUPK22zNjOUGMvJFZFCw==}
     peerDependencies:
       vue: 3.4.38
 
@@ -9079,6 +9091,9 @@ packages:
     resolution: {integrity: sha512-mZ2sDMaySvi1PkTp4lTo1In2zjU+cY8OvZsfwrDrx3YGRbXPX1/cbPwCR9zkm3O/Fz9Jo0F1HNgIQ1b8BepqyQ==}
     engines: {node: '>=12.0.0'}
 
+  tinymce@7.3.0:
+    resolution: {integrity: sha512-Ls4PgYlpk73XAxBSBqbVmSl8Mb3DuNfgF01GZ0lY6/MOEVRl3IL+VxC1Oe6165e8WqbqVsxO3Qj/PmoYNvQKGQ==}
+
   tinypool@1.0.0:
     resolution: {integrity: sha512-KIKExllK7jp3uvrNtvRBYBWBOAXSX8ZvoaD8T+7KB/QHIuoJW3Pmr60zucywjAlMb5TeXUkcs/MWeWLu0qvuAQ==}
     engines: {node: ^18.0.0 || >=20.0.0}
@@ -12790,6 +12805,11 @@ snapshots:
   '@tanstack/vue-virtual@3.8.5(vue@3.4.38(typescript@5.5.4))':
     dependencies:
       '@tanstack/virtual-core': 3.8.4
+      vue: 3.4.38(typescript@5.5.4)
+
+  '@tinymce/tinymce-vue@6.0.1(vue@3.4.38(typescript@5.5.4))':
+    dependencies:
+      tinymce: 7.3.0
       vue: 3.4.38(typescript@5.5.4)
 
   '@tootallnate/once@1.1.2': {}
@@ -18648,6 +18668,8 @@ snapshots:
     dependencies:
       fdir: 6.2.0(picomatch@4.0.2)
       picomatch: 4.0.2
+
+  tinymce@7.3.0: {}
 
   tinypool@1.0.0: {}
 

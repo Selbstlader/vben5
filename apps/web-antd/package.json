@@ -26,6 +26,7 @@
     "#/*": "./src/*"
   },
   "dependencies": {
+    "@tinymce/tinymce-vue": "^6.0.1",
     "@vben/access": "workspace:*",
     "@vben/chart-ui": "workspace:*",
     "@vben/common-ui": "workspace:*",
@@ -48,6 +49,7 @@
     "jsencrypt": "^3.3.2",
     "lodash-es": "^4.17.21",
     "pinia": "2.2.2",
+    "tinymce": "^7.3.0",
     "vue": "^3.4.38",
     "vue-router": "^4.4.3"
   },

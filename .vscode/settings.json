@@ -193,5 +193,6 @@
   "commentTranslate.multiLineMerge": true,
   "vue.server.hybridMode": true,
   "typescript.tsdk": "node_modules/typescript/lib",
-  "vitest.disableWorkspaceWarning": true
+  "vitest.disableWorkspaceWarning": true,
+  "cSpell.words": ["tinymce"]
 }
