@@ -20,7 +20,7 @@ import { preferences } from '@vben/preferences';
 import Editor from '@tinymce/tinymce-vue';
 import { isNumber } from 'lodash-es';
 
-import { uploadApi, type UploadResult } from '#/api';
+import { commonUploadApi, type UploadResult } from '#/api/core/upload';
 import { buildShortUUID } from '#/utils/uuid';
 
 import { bindHandlers } from './helper';
@@ -144,7 +144,7 @@ const initOptions = computed((): InitOptions => {
     content_css: contentCss.value,
     content_style:
       'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }',
-    contextmenu: 'link image table',
+    // contextmenu: 'link image table',
     default_link_target: '_blank',
     height,
     image_advtab: true, // 图片高级选项
@@ -161,8 +161,8 @@ const initOptions = computed((): InitOptions => {
      */
     paste_data_images: true,
     plugins,
-    quickbars_selection_toolbar:
-      'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
+    // quickbars_selection_toolbar:
+    //   'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
     skin: skinName.value,
     toolbar,
     toolbar_mode: 'sliding',
@@ -177,7 +177,7 @@ const initOptions = computed((): InitOptions => {
       return new Promise((resolve, reject) => {
         const file = blobInfo.blob();
         // const filename = blobInfo.filename();
-        uploadApi(file)
+        commonUploadApi(file)
           .then((response) => {
             const { url } = response as unknown as UploadResult;
             console.log('tinymce上传图片:', url);
