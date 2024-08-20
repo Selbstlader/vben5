@@ -15,12 +15,12 @@ import {
   watch,
 } from 'vue';
 
-import { preferences } from '@vben/preferences';
+import { preferences, usePreferences } from '@vben/preferences';
 
 import Editor from '@tinymce/tinymce-vue';
 import { isNumber } from 'lodash-es';
 
-import { commonUploadApi, type UploadResult } from '#/api/core/upload';
+import { uploadApi, type UploadResult } from '#/api/core/upload';
 import { buildShortUUID } from '#/utils/uuid';
 
 import { bindHandlers } from './helper';
@@ -93,16 +93,13 @@ const containerWidth = computed(() => {
   return width;
 });
 
+const { isDark } = usePreferences();
 const skinName = computed(() => {
-  const theme =
-    preferences.theme.mode === 'auto' ? 'light' : preferences.theme.mode;
-  return theme === 'light' ? 'oxide' : 'oxide-dark';
+  return isDark.value ? 'oxide-dark' : 'oxide';
 });
 
 const contentCss = computed(() => {
-  const theme =
-    preferences.theme.mode === 'auto' ? 'light' : preferences.theme.mode;
-  return theme === 'light' ? 'default' : 'dark';
+  return isDark.value ? 'dark' : 'default';
 });
 
 /**
@@ -183,7 +180,7 @@ const initOptions = computed((): InitOptions => {
       return new Promise((resolve, reject) => {
         const file = blobInfo.blob();
         // const filename = blobInfo.filename();
-        commonUploadApi(file)
+        uploadApi(file)
           .then((response) => {
             const { url } = response as unknown as UploadResult;
             console.log('tinymce上传图片:', url);
