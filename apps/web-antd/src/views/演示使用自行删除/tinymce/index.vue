@@ -16,7 +16,7 @@ const content = ref('');
         <span>只读</span>
         <a-switch v-model:checked="readonly" />
       </div>
-      <Tinymce v-model="content" :disabled="readonly" :height="800" />
+      <Tinymce v-model="content" :height="800" :options="{ readonly }" />
     </div>
   </Page>
 </template>

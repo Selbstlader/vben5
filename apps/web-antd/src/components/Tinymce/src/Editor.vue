@@ -109,7 +109,7 @@ const contentCss = computed(() => {
  * 通过v-if来挂载/卸载组件
  * 来完成主题切换/语言切换
  */
-const changeTheme = ref(true);
+const init = ref(true);
 watch(
   () => [preferences.theme.mode, preferences.app.locale],
   () => {
@@ -117,10 +117,16 @@ watch(
       return;
     }
     destroy();
-    changeTheme.value = false;
+    init.value = false;
     // 放在下一次tick来切换
+    // 需要先加载组件 也就是v-if为true  然后需要拿到editorRef 必须放在setTimeout(相当于onMounted)
     nextTick(() => {
-      changeTheme.value = true;
+      init.value = true;
+      setTimeout(() => {
+        // 需要手动设置只读/编辑状态
+        const mode = props.options.readonly ? 'readonly' : 'design';
+        editorRef.value?.mode.set(mode);
+      });
     });
   },
 );
@@ -144,7 +150,7 @@ const initOptions = computed((): InitOptions => {
     content_css: contentCss.value,
     content_style:
       'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }',
-    // contextmenu: 'link image table',
+    contextmenu: 'link image table',
     default_link_target: '_blank',
     height,
     image_advtab: true, // 图片高级选项
@@ -161,8 +167,8 @@ const initOptions = computed((): InitOptions => {
      */
     paste_data_images: true,
     plugins,
-    // quickbars_selection_toolbar:
-    //   'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
+    quickbars_selection_toolbar:
+      'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
     skin: skinName.value,
     toolbar,
     toolbar_mode: 'sliding',
@@ -207,17 +213,6 @@ watch(
     if (editor) {
       editor.mode.set(getDisabled ? 'readonly' : 'design');
     }
-  },
-);
-
-watch(
-  () => attrs.disabled,
-  () => {
-    const editor = unref(editorRef);
-    if (!editor) {
-      return;
-    }
-    editor.mode.set(attrs.disabled ? 'readonly' : 'design');
   },
 );
 
@@ -298,15 +293,7 @@ function bindModelHandlers(editor: any) {
   });
 }
 
-/**
- * disabled
- * 可使用:options="{readonly: true}"
- * 或者:disabled="true"
- */
-const disabled = computed(
-  () =>
-    (props.options.readonly ?? false) || ((attrs.disabled as boolean) ?? false),
-);
+const disabled = computed(() => props.options.readonly ?? false);
 
 function getUploadingImgName(name: string) {
   return `[uploading:${name}]`;
@@ -345,7 +332,7 @@ function handleDone(name: string, url: string) {
       @uploading="handleImageUploading"
     />
     <Editor
-      v-if="!initOptions.inline && changeTheme"
+      v-if="!initOptions.inline && init"
       v-model="modelValue"
       :init="initOptions"
       :style="{ visibility: 'hidden' }"
