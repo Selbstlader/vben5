@@ -8,6 +8,6 @@ export function uploadApi(file: Blob | File) {
  */
 export interface UploadResult {
   url: string;
-  filename: string;
+  fileName: string;
   ossId: string;
 }
