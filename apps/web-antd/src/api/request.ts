@@ -158,6 +158,12 @@ function createRequestClient(baseURL: string) {
     },
   });
 
+  // 通用的错误处理, 如果没有进入上面的错误处理逻辑，就会进入这里
+  // 主要处理http状态码不为200的情况 必须放在在下面的响应拦截器之前
+  client.addResponseInterceptor(
+    errorMessageResponseInterceptor((msg: string) => message.error(msg)),
+  );
+
   client.addResponseInterceptor<HttpResponse>({
     fulfilled: (response) => {
       const encryptKey = (response.headers || {})['encrypt-key'];
@@ -271,11 +277,6 @@ function createRequestClient(baseURL: string) {
       enableRefreshToken: preferences.app.enableRefreshToken,
       formatToken,
     }),
-  );
-
-  // 通用的错误处理, 如果没有进入上面的错误处理逻辑，就会进入这里
-  client.addResponseInterceptor(
-    errorMessageResponseInterceptor((msg: string) => message.error(msg)),
   );
 
   return client;
