@@ -73,7 +73,7 @@ const localMenuList: RouteRecordStringComponent[] = [
     path: '/about',
     children: [
       {
-        component: '/_core/vben/about/index',
+        component: '/_core/about/index',
         meta: {
           title: $t('page.vben.about'),
         },
