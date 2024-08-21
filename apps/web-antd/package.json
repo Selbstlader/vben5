@@ -44,7 +44,7 @@
     "@vueuse/core": "^11.0.1",
     "ant-design-vue": "^4.2.3",
     "crypto-js": "^4.2.0",
-    "dayjs": "^1.11.12",
+    "dayjs": "^1.11.13",
     "echarts": "^5.5.1",
     "jsencrypt": "^3.3.2",
     "lodash-es": "^4.17.21",
