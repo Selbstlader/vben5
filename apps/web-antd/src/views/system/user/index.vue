@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue';
 
+import { useVbenDrawer, useVbenModal } from '@vben/common-ui';
+
 import {
   Tag as ATag,
   Button,
@@ -8,11 +10,14 @@ import {
   RadioButton,
   RadioGroup,
   Select,
+  Space,
 } from 'ant-design-vue';
 
 import { DictTag } from '#/components/Dict';
 import { getDict, getDictOptions } from '#/utils/dict';
 
+import DrawerDemo from './drawer.vue';
+import ModalDemo from './modal.vue';
 import TableTest from './table';
 
 const count = ref(0);
@@ -30,6 +35,14 @@ const sexOptions = getDictOptions('sys_user_sex');
 const disabledDict = getDict('sys_normal_disable');
 const select = ref('pc');
 const deviceOptions = getDictOptions('sys_device_type');
+
+const [TestNodal, modalApi] = useVbenModal({
+  connectedComponent: ModalDemo,
+});
+
+const [TestDrawer, drawerApi] = useVbenDrawer({
+  connectedComponent: DrawerDemo,
+});
 </script>
 
 <template>
@@ -83,6 +96,14 @@ const deviceOptions = getDictOptions('sys_device_type');
     </Card>
     <Card title="table测试">
       <TableTest />
+    </Card>
+    <Card title="Modal/Drawer测试">
+      <Space>
+        <a-button @click="() => modalApi.open()">打开Modal</a-button>
+        <a-button @click="() => drawerApi.open()">打开Drawer</a-button>
+      </Space>
+      <TestNodal />
+      <TestDrawer />
     </Card>
   </div>
 </template>
