@@ -182,6 +182,7 @@
     "position": {
       "title": "Preferences Postion",
       "header": "Header",
+      "auto": "Auto",
       "fixed": "Fixed"
     },
     "sidebar": {
