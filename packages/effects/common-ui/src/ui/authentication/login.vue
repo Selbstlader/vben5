@@ -161,7 +161,7 @@ defineExpose({ resetCaptcha });
 </script>
 
 <template>
-  <div @keypress.enter.prevent="handleSubmit">
+  <div @keydown.enter.prevent="handleSubmit">
     <Title>
       {{ title || `${$t('authentication.welcomeBack')} 👋🏻` }}
       <template #desc>
