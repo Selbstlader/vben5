@@ -5,6 +5,7 @@ import type { Editor as EditorType } from 'tinymce/tinymce';
 import {
   computed,
   nextTick,
+  onActivated,
   onBeforeUnmount,
   onDeactivated,
   onMounted,
@@ -120,9 +121,7 @@ watch(
     nextTick(() => {
       init.value = true;
       setTimeout(() => {
-        // 需要手动设置只读/编辑状态
-        const mode = props.options.readonly ? 'readonly' : 'design';
-        editorRef.value?.mode.set(mode);
+        setEditorMode();
       });
     });
   },
@@ -220,6 +219,7 @@ onMounted(() => {
   nextTick(() => {
     setTimeout(() => {
       initEditor();
+      setEditorMode();
     }, 30);
   });
 });
@@ -231,6 +231,18 @@ onBeforeUnmount(() => {
 onDeactivated(() => {
   destroy();
 });
+
+onActivated(() => {
+  setEditorMode();
+});
+
+function setEditorMode() {
+  const editor = unref(editorRef);
+  if (editor) {
+    const mode = props.options.readonly ? 'readonly' : 'design';
+    editor.mode.set(mode);
+  }
+}
 
 function destroy() {
   const editor = unref(editorRef);
