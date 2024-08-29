@@ -4,7 +4,11 @@ import type { EChartsOption } from 'echarts';
 // import * as echarts from 'echarts';
 import { onMounted, ref } from 'vue';
 
-import { EchartsUI, type EchartsUIType, useEcharts } from '@vben/chart-ui';
+import {
+  EchartsUI,
+  type EchartsUIType,
+  useEcharts,
+} from '@vben/plugins/echarts';
 
 import { loginLine } from '../api';
 

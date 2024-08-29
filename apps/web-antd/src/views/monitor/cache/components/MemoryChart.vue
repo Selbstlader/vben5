@@ -3,7 +3,11 @@ import type { EChartsOption } from 'echarts';
 
 import { defineComponent, onMounted, ref, watch } from 'vue';
 
-import { EchartsUI, type EchartsUIType, useEcharts } from '@vben/chart-ui';
+import {
+  EchartsUI,
+  type EchartsUIType,
+  useEcharts,
+} from '@vben/plugins/echarts';
 
 export default defineComponent({
   components: { EchartsUI },
