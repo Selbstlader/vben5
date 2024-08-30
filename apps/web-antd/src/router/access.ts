@@ -94,143 +94,188 @@ async function generateAccess(options: GenerateMenuAndRoutesOptions) {
   };
 
   /**
-   * 后台路由转vben路由
+   * 优化后的后台路由转 vben 路由
    *
-   * todo 需要重构
    * @param menuList 后台菜单
    * @param parentPath 上级目录
-   * @returns vben路由
+   * @returns vben 路由
    */
   function backMenuToVbenMenu(
     menuList: Menu[],
     parentPath = '',
   ): RouteRecordStringComponent[] {
     const resultList: RouteRecordStringComponent[] = [];
+
     menuList.forEach((menu) => {
-      // 根目录为菜单形式
-      // 固定有一个children  children为当前菜单
-      if (menu.path === '/' && menu.children && menu.children.length === 1) {
+      // 根目录处理
+      if (isRootMenu(menu)) {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         menu.meta = menu.children[0]!.meta;
-        /**
-         * todo 先写死 后续再优化
-         */
-        menu.path = '/root_menu';
         menu.component = 'RootMenu';
       }
-      // 外链: http开头 & 组件为Layout || ParentView
-      // 正则判断是否为http://或者https://开头
-      if (
-        /^https?:\/\//.test(menu.path) &&
-        (menu.component === 'Layout' || menu.component === 'ParentView')
-      ) {
+
+      // 外链处理
+      if (isExternalLink(menu)) {
         menu.component = 'Link';
       }
-      // 内嵌iframe 组件为InnerLink
-      if (menu.meta?.link && menu.component === 'InnerLink') {
+
+      // 内嵌 iframe 处理
+      if (isIframe(menu)) {
         menu.component = 'IFrameView';
       }
 
-      // path
-      if (parentPath) {
-        menu.path = `${parentPath}/${menu.path}`;
-      }
+      // 处理路径
+      menu.path = formatPath(menu.path, parentPath);
 
-      const vbenRoute: RouteRecordStringComponent = {
-        component: menu.component,
-        meta: {
-          // 当前路由不在菜单显示 但是可以通过链接访问
-          // 不可访问的路由由后端控制隐藏(不返回对应路由)
-          hideInMenu: menu.hidden,
-          icon: menu.meta?.icon,
-          keepAlive: !menu.meta?.noCache,
-          title: menu.meta?.title,
-        },
-        name: menu.name,
-        path: menu.path,
-      };
+      const vbenRoute: RouteRecordStringComponent = createVbenRoute(menu);
 
-      /**
-       * 处理不同组件
-       */
-      switch (menu.component) {
-        case 'Layout': {
-          vbenRoute.component = 'BasicLayout';
-          break;
-        }
-        /**
-         * iframe内嵌
-         */
-        case 'IFrameView': {
-          vbenRoute.component = 'IFrameView';
-          if (vbenRoute.meta) {
-            vbenRoute.meta.iframeSrc = menu.meta.link;
-          }
-          /**
-           * 需要判断特殊情况  比如vue的hash是带#的
-           * 比如链接 aaa.com/#/bbb  path会转换为 aaa/com/#/bbb
-           * 比如链接 aaa.com/?bbb=xxx
-           * 需要去除#  否则无法被添加到路由
-           */
-          /**
-           * todo 不优雅 考虑别的方案
-           */
-          if (vbenRoute.path.includes('/#/')) {
-            vbenRoute.path = vbenRoute.path.replace('/#/', '');
-          }
-          if (vbenRoute.path.includes('#')) {
-            vbenRoute.path = vbenRoute.path.replace('#', '');
-          }
-          if (vbenRoute.path.includes('?') || vbenRoute.path.includes('&')) {
-            vbenRoute.path = vbenRoute.path.replace('?', '');
-            vbenRoute.path = vbenRoute.path.replace('&', '');
-          }
-          break;
-        }
-        /**
-         * 外链 新窗口打开
-         */
-        case 'Link': {
-          if (vbenRoute.meta) {
-            vbenRoute.meta.link = menu.meta.link;
-          }
-          vbenRoute.component = 'BasicLayout';
-          break;
-        }
-        /**
-         * 根目录菜单
-         */
-        case 'RootMenu': {
-          if (vbenRoute.meta) {
-            vbenRoute.meta.hideChildrenInMenu = true;
-          }
-          vbenRoute.component = 'BasicLayout';
-          break;
-        }
-        /**
-         * 不能为layout 会套两层BasicLayout
-         */
-        case 'ParentView': {
-          vbenRoute.component = '';
-          break;
-        }
-        /**
-         * 其他自定义组件 如system/user/index 拼接/
-         */
-        default: {
-          vbenRoute.component = `/${menu.component}`;
-          break;
-        }
-      }
+      // 处理组件类型
+      handleComponentType(menu, vbenRoute);
 
-      // children处理
+      // 递归处理子路由
       if (menu.children && menu.children.length > 0) {
         vbenRoute.children = backMenuToVbenMenu(menu.children, menu.path);
       }
 
       resultList.push(vbenRoute);
     });
+
     return resultList;
+  }
+
+  /**
+   * 根目录处理
+   * @param menu
+   */
+  function isRootMenu(menu: Menu): boolean {
+    return menu.path === '/' && menu.children && menu.children.length === 1;
+  }
+
+  /**
+   * 外链判断
+   * @param menu
+   */
+  function isExternalLink(menu: Menu): boolean {
+    return (
+      /^https?:\/\//.test(menu.path) &&
+      (menu.component === 'Layout' || menu.component === 'ParentView')
+    );
+  }
+
+  /**
+   * 内嵌 iframe 判断
+   * @param menu
+   */
+  function isIframe(menu: Menu): boolean {
+    return !!menu.meta?.link && menu.component === 'InnerLink';
+  }
+
+  /**
+   * 格式化路径
+   * @param path
+   * @param parentPath
+   */
+  function formatPath(path: string, parentPath: string): string {
+    // 如果父路径是根目录且当前路径不是根目录，避免多余的斜杠
+    if (parentPath === '/' && path !== '/') {
+      return `/${path}`;
+    }
+    // 如果当前路径是根目录，直接返回
+    if (path === '/') {
+      return parentPath ? `${parentPath}` : path;
+    }
+    // 处理其他正常情况
+    return parentPath ? `${parentPath}/${path}` : path;
+  }
+
+  /**
+   * 创建 vben 路由
+   * @param menu
+   */
+  function createVbenRoute(menu: Menu): RouteRecordStringComponent {
+    return {
+      component: menu.component,
+      meta: {
+        hideInMenu: menu.hidden,
+        icon: menu.meta?.icon,
+        keepAlive: !menu.meta?.noCache,
+        title: menu.meta?.title,
+      },
+      name: menu.name,
+      path: menu.path,
+    };
+  }
+
+  /**
+   * 处理不同组件类型
+   * @param menu
+   * @param vbenRoute
+   */
+  function handleComponentType(
+    menu: Menu,
+    vbenRoute: RouteRecordStringComponent,
+  ) {
+    switch (menu.component) {
+      case 'Layout': {
+        vbenRoute.component = 'BasicLayout';
+        break;
+      }
+      /**
+       * iframe内嵌
+       */
+      case 'IFrameView': {
+        vbenRoute.component = 'IFrameView';
+        handleIframePath(vbenRoute);
+        break;
+      }
+      /**
+       * 外链 新窗口打开
+       */
+      case 'Link': {
+        vbenRoute.component = 'BasicLayout';
+        break;
+      }
+      /**
+       * 根目录菜单
+       */
+      case 'RootMenu': {
+        if (vbenRoute.meta) {
+          vbenRoute.meta.hideChildrenInMenu = true;
+        }
+        vbenRoute.component = 'BasicLayout';
+        break;
+      }
+      /**
+       * 不能为layout 会套两层BasicLayout
+       */
+      case 'ParentView': {
+        vbenRoute.component = '';
+        break;
+      }
+      /**
+       * 其他自定义组件 如system/user/index 拼接/
+       */
+      default: {
+        vbenRoute.component = `/${menu.component}`;
+      }
+    }
+  }
+
+  /**
+   * 处理 iframe 路径中的特殊字符
+   * @param vbenRoute
+   */
+  function handleIframePath(vbenRoute: RouteRecordStringComponent) {
+    if (vbenRoute.meta) {
+      vbenRoute.meta.iframeSrc = vbenRoute.meta.link;
+
+      const specialChars = ['#', '?', '&'];
+      specialChars.forEach((char) => {
+        if (vbenRoute.path.includes(char)) {
+          vbenRoute.path = vbenRoute.path.replace(char, '');
+        }
+      });
+    }
   }
 
   return await generateAccessible(preferences.app.accessMode, {
@@ -240,6 +285,7 @@ async function generateAccess(options: GenerateMenuAndRoutesOptions) {
         content: `${$t('common.loadingMenu')}...`,
         duration: 1,
       });
+
       // 后台返回路由/菜单
       const backMenuList = await getAllMenusApi();
       // 转换为vben能用的路由
@@ -247,6 +293,7 @@ async function generateAccess(options: GenerateMenuAndRoutesOptions) {
       // 特别注意 这里要深拷贝
       const menuList = [...cloneDeep(localMenuList), ...vbenMenuList];
       console.log('menuList', menuList);
+
       return menuList;
     },
     // 可以指定没有权限跳转403页面
