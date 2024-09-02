@@ -66,11 +66,8 @@ async function handleAccountLogin(values: LoginForm) {
     console.error(error);
     // 处理验证码错误
     if (error instanceof Error) {
-      const message = error.message;
-      if (message.includes('captcha') || message.includes('验证码')) {
-        // 刷新验证码
-        loginRef.value?.resetCaptcha();
-      }
+      // 刷新验证码
+      loginRef.value?.resetCaptcha();
     }
   }
 }
