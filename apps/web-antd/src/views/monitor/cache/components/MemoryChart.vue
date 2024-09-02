@@ -1,7 +1,7 @@
 <script lang="ts">
 import type { EChartsOption } from 'echarts';
 
-import { defineComponent, onMounted, ref, watch } from 'vue';
+import { defineComponent, onActivated, onMounted, ref, watch } from 'vue';
 
 import {
   EchartsUI,
@@ -21,7 +21,7 @@ export default defineComponent({
     expose({});
 
     const memoryHtmlRef = ref<EchartsUIType>();
-    const { renderEcharts } = useEcharts(memoryHtmlRef);
+    const { renderEcharts, resize } = useEcharts(memoryHtmlRef);
 
     watch(
       () => props.data,
@@ -35,6 +35,8 @@ export default defineComponent({
     onMounted(() => {
       setEchartsOption(props.data);
     });
+    // 从其他页面切换回来会有一个奇怪的动画效果 需要调用resize
+    onActivated(resize);
 
     function getNearestPowerOfTen(num: number) {
       let power = 10;

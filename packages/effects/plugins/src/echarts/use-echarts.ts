@@ -74,12 +74,14 @@ function useEcharts(chartRef: Ref<EchartsUIType>) {
     });
   };
 
-  function resize() {
+  function resize(withAnimation = true) {
     chartInstance?.resize({
-      animation: {
-        duration: 300,
-        easing: 'quadraticIn',
-      },
+      animation: withAnimation
+        ? {
+            duration: 300,
+            easing: 'quadraticIn',
+          }
+        : undefined,
     });
   }
 
