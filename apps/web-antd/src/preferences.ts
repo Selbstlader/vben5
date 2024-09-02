@@ -28,7 +28,7 @@ export const overridesPreferences = defineOverridesPreferences({
      * 标签tab 持久化 关闭
      */
     persist: false,
-    styleType: 'card',
+    // styleType: 'card',
   },
   theme: {},
 });
