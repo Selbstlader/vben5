@@ -21,3 +21,5 @@ export const CommandLineIcon = createIconifyIcon(
 export const MemoryIcon = createIconifyIcon('la:memory');
 
 export const GiteeIcon = createIconifyIcon('simple-icons:gitee');
+// 个人中心
+export const ProfileIcon = createIconifyIcon('mingcute:profile-line');

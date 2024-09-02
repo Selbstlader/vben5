@@ -14,75 +14,10 @@ import { getAllMenusApi, type Menu } from '#/api';
 import { BasicLayout, IFrameView } from '#/layouts';
 import { $t } from '#/locales';
 
+import { localMenuList } from './routes/local';
+
 const forbiddenComponent = () => import('#/views/_core/fallback/forbidden.vue');
 const NotFoundComponent = () => import('#/views/_core/fallback/not-found.vue');
-
-/**
- * 这里放本地路由
- */
-const localMenuList: RouteRecordStringComponent[] = [
-  {
-    component: 'BasicLayout',
-    meta: {
-      order: -1,
-      title: 'page.dashboard.title',
-    },
-    name: 'Dashboard',
-    path: '/',
-    redirect: '/analytics',
-    children: [
-      {
-        name: 'Analytics',
-        path: '/analytics',
-        component: '/dashboard/analytics/index',
-        meta: {
-          affixTab: true,
-          title: 'page.dashboard.analytics',
-        },
-      },
-      {
-        name: 'Workspace',
-        path: '/workspace',
-        component: '/dashboard/workspace/index',
-        meta: {
-          title: 'page.dashboard.workspace',
-        },
-      },
-      {
-        name: 'VbenDocument',
-        path: '/vben-admin/document',
-        component: 'IFrameView',
-        meta: {
-          icon: 'lucide:book-open-text',
-          iframeSrc: 'https://dapdap.top',
-          keepAlive: true,
-          title: $t('page.vben.document'),
-        },
-      },
-    ],
-  },
-  {
-    component: 'BasicLayout',
-    meta: {
-      hideChildrenInMenu: true,
-      icon: 'lucide:copyright',
-      order: 9999,
-      title: $t('page.vben.about'),
-    },
-    name: 'About',
-    path: '/about',
-    children: [
-      {
-        component: '/_core/about/index',
-        meta: {
-          title: $t('page.vben.about'),
-        },
-        name: 'VbenAbout',
-        path: '/vben-admin/about',
-      },
-    ],
-  },
-];
 
 async function generateAccess(options: GenerateMenuAndRoutesOptions) {
   const pageMap: ComponentRecordType = import.meta.glob('../views/**/*.vue');

@@ -1,9 +1,10 @@
 <script lang="ts" setup>
 import { computed, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 
 import { AuthenticationLoginExpiredModal } from '@vben/common-ui';
 import { VBEN_DOC_URL, VBEN_GITHUB_URL } from '@vben/constants';
-import { BookOpenText, CircleHelp, MdiGithub } from '@vben/icons';
+import { BookOpenText, CircleHelp, MdiGithub, ProfileIcon } from '@vben/icons';
 import {
   BasicLayout,
   LockScreen,
@@ -24,6 +25,7 @@ import { useAuthStore, useNotifyStore } from '#/store';
 const userStore = useUserStore();
 const authStore = useAuthStore();
 const accessStore = useAccessStore();
+const router = useRouter();
 
 const menus = computed(() => [
   {
@@ -34,6 +36,13 @@ const menus = computed(() => [
     },
     icon: BookOpenText,
     text: $t('widgets.document'),
+  },
+  {
+    handler: () => {
+      router.push('/profile');
+    },
+    icon: ProfileIcon,
+    text: $t('widgets.profile'),
   },
   {
     handler: () => {
