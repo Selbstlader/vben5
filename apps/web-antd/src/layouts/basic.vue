@@ -21,48 +21,59 @@ import TenantToggle from '#/components/TenantToggle/index.vue';
 import { $t } from '#/locales';
 import { resetRoutes } from '#/router';
 import { useAuthStore, useNotifyStore } from '#/store';
+import { useTenantStore } from '#/store/tenant';
 
 const userStore = useUserStore();
 const authStore = useAuthStore();
 const accessStore = useAccessStore();
 const router = useRouter();
 
-const menus = computed(() => [
-  {
-    handler: () => {
-      openWindow(VBEN_DOC_URL, {
-        target: '_blank',
-      });
+const tenantStore = useTenantStore();
+const menus = computed(() => {
+  const defaultMenus = [
+    {
+      handler: () => {
+        openWindow(VBEN_DOC_URL, {
+          target: '_blank',
+        });
+      },
+      icon: BookOpenText,
+      text: $t('widgets.document'),
     },
-    icon: BookOpenText,
-    text: $t('widgets.document'),
-  },
-  {
-    handler: () => {
-      router.push('/profile');
+    {
+      handler: () => {
+        router.push('/profile');
+      },
+      icon: ProfileIcon,
+      text: $t('widgets.profile'),
     },
-    icon: ProfileIcon,
-    text: $t('widgets.profile'),
-  },
-  {
-    handler: () => {
-      openWindow(VBEN_GITHUB_URL, {
-        target: '_blank',
-      });
+    {
+      handler: () => {
+        openWindow(VBEN_GITHUB_URL, {
+          target: '_blank',
+        });
+      },
+      icon: MdiGithub,
+      text: 'GitHub',
     },
-    icon: MdiGithub,
-    text: 'GitHub',
-  },
-  {
-    handler: () => {
-      openWindow(`${VBEN_GITHUB_URL}/issues`, {
-        target: '_blank',
-      });
+    {
+      handler: () => {
+        openWindow(`${VBEN_GITHUB_URL}/issues`, {
+          target: '_blank',
+        });
+      },
+      icon: CircleHelp,
+      text: $t('widgets.qa'),
     },
-    icon: CircleHelp,
-    text: $t('widgets.qa'),
-  },
-]);
+  ];
+  /**
+   * 租户选中状态 不显示个人中心
+   */
+  if (tenantStore.checked) {
+    defaultMenus.splice(1, 1);
+  }
+  return defaultMenus;
+});
 
 const { loginLoading } = storeToRefs(authStore);
 
