@@ -23,6 +23,7 @@
   ],
   "unwantedRecommendations": [
     // 和 volar 冲突
-    "octref.vetur"
+    "octref.vetur",
+    "antfu.unocss"
   ]
 }
