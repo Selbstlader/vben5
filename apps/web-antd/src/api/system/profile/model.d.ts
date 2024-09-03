@@ -62,3 +62,8 @@ export interface UserProfile {
   roleGroup: string;
   postGroup: string;
 }
+
+export interface UpdatePasswordParam {
+  oldPassword: string;
+  newPassword: string;
+}

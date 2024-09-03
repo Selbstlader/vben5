@@ -1,4 +1,4 @@
-import type { UserProfile } from './model';
+import type { UpdatePasswordParam, UserProfile } from './model';
 
 import { requestClient } from '#/api/request';
 
@@ -30,6 +30,8 @@ export function userProfileUpdate(data: any) {
  * @param data
  * @returns void
  */
-export function userUpdatePassword(data: any) {
-  return requestClient.put<void>(Api.updatePassword, data, { encrypt: true });
+export function userUpdatePassword(data: UpdatePasswordParam) {
+  return requestClient.putWithMsg<void>(Api.updatePassword, data, {
+    encrypt: true,
+  });
 }
