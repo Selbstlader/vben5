@@ -25,6 +25,7 @@ const profileRoute: RouteRecordStringComponent[] = [
         component: '/_core/profile/index',
         meta: {
           icon: 'mingcute:profile-line',
+          keepAlive: true,
           title: $t('widgets.profile'),
         },
         name: 'ProfileIndex',
