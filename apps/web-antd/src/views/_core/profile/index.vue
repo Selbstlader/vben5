@@ -23,7 +23,7 @@ onMounted(loadProfile);
   <Page>
     <div class="flex flex-col gap-[16px] lg:flex-row">
       <!-- 左侧 -->
-      <ProfilePanel :profile="profile" />
+      <ProfilePanel :profile="profile" @upload-finish="loadProfile" />
       <!-- 右侧 -->
       <SettingPanel v-if="profile" :profile="profile" @reload="loadProfile" />
     </div>

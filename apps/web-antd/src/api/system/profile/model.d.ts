@@ -67,3 +67,9 @@ export interface UpdatePasswordParam {
   oldPassword: string;
   newPassword: string;
 }
+
+interface FileCallBack {
+  name: string;
+  file: Blob;
+  filename: string;
+}

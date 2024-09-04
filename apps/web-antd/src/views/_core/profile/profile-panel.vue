@@ -1,22 +1,42 @@
 <script setup lang="ts">
 import type { UserProfile } from '#/api/system/profile/model';
 
+import { computed } from 'vue';
+
 import {
-  Avatar,
   Card,
   Descriptions,
   DescriptionsItem,
   Tag,
+  Tooltip,
 } from 'ant-design-vue';
 
-defineProps<{ profile?: UserProfile }>();
+import { userUpdateAvatar } from '#/api/system/profile';
+import { CropperAvatar } from '#/components/cropper';
+
+const props = defineProps<{ profile?: UserProfile }>();
+
+defineEmits<{
+  // 头像上传完毕
+  uploadFinish: [];
+}>();
+
+const avatar = computed(() => props.profile?.user.avatar ?? '');
 </script>
 
 <template>
   <Card :loading="!profile" class="h-full lg:w-1/3">
     <div v-if="profile" class="flex flex-col items-center gap-[24px]">
       <div class="flex flex-col items-center gap-[20px]">
-        <Avatar :size="96" :src="profile.user.avatar" />
+        <Tooltip title="点击上传头像">
+          <CropperAvatar
+            :show-btn="false"
+            :upload-api="userUpdateAvatar"
+            :value="avatar"
+            width="120"
+            @change="$emit('uploadFinish')"
+          />
+        </Tooltip>
         <div class="flex flex-col items-center gap-[8px]">
           <span class="text-foreground text-xl font-bold">
             {{ profile.user.nickName ?? '未知' }}
