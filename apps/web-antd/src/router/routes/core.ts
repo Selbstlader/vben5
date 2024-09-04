@@ -30,6 +30,14 @@ const coreRoutes: RouteRecordRaw[] = [
     redirect: DEFAULT_HOME_PATH,
   },
   {
+    component: () => import('#/views/_core/social-callback/index.vue'),
+    meta: {
+      title: $t('page.core.oauthLogin'),
+    },
+    name: 'OAuthRedirect',
+    path: '/social-callback',
+  },
+  {
     component: AuthPageLayout,
     meta: {
       title: 'Authentication',

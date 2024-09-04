@@ -3,12 +3,13 @@ import { onMounted, ref } from 'vue';
 
 import { AuthenticationLogin } from '@vben/common-ui';
 
-import { message } from 'ant-design-vue';
 import { omit } from 'lodash-es';
 
 import { tenantList, type TenantResp } from '#/api';
 import { captchaImage, type CaptchaResponse } from '#/api/core/captcha';
 import { useAuthStore } from '#/store';
+
+import OauthLogin from './oauth-login.vue';
 
 defineOptions({ name: 'Login' });
 
@@ -71,18 +72,6 @@ async function handleAccountLogin(values: LoginForm) {
     }
   }
 }
-
-function handleOauthLogin(provider: string) {
-  switch (provider) {
-    case 'gitee': {
-      message.success('todo gitee login');
-      break;
-    }
-    default: {
-      message.warn('暂不支持该登录方式');
-    }
-  }
-}
 </script>
 
 <template>
@@ -97,7 +86,10 @@ function handleOauthLogin(provider: string) {
     password-placeholder="密码"
     username-placeholder="用户名"
     @captcha-click="loadCaptcha"
-    @oauth-login="handleOauthLogin"
     @submit="handleAccountLogin"
-  />
+  >
+    <template #third-party-login>
+      <OauthLogin />
+    </template>
+  </AuthenticationLogin>
 </template>
