@@ -39,7 +39,21 @@ let scaleY = 1;
 const prefixCls = 'cropper-am';
 const [BasicModal, modalApi] = useVbenModal({
   onConfirm: handleOk,
+  onOpenChange(isOpen) {
+    // 打开的时候loading CropperImage组件加载完毕关闭loading
+    if (isOpen) {
+      modalLoading(true);
+    } else {
+      // 关闭时候清空右侧预览
+      previewSource.value = '';
+      modalLoading(false);
+    }
+  },
 });
+
+function modalLoading(loading: boolean) {
+  modalApi.setState({ confirmLoading: loading, loading });
+}
 
 // Block upload
 function handleBeforeUpload(file: File) {
@@ -64,6 +78,8 @@ function handleCropend({ imgBase64 }: CropendResult) {
 
 function handleReady(cropperInstance: Cropper) {
   cropper.value = cropperInstance;
+  // 画布加载完毕 关闭loading
+  modalLoading(false);
 }
 
 function handlerToolbar(event: string, arg?: number) {
@@ -85,12 +101,12 @@ async function handleOk() {
     }
     const blob = dataURLtoBlob(previewSource.value);
     try {
-      modalApi.setState({ confirmLoading: true, loading: true });
+      modalLoading(true);
       const result = await uploadApi({ file: blob, filename, name: 'file' });
       emit('uploadSuccess', { data: result.url, source: previewSource.value });
       modalApi.close();
     } finally {
-      modalApi.setState({ confirmLoading: false, loading: false });
+      modalLoading(false);
     }
   }
 }
