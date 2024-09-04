@@ -1,3 +1,21 @@
+开发中: 目前状态等待官方table Form组件
+
+贡献规范:
+
+文件夹/组件采用短横线命名法: 比如 `a-table.vue test-form.vue`
+
+组件导入采用手动导入&大写(button/input等常用除外 可正常使用a-button/a-input) 与html标签区分开:
+
+```vue
+<template>
+  <Table />
+</template>
+
+<script setup lang="ts">
+import { Table } from 'ant-design-vue';
+</script>
+```
+
 <div align="center"> <a href="https://github.com/anncwb/vue-vben-admin"> <img alt="VbenAdmin Logo" width="215" src="https://unpkg.com/@vbenjs/static-source@0.1.6/source/logo-v1.webp"> </a> <br> <br>
 
 [![license](https://img.shields.io/github/license/anncwb/vue-vben-admin.svg)](LICENSE)
