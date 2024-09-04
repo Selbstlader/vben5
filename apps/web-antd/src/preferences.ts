@@ -30,5 +30,10 @@ export const overridesPreferences = defineOverridesPreferences({
     persist: false,
     // styleType: 'card',
   },
-  theme: {},
+  theme: {
+    /**
+     * 浅色sidebar
+     */
+    semiDarkSidebar: false,
+  },
 });
