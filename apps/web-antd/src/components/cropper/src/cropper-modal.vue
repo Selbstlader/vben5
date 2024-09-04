@@ -6,7 +6,7 @@ import { type PropType, ref } from 'vue';
 import { useVbenModal } from '@vben/common-ui';
 import { $t as t } from '@vben/locales';
 
-import { Avatar, Space, Tooltip, Upload } from 'ant-design-vue';
+import { Avatar, message, Space, Tooltip, Upload } from 'ant-design-vue';
 import { isFunction } from 'lodash-es';
 
 import { dataURLtoBlob } from '#/utils/file/base64Conver';
@@ -79,14 +79,18 @@ function handlerToolbar(event: string, arg?: number) {
 async function handleOk() {
   const uploadApi = props.uploadApi;
   if (uploadApi && isFunction(uploadApi)) {
+    if (!previewSource.value) {
+      message.warn('未选择图片');
+      return;
+    }
     const blob = dataURLtoBlob(previewSource.value);
     try {
-      modalApi.setState({ loading: true });
+      modalApi.setState({ confirmLoading: true, loading: true });
       const result = await uploadApi({ file: blob, filename, name: 'file' });
       emit('uploadSuccess', { data: result.url, source: previewSource.value });
       modalApi.close();
     } finally {
-      modalApi.setState({ loading: false });
+      modalApi.setState({ confirmLoading: false, loading: false });
     }
   }
 }
