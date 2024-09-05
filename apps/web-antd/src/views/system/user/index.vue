@@ -13,7 +13,7 @@ import {
   Space,
 } from 'ant-design-vue';
 
-import { DictTag } from '#/components/Dict';
+import { DictTag } from '#/components/dict';
 import { getDict, getDictOptions } from '#/utils/dict';
 
 import DrawerDemo from './drawer.vue';

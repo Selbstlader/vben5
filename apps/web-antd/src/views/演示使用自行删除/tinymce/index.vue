@@ -3,7 +3,7 @@ import { ref } from 'vue';
 
 import { Page } from '@vben/common-ui';
 
-import { Tinymce } from '#/components/Tinymce';
+import { Tinymce } from '#/components/tinymce';
 
 const readonly = ref(false);
 const content = ref('');

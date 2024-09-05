@@ -131,7 +131,7 @@ importers:
     dependencies:
       '@tinymce/tinymce-vue':
         specifier: ^6.0.1
-        version: 6.0.1(vue@3.4.38(typescript@5.5.4))
+        version: 6.0.1(vue@3.5.0(typescript@5.5.4))
       '@vben/access':
         specifier: workspace:*
         version: link:../../packages/effects/access
@@ -179,17 +179,13 @@ importers:
         version: 11.0.3(vue@3.5.0(typescript@5.5.4))
       ant-design-vue:
         specifier: ^4.2.3
-<<<<<<< HEAD
-        version: 4.2.3(vue@3.4.38(typescript@5.5.4))
+        version: 4.2.3(vue@3.5.0(typescript@5.5.4))
       cropperjs:
         specifier: ^1.6.2
         version: 1.6.2
       crypto-js:
         specifier: ^4.2.0
         version: 4.2.0
-=======
-        version: 4.2.3(vue@3.5.0(typescript@5.5.4))
->>>>>>> 41612f7723ae46e58e1fc14a46255d4b763e06da
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
@@ -204,21 +200,16 @@ importers:
         version: 4.17.21
       pinia:
         specifier: 2.2.2
-<<<<<<< HEAD
-        version: 2.2.2(typescript@5.5.4)(vue@3.4.38(typescript@5.5.4))
+        version: 2.2.2(typescript@5.5.4)(vue@3.5.0(typescript@5.5.4))
       tinymce:
         specifier: ^7.3.0
         version: 7.3.0
-=======
-        version: 2.2.2(typescript@5.5.4)(vue@3.5.0(typescript@5.5.4))
->>>>>>> 41612f7723ae46e58e1fc14a46255d4b763e06da
       vue:
         specifier: 3.5.0
         version: 3.5.0(typescript@5.5.4)
       vue-router:
         specifier: ^4.4.3
-<<<<<<< HEAD
-        version: 4.4.3(vue@3.4.38(typescript@5.5.4))
+        version: 4.4.3(vue@3.5.0(typescript@5.5.4))
     devDependencies:
       '@types/crypto-js':
         specifier: ^4.2.2
@@ -228,10 +219,7 @@ importers:
         version: 4.17.12
       unplugin-vue-components:
         specifier: ^0.27.3
-        version: 0.27.4(@babel/parser@7.25.6)(rollup@4.21.2)(vue@3.4.38(typescript@5.5.4))
-=======
-        version: 4.4.3(vue@3.5.0(typescript@5.5.4))
->>>>>>> 41612f7723ae46e58e1fc14a46255d4b763e06da
+        version: 0.27.4(@babel/parser@7.25.6)(rollup@4.21.2)(vue@3.5.0(typescript@5.5.4))
 
   apps/web-ele:
     dependencies:
@@ -4034,7 +4022,7 @@ packages:
   '@tanstack/vue-virtual@3.10.1':
     resolution: {integrity: sha512-K4WFHK0RpQpJvV6osI8qDrFJjMbsfWFptbyxOXJu5yEpEMP7C14e5hFgMINlKc3yK1BvFrtKedc0qM4UV+oOkg==}
     peerDependencies:
-      vue: 3.4.38
+      vue: 3.5.0
 
   '@tinymce/tinymce-vue@6.0.1':
     resolution: {integrity: sha512-VzjI8AKlNrrsosIk3WuBez6kubqPsPMeaButkRLuts77uo4e2EwPRFX+VyB6fHbMGHwUPK22zNjOUGMvJFZFCw==}
@@ -4348,30 +4336,12 @@ packages:
   '@vitest/utils@2.0.5':
     resolution: {integrity: sha512-d8HKbqIcya+GR67mkZbrzhS5kKhtp8dQLcmRZLGTscGVg7yImT82cIrhtn2L8+VujWcy6KZweApgNmPsTAO/UQ==}
 
-<<<<<<< HEAD
-  '@volar/language-core@2.4.0':
-    resolution: {integrity: sha512-FTla+khE+sYK0qJP+6hwPAAUwiNHVMph4RUXpxf/FIPKUP61NFrVZorml4mjFShnueR2y9/j8/vnh09YwVdH7A==}
-
-  '@volar/language-core@2.4.1':
-    resolution: {integrity: sha512-9AKhC7Qn2mQYxj7Dz3bVxeOk7gGJladhWixUYKef/o0o7Bm4an+A3XvmcTHVqZ8stE6lBVH++g050tBtJ4TZPQ==}
-
-  '@volar/source-map@2.4.0':
-    resolution: {integrity: sha512-2ceY8/NEZvN6F44TXw2qRP6AQsvCYhV2bxaBPWxV9HqIfkbRydSksTFObCF1DBDNBfKiZTS8G/4vqV6cvjdOIQ==}
-
-  '@volar/source-map@2.4.1':
-    resolution: {integrity: sha512-Xq6ep3OZg9xUqN90jEgB9ztX5SsTz1yiV8wiQbcYNjWkek+Ie3dc8l7AVt3EhDm9mSIR58oWczHkzM2H6HIsmQ==}
-
-  '@volar/typescript@2.4.0':
-    resolution: {integrity: sha512-9zx3lQWgHmVd+JRRAHUSRiEhe4TlzL7U7e6ulWXOxHH/WNYxzKwCvZD7WYWEZFdw4dHfTD9vUR0yPQO6GilCaQ==}
-
-=======
   '@volar/language-core@2.4.1':
     resolution: {integrity: sha512-9AKhC7Qn2mQYxj7Dz3bVxeOk7gGJladhWixUYKef/o0o7Bm4an+A3XvmcTHVqZ8stE6lBVH++g050tBtJ4TZPQ==}
 
   '@volar/source-map@2.4.1':
     resolution: {integrity: sha512-Xq6ep3OZg9xUqN90jEgB9ztX5SsTz1yiV8wiQbcYNjWkek+Ie3dc8l7AVt3EhDm9mSIR58oWczHkzM2H6HIsmQ==}
 
->>>>>>> 41612f7723ae46e58e1fc14a46255d4b763e06da
   '@volar/typescript@2.4.1':
     resolution: {integrity: sha512-UoRzC0PXcwajFQTu8XxKSYNsWNBtVja6Y9gC8eLv7kYm+UEKJCcZ8g7dialsOYA0HKs3Vpg57MeCsawFLC6m9Q==}
 
@@ -9505,7 +9475,7 @@ packages:
     peerDependencies:
       '@babel/parser': ^7.15.8
       '@nuxt/kit': ^3.2.2
-      vue: 3.4.38
+      vue: 3.5.0
     peerDependenciesMeta:
       '@babel/parser':
         optional: true
@@ -13034,22 +13004,15 @@ snapshots:
       vue: 3.5.0(typescript@5.5.4)
       vue-demi: 0.14.10(vue@3.5.0(typescript@5.5.4))
 
-<<<<<<< HEAD
-  '@tanstack/vue-virtual@3.10.1(vue@3.4.38(typescript@5.5.4))':
+  '@tanstack/vue-virtual@3.10.1(vue@3.5.0(typescript@5.5.4))':
     dependencies:
       '@tanstack/virtual-core': 3.10.1
-      vue: 3.4.38(typescript@5.5.4)
+      vue: 3.5.0(typescript@5.5.4)
 
-  '@tinymce/tinymce-vue@6.0.1(vue@3.4.38(typescript@5.5.4))':
+  '@tinymce/tinymce-vue@6.0.1(vue@3.5.0(typescript@5.5.4))':
     dependencies:
       tinymce: 7.3.0
-      vue: 3.4.38(typescript@5.5.4)
-=======
-  '@tanstack/vue-virtual@3.9.0(vue@3.5.0(typescript@5.5.4))':
-    dependencies:
-      '@tanstack/virtual-core': 3.9.0
       vue: 3.5.0(typescript@5.5.4)
->>>>>>> 41612f7723ae46e58e1fc14a46255d4b763e06da
 
   '@tootallnate/once@1.1.2': {}
 
@@ -13090,11 +13053,7 @@ snapshots:
   '@types/fs-extra@11.0.4':
     dependencies:
       '@types/jsonfile': 6.1.4
-<<<<<<< HEAD
-      '@types/node': 22.5.1
-=======
       '@types/node': 22.5.3
->>>>>>> 41612f7723ae46e58e1fc14a46255d4b763e06da
 
   '@types/hast@3.0.4':
     dependencies:
@@ -13426,32 +13385,12 @@ snapshots:
       loupe: 3.1.1
       tinyrainbow: 1.2.0
 
-<<<<<<< HEAD
-  '@volar/language-core@2.4.0':
-    dependencies:
-      '@volar/source-map': 2.4.0
-
-=======
->>>>>>> 41612f7723ae46e58e1fc14a46255d4b763e06da
   '@volar/language-core@2.4.1':
     dependencies:
       '@volar/source-map': 2.4.1
 
-<<<<<<< HEAD
-  '@volar/source-map@2.4.0': {}
-
   '@volar/source-map@2.4.1': {}
 
-  '@volar/typescript@2.4.0':
-    dependencies:
-      '@volar/language-core': 2.4.0
-      path-browserify: 1.0.1
-      vscode-uri: 3.0.8
-
-=======
-  '@volar/source-map@2.4.1': {}
-
->>>>>>> 41612f7723ae46e58e1fc14a46255d4b763e06da
   '@volar/typescript@2.4.1':
     dependencies:
       '@volar/language-core': 2.4.1
@@ -13596,13 +13535,8 @@ snapshots:
 
   '@vue/language-core@2.0.29(typescript@5.5.4)':
     dependencies:
-<<<<<<< HEAD
-      '@volar/language-core': 2.4.0
-      '@vue/compiler-dom': 3.4.38
-=======
       '@volar/language-core': 2.4.1
       '@vue/compiler-dom': 3.5.0
->>>>>>> 41612f7723ae46e58e1fc14a46255d4b763e06da
       '@vue/compiler-vue2': 2.7.16
       '@vue/shared': 3.5.1
       computeds: 0.0.1
@@ -17987,15 +17921,9 @@ snapshots:
       '@floating-ui/vue': 1.1.4(vue@3.5.0(typescript@5.5.4))
       '@internationalized/date': 3.5.5
       '@internationalized/number': 3.5.3
-<<<<<<< HEAD
-      '@tanstack/vue-virtual': 3.10.1(vue@3.4.38(typescript@5.5.4))
-      '@vueuse/core': 10.11.1(vue@3.4.38(typescript@5.5.4))
-      '@vueuse/shared': 10.11.1(vue@3.4.38(typescript@5.5.4))
-=======
-      '@tanstack/vue-virtual': 3.9.0(vue@3.5.0(typescript@5.5.4))
+      '@tanstack/vue-virtual': 3.10.1(vue@3.5.0(typescript@5.5.4))
       '@vueuse/core': 10.11.1(vue@3.5.0(typescript@5.5.4))
       '@vueuse/shared': 10.11.1(vue@3.5.0(typescript@5.5.4))
->>>>>>> 41612f7723ae46e58e1fc14a46255d4b763e06da
       aria-hidden: 1.2.4
       defu: 6.1.4
       fast-deep-equal: 3.1.3
@@ -19225,7 +19153,7 @@ snapshots:
     transitivePeerDependencies:
       - rollup
 
-  unplugin-vue-components@0.27.4(@babel/parser@7.25.6)(rollup@4.21.2)(vue@3.4.38(typescript@5.5.4)):
+  unplugin-vue-components@0.27.4(@babel/parser@7.25.6)(rollup@4.21.2)(vue@3.5.0(typescript@5.5.4)):
     dependencies:
       '@antfu/utils': 0.7.10
       '@rollup/pluginutils': 5.1.0(rollup@4.21.2)
@@ -19237,7 +19165,7 @@ snapshots:
       minimatch: 9.0.5
       mlly: 1.7.1
       unplugin: 1.12.2
-      vue: 3.4.38(typescript@5.5.4)
+      vue: 3.5.0(typescript@5.5.4)
     optionalDependencies:
       '@babel/parser': 7.25.6
     transitivePeerDependencies:
@@ -19378,11 +19306,7 @@ snapshots:
     dependencies:
       '@microsoft/api-extractor': 7.47.4(@types/node@22.5.3)
       '@rollup/pluginutils': 5.1.0(rollup@4.21.2)
-<<<<<<< HEAD
-      '@volar/typescript': 2.4.0
-=======
       '@volar/typescript': 2.4.1
->>>>>>> 41612f7723ae46e58e1fc14a46255d4b763e06da
       '@vue/language-core': 2.0.29(typescript@5.5.4)
       compare-versions: 6.1.1
       debug: 4.3.6

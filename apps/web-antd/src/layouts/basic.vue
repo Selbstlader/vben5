@@ -17,7 +17,7 @@ import { openWindow } from '@vben/utils';
 
 import { message } from 'ant-design-vue';
 
-import TenantToggle from '#/components/TenantToggle/index.vue';
+import { TenantToggle } from '#/components/tenant-toggle';
 import { $t } from '#/locales';
 import { resetRoutes } from '#/router';
 import { useAuthStore, useNotifyStore } from '#/store';
