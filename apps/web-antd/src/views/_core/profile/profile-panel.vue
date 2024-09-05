@@ -41,7 +41,8 @@ const avatar = computed(() => props.profile?.user.avatar ?? '');
           <span class="text-foreground text-xl font-bold">
             {{ profile.user.nickName ?? '未知' }}
           </span>
-          <span> 海纳百川，有容乃大 </span>
+          <!-- http://gushi.ci/ -->
+          <img src="https://v1.jinrishici.com/all.svg?font-size=14" />
         </div>
       </div>
       <div class="px-[24px]">
