@@ -7,8 +7,6 @@ import { Tag } from 'ant-design-vue';
 
 import { tagTypes } from './data';
 
-defineOptions({ name: 'DictTag' });
-
 const props = withDefaults(
   defineProps<{
     dicts: DictData[]; // dict数组

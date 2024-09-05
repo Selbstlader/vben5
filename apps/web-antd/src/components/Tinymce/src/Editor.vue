@@ -31,8 +31,7 @@ import {
   toolbar as defaultToolbar,
 } from './tinymce';
 
-// eslint-disable-next-line vue/order-in-components
-defineOptions({ inheritAttrs: false, name: 'Tinymce' });
+defineOptions({ inheritAttrs: false });
 
 const props = defineProps({
   height: {
