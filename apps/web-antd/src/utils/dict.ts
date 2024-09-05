@@ -15,10 +15,8 @@ export function getDict(dictName: string): DictData[] {
   const { getDict, setDictInfo } = useDictStore();
   // 这里拿到
   const dictList = getDict(dictName);
-  if (
-    dictList.length === 0 && // 检查请求状态缓存
-    !dictRequestCache.has(dictName)
-  ) {
+  // 检查请求状态缓存
+  if (dictList.length === 0 && !dictRequestCache.has(dictName)) {
     dictRequestCache.set(
       dictName,
       dictDataInfo(dictName).then((resp) => {
@@ -36,10 +34,8 @@ export function getDict(dictName: string): DictData[] {
 export function getDictOptions(dictName: string): Option[] {
   const { getDictOptions, setDictInfo } = useDictStore();
   const dictOptionList = getDictOptions(dictName);
-  if (
-    dictOptionList.length === 0 && // 检查请求状态缓存
-    !dictRequestCache.has(dictName)
-  ) {
+  // 检查请求状态缓存
+  if (dictOptionList.length === 0 && !dictRequestCache.has(dictName)) {
     dictRequestCache.set(
       dictName,
       dictDataInfo(dictName).then((resp) => {
