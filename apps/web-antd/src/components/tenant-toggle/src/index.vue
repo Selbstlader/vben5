@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { SelectHandler } from 'ant-design-vue/es/vc-select/Select';
+
 import type { TenantOption } from '#/api';
 
 import { computed, onMounted, ref, unref } from 'vue';
@@ -51,19 +53,22 @@ function close(checked: boolean) {
 
 const dictStore = useDictStore();
 /**
- * 为什么要用any ide报错😅 实际类型为string
+ * 选中租户的处理
+ * @param tenantId tenantId
+ * @param option 当前option
  */
-async function onSelected(tenantId: any, option: any) {
+const onSelected: SelectHandler = async (tenantId: string, option: any) => {
   if (unref(lastSelected) === tenantId) {
     // createMessage.info('选择一致');
     return;
   }
   await tenantDynamicToggle(tenantId);
   lastSelected.value = tenantId;
-  dictStore.resetCache();
   message.success(`切换当前租户为: ${option.companyName}`);
   close(true);
-}
+  // 需要放在宏队列处理 直接清空页面由于没有字典会有样式问题(标签变成unknown)
+  setTimeout(() => dictStore.resetCache());
+};
 
 async function onDeselect() {
   await tenantDynamicClear();
@@ -71,6 +76,8 @@ async function onDeselect() {
   message.success('还原为默认租户');
   lastSelected.value = '';
   close(false);
+  // 需要放在宏队列处理 直接清空页面由于没有字典会有样式问题(标签变成unknown)
+  setTimeout(() => dictStore.resetCache());
 }
 
 /**
