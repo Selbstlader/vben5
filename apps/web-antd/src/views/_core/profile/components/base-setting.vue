@@ -50,7 +50,7 @@ async function handleSubmit() {
 </script>
 
 <template>
-  <div class="mt-[16px] md:w-full lg:w-1/2 xl:w-1/3">
+  <div class="mt-[16px] md:w-full lg:w-1/2 2xl:w-2/5">
     <Form :label-col="{ span: 4 }" :model="form" @finish="handleSubmit">
       <FormItem
         :rules="[{ required: true, message: '请输入昵称' }]"
