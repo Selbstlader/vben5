@@ -180,12 +180,15 @@ importers:
       ant-design-vue:
         specifier: ^4.2.3
         version: 4.2.3(vue@3.5.2(typescript@5.5.4))
+<<<<<<< HEAD
       cropperjs:
         specifier: ^1.6.2
         version: 1.6.2
       crypto-js:
         specifier: ^4.2.0
         version: 4.2.0
+=======
+>>>>>>> 1cff0b9753d1424ee8da1703b2b9caae366cb29b
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
@@ -201,15 +204,19 @@ importers:
       pinia:
         specifier: 2.2.2
         version: 2.2.2(typescript@5.5.4)(vue@3.5.2(typescript@5.5.4))
+<<<<<<< HEAD
       tinymce:
         specifier: ^7.3.0
         version: 7.3.0
+=======
+>>>>>>> 1cff0b9753d1424ee8da1703b2b9caae366cb29b
       vue:
         specifier: 3.5.2
         version: 3.5.2(typescript@5.5.4)
       vue-router:
         specifier: ^4.4.3
         version: 4.4.3(vue@3.5.2(typescript@5.5.4))
+<<<<<<< HEAD
     devDependencies:
       '@types/crypto-js':
         specifier: ^4.2.2
@@ -220,6 +227,8 @@ importers:
       unplugin-vue-components:
         specifier: ^0.27.3
         version: 0.27.4(@babel/parser@7.25.6)(rollup@4.21.2)(vue@3.5.2(typescript@5.5.4))
+=======
+>>>>>>> 1cff0b9753d1424ee8da1703b2b9caae366cb29b
 
   apps/web-ele:
     dependencies:
@@ -4026,11 +4035,14 @@ packages:
     resolution: {integrity: sha512-K4WFHK0RpQpJvV6osI8qDrFJjMbsfWFptbyxOXJu5yEpEMP7C14e5hFgMINlKc3yK1BvFrtKedc0qM4UV+oOkg==}
     peerDependencies:
       vue: 3.5.2
+<<<<<<< HEAD
 
   '@tinymce/tinymce-vue@6.0.1':
     resolution: {integrity: sha512-VzjI8AKlNrrsosIk3WuBez6kubqPsPMeaButkRLuts77uo4e2EwPRFX+VyB6fHbMGHwUPK22zNjOUGMvJFZFCw==}
     peerDependencies:
       vue: 3.5.2
+=======
+>>>>>>> 1cff0b9753d1424ee8da1703b2b9caae366cb29b
 
   '@tootallnate/once@1.1.2':
     resolution: {integrity: sha512-RbzJvlNzmRq5c3O09UipeuXno4tA1FE6ikOjxZK0tuxVv3412l64l5t1W5pj4+rJq9vpkm/kwiR07aZXnsKPxw==}
@@ -12983,6 +12995,7 @@ snapshots:
       vue: 3.5.2(typescript@5.5.4)
       vue-demi: 0.14.10(vue@3.5.2(typescript@5.5.4))
 
+<<<<<<< HEAD
   '@tanstack/vue-virtual@3.10.1(vue@3.5.2(typescript@5.5.4))':
     dependencies:
       '@tanstack/virtual-core': 3.10.1
@@ -12991,6 +13004,11 @@ snapshots:
   '@tinymce/tinymce-vue@6.0.1(vue@3.5.2(typescript@5.5.4))':
     dependencies:
       tinymce: 7.3.0
+=======
+  '@tanstack/vue-virtual@3.9.0(vue@3.5.2(typescript@5.5.4))':
+    dependencies:
+      '@tanstack/virtual-core': 3.9.0
+>>>>>>> 1cff0b9753d1424ee8da1703b2b9caae366cb29b
       vue: 3.5.2(typescript@5.5.4)
 
   '@tootallnate/once@1.1.2': {}
@@ -13012,8 +13030,11 @@ snapshots:
   '@types/conventional-commits-parser@5.0.0':
     dependencies:
       '@types/node': 22.5.4
+<<<<<<< HEAD
 
   '@types/crypto-js@4.2.2': {}
+=======
+>>>>>>> 1cff0b9753d1424ee8da1703b2b9caae366cb29b
 
   '@types/eslint@8.56.11':
     dependencies:
@@ -17868,7 +17889,11 @@ snapshots:
       '@floating-ui/vue': 1.1.4(vue@3.5.2(typescript@5.5.4))
       '@internationalized/date': 3.5.5
       '@internationalized/number': 3.5.3
+<<<<<<< HEAD
       '@tanstack/vue-virtual': 3.10.1(vue@3.5.2(typescript@5.5.4))
+=======
+      '@tanstack/vue-virtual': 3.9.0(vue@3.5.2(typescript@5.5.4))
+>>>>>>> 1cff0b9753d1424ee8da1703b2b9caae366cb29b
       '@vueuse/core': 10.11.1(vue@3.5.2(typescript@5.5.4))
       '@vueuse/shared': 10.11.1(vue@3.5.2(typescript@5.5.4))
       aria-hidden: 1.2.4
