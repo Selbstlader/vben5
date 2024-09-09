@@ -3,6 +3,8 @@ import type { UserProfile } from '#/api/system/profile/model';
 
 import { computed } from 'vue';
 
+import { usePreferences } from '@vben/preferences';
+
 import {
   Card,
   Descriptions,
@@ -26,6 +28,12 @@ const avatar = computed(
     props.profile?.user.avatar ??
     'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
 );
+
+const { isDark } = usePreferences();
+const poetrySrc = computed(() => {
+  const color = isDark.value ? 'white' : 'gray';
+  return `https://v2.jinrishici.com/one.svg?font-size=12&color=${color}`;
+});
 </script>
 
 <template>
@@ -45,8 +53,8 @@ const avatar = computed(
           <span class="text-foreground text-xl font-bold">
             {{ profile.user.nickName ?? '未知' }}
           </span>
-          <!-- http://gushi.ci/ -->
-          <img src="https://v1.jinrishici.com/all.svg?font-size=14" />
+          <!-- https://www.jinrishici.com/doc/#image -->
+          <img :src="poetrySrc" />
         </div>
       </div>
       <div class="px-[24px]">
