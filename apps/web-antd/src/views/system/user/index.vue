@@ -21,7 +21,7 @@ import ModalDemo from './modal.vue';
 import TableTest from './table';
 
 const count = ref(0);
-let intervalId: number = 0;
+let intervalId: null | ReturnType<typeof setInterval> = null;
 
 onMounted(() => {
   intervalId = setInterval(() => {
