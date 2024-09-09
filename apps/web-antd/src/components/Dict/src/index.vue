@@ -1,28 +1,20 @@
 <script setup lang="ts">
 import type { DictData } from '#/api/system/dict/dict-data-model';
 
-import { computed, watch } from 'vue';
+import { computed } from 'vue';
 
 import { Tag } from 'ant-design-vue';
 
 import { tagTypes } from './data';
 
-const props = withDefaults(
-  defineProps<{
-    dicts: DictData[]; // dict数组
-    value: number | string; // value
-  }>(),
-  {
-    dicts: undefined,
-  },
-);
+interface Props {
+  dicts: DictData[]; // dict数组
+  value: number | string; // value
+}
 
-watch(
-  () => props.dicts,
-  (value) => {
-    console.log('dicts change', value);
-  },
-);
+const props = withDefaults(defineProps<Props>(), {
+  dicts: undefined,
+});
 
 const color = computed<string>(() => {
   // eslint-disable-next-line eqeqeq
