@@ -7,6 +7,17 @@ export default defineConfig(async () => {
   return {
     application: {},
     vite: {
+      optimizeDeps: {
+        include: [
+          'echarts/core',
+          'echarts/charts',
+          'echarts/components',
+          'echarts/renderers',
+          '@iconify/iconify',
+          'ant-design-vue/es/locale/zh_CN',
+          'ant-design-vue/es/locale/en_US',
+        ],
+      },
       plugins: [
         Components({
           dirs: [], // 默认会导入src/components目录下所有组件 不需要
@@ -27,6 +38,9 @@ export default defineConfig(async () => {
             target: 'http://localhost:8080',
             ws: true,
           },
+        },
+        warmup: {
+          clientFiles: ['./index.html', './src/{views,components}/*'],
         },
       },
     },
