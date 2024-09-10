@@ -25,6 +25,10 @@
       "placeholder": "Please select a tenant",
       "switch": "Switch to tenant: ",
       "reset": "Reset to default tenant"
+    },
+    "notice": {
+      "title": "Notice",
+      "received": "You have received a new message"
     }
   },
   "pages": {

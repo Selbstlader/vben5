@@ -3,6 +3,7 @@ import type { NotificationItem } from '@vben/layouts';
 import { computed, ref, watch } from 'vue';
 
 import { useAppConfig } from '@vben/hooks';
+import { $t } from '@vben/locales';
 import { useAccessStore, useUserStore } from '@vben/stores';
 
 import { useEventSource } from '@vueuse/core';
@@ -48,7 +49,7 @@ export const useNotifyStore = defineStore(
         autoReconnect: {
           delay: 1000,
           onFailed() {
-            console.log('sse重连失败.');
+            console.error('sse重连失败.');
           },
           retries: 3,
         },
@@ -61,7 +62,7 @@ export const useNotifyStore = defineStore(
         notification.success({
           description: message,
           duration: 3,
-          message: '收到新消息',
+          message: $t('component.notice.received'),
         });
 
         notificationList.value.unshift({
@@ -70,7 +71,7 @@ export const useNotifyStore = defineStore(
           date: dayjs().format('YYYY-MM-DD HH:mm:ss'),
           isRead: false,
           message,
-          title: '消息',
+          title: $t('component.notice.title'),
           userId: userId.value,
         });
 
