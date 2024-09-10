@@ -103,7 +103,7 @@
     "username": "账号",
     "password": "密码",
     "captcha": "验证码",
-    "usernameTip": "请输入用户名",
+    "usernameTip": "请输入账号",
     "passwordTip": "请输入密码",
     "captchaTip": "请输入验证码",
     "rememberMe": "记住账号",

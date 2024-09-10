@@ -83,8 +83,6 @@ async function handleAccountLogin(values: LoginForm) {
     :tenant-options="tenantInfo.voList"
     :use-captcha="captchaInfo.captchaEnabled"
     :use-tenant="tenantInfo.tenantEnabled"
-    password-placeholder="密码"
-    username-placeholder="用户名"
     @captcha-click="loadCaptcha"
     @submit="handleAccountLogin"
   >
