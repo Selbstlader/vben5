@@ -9,6 +9,7 @@ import { useRouter } from 'vue-router';
 import { useAccess } from '@vben/access';
 import { DEFAULT_HOME_PATH } from '@vben/constants';
 import { useTabs } from '@vben/hooks';
+import { $t } from '@vben/locales';
 
 import { message, Select } from 'ant-design-vue';
 import { storeToRefs } from 'pinia';
@@ -64,7 +65,9 @@ const onSelected: SelectHandler = async (tenantId: string, option: any) => {
   }
   await tenantDynamicToggle(tenantId);
   lastSelected.value = tenantId;
-  message.success(`切换当前租户为: ${option.companyName}`);
+  message.success(
+    `${$t('component.tenantToggle.switch')} ${option.companyName}`,
+  );
   close(true);
   // 需要放在宏队列处理 直接清空页面由于没有字典会有样式问题(标签变成unknown)
   setTimeout(() => dictStore.resetCache());
@@ -73,7 +76,7 @@ const onSelected: SelectHandler = async (tenantId: string, option: any) => {
 async function onDeselect() {
   await tenantDynamicClear();
   dictStore.resetCache();
-  message.success('还原为默认租户');
+  message.success($t('component.tenantToggle.reset'));
   lastSelected.value = '';
   close(false);
   // 需要放在宏队列处理 直接清空页面由于没有字典会有样式问题(标签变成unknown)
@@ -97,9 +100,9 @@ function filterOption(input: string, option: TenantOption) {
       :field-names="{ label: 'companyName', value: 'tenantId' }"
       :filter-option="filterOption"
       :options="tenantList"
+      :placeholder="$t('component.tenantToggle.placeholder')"
       allow-clear
       class="w-60"
-      placeholder="选择租户"
       show-search
       @deselect="onDeselect"
       @select="onSelected"

@@ -20,6 +20,11 @@
       "btn_zoom_in": "Zoom in",
       "btn_zoom_out": "Zoom out",
       "preview": "Preview"
+    },
+    "tenantToggle": {
+      "placeholder": "Please select a tenant",
+      "switch": "Switch to tenant: ",
+      "reset": "Reset to default tenant"
     }
   },
   "pages": {
