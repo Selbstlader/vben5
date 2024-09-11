@@ -1,93 +1,91 @@
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue';
+import type { VbenFormSchema } from '@vben/common-ui';
+import type { BasicOption } from '@vben/types';
 
-import { AuthenticationLogin } from '@vben/common-ui';
+import { computed } from 'vue';
 
-import { omit } from 'lodash-es';
+import { AuthenticationLogin, z } from '@vben/common-ui';
+import { $t } from '@vben/locales';
 
-import { tenantList, type TenantResp } from '#/api';
-import { captchaImage, type CaptchaResponse } from '#/api/core/captcha';
 import { useAuthStore } from '#/store';
-
-import OauthLogin from './oauth-login.vue';
 
 defineOptions({ name: 'Login' });
 
 const authStore = useAuthStore();
 
-const captchaInfo = ref<CaptchaResponse>({
-  captchaEnabled: false,
-  img: '',
-  uuid: '',
+const MOCK_USER_OPTIONS: BasicOption[] = [
+  {
+    label: '超级管理员',
+    value: 'vben',
+  },
+  {
+    label: '管理员',
+    value: 'admin',
+  },
+  {
+    label: '用户',
+    value: 'jack',
+  },
+];
+
+const formSchema = computed((): VbenFormSchema[] => {
+  return [
+    {
+      component: 'VbenSelect',
+      componentProps: {
+        options: MOCK_USER_OPTIONS,
+        placeholder: $t('authentication.selectAccount'),
+      },
+      fieldName: 'selectAccount',
+      label: $t('authentication.selectAccount'),
+      rules: z
+        .string()
+        .min(1, { message: $t('authentication.selectAccount') })
+        .optional()
+        .default('vben'),
+    },
+    {
+      component: 'VbenInput',
+      componentProps: {
+        placeholder: $t('authentication.usernameTip'),
+      },
+      dependencies: {
+        trigger(values, form) {
+          if (values.selectAccount) {
+            const findUser = MOCK_USER_OPTIONS.find(
+              (item) => item.value === values.selectAccount,
+            );
+            if (findUser) {
+              form.setValues({
+                password: '123456',
+                username: findUser.value,
+              });
+            }
+          }
+        },
+        triggerFields: ['selectAccount'],
+      },
+      fieldName: 'username',
+      label: $t('authentication.username'),
+      rules: z.string().min(1, { message: $t('authentication.usernameTip') }),
+    },
+    {
+      component: 'VbenInputPassword',
+      componentProps: {
+        placeholder: $t('authentication.password'),
+      },
+      fieldName: 'password',
+      label: $t('authentication.password'),
+      rules: z.string().min(1, { message: $t('authentication.passwordTip') }),
+    },
+  ];
 });
-
-async function loadCaptcha() {
-  const resp = await captchaImage();
-  if (resp.captchaEnabled) {
-    resp.img = `data:image/png;base64,${resp.img}`;
-  }
-  captchaInfo.value = resp;
-}
-
-const tenantInfo = ref<TenantResp>({
-  tenantEnabled: false,
-  voList: [],
-});
-
-async function loadTenant() {
-  const resp = await tenantList();
-  tenantInfo.value = resp;
-}
-
-onMounted(() => {
-  loadCaptcha();
-  loadTenant();
-});
-
-interface LoginForm {
-  code?: string;
-  grantType: string;
-  password: string;
-  tenantId: string;
-  username: string;
-}
-
-const loginRef = ref<InstanceType<typeof AuthenticationLogin>>();
-async function handleAccountLogin(values: LoginForm) {
-  try {
-    const requestParam: any = omit(values, ['code']);
-    // 验证码
-    if (captchaInfo.value.captchaEnabled) {
-      requestParam.code = values.code;
-      requestParam.uuid = captchaInfo.value.uuid;
-    }
-    // 登录
-    await authStore.authLogin(requestParam);
-  } catch (error) {
-    console.error(error);
-    // 处理验证码错误
-    if (error instanceof Error) {
-      // 刷新验证码
-      loginRef.value?.resetCaptcha();
-    }
-  }
-}
 </script>
 
 <template>
   <AuthenticationLogin
-    ref="loginRef"
-    :captcha-base64="captchaInfo.img"
+    :form-schema="formSchema"
     :loading="authStore.loginLoading"
-    :show-register="false"
-    :tenant-options="tenantInfo.voList"
-    :use-captcha="captchaInfo.captchaEnabled"
-    :use-tenant="tenantInfo.tenantEnabled"
-    @captcha-click="loadCaptcha"
-    @submit="handleAccountLogin"
-  >
-    <template #third-party-login>
-      <OauthLogin />
-    </template>
-  </AuthenticationLogin>
+    @submit="authStore.authLogin"
+  />
 </template>

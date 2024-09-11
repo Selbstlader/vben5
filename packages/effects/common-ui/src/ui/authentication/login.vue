@@ -1,43 +1,20 @@
 <script setup lang="ts">
+import type { VbenFormSchema } from '@vben-core/form-ui';
+
 import type { AuthenticationProps, LoginEmits } from './types';
 
-import { computed, reactive, watch } from 'vue';
+import { computed, onMounted, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { $t } from '@vben/locales';
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-  VbenButton,
-  VbenCheckbox,
-  VbenInput,
-  VbenInputPassword,
-} from '@vben-core/shadcn-ui';
+import { useVbenForm } from '@vben-core/form-ui';
+import { VbenButton, VbenCheckbox } from '@vben-core/shadcn-ui';
 
 import Title from './auth-title.vue';
 import ThirdPartyLogin from './third-party-login.vue';
 
 interface Props extends AuthenticationProps {
-  /**
-   * @zh_CN 验证码图片base64
-   */
-  captchaBase64?: string;
-  /**
-   * 租户信息options
-   */
-  tenantOptions?: { companyName: string; domain?: string; tenantId: string }[];
-  /**
-   * @zh_CN 是否启用验证码
-   */
-  useCaptcha?: boolean;
-  /**
-   * @zh_CN 是否启用租户
-   */
-  useTenant?: boolean;
+  formSchema: VbenFormSchema[];
 }
 
 defineOptions({
@@ -45,11 +22,10 @@ defineOptions({
 });
 
 const props = withDefaults(defineProps<Props>(), {
-  captchaBase64: '',
   codeLoginPath: '/auth/code-login',
   forgetPasswordPath: '/auth/forget-password',
+  formSchema: () => [],
   loading: false,
-  passwordPlaceholder: '',
   qrCodeLoginPath: '/auth/qrcode-login',
   registerPath: '/auth/register',
   showCodeLogin: true,
@@ -61,7 +37,6 @@ const props = withDefaults(defineProps<Props>(), {
   subTitle: '',
   tenantOptions: () => [],
   title: '',
-  usernamePlaceholder: '',
 });
 
 const emit = defineEmits<{
@@ -76,104 +51,44 @@ const emit = defineEmits<{
   submit: LoginEmits['submit'];
 }>();
 
+const [Form, { setFieldValue, validate }] = useVbenForm(
+  reactive({
+    commonConfig: {
+      hideLabel: true,
+      hideRequiredMark: true,
+    },
+    schema: computed(() => props.formSchema),
+    showDefaultActions: false,
+  }),
+);
 const router = useRouter();
 
 const REMEMBER_ME_KEY = `REMEMBER_ME_USERNAME_${location.hostname}`;
 
 const localUsername = localStorage.getItem(REMEMBER_ME_KEY) || 'admin';
 
-const formState = reactive({
-  code: '',
-  password: 'admin123',
-  rememberMe: !!localUsername,
-  submitted: false,
-  // 默认租户
-  tenantId: '000000',
-  username: localUsername,
-});
+const rememberMe = ref(!!localUsername);
 
-/**
- * oauth登录 需要tenantId参数
- */
-watch(
-  () => formState.tenantId,
-  (tenantId) => {
-    localStorage.setItem('__oauth_tenant_id', tenantId);
-  },
-  {
-    immediate: true,
-  },
-);
-
-/**
- * 默认选中第一项租户
- */
-const stop = watch(
-  () => props.tenantOptions,
-  (options) => {
-    if (options.length > 0) {
-      formState.tenantId = options[0]!.tenantId;
-      stop();
-    }
-  },
-);
-
-const usernameStatus = computed(() => {
-  return formState.submitted && !formState.username ? 'error' : 'default';
-});
-
-const passwordStatus = computed(() => {
-  return formState.submitted && !formState.password ? 'error' : 'default';
-});
-
-const captchaStatus = computed(() => {
-  return formState.submitted && !formState.code ? 'error' : 'default';
-});
-
-function handleSubmit() {
-  formState.submitted = true;
-
-  if (
-    usernameStatus.value !== 'default' ||
-    passwordStatus.value !== 'default'
-  ) {
-    return;
+async function handleSubmit() {
+  const { valid, values } = await validate();
+  if (valid) {
+    localStorage.setItem(
+      REMEMBER_ME_KEY,
+      rememberMe.value ? values?.username : '',
+    );
+    emit('submit', values as { password: string; username: string });
   }
-
-  // 验证码
-  if (props.useCaptcha && captchaStatus.value !== 'default') {
-    return;
-  }
-
-  localStorage.setItem(
-    REMEMBER_ME_KEY,
-    formState.rememberMe ? formState.username : '',
-  );
-
-  emit('submit', {
-    code: formState.code,
-    grantType: 'password',
-    password: formState.password,
-    tenantId: formState.tenantId,
-    username: formState.username,
-  });
 }
 
 function handleGo(path: string) {
   router.push(path);
 }
 
-/**
- * 重置验证码
- */
-function resetCaptcha() {
-  emit('captchaClick');
-  formState.code = '';
-  // todo 获取焦点
-  // VbenInput并没有提供focus方法
-}
-
-defineExpose({ resetCaptcha });
+onMounted(() => {
+  if (localUsername) {
+    setFieldValue('username', localUsername);
+  }
+});
 </script>
 
 <template>
@@ -189,47 +104,7 @@ defineExpose({ resetCaptcha });
       </Title>
     </slot>
 
-    <!-- 租户 -->
-    <div v-if="useTenant" class="tenant-picker mb-6">
-      <Select v-model="formState.tenantId">
-        <SelectTrigger>
-          <SelectValue placeholder="选择公司" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectItem
-              v-for="item in tenantOptions"
-              :key="item.tenantId"
-              :value="item.tenantId"
-            >
-              {{ item.companyName }}
-            </SelectItem>
-          </SelectGroup>
-        </SelectContent>
-      </Select>
-    </div>
-
-    <VbenInput
-      v-model="formState.username"
-      :autofocus="false"
-      :error-tip="$t('authentication.usernameTip')"
-      :label="$t('authentication.username')"
-      :placeholder="usernamePlaceholder || $t('authentication.username')"
-      :status="usernameStatus"
-      name="username"
-      required
-      type="text"
-    />
-    <VbenInputPassword
-      v-model="formState.password"
-      :error-tip="$t('authentication.passwordTip')"
-      :label="$t('authentication.password')"
-      :placeholder="passwordPlaceholder || $t('authentication.password')"
-      :status="passwordStatus"
-      name="password"
-      required
-      type="password"
-    />
+    <Form />
 
     <!-- 图片验证码 -->
     <div v-if="useCaptcha" class="flex">
@@ -254,10 +129,10 @@ defineExpose({ resetCaptcha });
 
     <div
       v-if="showRememberMe || showForgetPassword"
-      class="mb-6 mt-4 flex justify-between"
+      class="mb-6 flex justify-between"
     >
-      <div class="flex-center">
-        <VbenCheckbox v-model:checked="formState.rememberMe" name="rememberMe">
+      <div v-if="showRememberMe" class="flex-center">
+        <VbenCheckbox v-model:checked="rememberMe" name="rememberMe">
           {{ $t('authentication.rememberMe') }}
         </VbenCheckbox>
       </div>
