@@ -1,8 +1,8 @@
 import type { DictData } from './dict-data-model';
 
-import type { ID, IDS, PageQuery } from '#/api/base';
+import type { ID, IDS, PageQuery } from '#/api/common';
 
-import { commonExport } from '#/api/base';
+import { commonExport } from '#/api/helper';
 import { requestClient } from '#/api/request';
 
 enum Api {

@@ -5,6 +5,7 @@ import { useVbenModal } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 
 import { useVbenForm } from '#/adapter';
+import { configAdd, configUpdate } from '#/api/system/config';
 import { getDictOptions } from '#/utils/dict';
 
 const emit = defineEmits<{ reload: [] }>();
@@ -18,26 +19,6 @@ const isUpdate = ref(false);
 const title = computed(() => {
   return isUpdate.value ? $t('pages.common.edit') : $t('pages.common.add');
 });
-
-const [BasicModal, modalApi] = useVbenModal({
-  fullscreenButton: false,
-  onCancel: handleCancel,
-  onConfirm: handleConfirm,
-  onOpenChange: (isOpen) => {
-    if (!isOpen) {
-      return null;
-    }
-    const { record, update } = modalApi.getData() as ModalProps;
-    isUpdate.value = update;
-    if (update && record) {
-      console.log(record);
-    }
-  },
-});
-
-function modalLoading(loading: boolean) {
-  modalApi.setState({ confirmLoading: loading, loading });
-}
 
 const [BasicForm, formApi] = useVbenForm({
   schema: [
@@ -86,7 +67,7 @@ const [BasicForm, formApi] = useVbenForm({
       },
       defaultValue: 'N',
       fieldName: 'configType',
-      label: '参数键值',
+      label: '是否内置',
       rules: 'required',
     },
     {
@@ -101,21 +82,38 @@ const [BasicForm, formApi] = useVbenForm({
   showDefaultActions: false,
 });
 
-function wait(ms: number) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
+const [BasicModal, modalApi] = useVbenModal({
+  fullscreenButton: false,
+  onCancel: handleCancel,
+  onConfirm: handleConfirm,
+  onOpenChange: async (isOpen) => {
+    if (!isOpen) {
+      return null;
+    }
+    const { record, update } = modalApi.getData() as ModalProps;
+    isUpdate.value = update;
+    if (update && record) {
+      for (const key in record) {
+        await formApi.setFieldValue(key, record[key]);
+      }
+    }
+  },
+});
+
+function modalLoading(loading: boolean) {
+  modalApi.setState({ confirmLoading: loading, loading });
 }
 
 async function handleConfirm() {
   try {
     modalLoading(true);
-    const { results, valid } = await formApi.validate();
+    const { valid } = await formApi.validate();
     if (!valid) {
       return;
     }
-    console.log(results);
-    await wait(1000);
+    const data = await formApi.getValues();
+    console.log(data);
+    await (isUpdate.value ? configUpdate(data) : configAdd(data));
     emit('reload');
     await handleCancel();
   } catch (error) {
