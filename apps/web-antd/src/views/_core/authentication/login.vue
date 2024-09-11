@@ -12,12 +12,13 @@ import { tenantList, type TenantResp } from '#/api';
 import { captchaImage, type CaptchaResponse } from '#/api/core/captcha';
 import { useAuthStore } from '#/store';
 
+import OAuthLogin from './oauth-login.vue';
+
 defineOptions({ name: 'Login' });
 
 const authStore = useAuthStore();
 
-const loginFormRef =
-  useTemplateRef<InstanceType<typeof AuthenticationLogin>>('loginFormRef');
+const loginFormRef = useTemplateRef('loginFormRef');
 
 const captchaInfo = ref<CaptchaResponse>({
   captchaEnabled: false,
@@ -150,6 +151,11 @@ async function handleAccountLogin(values: LoginForm) {
     ref="loginFormRef"
     :form-schema="formSchema"
     :loading="authStore.loginLoading"
+    :show-register="false"
     @submit="handleAccountLogin"
-  />
+  >
+    <template #third-party-login>
+      <OAuthLogin />
+    </template>
+  </AuthenticationLogin>
 </template>
