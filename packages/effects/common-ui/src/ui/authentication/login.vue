@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import type { VbenFormSchema } from '@vben-core/form-ui';
 
-import type { AuthenticationProps, LoginEmits } from './types';
+import type {
+  AuthenticationProps,
+  LoginAndRegisterParams,
+  LoginEmits,
+} from './types';
 
 import { computed, onMounted, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -35,19 +39,10 @@ const props = withDefaults(defineProps<Props>(), {
   showRememberMe: true,
   showThirdPartyLogin: true,
   subTitle: '',
-  tenantOptions: () => [],
   title: '',
 });
 
 const emit = defineEmits<{
-  /**
-   * 验证码点击
-   */
-  captchaClick: [];
-  /**
-   * 第三方登录 platfrom 对应平台的string
-   */
-  oauthLogin: [plateform: string];
   submit: LoginEmits['submit'];
 }>();
 
@@ -65,7 +60,7 @@ const router = useRouter();
 
 const REMEMBER_ME_KEY = `REMEMBER_ME_USERNAME_${location.hostname}`;
 
-const localUsername = localStorage.getItem(REMEMBER_ME_KEY) || 'admin';
+const localUsername = localStorage.getItem(REMEMBER_ME_KEY) || '';
 
 const rememberMe = ref(!!localUsername);
 
@@ -76,7 +71,9 @@ async function handleSubmit() {
       REMEMBER_ME_KEY,
       rememberMe.value ? values?.username : '',
     );
-    emit('submit', values as { password: string; username: string });
+    // 加上认证类型
+    (values as any).grantType = 'password';
+    emit('submit', values as LoginAndRegisterParams);
   }
 }
 
@@ -105,27 +102,6 @@ onMounted(() => {
     </slot>
 
     <Form />
-
-    <!-- 图片验证码 -->
-    <div v-if="useCaptcha" class="flex">
-      <div class="flex-1">
-        <VbenInput
-          v-model="formState.code"
-          :error-tip="$t('authentication.captchaTip')"
-          :label="$t('authentication.captcha')"
-          :placeholder="$t('authentication.captcha')"
-          :status="captchaStatus"
-          name="code"
-          required
-          type="text"
-        />
-      </div>
-      <img
-        :src="captchaBase64"
-        class="h-[40px] w-[115px] rounded-r-md"
-        @click="emit('captchaClick')"
-      />
-    </div>
 
     <div
       v-if="showRememberMe || showForgetPassword"
@@ -173,10 +149,7 @@ onMounted(() => {
 
     <!-- 第三方登录 -->
     <slot name="third-party-login">
-      <ThirdPartyLogin
-        v-if="showThirdPartyLogin"
-        @oauth-login="(e) => emit('oauthLogin', e)"
-      />
+      <ThirdPartyLogin v-if="showThirdPartyLogin" />
     </slot>
 
     <slot name="to-register">
@@ -192,26 +165,3 @@ onMounted(() => {
     </slot>
   </div>
 </template>
-
-<style lang="scss">
-/**
-  tenant-picker 跟下面的输入框样式保持一致
-*/
-.tenant-picker > button[role='combobox'] {
-  height: 40px;
-  background-color: hsl(var(--input-background));
-
-  &:focus {
-    @apply border-primary;
-  }
-}
-
-/**
-  验证码输入框样式
-  去除右边的圆角
-*/
-input[id='code'] {
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-}
-</style>
