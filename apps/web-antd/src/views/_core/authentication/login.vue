@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { VbenFormSchema } from '@vben/common-ui';
 
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, useTemplateRef } from 'vue';
 
 import { AuthenticationLogin, z } from '@vben/common-ui';
 import { $t } from '@vben/locales';
@@ -15,6 +15,9 @@ import { useAuthStore } from '#/store';
 defineOptions({ name: 'Login' });
 
 const authStore = useAuthStore();
+
+const loginFormRef =
+  useTemplateRef<InstanceType<typeof AuthenticationLogin>>('loginFormRef');
 
 const captchaInfo = ref<CaptchaResponse>({
   captchaEnabled: false,
@@ -38,6 +41,11 @@ const tenantInfo = ref<TenantResp>({
 async function loadTenant() {
   const resp = await tenantList();
   tenantInfo.value = resp;
+  // 选中第一个租户
+  if (resp.tenantEnabled && resp.voList.length > 0) {
+    const firstTenantId = resp.voList[0]!.tenantId;
+    loginFormRef.value?.setFieldValue('tenantId', firstTenantId);
+  }
 }
 
 onMounted(async () => {
@@ -50,34 +58,29 @@ const formSchema = computed((): VbenFormSchema[] => {
     {
       component: 'VbenSelect',
       componentProps: {
-        class: 'tenant-picker',
+        class: 'bg-background h-[40px] focus:border-primary',
         options: tenantInfo.value.voList.map((item) => ({
           label: item.companyName,
           value: item.tenantId,
         })),
         placeholder: $t('authentication.selectAccount'),
-        valueprop: 'tenantId',
       },
+      defaultValue: '000000',
       dependencies: {
-        trigger(values, _form) {
-          console.log(values);
-        },
-        triggerFields: [''],
+        if: () => tenantInfo.value.tenantEnabled,
+        triggerFields: [],
       },
       fieldName: 'tenantId',
       label: $t('authentication.selectAccount'),
-      rules: z
-        .string()
-        .min(1, { message: $t('authentication.selectAccount') })
-        .optional()
-        .default('000000'),
+      rules: z.string().min(1, { message: $t('authentication.selectAccount') }),
     },
     {
       component: 'VbenInput',
       componentProps: {
-        class: 'login-input',
+        class: 'focus:border-primary',
         placeholder: $t('authentication.usernameTip'),
       },
+      defaultValue: 'admin',
       fieldName: 'username',
       label: $t('authentication.username'),
       rules: z.string().min(1, { message: $t('authentication.usernameTip') }),
@@ -85,9 +88,10 @@ const formSchema = computed((): VbenFormSchema[] => {
     {
       component: 'VbenInputPassword',
       componentProps: {
-        class: 'login-input',
+        class: 'focus:border-primary',
         placeholder: $t('authentication.password'),
       },
+      defaultValue: 'admin123',
       fieldName: 'password',
       label: $t('authentication.password'),
       rules: z.string().min(6, { message: $t('authentication.passwordTip') }),
@@ -96,7 +100,7 @@ const formSchema = computed((): VbenFormSchema[] => {
       component: 'VbenInputCaptcha',
       componentProps: {
         captcha: captchaInfo.value.img,
-        class: 'login-input',
+        class: 'focus:border-primary',
         onCaptchaClick: loadCaptcha,
         placeholder: $t('authentication.code'),
       },
@@ -134,7 +138,8 @@ async function handleAccountLogin(values: LoginForm) {
     // 处理验证码错误
     if (error instanceof Error) {
       // 刷新验证码
-      // todo
+      loginFormRef.value?.setFieldValue('code', '');
+      await loadCaptcha();
     }
   }
 }
@@ -142,28 +147,9 @@ async function handleAccountLogin(values: LoginForm) {
 
 <template>
   <AuthenticationLogin
+    ref="loginFormRef"
     :form-schema="formSchema"
     :loading="authStore.loginLoading"
     @submit="handleAccountLogin"
   />
 </template>
-
-<style lang="scss">
-/**
-  tenant-picker 跟下面的输入框样式保持一致
-*/
-.tenant-picker {
-  height: 40px;
-  background-color: hsl(var(--input-background));
-
-  &:focus {
-    @apply border-primary;
-  }
-}
-
-.login-input {
-  &:focus {
-    @apply border-primary;
-  }
-}
-</style>
