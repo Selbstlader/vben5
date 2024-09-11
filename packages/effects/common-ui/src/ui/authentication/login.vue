@@ -38,6 +38,7 @@ const props = withDefaults(defineProps<Props>(), {
   showRegister: true,
   showRememberMe: true,
   showThirdPartyLogin: true,
+  submitButtonText: '',
   subTitle: '',
   title: '',
 });
@@ -94,10 +95,14 @@ defineExpose({ setFieldValue });
   <div @keydown.enter.prevent="handleSubmit">
     <slot name="title">
       <Title>
-        {{ title || `${$t('authentication.welcomeBack')} 👋🏻` }}
+        <slot name="title">
+          {{ title || `${$t('authentication.welcomeBack')} 👋🏻` }}
+        </slot>
         <template #desc>
           <span class="text-muted-foreground">
-            {{ subTitle || $t('authentication.loginSubtitle') }}
+            <slot name="subTitle">
+              {{ subTitle || $t('authentication.loginSubtitle') }}
+            </slot>
           </span>
         </template>
       </Title>
@@ -109,8 +114,12 @@ defineExpose({ setFieldValue });
       v-if="showRememberMe || showForgetPassword"
       class="mb-6 flex justify-between"
     >
-      <div v-if="showRememberMe" class="flex-center">
-        <VbenCheckbox v-model:checked="rememberMe" name="rememberMe">
+      <div class="flex-center">
+        <VbenCheckbox
+          v-if="showRememberMe"
+          v-model:checked="rememberMe"
+          name="rememberMe"
+        >
           {{ $t('authentication.rememberMe') }}
         </VbenCheckbox>
       </div>
@@ -124,7 +133,7 @@ defineExpose({ setFieldValue });
       </span>
     </div>
     <VbenButton :loading="loading" class="w-full" @click="handleSubmit">
-      {{ $t('common.login') }}
+      {{ submitButtonText || $t('common.login') }}
     </VbenButton>
 
     <div
