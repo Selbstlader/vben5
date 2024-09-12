@@ -36,7 +36,7 @@ export interface DescriptionProps extends DescriptionsProps {
 }
 
 export interface DescInstance {
-  setDescProps(descProps: Partial<DescriptionProps>): void;
+  setDescProps(descProps: Partial<DescriptionProps>, delay?: boolean): void;
 }
 
 export type Register = (descInstance: DescInstance) => void;
