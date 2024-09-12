@@ -6,14 +6,10 @@ import { type Option, useDictStore } from '#/store/dict';
 // todo 重复代码的封装
 export function getDict(dictName: string): DictData[] {
   const { dictRequestCache, getDict, setDictInfo } = useDictStore();
-  console.log('aaaaa');
   // 这里拿到
   const dictList = getDict(dictName);
   // 检查请求状态缓存
   if (dictList.length === 0 && !dictRequestCache.has(dictName)) {
-    console.log('bbbb');
-    console.log(dictList.length);
-    console.log(dictRequestCache.has(dictName));
     dictRequestCache.set(
       dictName,
       dictDataInfo(dictName).then((resp) => {
