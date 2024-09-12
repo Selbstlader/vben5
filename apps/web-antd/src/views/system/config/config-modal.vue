@@ -6,7 +6,8 @@ import { $t } from '@vben/locales';
 
 import { useVbenForm } from '#/adapter';
 import { configAdd, configUpdate } from '#/api/system/config';
-import { getDictOptions } from '#/utils/dict';
+
+import { modalSchema } from './data';
 
 const emit = defineEmits<{ reload: [] }>();
 
@@ -21,64 +22,7 @@ const title = computed(() => {
 });
 
 const [BasicForm, formApi] = useVbenForm({
-  schema: [
-    {
-      component: 'Input',
-      dependencies: {
-        show: () => false,
-        triggerFields: [''],
-      },
-      fieldName: 'configId',
-      label: '参数主键',
-    },
-    {
-      component: 'Input',
-      componentProps: {
-        placeholder: '请输入',
-      },
-      fieldName: 'configName',
-      label: '参数名称',
-      rules: 'required',
-    },
-    {
-      component: 'Input',
-      componentProps: {
-        placeholder: '请输入',
-      },
-      fieldName: 'configKey',
-      label: '参数键名',
-      rules: 'required',
-    },
-    {
-      component: 'Input',
-      componentProps: {
-        placeholder: '请输入',
-      },
-      fieldName: 'configValue',
-      label: '参数键值',
-      rules: 'required',
-    },
-    {
-      component: 'RadioGroup',
-      componentProps: {
-        buttonStyle: 'solid',
-        options: getDictOptions('sys_yes_no'),
-        optionType: 'button',
-      },
-      defaultValue: 'N',
-      fieldName: 'configType',
-      label: '是否内置',
-      rules: 'required',
-    },
-    {
-      component: 'Textarea',
-      componentProps: {
-        placeholder: '请输入',
-      },
-      fieldName: 'remark',
-      label: '备注',
-    },
-  ],
+  schema: modalSchema(),
   showDefaultActions: false,
 });
 
