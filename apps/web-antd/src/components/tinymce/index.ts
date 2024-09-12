@@ -1,5 +1,1 @@
-import { withInstall } from '#/utils';
-
-import tinymce from './src/editor.vue';
-
-export const Tinymce = withInstall(tinymce);
+export { default as Tinymce } from './src/editor.vue';

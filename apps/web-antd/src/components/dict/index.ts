@@ -1,5 +1,1 @@
-import { withInstall } from '#/utils';
-
-import dictTag from './src/index.vue';
-
-export const DictTag = withInstall(dictTag);
+export { default as DictTag } from './src/index.vue';
