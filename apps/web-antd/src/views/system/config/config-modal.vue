@@ -22,6 +22,9 @@ const title = computed(() => {
 });
 
 const [BasicForm, formApi] = useVbenForm({
+  commonConfig: {
+    labelWidth: 80,
+  },
   schema: modalSchema(),
   showDefaultActions: false,
 });
@@ -34,6 +37,7 @@ const [BasicModal, modalApi] = useVbenModal({
     if (!isOpen) {
       return null;
     }
+    modalApi.modalLoading(true);
     const { record, update } = modalApi.getData() as ModalProps;
     isUpdate.value = update;
     if (update && record) {
@@ -41,6 +45,7 @@ const [BasicModal, modalApi] = useVbenModal({
         await formApi.setFieldValue(key, record[key]);
       }
     }
+    modalApi.modalLoading(false);
   },
 });
 
@@ -70,7 +75,7 @@ async function handleCancel() {
 </script>
 
 <template>
-  <BasicModal :title="title" class="w-[600px]">
+  <BasicModal :title="title" class="w-[550px]">
     <BasicForm />
   </BasicModal>
 </template>

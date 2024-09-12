@@ -59,6 +59,7 @@ export const modalSchema: FormSchemaGetter = () => [
       placeholder: '请输入',
     },
     fieldName: 'remark',
+    formItemClass: 'items-baseline',
     label: '备注',
   },
 ];
