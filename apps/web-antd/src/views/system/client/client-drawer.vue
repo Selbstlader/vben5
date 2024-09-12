@@ -23,9 +23,13 @@ const title = computed(() => {
 });
 
 const [BasicForm, formApi] = useVbenForm({
+  commonConfig: {
+    formItemClass: 'col-span-2',
+  },
   layout: 'vertical',
   schema: drawerSchema(),
   showDefaultActions: false,
+  wrapperClass: 'grid-cols-2',
 });
 
 function setupForm(update: boolean, record?: any) {
