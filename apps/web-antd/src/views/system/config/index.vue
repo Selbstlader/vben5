@@ -7,10 +7,12 @@ import type { Config } from '#/api/system/config/model';
 import { onMounted, ref } from 'vue';
 
 import { Page, useVbenModal } from '@vben/common-ui';
+import { DictEnum } from '@vben/constants';
 
 import { Space, Table } from 'ant-design-vue';
 
 import { configList } from '#/api/system/config';
+import { renderDict } from '#/utils/render';
 
 import configModal from './config-modal.vue';
 
@@ -51,6 +53,14 @@ const columns: ColumnsType = [
     align: 'center',
     dataIndex: 'configValue',
     title: '参数Value',
+  },
+  {
+    align: 'center',
+    customRender: ({ value }) => {
+      return renderDict(value, DictEnum.SYS_YES_NO);
+    },
+    dataIndex: 'configType',
+    title: '系统内置',
   },
   {
     align: 'center',
