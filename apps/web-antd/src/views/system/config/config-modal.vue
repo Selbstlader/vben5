@@ -103,8 +103,6 @@ const [BasicModal, modalApi] = useVbenModal({
 async function handleConfirm() {
   try {
     modalApi.modalLoading(true);
-    const a = await formApi.validate();
-    console.log(a);
     const { valid } = await formApi.validate();
     if (!valid) {
       return;
