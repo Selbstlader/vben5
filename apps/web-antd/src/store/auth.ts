@@ -73,7 +73,6 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function logout(redirect: boolean = true) {
-    console.log(accessStore.accessToken);
     try {
       await seeConnectionClose();
       await doLogout();

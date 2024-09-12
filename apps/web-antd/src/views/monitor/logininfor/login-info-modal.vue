@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { onBeforeUnmount } from 'vue';
-
 import { useVbenModal } from '@vben/common-ui';
 
 import { Description, useDescription } from '#/components/description';
@@ -21,8 +19,6 @@ const [BasicModal, modalApi] = useVbenModal({
     setDescProps({ data }, true);
   },
 });
-
-onBeforeUnmount(() => console.log('before unmount'));
 </script>
 
 <template>
