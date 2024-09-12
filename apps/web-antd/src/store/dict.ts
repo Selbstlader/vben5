@@ -29,6 +29,16 @@ export const useDictStore = defineStore('app-dict', () => {
    * select radio radioButton使用 只能为固定格式(Option)
    */
   const dictOptionsMap = reactive(new Map<string, Option[]>());
+  /**
+   * 添加一个字典请求状态的缓存
+   *
+   * 主要解决多次请求重复api的问题(不能用abortController 会导致除了第一个其他的获取的全为空)
+   * 比如在一个页面 index表单 modal drawer总共会请求三次 但是获取的都是一样的数据
+   * 相当于加锁 保证只有第一次请求的结果能拿到
+   */
+  const dictRequestCache = reactive(
+    new Map<string, Promise<DictData[] | void>>(),
+  );
 
   function getDict(dictName: string): DictData[] {
     if (!dictName) return [];
@@ -53,6 +63,7 @@ export const useDictStore = defineStore('app-dict', () => {
   }
 
   function resetCache() {
+    dictRequestCache.clear();
     dictMap.clear();
     dictOptionsMap.clear();
   }
@@ -90,6 +101,7 @@ export const useDictStore = defineStore('app-dict', () => {
     $reset,
     dictMap,
     dictOptionsMap,
+    dictRequestCache,
     getDict,
     getDictOptions,
     resetCache,
