@@ -81,10 +81,8 @@ const avatar = computed(() => {
 });
 
 async function handleLogout() {
-  // resetAllStores();
+  await authStore.logout();
   resetRoutes();
-  // await router.replace(LOGIN_PATH);
-  authStore.logout();
 }
 
 const notifyStore = useNotifyStore();

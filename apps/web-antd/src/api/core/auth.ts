@@ -92,6 +92,14 @@ export function doLogout() {
 }
 
 /**
+ * 关闭sse连接
+ * @returns void
+ */
+export function seeConnectionClose() {
+  return requestClient.get<void>('/resource/sse/close');
+}
+
+/**
  * @param companyName 租户/公司名称
  * @param domain 绑定域名(不带http(s)://) 可选
  * @param tenantId 租户id
