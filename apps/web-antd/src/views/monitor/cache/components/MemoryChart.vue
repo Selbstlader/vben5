@@ -69,6 +69,9 @@ export default defineComponent({
             max,
             min: 0,
             name: '峰值',
+            progress: {
+              show: true,
+            },
             type: 'gauge',
           },
         ],
