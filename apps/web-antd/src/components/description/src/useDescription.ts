@@ -18,9 +18,9 @@ export function useDescription(
   const loaded = ref(false);
 
   function register(instance: DescInstance) {
-    if (unref(loaded)) {
-      return;
-    }
+    // if (unref(loaded) && import.meta.env.PROD) {
+    //   return;
+    // }
     desc.value = instance;
     props && instance.setDescProps(props);
     loaded.value = true;
