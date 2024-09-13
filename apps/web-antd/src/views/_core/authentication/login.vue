@@ -95,7 +95,7 @@ const formSchema = computed((): VbenFormSchema[] => {
       defaultValue: 'admin123',
       fieldName: 'password',
       label: $t('authentication.password'),
-      rules: z.string().min(6, { message: $t('authentication.passwordTip') }),
+      rules: z.string().min(5, { message: $t('authentication.passwordTip') }),
     },
     {
       component: 'VbenInputCaptcha',

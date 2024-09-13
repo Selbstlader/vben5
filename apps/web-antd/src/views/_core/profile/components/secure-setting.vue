@@ -1,69 +1,106 @@
 <script setup lang="ts">
-import type { RuleObject } from 'ant-design-vue/es/form';
+import type { UpdatePasswordParam } from '#/api/system/profile/model';
 
-import { ref } from 'vue';
-
-import { Form, FormItem, InputPassword, Modal } from 'ant-design-vue';
+import { Modal } from 'ant-design-vue';
 import { omit } from 'lodash-es';
 
+import { useVbenForm, z } from '#/adapter';
 import { userUpdatePassword } from '#/api/system/profile';
 import { useAuthStore } from '#/store';
 
-const form = ref({
-  confirmPassword: '',
-  newPassword: '',
-  oldPassword: '',
+const [BasicForm, formApi] = useVbenForm({
+  actionWrapperClass: 'text-left mb-[16px] ml-[96px]',
+  commonConfig: {
+    labelWidth: 90,
+  },
+  handleSubmit,
+  resetButtonOptions: {
+    show: false,
+  },
+  schema: [
+    {
+      component: 'InputPassword',
+      componentProps: {
+        placeholder: '请输入',
+      },
+      fieldName: 'oldPassword',
+      label: '旧密码',
+      rules: z
+        .string({ message: '请输入密码' })
+        .min(5, '密码长度不能少于5个字符')
+        .max(20, '密码长度不能超过20个字符'),
+    },
+    {
+      component: 'InputPassword',
+      componentProps: {
+        placeholder: '请输入',
+      },
+      dependencies: {
+        rules(values) {
+          return z
+            .string({ message: '请输入新密码' })
+            .min(5, '密码长度不能少于5个字符')
+            .max(20, '密码长度不能超过20个字符')
+            .refine(
+              (value) => value !== values.oldPassword,
+              '新旧密码不能相同',
+            );
+        },
+        triggerFields: ['newPassword', 'oldPassword'],
+      },
+      fieldName: 'newPassword',
+      label: '新密码',
+      rules: 'required',
+    },
+    {
+      component: 'InputPassword',
+      componentProps: {
+        placeholder: '请输入',
+      },
+      dependencies: {
+        rules(values) {
+          return z
+            .string({ message: '请输入确认密码' })
+            .min(5, '密码长度不能少于5个字符')
+            .max(20, '密码长度不能超过20个字符')
+            .refine(
+              (value) => value === values.newPassword,
+              '新密码和确认密码不一致',
+            );
+        },
+        triggerFields: ['newPassword', 'confirmPassword'],
+      },
+      fieldName: 'confirmPassword',
+      label: '确认密码',
+      rules: 'required',
+    },
+  ],
+  submitButtonOptions: {
+    text: '修改密码',
+  },
 });
 
-const newPassRules: RuleObject[] = [
-  {
-    required: true,
-    validator: (_, value) => {
-      if (!value) {
-        // eslint-disable-next-line prefer-promise-reject-errors
-        return Promise.reject('新密码不能为空');
-      }
-      if (value === form.value.oldPassword) {
-        // eslint-disable-next-line prefer-promise-reject-errors
-        return Promise.reject('新旧密码不能相同');
-      }
-      return Promise.resolve();
-    },
-  },
-];
-
-const confirmRules: RuleObject[] = [
-  {
-    required: true,
-    validator: (_, value) => {
-      if (!value) {
-        // eslint-disable-next-line prefer-promise-reject-errors
-        return Promise.reject('确认密码不能为空');
-      }
-      if (value !== form.value.newPassword) {
-        // eslint-disable-next-line prefer-promise-reject-errors
-        return Promise.reject('两次输入的密码不一致!');
-      }
-      return Promise.resolve();
-    },
-  },
-];
+function buttonLoading(loading: boolean) {
+  formApi.setState((prev) => ({
+    ...prev,
+    submitButtonOptions: { ...prev.submitButtonOptions, loading },
+  }));
+}
 
 const authStore = useAuthStore();
-
-const loading = ref(false);
-function handleSubmit() {
+function handleSubmit(values: any) {
   Modal.confirm({
     content: '确认修改密码吗？',
     onOk: async () => {
-      loading.value = true;
       try {
-        await userUpdatePassword(omit(form.value, ['confirmPassword']));
+        buttonLoading(true);
+        const data = omit(values, ['confirmPassword']) as UpdatePasswordParam;
+        await userUpdatePassword(data);
         await authStore.logout(true);
       } catch (error) {
         console.error(error);
       } finally {
-        loading.value = false;
+        buttonLoading(false);
       }
     },
     title: '提示',
@@ -73,37 +110,6 @@ function handleSubmit() {
 
 <template>
   <div class="mt-[16px] md:w-full lg:w-1/2 2xl:w-2/5">
-    <Form :label-col="{ span: 5 }" :model="form" @finish="handleSubmit">
-      <FormItem
-        :rules="[{ required: true, message: '请输入旧密码' }]"
-        label="旧密码"
-        name="oldPassword"
-      >
-        <InputPassword
-          v-model:value="form.oldPassword"
-          allow-clear
-          placeholder="请输入"
-        />
-      </FormItem>
-      <FormItem :rules="newPassRules" label="新密码" name="newPassword">
-        <InputPassword
-          v-model:value="form.newPassword"
-          allow-clear
-          placeholder="请输入"
-        />
-      </FormItem>
-      <FormItem :rules="confirmRules" label="确认密码" name="confirmPassword">
-        <InputPassword
-          v-model:value="form.confirmPassword"
-          allow-clear
-          placeholder="请输入"
-        />
-      </FormItem>
-      <FormItem :wrapper-col="{ span: 5, offset: 5 }">
-        <a-button :loading="loading" html-type="submit" type="primary">
-          修改密码
-        </a-button>
-      </FormItem>
-    </Form>
+    <BasicForm />
   </div>
 </template>
