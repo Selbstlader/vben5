@@ -163,14 +163,9 @@ function handleSelect(selectedKeys: Key[]) {
 </template>
 
 <style lang="scss" scoped>
-/**
-todo
-*/
-.ant-tree {
-  :deep(&-switcher) {
-    display: flex;
-    align-items: center;
-  }
+:deep(.ant-tree .ant-tree-switcher) {
+  display: flex;
+  align-items: center;
 }
 
 /** codeMirror 占满容器高度 即calc计算的高度 */
