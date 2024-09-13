@@ -51,7 +51,13 @@
     "vitepress",
     "vnode",
     "vueuse",
-    "yxxx"
+    "yxxx",
+    "echarts",
+    "sortablejs",
+    "etag",
+    "naiveui",
+    "uicons",
+    "iconoir"
   ],
   "ignorePaths": [
     "**/node_modules/**",
