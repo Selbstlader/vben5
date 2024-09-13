@@ -48,14 +48,16 @@ export function userExport(data: any) {
  * @returns void
  */
 export function userImportData(data: UserImportParam) {
-  return requestClient.post<void>(Api.userImport, data, {
-    // 返回的msg包含<br> 用modal显示
-    errorMessageMode: 'modal',
-    headers: {
-      'Content-Type': ContentTypeEnum.FORM_DATA,
+  return requestClient.post<{ code: number; msg: string }>(
+    Api.userImport,
+    data,
+    {
+      headers: {
+        'Content-Type': ContentTypeEnum.FORM_DATA,
+      },
+      isTransformResponse: false,
     },
-    successMessageMode: 'modal',
-  });
+  );
 }
 
 /**
