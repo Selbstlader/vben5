@@ -11,7 +11,8 @@ import { DictEnum } from '@vben/constants';
 
 import { Space, Table } from 'ant-design-vue';
 
-import { configList } from '#/api/system/config';
+import { configExport, configList } from '#/api/system/config';
+import { downloadExcel } from '#/utils/file/download';
 import { renderDict } from '#/utils/render';
 
 import configModal from './config-modal.vue';
@@ -83,7 +84,10 @@ const columns: ColumnsType = [
 
 <template>
   <Page>
-    <div class="mb-[16px] flex justify-end">
+    <div class="mb-[16px] flex justify-end gap-[8px]">
+      <a-button @click="downloadExcel(configExport, '参数配置', {})">
+        {{ $t('pages.common.export') }}
+      </a-button>
       <a-button type="primary" @click="handleAdd">
         {{ $t('pages.common.add') }}
       </a-button>

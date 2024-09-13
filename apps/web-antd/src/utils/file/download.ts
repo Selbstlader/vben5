@@ -1,5 +1,34 @@
-import { openWindow } from '..';
+import { $t } from '@vben/locales';
+
+import { message } from 'ant-design-vue';
+
 import { dataURLtoBlob, urlToBase64 } from './base64Conver';
+
+/**
+ * 下载excel文件
+ * @param [func] axios函数
+ * @param [fileName] 文件名称 不需要带xlsx后缀
+ * @param [requestData] 请求参数
+ * @param [withRandomName] 是否带随机文件名
+ *
+ * @return void
+ */
+export async function downloadExcel(
+  func: (data?: any) => Promise<Blob>,
+  fileName: string,
+  requestData: any = {},
+  withRandomName = true,
+) {
+  const hideLoading = message.loading($t('pages.common.downloadLoading'), 0);
+  try {
+    const data = await func(requestData);
+    downloadExcelFile(data, fileName, withRandomName);
+  } catch (error) {
+    console.error(error);
+  } finally {
+    hideLoading();
+  }
+}
 
 export function downloadExcelFile(
   data: BlobPart,
@@ -76,6 +105,23 @@ export function downloadByData(
   tempLink.click();
   tempLink.remove();
   window.URL.revokeObjectURL(blobURL);
+}
+
+export function openWindow(
+  url: string,
+  opt?: {
+    noopener?: boolean;
+    noreferrer?: boolean;
+    target?: '_blank' | '_self' | string;
+  },
+) {
+  const { noopener = true, noreferrer = true, target = '__blank' } = opt || {};
+  const feature: string[] = [];
+
+  noopener && feature.push('noopener=yes');
+  noreferrer && feature.push('noreferrer=yes');
+
+  window.open(url, target, feature.join(','));
 }
 
 /**
