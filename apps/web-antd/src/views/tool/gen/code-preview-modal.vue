@@ -89,7 +89,6 @@ function findIcon(path: string) {
   const defaultFileIcon = 'bx:file';
   const defaultFolderIcon = 'flat-color-icons:folder';
   if (path.endsWith('.vm')) {
-    // todo 这里写死的
     const realPath = path.slice(0, -3);
     // 是否为指定拓展名
     const icon = iconMap.find((item) => realPath.endsWith(item.key));
@@ -117,7 +116,6 @@ function changeLanguageType(filename: string) {
 
 function handleSelect(selectedKeys: Key[]) {
   const [currentFile = ''] = selectedKeys as string[];
-  console.log(currentFile);
   const currentCode = data[currentFile as keyof typeof data];
   if (currentCode) {
     // 设置代码type
