@@ -17,12 +17,12 @@ import {
 } from 'vue';
 
 import { preferences, usePreferences } from '@vben/preferences';
+import { buildShortUUID } from '@vben/utils';
 
 import Editor from '@tinymce/tinymce-vue';
 import { isNumber } from 'lodash-es';
 
 import { uploadApi, type UploadResult } from '#/api/core/upload';
-import { buildShortUUID } from '#/utils/uuid';
 
 import { bindHandlers } from './helper';
 import ImgUpload from './img-upload.vue';

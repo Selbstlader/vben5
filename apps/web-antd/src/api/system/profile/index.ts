@@ -1,7 +1,8 @@
 import type { FileCallBack, UpdatePasswordParam, UserProfile } from './model';
 
+import { buildUUID } from '@vben/utils';
+
 import { requestClient } from '#/api/request';
-import { buildUUID } from '#/utils/uuid';
 
 enum Api {
   root = '/system/user/profile',

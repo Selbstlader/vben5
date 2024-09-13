@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { Icon } from '@vben/icons';
+import { buildUUID } from '@vben/utils';
 
 import { Input } from 'ant-design-vue';
-
-import { buildUUID } from '#/utils/uuid';
 
 defineOptions({ name: 'SecretInput' });
 
