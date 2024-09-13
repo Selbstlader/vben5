@@ -23,3 +23,8 @@ export const MemoryIcon = createIconifyIcon('la:memory');
 export const GiteeIcon = createIconifyIcon('simple-icons:gitee');
 // 个人中心
 export const ProfileIcon = createIconifyIcon('mingcute:profile-line');
+
+// Excel图标
+export const ExcelIcon = createIconifyIcon('vscode-icons:file-type-excel');
+// 拖拽上传图标
+export const InBoxIcon = createIconifyIcon('ant-design:inbox-outlined');

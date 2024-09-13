@@ -4,6 +4,7 @@ import type { UploadFile } from 'ant-design-vue/es/upload/interface';
 import { h, ref, unref } from 'vue';
 
 import { useVbenModal } from '@vben/common-ui';
+import { ExcelIcon, InBoxIcon } from '@vben/icons';
 
 import { Modal, Switch, Upload } from 'ant-design-vue';
 
@@ -44,7 +45,7 @@ async function handleSubmit() {
     modal({
       content: h('div', {
         class: 'max-h-[260px] overflow-y-auto',
-        innerHTML: msg,
+        innerHTML: msg, // 后台已经处理xss问题
       }),
       title: '提示',
     });
@@ -67,7 +68,6 @@ function handleCancel() {
   <BasicModal
     :close-on-click-modal="false"
     :fullscreen-button="false"
-    class="w-[550px]"
     title="用户导入"
   >
     <!-- z-index不设置会遮挡模板下载loading -->
@@ -79,22 +79,22 @@ function handleCancel() {
       :show-upload-list="true"
       accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
     >
-      <p class="ant-upload-drag-icon">
-        <span
-          class="icon-[ant-design--inbox-outlined] text-primary size-[36px]"
-        ></span>
+      <p class="ant-upload-drag-icon flex items-center justify-center">
+        <InBoxIcon class="text-primary size-[36px]" />
       </p>
       <p class="ant-upload-text">点击或者拖拽到此处上传文件</p>
     </UploadDragger>
     <div class="mt-2 flex flex-col gap-2">
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-2">
         <span>允许导入xlsx, xls文件</span>
         <a-button
-          link
           type="link"
           @click="downloadExcel(downloadImportTemplate, '用户导入模板')"
         >
-          下载模板
+          <div class="flex items-center gap-[4px]">
+            <ExcelIcon />
+            <span>下载模板</span>
+          </div>
         </a-button>
       </div>
       <div class="flex items-center gap-2">
