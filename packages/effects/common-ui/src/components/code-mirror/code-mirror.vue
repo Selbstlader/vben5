@@ -18,7 +18,7 @@ const props = withDefaults(
     /**
      * 只读
      */
-    readonly: boolean;
+    readonly?: boolean;
   }>(),
   {
     language: 'js',
