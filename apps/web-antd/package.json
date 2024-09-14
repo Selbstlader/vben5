@@ -51,7 +51,7 @@
     "lodash-es": "^4.17.21",
     "pinia": "2.2.2",
     "tinymce": "^7.3.0",
-    "vue": "^3.5.4",
+    "vue": "^3.5.5",
     "vue-router": "^4.4.5"
   },
   "devDependencies": {
