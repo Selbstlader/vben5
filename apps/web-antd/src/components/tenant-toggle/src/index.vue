@@ -120,9 +120,5 @@ function filterOption(input: string, option: TenantOption) {
   &:has(.ant-select-selection-item) {
     box-shadow: 0 0 10px hsl(var(--primary));
   }
-  // 选中时字体加粗
-  .ant-select-selection-item {
-    font-weight: 600;
-  }
 }
 </style>
