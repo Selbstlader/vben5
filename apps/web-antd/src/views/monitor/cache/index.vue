@@ -50,7 +50,7 @@ async function loadInfo() {
 </script>
 
 <template>
-  <Page title="缓存监控">
+  <Page>
     <Row :gutter="[15, 15]">
       <Col :span="24">
         <Card size="small">
