@@ -73,5 +73,3 @@ export default defineComponent({
 <template>
   <EchartsUI ref="chartRef" height="400px" width="100%" />
 </template>
-
-<style scoped></style>

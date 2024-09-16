@@ -92,5 +92,3 @@ export default defineComponent({
 <template>
   <EchartsUI ref="memoryHtmlRef" height="400px" width="100%" />
 </template>
-
-<style scoped></style>
