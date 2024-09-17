@@ -38,6 +38,6 @@ export const modalSchema: FormSchemaGetter = () => [
     },
     fieldName: 'remark',
     formItemClass: 'items-baseline',
-    label: '字典类型',
+    label: '备注',
   },
 ];
