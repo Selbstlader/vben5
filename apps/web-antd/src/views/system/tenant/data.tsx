@@ -130,7 +130,6 @@ export const drawerSchema: FormSchemaGetter = () => [
     fieldName: 'expireTime',
     help: `已经设置过期时间不允许重置为'无期限'\n即在开通时未设置无期限 以后都不允许设置`,
     label: '过期时间',
-    rules: 'required',
   },
   {
     component: 'InputNumber',
