@@ -33,6 +33,30 @@ const profileRoute: RouteRecordStringComponent[] = [
       },
     ],
   },
+  {
+    component: 'BasicLayout',
+    meta: {
+      hideChildrenInMenu: true,
+      hideInMenu: true,
+      title: 'oss配置',
+    },
+    name: 'OssConfig',
+    path: '/',
+    redirect: '/system/oss-config',
+    children: [
+      {
+        component: '/system/oss-config/index',
+        meta: {
+          activePath: '/system/oss',
+          icon: 'mingcute:profile-line',
+          keepAlive: true,
+          title: 'oss配置',
+        },
+        name: 'OssConfigIndex',
+        path: '/system/oss-config',
+      },
+    ],
+  },
 ];
 
 /**

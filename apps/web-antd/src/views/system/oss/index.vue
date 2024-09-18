@@ -1,9 +1,13 @@
 <script setup lang="ts">
-import CommonSkeleton from '#/views/common';
+import { useRouter } from 'vue-router';
+
+import { Page } from '@vben/common-ui';
+
+const router = useRouter();
 </script>
 
 <template>
-  <div>
-    <CommonSkeleton />
-  </div>
+  <Page>
+    <a-button @click="() => router.push('/system/oss-config')">配置</a-button>
+  </Page>
 </template>
