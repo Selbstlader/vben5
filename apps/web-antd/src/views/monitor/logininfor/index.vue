@@ -9,7 +9,8 @@ import { Page, useVbenModal } from '@vben/common-ui';
 
 import { Space, Table } from 'ant-design-vue';
 
-import { loginInfoList } from '#/api/monitor/logininfo';
+import { loginInfoClean, loginInfoList } from '#/api/monitor/logininfo';
+import { confirmDeleteModal } from '#/utils/modal';
 
 import { columns } from './data';
 import loginInfoModal from './login-info-modal.vue';
@@ -30,10 +31,21 @@ function handlePreview(record: Recordable<any>) {
   modalApi.setData(record);
   modalApi.open();
 }
+
+function handleClear() {
+  confirmDeleteModal({
+    onValidated: async () => {
+      await loginInfoClean();
+    },
+  });
+}
 </script>
 
 <template>
-  <Page>
+  <Page content-class="flex flex-col gap-[6px]">
+    <div class="flex justify-end">
+      <a-button @click="handleClear">{{ $t('pages.common.clear') }}</a-button>
+    </div>
     <Table :columns="columns" :data-source="loginDataList" size="middle">
       <template #bodyCell="{ column, record }">
         <template v-if="column.dataIndex === 'action'">
