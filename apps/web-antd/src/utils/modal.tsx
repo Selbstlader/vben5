@@ -12,7 +12,7 @@ export interface ConfirmModalProps extends Omit<ModalFuncProps, 'visible'> {
 }
 
 export function confirmDeleteModal(props: ConfirmModalProps) {
-  const placeholder = props.placeholder || `输入'确认删除'以确认删除`;
+  const placeholder = props.placeholder || `输入'确认删除'`;
   const confirmText = props.confirmText || '确认删除';
 
   const formValue = reactive({
