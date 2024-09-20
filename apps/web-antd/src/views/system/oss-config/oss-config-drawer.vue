@@ -53,12 +53,15 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
 async function handleConfirm() {
   try {
     drawerApi.drawerLoading(true);
+    /**
+     * 这里解构出来的values只能获取到自定义校验参数的值
+     * 需要自行调用formApi.getValues()获取表单值
+     */
     const { valid } = await formApi.validate();
     if (!valid) {
       return;
     }
     const data = await formApi.getValues();
-    console.log(data);
     await (isUpdate.value ? ossConfigUpdate(data) : ossConfigAdd(data));
     emit('reload');
     await handleCancel();

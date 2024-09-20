@@ -49,12 +49,10 @@ export const drawerSchema: FormSchemaGetter = () => [
       addonBefore: () => (formModel.isHttps === 'Y' ? 'https://' : 'http://'),
     }),
     rules: z
-      .string({ message: '请输入服务地址' })
-      .refine(
-        (domain) =>
-          !(domain.startsWith('http://') || domain.startsWith('https://')),
-        { message: '请输入正确的域名, 不需要http(s)' },
-      ),
+      .string()
+      .refine((domain) => domain && !/^https?:\/\/.*/.test(domain), {
+        message: '请输入正确的域名, 不需要http(s)',
+      }),
   },
   {
     component: 'Input',
@@ -63,14 +61,6 @@ export const drawerSchema: FormSchemaGetter = () => [
     },
     fieldName: 'domain',
     label: '自定义域名',
-    rules: z
-      .string()
-      .refine(
-        (domain) =>
-          !(domain.startsWith('http://') || domain.startsWith('https://')),
-        { message: '请输入正确的域名, 不需要http(s)' },
-      )
-      .optional(),
   },
   {
     component: 'Divider',
