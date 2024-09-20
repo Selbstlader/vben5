@@ -3,6 +3,8 @@ import { ref } from 'vue';
 
 import { Page } from '@vben/common-ui';
 
+import { Switch } from 'ant-design-vue';
+
 import { Tinymce } from '#/components/tinymce';
 
 const readonly = ref(false);
@@ -14,7 +16,7 @@ const content = ref('');
     <div class="flex flex-col gap-[16px]">
       <div class="flex items-center gap-[16px]">
         <span>只读</span>
-        <a-switch v-model:checked="readonly" />
+        <Switch v-model:checked="readonly" />
       </div>
       <Tinymce v-model="content" :height="800" :options="{ readonly }" />
     </div>
