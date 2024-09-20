@@ -44,7 +44,7 @@ export const drawerSchema: FormSchemaGetter = () => [
     componentProps: { class: 'w-full', placeholder: '请选择' },
     fieldName: 'deptId',
     label: '所属部门',
-    rules: 'required',
+    rules: 'selectRequired',
   },
   {
     component: 'Input',

@@ -23,7 +23,7 @@ export const drawerSchema: FormSchemaGetter = () => [
     },
     fieldName: 'deptId',
     label: '所属部门',
-    rules: 'required',
+    rules: 'selectRequired',
   },
   {
     component: 'Input',

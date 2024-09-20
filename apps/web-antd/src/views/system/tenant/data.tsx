@@ -117,7 +117,7 @@ export const drawerSchema: FormSchemaGetter = () => [
     },
     fieldName: 'packageId',
     label: '租户套餐',
-    rules: 'required',
+    rules: 'selectRequired',
   },
   {
     component: 'DatePicker',

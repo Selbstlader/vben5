@@ -55,7 +55,7 @@ export const drawerSchema: FormSchemaGetter = () => [
     },
     fieldName: 'grantTypeList',
     label: '授权类型',
-    rules: 'required',
+    rules: 'selectRequired',
   },
   {
     component: 'Select',
@@ -68,7 +68,7 @@ export const drawerSchema: FormSchemaGetter = () => [
     },
     fieldName: 'deviceType',
     label: '设备类型',
-    rules: 'required',
+    rules: 'selectRequired',
   },
   {
     component: 'InputNumber',
