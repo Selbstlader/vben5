@@ -112,6 +112,7 @@
     "passwordErrorTip": "Password is incorrect",
     "passwordTip": "Please enter password",
     "captchaTip": "Please enter captcha",
+    "verifyRequiredTip": "Please complete the verification first",
     "rememberMe": "Remember Me",
     "createAnAccount": "Create an Account",
     "createAccount": "Create Account",
