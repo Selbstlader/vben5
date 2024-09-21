@@ -32,6 +32,7 @@ import {
   TreeSelect,
   Upload,
 } from 'ant-design-vue';
+import { isArray } from 'lodash-es';
 
 // 业务表单组件适配
 
@@ -107,7 +108,10 @@ setupVbenForm<FormComponentType>({
       return true;
     },
     selectRequired: (value, _params, ctx) => {
-      if (value === undefined || value === null) {
+      if (
+        [false, null, undefined].includes(value) ||
+        (isArray(value) && value.length === 0)
+      ) {
         return $t('formRules.selectRequired', [ctx.label]);
       }
       return true;
