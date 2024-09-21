@@ -128,3 +128,9 @@ async function handleCancel() {
     </BasicForm>
   </BasicDrawer>
 </template>
+
+<style lang="scss" scoped>
+:deep(.form-valid-error .ant-input[name='clientSecret']) {
+  border-color: hsl(var(--destructive));
+}
+</style>
