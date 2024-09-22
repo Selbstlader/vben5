@@ -5,7 +5,7 @@ import { useVbenDrawer } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 
 import { useVbenForm } from '#/adapter';
-import { userAdd, userUpdate } from '#/api/system/user';
+import { findUserInfo, userAdd, userUpdate } from '#/api/system/user';
 
 import { drawerSchema } from './data';
 
@@ -28,7 +28,7 @@ const [BasicForm, formApi] = useVbenForm({
 
 interface DrawerProps {
   update: boolean;
-  record: any;
+  id: number | string;
 }
 
 const [BasicDrawer, drawerApi] = useVbenDrawer({
@@ -39,12 +39,17 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
       return null;
     }
     drawerApi.drawerLoading(true);
-    const { record, update } = drawerApi.getData() as DrawerProps;
+    const { id, update } = drawerApi.getData() as DrawerProps;
     isUpdate.value = update;
     // 更新 && 赋值
-    if (update && record) {
-      for (const key in record) {
-        await formApi.setFieldValue(key, record[key]);
+    if (update && id) {
+      const { postIds = [], roleIds = [], user } = await findUserInfo(id);
+      for (const key in user) {
+        // 添加基础信息
+        await formApi.setFieldValue(key, user as any);
+        // 添加角色和岗位
+        await formApi.setFieldValue('postIds', postIds);
+        await formApi.setFieldValue('roleIds', roleIds);
       }
     }
     drawerApi.drawerLoading(false);
