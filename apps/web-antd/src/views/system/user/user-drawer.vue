@@ -46,7 +46,7 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
       const { postIds = [], roleIds = [], user } = await findUserInfo(id);
       for (const key in user) {
         // 添加基础信息
-        await formApi.setFieldValue(key, user as any);
+        await formApi.setFieldValue(key, user[key as keyof typeof user]);
         // 添加角色和岗位
         await formApi.setFieldValue('postIds', postIds);
         await formApi.setFieldValue('roleIds', roleIds);
