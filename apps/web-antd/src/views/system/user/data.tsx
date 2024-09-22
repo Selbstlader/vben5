@@ -42,11 +42,8 @@ export const drawerSchema: FormSchemaGetter = () => [
   },
   {
     component: 'TreeSelect',
-    componentProps: {
-      class: 'w-full',
-      getPopupContainer,
-      placeholder: '请选择',
-    },
+    // 在drawer里更新 这里不需要默认的componentProps
+    defaultValue: undefined,
     fieldName: 'deptId',
     label: '所属部门',
     rules: 'selectRequired',
@@ -101,9 +98,13 @@ export const drawerSchema: FormSchemaGetter = () => [
     componentProps: {
       class: 'w-full',
       getPopupContainer,
-      placeholder: '请选择',
+      mode: 'multiple',
+      optionFilterProp: 'label',
+      optionLabelProp: 'label',
+      placeholder: '请先选择部门',
     },
     fieldName: 'postIds',
+    help: '选择部门后, 将自动加载该部门下所有的岗位',
     label: '岗位',
   },
   {
@@ -111,6 +112,9 @@ export const drawerSchema: FormSchemaGetter = () => [
     componentProps: {
       class: 'w-full',
       getPopupContainer,
+      mode: 'multiple',
+      optionFilterProp: 'label',
+      optionLabelProp: 'label',
       placeholder: '请选择',
     },
     fieldName: 'roleIds',

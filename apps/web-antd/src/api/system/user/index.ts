@@ -77,11 +77,12 @@ export function downloadImportTemplate() {
 
 /**
  * 可以不传ID  返回部门和角色options 需要获得原始数据
+ * 不传ID时一定要带最后的/
  * @param userId 用户ID
  * @returns 用户信息
  */
 export function findUserInfo(userId?: ID) {
-  const url = userId ? `${Api.root}/${userId}` : `${Api.root}`;
+  const url = userId ? `${Api.root}/${userId}` : `${Api.root}/`;
   return requestClient.get<UserInfoResponse>(url);
 }
 

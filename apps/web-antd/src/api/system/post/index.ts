@@ -42,5 +42,5 @@ export function postRemove(postIds: IDS) {
 }
 
 export function postOptionSelect(deptId: ID) {
-  return requestClient.get(Api.postSelect, { params: { deptId } });
+  return requestClient.get<Post[]>(Api.postSelect, { params: { deptId } });
 }
