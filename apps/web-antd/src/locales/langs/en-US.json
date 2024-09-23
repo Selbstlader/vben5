@@ -50,7 +50,8 @@
       "sync": "Sync",
       "refresh": "Refresh",
       "generate": "Generate",
-      "downloadLoading": "Downloading... Please wait."
+      "downloadLoading": "Downloading... Please wait.",
+      "preview": "Preview"
     }
   }
 }

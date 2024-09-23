@@ -57,6 +57,30 @@ const profileRoute: RouteRecordStringComponent[] = [
       },
     ],
   },
+  {
+    component: 'BasicLayout',
+    meta: {
+      hideChildrenInMenu: true,
+      hideInMenu: true,
+      title: '修改生成配置',
+    },
+    name: 'GenConfig',
+    path: '/',
+    redirect: '/code-gen/edit',
+    children: [
+      {
+        component: '/tool/gen/edit-gen',
+        meta: {
+          activePath: '/tool/gen',
+          icon: 'mingcute:profile-line',
+          keepAlive: true,
+          title: '生成配置',
+        },
+        name: 'GenConfigIndex',
+        path: '/code-gen/edit/:tableId',
+      },
+    ],
+  },
 ];
 
 /**

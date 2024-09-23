@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { Recordable } from '@vben/types';
 import type { Key } from 'ant-design-vue/es/vc-tree/interface';
 
 import { ref } from 'vue';
@@ -10,9 +11,9 @@ import {
 } from '@vben/common-ui';
 import { Icon } from '@vben/icons';
 
-import { Tree } from 'ant-design-vue';
+import { Skeleton, Tree } from 'ant-design-vue';
 
-import { data } from './preview.json';
+import { previewCode } from '#/api/tool/gen';
 
 interface TreeNode {
   children: TreeNode[];
@@ -26,14 +27,24 @@ const treeData = ref<TreeNode[]>([]);
 const modalTitle = ref('代码预览');
 /** 代码内容 */
 const codeContent = ref('点击左侧树节点查看代码');
+/** code */
+const currentCodeData = ref<null | Recordable<any>>(null);
 
-const [BasicModal] = useVbenModal({
-  onOpenChange(isOpen) {
+const [BasicModal, modalApi] = useVbenModal({
+  async onOpenChange(isOpen) {
     if (!isOpen) {
+      handleClose();
       return null;
     }
+    modalApi.modalLoading(true);
+
+    const { tableId } = modalApi.getData() as { tableId: string };
+    const data = await previewCode(tableId);
+    currentCodeData.value = data;
     const tree = convertToTree(Object.keys(data));
     treeData.value = tree;
+
+    modalApi.modalLoading(false);
   },
 });
 
@@ -116,7 +127,11 @@ function changeLanguageType(filename: string) {
 
 function handleSelect(selectedKeys: Key[]) {
   const [currentFile = ''] = selectedKeys as string[];
-  const currentCode = data[currentFile as keyof typeof data];
+  if (!currentCodeData.value) {
+    return;
+  }
+  const currentCode =
+    currentCodeData.value[currentFile as keyof typeof currentCodeData.value];
   if (currentCode) {
     // 设置代码type
     changeLanguageType(currentFile);
@@ -125,6 +140,13 @@ function handleSelect(selectedKeys: Key[]) {
     // 修改标题
     modalTitle.value = `代码预览: ${currentFile.replace('.vm', '')}`;
   }
+}
+
+function handleClose() {
+  currentCodeData.value = null;
+  codeContent.value = '点击左侧树节点查看代码';
+  modalTitle.value = '代码预览';
+  language.value = 'html';
 }
 </script>
 
@@ -135,7 +157,7 @@ function handleSelect(selectedKeys: Key[]) {
     :fullscreen-button="false"
     :title="modalTitle"
   >
-    <div class="flex gap-[8px]">
+    <div v-if="currentCodeData" class="flex gap-[8px]">
       <Tree
         v-if="treeData.length > 0"
         :tree-data="treeData"
@@ -157,6 +179,7 @@ function handleSelect(selectedKeys: Key[]) {
         readonly
       />
     </div>
+    <Skeleton v-if="!currentCodeData" active />
   </BasicModal>
 </template>
 

@@ -50,7 +50,8 @@
       "sync": "同步",
       "refresh": "刷新",
       "generate": "生成",
-      "downloadLoading": "下载中, 请稍后..."
+      "downloadLoading": "下载中, 请稍后...",
+      "preview": "预览"
     }
   }
 }
