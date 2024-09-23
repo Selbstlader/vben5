@@ -27,7 +27,7 @@ function handleAdd() {
 }
 
 async function handleEdit(record: Recordable<any>) {
-  modalApi.setData({ record, update: true });
+  modalApi.setData({ id: record.configId, update: true });
   modalApi.open();
 }
 
