@@ -22,12 +22,12 @@ const [ConfigModal, modalApi] = useVbenModal({
 });
 
 function handleAdd() {
-  modalApi.setData({ update: false });
+  modalApi.setData({});
   modalApi.open();
 }
 
 async function handleEdit(record: Recordable<any>) {
-  modalApi.setData({ id: record.configId, update: true });
+  modalApi.setData({ id: record.configId });
   modalApi.open();
 }
 
