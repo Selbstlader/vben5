@@ -6,7 +6,7 @@ import { $t } from '@vben/locales';
 import { addFullName, getPopupContainer, listToTree } from '@vben/utils';
 
 import { useVbenForm } from '#/adapter';
-import { menuAdd, menuList, menuUpdate } from '#/api/system/menu';
+import { menuAdd, menuInfo, menuList, menuUpdate } from '#/api/system/menu';
 
 import { drawerSchema } from './data';
 
@@ -14,7 +14,7 @@ const emit = defineEmits<{ reload: [] }>();
 
 interface DrawerProps {
   update: boolean;
-  record?: any;
+  id?: number | string;
 }
 
 const isUpdate = ref(false);
@@ -81,13 +81,14 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
       return null;
     }
     drawerApi.drawerLoading(true);
-    const { record, update } = drawerApi.getData() as DrawerProps;
+    const { id, update } = drawerApi.getData() as DrawerProps;
     isUpdate.value = update;
     // 加载菜单树选择
     await setupMenuSelect();
-    if (update && record) {
+    if (update && id) {
+      const record = await menuInfo(id);
       for (const key in record) {
-        await formApi.setFieldValue(key, record[key]);
+        await formApi.setFieldValue(key, record[key as keyof typeof record]);
       }
     }
     drawerApi.drawerLoading(false);
@@ -102,7 +103,6 @@ async function handleConfirm() {
       return;
     }
     const data = await formApi.getValues();
-    console.log(data);
     await (isUpdate.value ? menuUpdate(data) : menuAdd(data));
     emit('reload');
     await handleCancel();
