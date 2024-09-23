@@ -37,6 +37,7 @@ const [BasicForm, formApi] = useVbenForm({
 async function setupMenuSelect() {
   // menu
   const menuArray = await menuList();
+  // const folderArray = menuArray.filter((item) => item.menuType === 'M');
   const menuTree = listToTree(menuArray, { id: 'menuId', pid: 'parentId' });
   const fullMenuTree = [
     {
@@ -47,7 +48,7 @@ async function setupMenuSelect() {
   ];
   addFullName(fullMenuTree, 'menuName', ' / ');
 
-  await formApi.updateSchema([
+  formApi.updateSchema([
     {
       componentProps: {
         fieldNames: {
@@ -57,11 +58,14 @@ async function setupMenuSelect() {
         getPopupContainer,
         // 设置弹窗滚动高度 默认256
         listHeight: 300,
+        showSearch: true,
         treeData: fullMenuTree,
         treeDefaultExpandAll: false,
         // 默认展开的树节点
         treeDefaultExpandedKeys: [0],
         treeLine: { showLeafIcon: false },
+        // 筛选的字段
+        treeNodeFilterProp: 'menuName',
         treeNodeLabelProp: 'fullName',
       },
       fieldName: 'parentId',
