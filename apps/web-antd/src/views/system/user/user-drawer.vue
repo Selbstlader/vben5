@@ -120,6 +120,13 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
   onConfirm: handleConfirm,
   async onOpenChange(isOpen) {
     if (!isOpen) {
+      // 需要重置岗位选择
+      formApi.updateSchema([
+        {
+          componentProps: { options: [], placeholder: '请先选择部门' },
+          fieldName: 'postIds',
+        },
+      ]);
       return null;
     }
     drawerApi.drawerLoading(true);
@@ -187,13 +194,6 @@ async function handleConfirm() {
 async function handleCancel() {
   drawerApi.close();
   await formApi.resetForm();
-  // 需要重置岗位选择
-  formApi.updateSchema([
-    {
-      componentProps: { options: [], placeholder: '请先选择部门' },
-      fieldName: 'postIds',
-    },
-  ]);
 }
 </script>
 
