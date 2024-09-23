@@ -6,6 +6,7 @@ import { $t } from '@vben/locales';
 
 import { useVbenForm } from '#/adapter';
 import { clientAdd, clientUpdate } from '#/api/system/client';
+import { packageSelectList } from '#/api/system/tenant-package';
 
 import { drawerSchema } from './data';
 
@@ -31,23 +32,17 @@ const [BasicForm, formApi] = useVbenForm({
   wrapperClass: 'grid-cols-2',
 });
 
-function setupForm() {
-  formApi.setState((prev) => {
-    return {
-      ...prev,
-      schema: prev.schema?.map((item) => {
-        if (item.fieldName === 'packageId') {
-          return {
-            ...item,
-            componentProps: {
-              ...item.componentProps,
-            },
-          };
-        }
-        return item;
-      }),
-    };
-  });
+async function setupPackageSelect() {
+  const tenantPackageList = await packageSelectList();
+  formApi.updateSchema([
+    {
+      componentProps: {
+        fieldNames: { label: 'packageName', value: 'packageId' },
+        options: tenantPackageList,
+      },
+      fieldName: 'packageId',
+    },
+  ]);
 }
 
 const [BasicDrawer, drawerApi] = useVbenDrawer({
@@ -61,7 +56,7 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
     const { record, update } = drawerApi.getData() as DrawerProps;
     isUpdate.value = update;
     // 初始化
-    setupForm();
+    await setupPackageSelect();
     if (update && record) {
       for (const key in record) {
         await formApi.setFieldValue(key, record[key]);
