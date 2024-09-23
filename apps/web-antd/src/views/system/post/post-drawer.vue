@@ -6,7 +6,7 @@ import { $t } from '@vben/locales';
 import { addFullName } from '@vben/utils';
 
 import { useVbenForm } from '#/adapter';
-import { postAdd, postUpdate } from '#/api/system/post';
+import { postAdd, postInfo, postUpdate } from '#/api/system/post';
 import { getDeptTree } from '#/api/system/user';
 
 import { drawerSchema } from './data';
@@ -15,7 +15,7 @@ const emit = defineEmits<{ reload: [] }>();
 
 interface DrawerProps {
   update: boolean;
-  record?: any;
+  id?: number | string;
 }
 
 const isUpdate = ref(false);
@@ -32,33 +32,23 @@ const [BasicForm, formApi] = useVbenForm({
   wrapperClass: 'grid-cols-2',
 });
 
-async function initDeptSelect() {
+async function setupDeptSelect() {
   const deptTree = await getDeptTree();
   // 选中后显示在输入框的值 即父节点 / 子节点
   addFullName(deptTree, 'label', ' / ');
-  formApi.setState((prev) => {
-    return {
-      ...prev,
-      schema: prev.schema?.map((item) => {
-        // 部门树
-        if (item.fieldName === 'deptId') {
-          return {
-            ...item,
-            componentProps: {
-              ...item.componentProps,
-              fieldNames: { label: 'label', value: 'id' },
-              treeData: deptTree,
-              treeDefaultExpandAll: true,
-              treeLine: { showLeafIcon: false },
-              // 选中后显示在输入框的值
-              treeNodeLabelProp: 'fullName',
-            },
-          };
-        }
-        return item;
-      }),
-    };
-  });
+  formApi.updateSchema([
+    {
+      componentProps: {
+        fieldNames: { label: 'label', value: 'id' },
+        treeData: deptTree,
+        treeDefaultExpandAll: true,
+        treeLine: { showLeafIcon: false },
+        // 选中后显示在输入框的值
+        treeNodeLabelProp: 'fullName',
+      },
+      fieldName: 'deptId',
+    },
+  ]);
 }
 
 const [BasicDrawer, drawerApi] = useVbenDrawer({
@@ -69,14 +59,15 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
       return null;
     }
     drawerApi.drawerLoading(true);
-    const { record, update } = drawerApi.getData() as DrawerProps;
+    const { id, update } = drawerApi.getData() as DrawerProps;
     isUpdate.value = update;
     // 初始化
-    await initDeptSelect();
+    await setupDeptSelect();
     // 更新 && 赋值
-    if (update && record) {
+    if (update && id) {
+      const record = await postInfo(id);
       for (const key in record) {
-        await formApi.setFieldValue(key, record[key]);
+        await formApi.setFieldValue(key, record[key as keyof typeof record]);
       }
     }
     drawerApi.drawerLoading(false);
@@ -91,7 +82,6 @@ async function handleConfirm() {
       return;
     }
     const data = await formApi.getValues();
-    console.log(data);
     await (isUpdate.value ? postUpdate(data) : postAdd(data));
     emit('reload');
     await handleCancel();
