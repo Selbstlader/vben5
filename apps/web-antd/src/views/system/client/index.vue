@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Page, useVbenDrawer } from '@vben/common-ui';
+import { $t } from '@vben/locales';
 
 import clientDrawer from './client-drawer.vue';
 
@@ -15,7 +16,9 @@ function handleAdd() {
 
 <template>
   <Page>
-    <a-button type="primary" @click="handleAdd">add</a-button>
+    <a-button type="primary" @click="handleAdd">
+      {{ $t('pages.common.add') }}
+    </a-button>
     <ClientDrawer />
   </Page>
 </template>
