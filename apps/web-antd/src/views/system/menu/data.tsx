@@ -137,11 +137,15 @@ export const drawerSchema: FormSchemaGetter = () => [
       rules: (model) => {
         // 非链接时为必填项
         if (model.path && !/^https?:\/\//.test(model.path)) {
-          // TODO 有bug 不会显示此处的校验信息
-          console.log('非链接时必填组件路径');
-          return z.string({ message: '非链接时必填组件路径' });
+          return z
+            .string()
+            .min(1, { message: '非链接时必填组件路径' })
+            .refine((val) => !val.startsWith('/') && !val.endsWith('/'), {
+              message: '组件路径开头/末尾不需要带/',
+            });
         }
-        return z.string({ message: '请输入' }).optional();
+        // 为链接时非必填
+        return z.string().optional();
       },
       // 类型为菜单时显示
       show: (values) => values.menuType === 'C',
