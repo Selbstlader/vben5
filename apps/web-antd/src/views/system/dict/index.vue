@@ -3,6 +3,7 @@ import { Page } from '@vben/common-ui';
 
 import { Card } from 'ant-design-vue';
 
+import DictDataPanel from './data/index.vue';
 import DictTypePanel from './type/index.vue';
 </script>
 
@@ -11,6 +12,8 @@ import DictTypePanel from './type/index.vue';
     <Card class="w-full">
       <DictTypePanel />
     </Card>
-    <Card class="w-full">b</Card>
+    <Card class="w-full">
+      <DictDataPanel />
+    </Card>
   </Page>
 </template>
