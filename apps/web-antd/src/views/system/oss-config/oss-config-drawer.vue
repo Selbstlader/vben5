@@ -5,7 +5,11 @@ import { useVbenDrawer } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 
 import { useVbenForm } from '#/adapter';
-import { ossConfigAdd, ossConfigUpdate } from '#/api/system/oss-config';
+import {
+  ossConfigAdd,
+  ossConfigInfo,
+  ossConfigUpdate,
+} from '#/api/system/oss-config';
 
 import { drawerSchema } from './data';
 
@@ -13,7 +17,7 @@ const emit = defineEmits<{ reload: [] }>();
 
 interface DrawerProps {
   update: boolean;
-  record?: any;
+  id?: number | string;
 }
 
 const isUpdate = ref(false);
@@ -39,11 +43,12 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
       return null;
     }
     drawerApi.drawerLoading(true);
-    const { record, update } = drawerApi.getData() as DrawerProps;
+    const { id, update } = drawerApi.getData() as DrawerProps;
     isUpdate.value = update;
-    if (update && record) {
+    if (update && id) {
+      const record = await ossConfigInfo(id);
       for (const key in record) {
-        await formApi.setFieldValue(key, record[key]);
+        await formApi.setFieldValue(key, record[key as keyof typeof record]);
       }
     }
     drawerApi.drawerLoading(false);
