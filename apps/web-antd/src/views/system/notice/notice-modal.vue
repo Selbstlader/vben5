@@ -5,7 +5,7 @@ import { useVbenModal } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 
 import { useVbenForm } from '#/adapter';
-import { noticeAdd, noticeUpdate } from '#/api/system/notice';
+import { noticeAdd, noticeInfo, noticeUpdate } from '#/api/system/notice';
 import { Tinymce } from '#/components/tinymce';
 
 import { modalSchema } from './data';
@@ -14,7 +14,7 @@ const emit = defineEmits<{ reload: [] }>();
 
 interface ModalProps {
   update: boolean;
-  record?: any;
+  id?: number | string;
 }
 
 const isUpdate = ref(false);
@@ -38,11 +38,12 @@ const [BasicModal, modalApi] = useVbenModal({
       return null;
     }
     modalApi.modalLoading(true);
-    const { record, update } = modalApi.getData() as ModalProps;
+    const { id, update } = modalApi.getData() as ModalProps;
     isUpdate.value = update;
-    if (update && record) {
+    if (update && id) {
+      const record = await noticeInfo(id);
       for (const key in record) {
-        await formApi.setFieldValue(key, record[key]);
+        await formApi.setFieldValue(key, record[key as keyof typeof record]);
       }
     }
     modalApi.modalLoading(false);
