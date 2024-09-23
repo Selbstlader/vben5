@@ -57,7 +57,7 @@ function genRoleOptionlabel(role: Role) {
   }
   return h('div', { class: 'flex items-center gap-[6px]' }, [
     h('span', null, role.roleName),
-    h(Tag, { color: found.color }, found.label),
+    h(Tag, { color: found.color }, () => found.label),
   ]);
 }
 
