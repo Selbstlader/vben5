@@ -10,6 +10,13 @@ import {
 
 import { tagSelectOptions } from '#/components/dict';
 
+/**
+ * 需要禁止透传
+ * 不禁止会有奇怪的bug 会绑定到selectType上
+ * TODO: 未知原因 有待研究
+ */
+defineOptions({ inheritAttrs: false });
+
 defineEmits<{ deselect: [] }>();
 
 const options = [
@@ -31,21 +38,22 @@ const selectType = defineModel('selectType', {
   type: String as PropType<SelectType>,
 });
 
+/**
+ * color必须为hex颜色或者undefined
+ */
 const color = defineModel('value', {
-  default: '',
-  type: String,
+  default: undefined,
+  type: String as PropType<string | undefined>,
 });
 
 function handleSelectTypeChange(e: RadioChangeEvent) {
-  // 必须给默认hex颜色  不能为空字符串
-  if (e.target.value === 'custom') {
-    color.value = '#FFFFFF';
-  }
+  // 必须给默认hex颜色 不能为空字符串
+  color.value = e.target.value === 'custom' ? '#000000' : undefined;
 }
 </script>
 
 <template>
-  <div class="flex items-center gap-[6px]">
+  <div class="flex flex-1 items-center gap-[6px]">
     <RadioGroup
       v-model:value="selectType"
       :options="computedOptions"
@@ -55,6 +63,7 @@ function handleSelectTypeChange(e: RadioChangeEvent) {
     />
     <Select
       v-if="selectType === 'default'"
+      v-model:value="color"
       :allow-clear="true"
       :options="tagSelectOptions()"
       class="flex-1"
