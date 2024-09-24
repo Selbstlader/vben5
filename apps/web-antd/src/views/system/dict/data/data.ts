@@ -1,5 +1,27 @@
 import type { FormSchemaGetter } from '#/adapter';
 
+import { getPopupContainer } from '@vben/utils';
+
+export const querySchema: FormSchemaGetter = () => [
+  {
+    component: 'Select',
+    componentProps: {
+      getPopupContainer,
+      placeholder: '请选择',
+    },
+    fieldName: 'dictType',
+    label: '字典类型',
+  },
+  {
+    component: 'Input',
+    componentProps: {
+      placeholder: '请输入',
+    },
+    fieldName: 'dictLabel',
+    label: '字典标签',
+  },
+];
+
 export const drawerSchema: FormSchemaGetter = () => [
   {
     component: 'Input',

@@ -9,6 +9,34 @@ const accessPolicyOptions = [
   { color: 'blue', label: '自定义', value: '2' },
 ];
 
+export const querySchema: FormSchemaGetter = () => [
+  {
+    component: 'Input',
+    componentProps: {
+      placeholder: '请输入',
+    },
+    fieldName: 'configKey',
+    label: '配置名称',
+  },
+  {
+    component: 'Input',
+    componentProps: {
+      placeholder: '请输入',
+    },
+    fieldName: 'bucketName',
+    label: '桶名称',
+  },
+  {
+    component: 'Select',
+    componentProps: {
+      options: getDictOptions(DictEnum.SYS_YES_NO),
+      placeholder: '请选择',
+    },
+    fieldName: 'status',
+    label: '是否默认',
+  },
+];
+
 export const drawerSchema: FormSchemaGetter = () => [
   {
     component: 'Input',

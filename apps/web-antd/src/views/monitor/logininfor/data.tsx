@@ -1,12 +1,47 @@
 import type { ColumnsType } from 'ant-design-vue/es/table';
 
+import type { FormSchemaGetter } from '#/adapter';
 import type { DescItem } from '#/components/description';
 
 import { DictEnum } from '@vben/constants';
 
 import { Tooltip } from 'ant-design-vue';
 
+import { getDictOptions } from '#/utils/dict';
 import { renderBrowserIcon, renderDict, renderOsIcon } from '#/utils/render';
+
+export const querySchema: FormSchemaGetter = () => [
+  {
+    component: 'Input',
+    componentProps: {
+      placeholder: '请输入',
+    },
+    fieldName: 'ipaddr',
+    label: 'IP地址',
+  },
+  {
+    component: 'Input',
+    componentProps: {
+      placeholder: '请输入',
+    },
+    fieldName: 'userName',
+    label: '用户账号',
+  },
+  {
+    component: 'Select',
+    componentProps: {
+      options: getDictOptions(DictEnum.SYS_COMMON_STATUS),
+      placeholder: '请选择',
+    },
+    fieldName: 'status',
+    label: '登录状态',
+  },
+  {
+    component: 'RangePicker',
+    fieldName: 'dateTime',
+    label: '登录日期',
+  },
+];
 
 export const columns: ColumnsType = [
   {

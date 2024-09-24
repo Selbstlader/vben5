@@ -5,6 +5,34 @@ import { getPopupContainer } from '@vben/utils';
 
 import { getDictOptions } from '#/utils/dict';
 
+export const querySchema: FormSchemaGetter = () => [
+  {
+    component: 'Input',
+    componentProps: {
+      placeholder: '请输入',
+    },
+    fieldName: 'clientKey',
+    label: '客户端key',
+  },
+  {
+    component: 'Input',
+    componentProps: {
+      placeholder: '请输入',
+    },
+    fieldName: 'clientSecret',
+    label: '客户端密钥',
+  },
+  {
+    component: 'Select',
+    componentProps: {
+      options: getDictOptions(DictEnum.SYS_NORMAL_DISABLE),
+      placeholder: '请选择',
+    },
+    fieldName: 'status',
+    label: '状态',
+  },
+];
+
 export const drawerSchema: FormSchemaGetter = () => [
   {
     component: 'Input',

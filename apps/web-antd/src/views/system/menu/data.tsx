@@ -1,7 +1,39 @@
 import { DictEnum } from '@vben/constants';
+import { getPopupContainer } from '@vben/utils';
 
 import { type FormSchemaGetter, z } from '#/adapter';
 import { getDictOptions } from '#/utils/dict';
+
+export const querySchema: FormSchemaGetter = () => [
+  {
+    component: 'Input',
+    componentProps: {
+      placeholder: '请输入',
+    },
+    fieldName: 'menuName',
+    label: '菜单名称 ',
+  },
+  {
+    component: 'Select',
+    componentProps: {
+      getPopupContainer,
+      options: getDictOptions(DictEnum.SYS_NORMAL_DISABLE),
+      placeholder: '请选择',
+    },
+    fieldName: 'status',
+    label: '菜单状态 ',
+  },
+  {
+    component: 'Select',
+    componentProps: {
+      getPopupContainer,
+      options: getDictOptions(DictEnum.SYS_SHOW_HIDE),
+      placeholder: '请选择',
+    },
+    fieldName: 'visible',
+    label: '显示状态',
+  },
+];
 
 // 菜单类型（M目录 C菜单 F按钮）
 export const menuTypeOptions = [

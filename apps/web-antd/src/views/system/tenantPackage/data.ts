@@ -1,6 +1,6 @@
 import type { FormSchemaGetter } from '#/adapter';
 
-export const schema: FormSchemaGetter = () => [
+export const querySchema: FormSchemaGetter = () => [
   {
     component: 'Input',
     componentProps: {

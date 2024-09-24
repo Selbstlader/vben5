@@ -1,8 +1,38 @@
 import type { FormSchemaGetter } from '#/adapter';
 
 import { DictEnum } from '@vben/constants';
+import { getPopupContainer } from '@vben/utils';
 
 import { getDictOptions } from '#/utils/dict';
+
+export const querySchema: FormSchemaGetter = () => [
+  {
+    component: 'Input',
+    componentProps: {
+      placeholder: '请输入',
+    },
+    fieldName: 'noticeTitle',
+    label: '公告标题',
+  },
+  {
+    component: 'Input',
+    componentProps: {
+      placeholder: '请输入',
+    },
+    fieldName: 'createBy',
+    label: '创建人',
+  },
+  {
+    component: 'Select',
+    componentProps: {
+      getPopupContainer,
+      options: getDictOptions(DictEnum.SYS_NOTICE_TYPE),
+      placeholder: '请选择',
+    },
+    fieldName: 'noticeType',
+    label: '公告类型',
+  },
+];
 
 export const modalSchema: FormSchemaGetter = () => [
   {

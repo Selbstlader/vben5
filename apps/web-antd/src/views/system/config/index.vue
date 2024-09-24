@@ -9,13 +9,15 @@ import { onMounted, ref } from 'vue';
 import { Page, useVbenModal } from '@vben/common-ui';
 import { DictEnum } from '@vben/constants';
 
-import { Space, Table } from 'ant-design-vue';
+import { Card, Space, Table } from 'ant-design-vue';
 
+import { useVbenForm } from '#/adapter';
 import { configExport, configList } from '#/api/system/config';
 import { downloadExcel } from '#/utils/file/download';
 import { renderDict } from '#/utils/render';
 
 import configModal from './config-modal.vue';
+import { querySchema } from './data';
 
 const [ConfigModal, modalApi] = useVbenModal({
   connectedComponent: configModal,
@@ -80,11 +82,33 @@ const columns: ColumnsType = [
     title: '操作',
   },
 ];
+
+const [QueryForm] = useVbenForm({
+  // 默认展开
+  collapsed: false,
+  // 所有表单项共用，可单独在表单内覆盖
+  commonConfig: {
+    // 所有表单项
+    componentProps: {
+      class: 'w-full',
+    },
+  },
+  schema: querySchema(),
+  // 是否可展开
+  showCollapseButton: true,
+  submitButtonOptions: {
+    text: '查询',
+  },
+  wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
+});
 </script>
 
 <template>
-  <Page>
-    <div class="mb-[16px] flex justify-end gap-[8px]">
+  <Page content-class="flex flex-col gap-3">
+    <Card>
+      <QueryForm />
+    </Card>
+    <div class="flex justify-end gap-[8px]">
       <a-button @click="downloadExcel(configExport, '参数配置', {})">
         {{ $t('pages.common.export') }}
       </a-button>

@@ -4,6 +4,41 @@ import dayjs from 'dayjs';
 
 import { type FormSchemaGetter, z } from '#/adapter';
 
+export const querySchema: FormSchemaGetter = () => [
+  {
+    component: 'Input',
+    componentProps: {
+      placeholder: '请输入',
+    },
+    fieldName: 'tenantId',
+    label: '租户编号',
+  },
+  {
+    component: 'Input',
+    componentProps: {
+      placeholder: '请输入',
+    },
+    fieldName: 'companyName',
+    label: '租户名称',
+  },
+  {
+    component: 'Input',
+    componentProps: {
+      placeholder: '请输入',
+    },
+    fieldName: 'contactUserName',
+    label: '联系人',
+  },
+  {
+    component: 'Input',
+    componentProps: {
+      placeholder: '请输入',
+    },
+    fieldName: 'contactPhone',
+    label: '联系电话',
+  },
+];
+
 const defaultExpireTime = dayjs()
   .add(365, 'days')
   .startOf('day')

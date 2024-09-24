@@ -1,5 +1,24 @@
 import { type FormSchemaGetter, z } from '#/adapter';
 
+export const querySchema: FormSchemaGetter = () => [
+  {
+    component: 'Input',
+    componentProps: {
+      placeholder: '请输入',
+    },
+    fieldName: 'dictName',
+    label: '字典名称',
+  },
+  {
+    component: 'Input',
+    componentProps: {
+      placeholder: '请输入',
+    },
+    fieldName: 'dictType',
+    label: '字典类型',
+  },
+];
+
 export const modalSchema: FormSchemaGetter = () => [
   {
     component: 'Input',

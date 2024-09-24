@@ -7,12 +7,14 @@ import { useRouter } from 'vue-router';
 
 import { Page, useVbenModal } from '@vben/common-ui';
 
-import { message, Popconfirm, Table } from 'ant-design-vue';
+import { Card, message, Popconfirm, Table } from 'ant-design-vue';
 
+import { useVbenForm } from '#/adapter';
 import { batchGenCode, generatedList, genRemove, syncDb } from '#/api/tool/gen';
 import { downloadByData } from '#/utils/file/download';
 
 import codePreviewModal from './code-preview-modal.vue';
+import { querySchema } from './data';
 
 const [CodePreviewModal, previewModalApi] = useVbenModal({
   connectedComponent: codePreviewModal,
@@ -84,10 +86,32 @@ async function handleDelete(record: Recordable<any>) {
   await genRemove(record.tableId);
   // reload
 }
+
+const [QueryForm] = useVbenForm({
+  // 默认展开
+  collapsed: false,
+  // 所有表单项共用，可单独在表单内覆盖
+  commonConfig: {
+    // 所有表单项
+    componentProps: {
+      class: 'w-full',
+    },
+  },
+  schema: querySchema(),
+  // 是否可展开
+  showCollapseButton: true,
+  submitButtonOptions: {
+    text: '查询',
+  },
+  wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
+});
 </script>
 
 <template>
-  <Page>
+  <Page content-class="flex flex-col gap-4">
+    <Card>
+      <QueryForm />
+    </Card>
     <Table :columns="columns" :data-source="dataSource" e="middle">
       <template #bodyCell="{ record, column }">
         <template v-if="column.dataIndex === 'action'">
