@@ -4,6 +4,51 @@ import { getPopupContainer } from '@vben/utils';
 import { type FormSchemaGetter, z } from '#/adapter';
 import { getDictOptions } from '#/utils/dict';
 
+export const querySchema: FormSchemaGetter = () => [
+  {
+    component: 'Input',
+    componentProps: {
+      placeholder: '请输入',
+    },
+    fieldName: 'userName',
+    label: '用户账号',
+  },
+  {
+    component: 'Input',
+    componentProps: {
+      placeholder: '请输入',
+    },
+    fieldName: 'nickName',
+    label: '用户昵称',
+  },
+  {
+    component: 'Input',
+    componentProps: {
+      placeholder: '请输入',
+    },
+    fieldName: 'phonenumber',
+    label: '手机号码',
+    rules: z
+      .string()
+      .regex(/^1[3-9]\d{9}$/, '请输入正确的手机号码')
+      .optional(),
+  },
+  {
+    component: 'Select',
+    componentProps: {
+      getPopupContainer,
+      options: getDictOptions(DictEnum.SYS_NORMAL_DISABLE),
+      placeholder: '请选择',
+    },
+    fieldName: 'status',
+    label: '用户状态',
+  },
+  {
+    component: 'RangePicker',
+    fieldName: 'createTime',
+    label: '创建时间',
+  },
+];
 export const drawerSchema: FormSchemaGetter = () => [
   {
     component: 'Input',
