@@ -4,7 +4,7 @@ import { ref } from 'vue';
 import { Page, useVbenDrawer, useVbenModal } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 
-import { message } from 'ant-design-vue';
+import { Card, message } from 'ant-design-vue';
 
 import { useVbenForm } from '#/adapter';
 import { userExport } from '#/api/system/user';
@@ -69,25 +69,32 @@ const [QueryForm] = useVbenForm({
       @select="handleSelect"
     />
     <div class="flex w-full flex-col gap-[8px]">
-      <QueryForm />
-      <div class="flex justify-end gap-[8px]">
-        <a-button
-          v-access:code="['system:user:export']"
-          @click="downloadExcel(userExport, '用户管理', {})"
-        >
-          {{ $t('pages.common.export') }}
-        </a-button>
-        <a-button v-access:code="['system:user:import']" @click="handleImport">
-          {{ $t('pages.common.import') }}
-        </a-button>
-        <a-button
-          type="primary"
-          v-access:code="['system:user:add']"
-          @click="handleAdd"
-        >
-          {{ $t('pages.common.add') }}
-        </a-button>
-      </div>
+      <Card>
+        <QueryForm />
+      </Card>
+      <Card>
+        <div class="flex justify-end gap-[8px]">
+          <a-button
+            v-access:code="['system:user:export']"
+            @click="downloadExcel(userExport, '用户管理', {})"
+          >
+            {{ $t('pages.common.export') }}
+          </a-button>
+          <a-button
+            v-access:code="['system:user:import']"
+            @click="handleImport"
+          >
+            {{ $t('pages.common.import') }}
+          </a-button>
+          <a-button
+            type="primary"
+            v-access:code="['system:user:add']"
+            @click="handleAdd"
+          >
+            {{ $t('pages.common.add') }}
+          </a-button>
+        </div>
+      </Card>
     </div>
     <UserImpotModal />
     <UserDrawer />
