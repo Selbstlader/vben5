@@ -1,11 +1,18 @@
 <script setup lang="ts">
-import { Page } from '@vben/common-ui';
+import type { Recordable } from '@vben/types';
 
-import { Card } from 'ant-design-vue';
+import { onMounted, ref } from 'vue';
+
+import { Page, useVbenDrawer } from '@vben/common-ui';
+import { $t } from '@vben/locales';
+
+import { Card, Table } from 'ant-design-vue';
 
 import { useVbenForm } from '#/adapter';
+import { roleList } from '#/api/system/role';
 
 import { querySchema } from './data';
+import roleDrawer from './role-drawer.vue';
 
 const [QueryForm] = useVbenForm({
   // 默认展开
@@ -25,12 +32,76 @@ const [QueryForm] = useVbenForm({
   },
   wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
 });
+
+const [RoleDrawer, drawerApi] = useVbenDrawer({
+  connectedComponent: roleDrawer,
+});
+
+function handleAdd() {
+  drawerApi.setData({});
+  drawerApi.open();
+}
+
+const columns = [
+  {
+    dataIndex: 'roleName',
+    title: '角色名称',
+  },
+  {
+    dataIndex: 'roleKey',
+    title: '权限字符',
+  },
+  {
+    dataIndex: 'dataScope',
+    title: '数据权限',
+  },
+  {
+    dataIndex: 'roleSort',
+    title: '排序',
+  },
+  {
+    dataIndex: 'status',
+    title: '状态',
+  },
+  {
+    dataIndex: 'createTime',
+    title: '创建时间',
+  },
+  {
+    dataIndex: 'action',
+    title: '操作',
+  },
+];
+
+const dataSource = ref([]);
+onMounted(async () => {
+  const resp = await roleList();
+  dataSource.value = (resp as any).rows;
+});
+
+function handleEdit(record: Recordable<any>) {
+  drawerApi.setData({ id: record.roleId });
+  drawerApi.open();
+}
 </script>
 
 <template>
-  <Page content-class="flex lg:flex-row flex-col gap-[16px]">
+  <Page content-class="flex flex-col gap-[16px]">
     <Card class="flex-1">
       <QueryForm />
     </Card>
+    <a-button @click="handleAdd">{{ $t('pages.common.add') }}</a-button>
+    <RoleDrawer />
+    <div class="bg-background rounded-lg p-[16px]">
+      <Table :columns="columns" :data-source="dataSource">
+        <template #bodyCell="{ column, record }">
+          <template v-if="column.dataIndex === 'action'">
+            <a-button size="small" type="primary" @click="handleEdit(record)">
+              编辑
+            </a-button>
+          </template>
+        </template>
+      </Table>
+    </div>
   </Page>
 </template>
