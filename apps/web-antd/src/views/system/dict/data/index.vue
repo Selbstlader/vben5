@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ref } from 'vue';
+
 import { useVbenDrawer } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 
@@ -6,6 +8,7 @@ import { Card } from 'ant-design-vue';
 
 import { useVbenForm } from '#/adapter';
 
+import { emitter } from '../mitt';
 import { querySchema } from './data';
 import dictDataDrawer from './dict-data-drawer.vue';
 
@@ -36,6 +39,12 @@ const [QueryForm] = useVbenForm({
   },
   wrapperClass: 'grid-cols-1 md:grid-cols-2',
 });
+
+const testValue = ref('');
+
+emitter.on('rowClick', (dictType) => {
+  testValue.value = dictType;
+});
 </script>
 
 <template>
@@ -48,6 +57,7 @@ const [QueryForm] = useVbenForm({
         {{ $t('pages.common.add') }}
       </a-button>
     </Card>
+    {{ testValue }}
     <DictDataDrawer />
   </div>
 </template>

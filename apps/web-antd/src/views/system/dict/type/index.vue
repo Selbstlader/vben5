@@ -3,9 +3,11 @@ import { useVbenModal } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 
 import { Card } from 'ant-design-vue';
+import { uniqueId } from 'lodash-es';
 
 import { useVbenForm } from '#/adapter';
 
+import { emitter } from '../mitt';
 import { querySchema } from './data';
 import dictTypeModel from './dict-type-model.vue';
 
@@ -38,6 +40,10 @@ const [QueryForm] = useVbenForm({
   },
   wrapperClass: 'grid-cols-1 md:grid-cols-2',
 });
+
+function handleRowClickTest() {
+  emitter.emit('rowClick', uniqueId('mitt-'));
+}
 </script>
 
 <template>
@@ -49,6 +55,10 @@ const [QueryForm] = useVbenForm({
       <a-button type="primary" @click="handleAdd">
         {{ $t('pages.common.add') }}
       </a-button>
+    </Card>
+    <Card>
+      <a-button @click="handleRowClickTest">测试mitt</a-button>
+      左侧向右侧传值
     </Card>
     <DictTypeModal />
   </div>
