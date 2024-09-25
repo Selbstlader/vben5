@@ -3,18 +3,18 @@ import { computed, ref } from 'vue';
 
 import { useVbenModal } from '@vben/common-ui';
 import { $t } from '@vben/locales';
+import { cloneDeep } from '@vben/utils';
 
 import { useVbenForm } from '#/adapter';
-import { dictTypeAdd, dictTypeUpdate } from '#/api/system/dict/dict-type';
+import {
+  dictTypeAdd,
+  dictTypeInfo,
+  dictTypeUpdate,
+} from '#/api/system/dict/dict-type';
 
 import { modalSchema } from './data';
 
 const emit = defineEmits<{ reload: [] }>();
-
-interface ModalProps {
-  update: boolean;
-  record?: any;
-}
 
 const isUpdate = ref(false);
 const title = computed(() => {
@@ -38,12 +38,11 @@ const [BasicModal, modalApi] = useVbenModal({
       return null;
     }
     modalApi.modalLoading(true);
-    const { record, update } = modalApi.getData() as ModalProps;
-    isUpdate.value = update;
-    if (update && record) {
-      for (const key in record) {
-        await formApi.setFieldValue(key, record[key]);
-      }
+    const { id } = modalApi.getData() as { id?: number | string };
+    isUpdate.value = !!id;
+    if (isUpdate.value && id) {
+      const record = await dictTypeInfo(id);
+      await formApi.setValues(record);
     }
     modalApi.modalLoading(false);
   },
@@ -56,7 +55,7 @@ async function handleConfirm() {
     if (!valid) {
       return;
     }
-    const data = await formApi.getValues();
+    const data = cloneDeep(await formApi.getValues());
     await (isUpdate.value ? dictTypeUpdate(data) : dictTypeAdd(data));
     emit('reload');
     await handleCancel();

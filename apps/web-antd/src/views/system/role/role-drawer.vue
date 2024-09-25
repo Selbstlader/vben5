@@ -3,8 +3,7 @@ import { computed, ref } from 'vue';
 
 import { useVbenDrawer } from '@vben/common-ui';
 import { $t } from '@vben/locales';
-
-import { cloneDeep } from 'lodash-es';
+import { cloneDeep } from '@vben/utils';
 
 import { useVbenForm } from '#/adapter';
 import { menuTreeSelect, roleMenuTreeSelect } from '#/api/system/menu';
@@ -61,9 +60,7 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
 
     if (isUpdate.value && id) {
       const record = await roleInfo(id);
-      for (const key in record) {
-        await formApi.setFieldValue(key, record[key as keyof typeof record]);
-      }
+      await formApi.setValues(record);
     }
     // init菜单 注意顺序要放在赋值record之后 内部watch会依赖record
     await setupMenuTree(id);

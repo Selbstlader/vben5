@@ -3,6 +3,7 @@ import { computed, ref } from 'vue';
 
 import { useVbenDrawer } from '@vben/common-ui';
 import { $t } from '@vben/locales';
+import { cloneDeep } from '@vben/utils';
 
 import { useVbenForm } from '#/adapter';
 import { clientAdd, clientUpdate } from '#/api/system/client';
@@ -69,9 +70,7 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
     if (dictCode && isUpdate.value) {
       const record = await dictDetailInfo(dictCode);
       setupSelectType(record.listClass);
-      for (const key in record) {
-        await formApi.setFieldValue(key, record[key as keyof typeof record]);
-      }
+      await formApi.setValues(record);
     }
 
     drawerApi.drawerLoading(false);
@@ -85,7 +84,7 @@ async function handleConfirm() {
     if (!valid) {
       return;
     }
-    const data = await formApi.getValues();
+    const data = cloneDeep(await formApi.getValues());
     await (isUpdate.value ? clientUpdate(data) : clientAdd(data));
     emit('reload');
     await handleCancel();

@@ -2,8 +2,7 @@
 import { ref } from 'vue';
 
 import { useVbenModal } from '@vben/common-ui';
-
-import { cloneDeep } from 'lodash-es';
+import { cloneDeep } from '@vben/utils';
 
 import { useVbenForm } from '#/adapter';
 import { roleDataScope, roleDeptTree, roleInfo } from '#/api/system/role';
@@ -46,9 +45,7 @@ const [BasicModal, modalApi] = useVbenModal({
 
     setupDeptTree(id);
     const record = await roleInfo(id);
-    for (const key in record) {
-      await formApi.setFieldValue(key, record[key as keyof typeof record]);
-    }
+    await formApi.setValues(record);
 
     modalApi.modalLoading(false);
   },

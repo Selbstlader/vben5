@@ -3,6 +3,7 @@ import { computed, ref } from 'vue';
 
 import { useVbenDrawer } from '@vben/common-ui';
 import { $t } from '@vben/locales';
+import { cloneDeep } from '@vben/utils';
 
 import { useVbenForm } from '#/adapter';
 import { clientAdd, clientInfo, clientUpdate } from '#/api/system/client';
@@ -11,11 +12,6 @@ import { drawerSchema } from './data';
 import SecretInput from './secret-input.vue';
 
 const emit = defineEmits<{ reload: [] }>();
-
-interface DrawerProps {
-  update: boolean;
-  id?: number | string;
-}
 
 const isUpdate = ref(false);
 const title = computed(() => {
@@ -64,11 +60,11 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
       return null;
     }
     drawerApi.drawerLoading(true);
-    const { id, update } = drawerApi.getData() as DrawerProps;
-    isUpdate.value = update;
+    const { id } = drawerApi.getData() as { id?: number | string };
+    isUpdate.value = !!id;
     // 初始化
-    setupForm(update);
-    if (update && id) {
+    setupForm(isUpdate.value);
+    if (isUpdate.value && id) {
       const record = await clientInfo(id);
       // 不能禁用id为1的记录
       formApi.updateSchema([
@@ -79,10 +75,7 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
           fieldName: 'status',
         },
       ]);
-
-      for (const key in record) {
-        await formApi.setFieldValue(key, record[key as keyof typeof record]);
-      }
+      await formApi.setValues(record);
     }
     drawerApi.drawerLoading(false);
   },
@@ -95,7 +88,7 @@ async function handleConfirm() {
     if (!valid) {
       return;
     }
-    const data = await formApi.getValues();
+    const data = cloneDeep(await formApi.getValues());
     await (isUpdate.value ? clientUpdate(data) : clientAdd(data));
     emit('reload');
     await handleCancel();

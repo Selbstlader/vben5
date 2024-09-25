@@ -3,7 +3,7 @@ import { computed, ref } from 'vue';
 
 import { useVbenDrawer } from '@vben/common-ui';
 import { $t } from '@vben/locales';
-import { addFullName, listToTree } from '@vben/utils';
+import { addFullName, cloneDeep, listToTree } from '@vben/utils';
 
 import { useVbenForm } from '#/adapter';
 import {
@@ -120,10 +120,8 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
     if (id) {
       await formApi.setFieldValue('parentId', id);
       if (update) {
-        const ret = await deptInfo(id);
-        Object.keys(ret).forEach((key) => {
-          formApi.setFieldValue(key, ret[key as keyof typeof ret]);
-        });
+        const record = await deptInfo(id);
+        await formApi.setValues(record);
       }
     }
 
@@ -142,7 +140,7 @@ async function handleConfirm() {
     if (!valid) {
       return;
     }
-    const data = await formApi.getValues();
+    const data = cloneDeep(await formApi.getValues());
     await (isUpdate.value ? deptUpdate(data) : deptAdd(data));
     emit('reload');
     await handleCancel();

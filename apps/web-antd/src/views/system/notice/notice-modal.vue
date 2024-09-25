@@ -3,6 +3,7 @@ import { computed, ref } from 'vue';
 
 import { useVbenModal } from '@vben/common-ui';
 import { $t } from '@vben/locales';
+import { cloneDeep } from '@vben/utils';
 
 import { useVbenForm } from '#/adapter';
 import { noticeAdd, noticeInfo, noticeUpdate } from '#/api/system/notice';
@@ -11,11 +12,6 @@ import { Tinymce } from '#/components/tinymce';
 import { modalSchema } from './data';
 
 const emit = defineEmits<{ reload: [] }>();
-
-interface ModalProps {
-  update: boolean;
-  id?: number | string;
-}
 
 const isUpdate = ref(false);
 const title = computed(() => {
@@ -38,13 +34,11 @@ const [BasicModal, modalApi] = useVbenModal({
       return null;
     }
     modalApi.modalLoading(true);
-    const { id, update } = modalApi.getData() as ModalProps;
-    isUpdate.value = update;
-    if (update && id) {
+    const { id } = modalApi.getData() as { id?: number | string };
+    isUpdate.value = !!id;
+    if (isUpdate.value && id) {
       const record = await noticeInfo(id);
-      for (const key in record) {
-        await formApi.setFieldValue(key, record[key as keyof typeof record]);
-      }
+      await formApi.setValues(record);
     }
     modalApi.modalLoading(false);
   },
@@ -57,8 +51,7 @@ async function handleConfirm() {
     if (!valid) {
       return;
     }
-    const data = await formApi.getValues();
-    console.log(data);
+    const data = cloneDeep(await formApi.getValues());
     await (isUpdate.value ? noticeUpdate(data) : noticeAdd(data));
     emit('reload');
     await handleCancel();

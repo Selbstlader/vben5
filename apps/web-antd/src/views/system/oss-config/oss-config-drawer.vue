@@ -3,6 +3,7 @@ import { computed, ref } from 'vue';
 
 import { useVbenDrawer } from '@vben/common-ui';
 import { $t } from '@vben/locales';
+import { cloneDeep } from '@vben/utils';
 
 import { useVbenForm } from '#/adapter';
 import {
@@ -14,11 +15,6 @@ import {
 import { drawerSchema } from './data';
 
 const emit = defineEmits<{ reload: [] }>();
-
-interface DrawerProps {
-  update: boolean;
-  id?: number | string;
-}
 
 const isUpdate = ref(false);
 const title = computed(() => {
@@ -43,13 +39,11 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
       return null;
     }
     drawerApi.drawerLoading(true);
-    const { id, update } = drawerApi.getData() as DrawerProps;
-    isUpdate.value = update;
-    if (update && id) {
+    const { id } = drawerApi.getData() as { id?: number | string };
+    isUpdate.value = !!id;
+    if (isUpdate.value && id) {
       const record = await ossConfigInfo(id);
-      for (const key in record) {
-        await formApi.setFieldValue(key, record[key as keyof typeof record]);
-      }
+      await formApi.setValues(record);
     }
     drawerApi.drawerLoading(false);
   },
@@ -66,7 +60,7 @@ async function handleConfirm() {
     if (!valid) {
       return;
     }
-    const data = await formApi.getValues();
+    const data = cloneDeep(await formApi.getValues());
     await (isUpdate.value ? ossConfigUpdate(data) : ossConfigAdd(data));
     emit('reload');
     await handleCancel();

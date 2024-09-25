@@ -5,7 +5,7 @@ import { computed, h, ref } from 'vue';
 
 import { useVbenDrawer } from '@vben/common-ui';
 import { $t } from '@vben/locales';
-import { addFullName, getPopupContainer } from '@vben/utils';
+import { addFullName, cloneDeep, getPopupContainer } from '@vben/utils';
 
 import { Tag } from 'ant-design-vue';
 
@@ -125,7 +125,7 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
       return null;
     }
     drawerApi.drawerLoading(true);
-    const { id } = drawerApi.getData() as { id: number | string };
+    const { id } = drawerApi.getData() as { id?: number | string };
     isUpdate.value = !!id;
     /** update时 禁用用户名修改 不显示密码框 */
     formApi.updateSchema([
@@ -155,11 +155,13 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
     // 部门选择
     await setupDeptSelect();
     if (user) {
-      // 添加基础信息
-      formApi.setValues(user);
-      // 添加角色和岗位
-      await formApi.setFieldValue('postIds', postIds);
-      await formApi.setFieldValue('roleIds', roleIds);
+      await Promise.all([
+        // 添加基础信息
+        formApi.setValues(user),
+        // 添加角色和岗位
+        formApi.setFieldValue('postIds', postIds),
+        formApi.setFieldValue('roleIds', roleIds),
+      ]);
     }
     drawerApi.drawerLoading(false);
   },
@@ -172,7 +174,7 @@ async function handleConfirm() {
     if (!valid) {
       return;
     }
-    const data = await formApi.getValues();
+    const data = cloneDeep(await formApi.getValues());
     await (isUpdate.value ? userUpdate(data) : userAdd(data));
     emit('reload');
     await handleCancel();

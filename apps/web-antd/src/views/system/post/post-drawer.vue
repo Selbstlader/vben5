@@ -3,7 +3,7 @@ import { computed, ref } from 'vue';
 
 import { useVbenDrawer } from '@vben/common-ui';
 import { $t } from '@vben/locales';
-import { addFullName } from '@vben/utils';
+import { addFullName, cloneDeep } from '@vben/utils';
 
 import { useVbenForm } from '#/adapter';
 import { postAdd, postInfo, postUpdate } from '#/api/system/post';
@@ -12,11 +12,6 @@ import { getDeptTree } from '#/api/system/user';
 import { drawerSchema } from './data';
 
 const emit = defineEmits<{ reload: [] }>();
-
-interface DrawerProps {
-  update: boolean;
-  id?: number | string;
-}
 
 const isUpdate = ref(false);
 const title = computed(() => {
@@ -59,16 +54,14 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
       return null;
     }
     drawerApi.drawerLoading(true);
-    const { id, update } = drawerApi.getData() as DrawerProps;
-    isUpdate.value = update;
+    const { id } = drawerApi.getData() as { id?: number | string };
+    isUpdate.value = !!id;
     // 初始化
     await setupDeptSelect();
     // 更新 && 赋值
-    if (update && id) {
+    if (isUpdate.value && id) {
       const record = await postInfo(id);
-      for (const key in record) {
-        await formApi.setFieldValue(key, record[key as keyof typeof record]);
-      }
+      await formApi.setValues(record);
     }
     drawerApi.drawerLoading(false);
   },
@@ -81,7 +74,7 @@ async function handleConfirm() {
     if (!valid) {
       return;
     }
-    const data = await formApi.getValues();
+    const data = cloneDeep(await formApi.getValues());
     await (isUpdate.value ? postUpdate(data) : postAdd(data));
     emit('reload');
     await handleCancel();

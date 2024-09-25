@@ -3,6 +3,7 @@ import { computed, ref } from 'vue';
 
 import { useVbenModal } from '@vben/common-ui';
 import { $t } from '@vben/locales';
+import { cloneDeep } from '@vben/utils';
 
 import { useVbenForm } from '#/adapter';
 import { configAdd, configInfo, configUpdate } from '#/api/system/config';
@@ -53,7 +54,7 @@ async function handleConfirm() {
     if (!valid) {
       return;
     }
-    const data = await formApi.getValues();
+    const data = cloneDeep(await formApi.getValues());
     await (isUpdate.value ? configUpdate(data) : configAdd(data));
     emit('reload');
     await handleCancel();
