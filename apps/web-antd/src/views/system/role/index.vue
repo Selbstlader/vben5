@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import type { Recordable } from '@vben/types';
+import type { ColumnsType } from 'ant-design-vue/es/table';
 
 import { onMounted, ref } from 'vue';
 
 import { Page, useVbenDrawer, useVbenModal } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 
-import { Card, Table } from 'ant-design-vue';
+import { Card, Space, Table } from 'ant-design-vue';
 
 import { useVbenForm } from '#/adapter';
 import { roleList } from '#/api/system/role';
@@ -43,7 +44,7 @@ function handleAdd() {
   drawerApi.open();
 }
 
-const columns = [
+const columns: ColumnsType = [
   {
     dataIndex: 'roleName',
     title: '角色名称',
@@ -69,6 +70,7 @@ const columns = [
     title: '创建时间',
   },
   {
+    align: 'center',
     dataIndex: 'action',
     title: '操作',
   },
@@ -107,16 +109,14 @@ function handleAuthEdit(record: Recordable<any>) {
       <Table :columns="columns" :data-source="dataSource">
         <template #bodyCell="{ column, record }">
           <template v-if="column.dataIndex === 'action'">
-            <a-button size="small" type="primary" @click="handleEdit(record)">
-              编辑
-            </a-button>
-            <a-button
-              size="small"
-              type="primary"
-              @click="handleAuthEdit(record)"
-            >
-              数据权限
-            </a-button>
+            <Space>
+              <a-button size="small" type="primary" @click="handleEdit(record)">
+                编辑
+              </a-button>
+              <a-button size="small" @click="handleAuthEdit(record)">
+                数据权限
+              </a-button>
+            </Space>
           </template>
         </template>
       </Table>
