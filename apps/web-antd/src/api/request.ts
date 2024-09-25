@@ -1,13 +1,14 @@
 /**
  * 该文件可自行根据业务逻辑进行调整
  */
+import type { HttpResponse } from '@vben/request';
+
 import { useAppConfig } from '@vben/hooks';
 import { $t } from '@vben/locales';
 import { preferences } from '@vben/preferences';
 import {
   authenticateResponseInterceptor,
   errorMessageResponseInterceptor,
-  type HttpResponse,
   RequestClient,
 } from '@vben/request';
 import { useAccessStore } from '@vben/stores';
