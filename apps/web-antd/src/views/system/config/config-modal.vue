@@ -16,11 +16,12 @@ const title = computed(() => {
   return isUpdate.value ? $t('pages.common.edit') : $t('pages.common.add');
 });
 
+const schema = modalSchema();
 const [BasicForm, formApi] = useVbenForm({
   commonConfig: {
     labelWidth: 80,
   },
-  schema: modalSchema(),
+  schema,
   showDefaultActions: false,
 });
 
@@ -39,9 +40,14 @@ const [BasicModal, modalApi] = useVbenModal({
 
     if (isUpdate.value && id) {
       const record = await configInfo(id);
-      for (const key in record) {
-        await formApi.setFieldValue(key, record[key as keyof typeof record]);
-      }
+      // 只取需要的字段
+      schema
+        .map((item) => item.fieldName)
+        .forEach((key) => {
+          if (key in record) {
+            formApi.setFieldValue(key, record[key as keyof typeof record]);
+          }
+        });
     }
 
     modalApi.modalLoading(false);
