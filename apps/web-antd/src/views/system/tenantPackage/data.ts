@@ -21,7 +21,7 @@ export const drawerSchema: FormSchemaGetter = () => [
     fieldName: 'packageId',
   },
   {
-    component: 'Input',
+    component: 'Radio',
     dependencies: {
       show: () => false,
       triggerFields: [''],
@@ -50,6 +50,7 @@ export const drawerSchema: FormSchemaGetter = () => [
     },
     fieldName: 'remark',
     formItemClass: 'items-baseline',
+    label: '备注',
   },
 ];
 
