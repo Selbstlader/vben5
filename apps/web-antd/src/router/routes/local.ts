@@ -57,6 +57,7 @@ const profileRoute: RouteRecordStringComponent[] = [
       },
     ],
   },
+  // TODO: 图标要改
   {
     component: 'BasicLayout',
     meta: {
@@ -78,6 +79,30 @@ const profileRoute: RouteRecordStringComponent[] = [
         },
         name: 'GenConfigIndex',
         path: '/code-gen/edit/:tableId',
+      },
+    ],
+  },
+  {
+    component: 'BasicLayout',
+    meta: {
+      hideChildrenInMenu: true,
+      hideInMenu: true,
+      title: '分配角色',
+    },
+    name: 'RoleAssign',
+    path: '/',
+    redirect: '/system/role-assign',
+    children: [
+      {
+        component: '/system/role-assign/index',
+        meta: {
+          activePath: '/tool/gen',
+          icon: 'mingcute:profile-line',
+          keepAlive: true,
+          title: '分配角色',
+        },
+        name: 'RoleAssignIndex',
+        path: '/system/role-assign/:roleId',
       },
     ],
   },

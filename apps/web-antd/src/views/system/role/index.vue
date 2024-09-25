@@ -3,6 +3,7 @@ import type { Recordable } from '@vben/types';
 import type { ColumnsType } from 'ant-design-vue/es/table';
 
 import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 import { Page, useVbenDrawer, useVbenModal } from '@vben/common-ui';
 import { $t } from '@vben/locales';
@@ -95,6 +96,11 @@ function handleAuthEdit(record: Recordable<any>) {
   authModalApi.setData({ id: record.roleId });
   authModalApi.open();
 }
+
+const router = useRouter();
+function handleAssignRole(record: Recordable<any>) {
+  router.push(`/system/role-assign/${record.roleId}`);
+}
 </script>
 
 <template>
@@ -115,6 +121,9 @@ function handleAuthEdit(record: Recordable<any>) {
               </a-button>
               <a-button size="small" @click="handleAuthEdit(record)">
                 数据权限
+              </a-button>
+              <a-button size="small" @click="handleAssignRole(record)">
+                分配角色
               </a-button>
             </Space>
           </template>
