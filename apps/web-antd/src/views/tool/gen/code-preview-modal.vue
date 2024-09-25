@@ -158,20 +158,23 @@ function handleClose() {
     :title="modalTitle"
   >
     <div v-if="currentCodeData" class="flex gap-[8px]">
-      <Tree
-        v-if="treeData.length > 0"
-        :tree-data="treeData"
-        class="w-[300px]"
-        default-expand-all
-        @select="handleSelect"
-      >
-        <template #title="{ title, icon }">
-          <div class="flex items-center gap-[16px]">
-            <Icon :icon="icon" />
-            <span>{{ title }}</span>
-          </div>
-        </template>
-      </Tree>
+      <div class="h-[calc(100vh-80px)] w-[300px] overflow-y-scroll">
+        <Tree
+          v-if="treeData.length > 0"
+          :show-line="{ showLeafIcon: false }"
+          :tree-data="treeData"
+          :virtual="false"
+          default-expand-all
+          @select="handleSelect"
+        >
+          <template #title="{ title, icon }">
+            <div class="flex items-center gap-[16px]">
+              <Icon :icon="icon" />
+              <span>{{ title }}</span>
+            </div>
+          </template>
+        </Tree>
+      </div>
       <CodeMirror
         v-model="codeContent"
         :language="language"
