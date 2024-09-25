@@ -98,7 +98,7 @@ export const drawerSchema: FormSchemaGetter = () => [
       optionType: 'button',
     },
     defaultValue: '0',
-    fieldName: 'postStatus',
+    fieldName: 'status',
     label: '岗位状态',
     rules: 'required',
   },
