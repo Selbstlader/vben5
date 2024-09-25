@@ -3,7 +3,7 @@ import type { Recordable } from '@vben/types';
 
 import { onMounted, ref } from 'vue';
 
-import { Page, useVbenDrawer } from '@vben/common-ui';
+import { Page, useVbenDrawer, useVbenModal } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 
 import { Card, Table } from 'ant-design-vue';
@@ -12,6 +12,7 @@ import { useVbenForm } from '#/adapter';
 import { roleList } from '#/api/system/role';
 
 import { querySchema } from './data';
+import roleAuthModal from './role-auth-modal.vue';
 import roleDrawer from './role-drawer.vue';
 
 const [QueryForm] = useVbenForm({
@@ -83,6 +84,15 @@ function handleEdit(record: Recordable<any>) {
   drawerApi.setData({ id: record.roleId });
   drawerApi.open();
 }
+
+const [RoleAuthModal, authModalApi] = useVbenModal({
+  connectedComponent: roleAuthModal,
+});
+
+function handleAuthEdit(record: Recordable<any>) {
+  authModalApi.setData({ id: record.roleId });
+  authModalApi.open();
+}
 </script>
 
 <template>
@@ -92,12 +102,20 @@ function handleEdit(record: Recordable<any>) {
     </Card>
     <a-button @click="handleAdd">{{ $t('pages.common.add') }}</a-button>
     <RoleDrawer />
+    <RoleAuthModal />
     <div class="bg-background rounded-lg p-[16px]">
       <Table :columns="columns" :data-source="dataSource">
         <template #bodyCell="{ column, record }">
           <template v-if="column.dataIndex === 'action'">
             <a-button size="small" type="primary" @click="handleEdit(record)">
               编辑
+            </a-button>
+            <a-button
+              size="small"
+              type="primary"
+              @click="handleAuthEdit(record)"
+            >
+              数据权限
             </a-button>
           </template>
         </template>
