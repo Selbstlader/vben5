@@ -8,9 +8,9 @@ export default defineComponent({
     return () => (
       <div class="flex h-[600px] w-full items-center justify-center">
         <Fallback
-          description="等待官方组件中"
+          description="等待后端重构工作流后开发"
           status="coming-soon"
-          title="Coming Soon"
+          title="等待开发"
         />
       </div>
     );
