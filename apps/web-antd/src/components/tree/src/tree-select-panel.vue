@@ -173,7 +173,15 @@ onMounted(() => {
         :selectable="false"
         :tree-data="treeData"
         @check="handleChecked"
-      />
+      >
+        <template
+          v-for="slotName in Object.keys($slots)"
+          :key="slotName"
+          #[slotName]="data"
+        >
+          <slot :name="slotName" v-bind="data ?? {}"></slot>
+        </template>
+      </Tree>
     </div>
   </div>
 </template>
