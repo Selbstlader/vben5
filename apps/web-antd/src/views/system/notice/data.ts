@@ -81,7 +81,10 @@ export const modalSchema: FormSchemaGetter = () => [
     rules: 'required',
   },
   {
-    component: 'Input',
+    component: 'RichTextarea',
+    componentProps: {
+      width: '100%',
+    },
     fieldName: 'noticeContent',
     formItemClass: 'col-span-2',
     label: '公告内容',

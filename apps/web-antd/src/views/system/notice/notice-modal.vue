@@ -7,7 +7,6 @@ import { cloneDeep } from '@vben/utils';
 
 import { useVbenForm } from '#/adapter';
 import { noticeAdd, noticeInfo, noticeUpdate } from '#/api/system/notice';
-import { Tinymce } from '#/components/tinymce';
 
 import { modalSchema } from './data';
 
@@ -70,10 +69,6 @@ async function handleCancel() {
 
 <template>
   <BasicModal :fullscreen-button="true" :title="title" class="w-[800px]">
-    <BasicForm>
-      <template #noticeContent="slotProps">
-        <Tinymce v-bind="slotProps" width="100%" />
-      </template>
-    </BasicForm>
+    <BasicForm />
   </BasicModal>
 </template>

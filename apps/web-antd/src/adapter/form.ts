@@ -34,6 +34,8 @@ import {
 } from 'ant-design-vue';
 import { isArray } from 'lodash-es';
 
+import { Tinymce as RichTextarea } from '#/components/tinymce';
+
 // 这里需要自行根据业务组件库进行适配，需要用到的组件都需要在这里类型说明
 export type FormComponentType =
   | 'AutoComplete'
@@ -49,6 +51,7 @@ export type FormComponentType =
   | 'RadioGroup'
   | 'RangePicker'
   | 'Rate'
+  | 'RichTextarea'
   | 'Select'
   | 'Space'
   | 'Switch'
@@ -82,6 +85,7 @@ setupVbenForm<FormComponentType>({
     RadioGroup,
     RangePicker,
     Rate,
+    RichTextarea,
     Select,
     Space,
     Switch,
@@ -98,6 +102,7 @@ setupVbenForm<FormComponentType>({
     modelPropNameMap: {
       Checkbox: 'checked',
       Radio: 'checked',
+      RichTextarea: 'modelValue',
       Switch: 'checked',
       Upload: 'fileList',
     },
