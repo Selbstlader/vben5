@@ -4,8 +4,10 @@ import { computed, ref } from 'vue';
 import { useVbenDrawer } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 
+import { cloneDeep } from 'lodash-es';
+
 import { useVbenForm } from '#/adapter';
-import { roleMenuTreeSelect } from '#/api/system/menu';
+import { menuTreeSelect, roleMenuTreeSelect } from '#/api/system/menu';
 import { roleAdd, roleInfo, roleUpdate } from '#/api/system/role';
 
 import { drawerSchema } from './data';
@@ -31,10 +33,19 @@ const [BasicForm, formApi] = useVbenForm({
   wrapperClass: 'grid-cols-2',
 });
 
-async function setupMenuTree(id: number | string) {
-  const resp = await roleMenuTreeSelect(id);
-  console.log(resp);
-  formApi.setFieldValue('menuIds', resp.checkedKeys);
+const menuTree = ref<any[]>([]);
+async function setupMenuTree(id?: number | string) {
+  if (id) {
+    const resp = await roleMenuTreeSelect(id);
+    formApi.setFieldValue('menuIds', resp.checkedKeys);
+    // 设置菜单信息
+    menuTree.value = resp.menus;
+  } else {
+    const resp = await menuTreeSelect();
+    formApi.setFieldValue('menuIds', []);
+    // 设置菜单信息
+    menuTree.value = resp;
+  }
 }
 
 const [BasicDrawer, drawerApi] = useVbenDrawer({
@@ -47,17 +58,24 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
     drawerApi.drawerLoading(true);
     const { id } = drawerApi.getData() as { id?: number | string };
     isUpdate.value = !!id;
+
     if (isUpdate.value && id) {
       const record = await roleInfo(id);
       for (const key in record) {
         await formApi.setFieldValue(key, record[key as keyof typeof record]);
       }
-      // 设置选中的菜单
-      await setupMenuTree(id);
     }
+    // init菜单 注意顺序要放在赋值record之后 内部watch会依赖record
+    await setupMenuTree(id);
+
     drawerApi.drawerLoading(false);
   },
 });
+
+/**
+ * 这里拿到的是一个数组ref
+ */
+const menuSelectRef = ref();
 
 async function handleConfirm() {
   try {
@@ -66,7 +84,11 @@ async function handleConfirm() {
     if (!valid) {
       return;
     }
-    const data = await formApi.getValues();
+    // 这个用于提交
+    const menuIds = menuSelectRef.value?.[0]?.getCheckedKeys() ?? [];
+    // formApi.getValues拿到的是一个readonly对象，不能直接修改，需要cloneDeep
+    const data = cloneDeep(await formApi.getValues());
+    data.menuIds = menuIds;
     await (isUpdate.value ? roleUpdate(data) : roleAdd(data));
     emit('reload');
     await handleCancel();
@@ -82,9 +104,12 @@ async function handleCancel() {
   await formApi.resetForm();
 }
 
-async function test() {
-  const data = await formApi.getValues();
-  console.log(data);
+/**
+ * 通过回调更新 无法通过v-model
+ * @param value 菜单选择是否严格模式
+ */
+function handleMenuCheckStrictlyChange(value: boolean) {
+  formApi.setFieldValue('menuCheckStrictly', value);
 }
 </script>
 
@@ -92,19 +117,15 @@ async function test() {
   <BasicDrawer :close-on-click-modal="false" :title="title" class="w-[600px]">
     <BasicForm>
       <template #menuIds="slotProps">
-        <MenuSelect v-bind="slotProps" />
+        <!-- check-strictly为readonly 不能通过v-model绑定 -->
+        <MenuSelect
+          ref="menuSelectRef"
+          v-bind="slotProps"
+          :check-strictly="formApi.form.values.menuCheckStrictly"
+          :menu-tree="menuTree"
+          @check-strictly-change="handleMenuCheckStrictlyChange"
+        />
       </template>
     </BasicForm>
-    <a-button @click="test">测试</a-button>
   </BasicDrawer>
 </template>
-
-<style lang="scss" scoped>
-/**
-自定义组件校验失败样式
-*/
-:deep(.form-valid-error .ant-input[name='clientSecret']) {
-  border-color: hsl(var(--destructive));
-  box-shadow: 0 0 0 2px rgb(255 38 5 / 6%);
-}
-</style>
