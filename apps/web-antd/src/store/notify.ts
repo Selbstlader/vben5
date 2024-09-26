@@ -136,7 +136,7 @@ export const useNotifyStore = defineStore(
   },
   {
     persist: {
-      paths: ['notificationList'],
+      pick: ['notificationList'],
     },
   },
 );
