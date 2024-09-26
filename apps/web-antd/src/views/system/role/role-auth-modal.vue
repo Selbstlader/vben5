@@ -17,8 +17,8 @@ const [BasicForm, formApi] = useVbenForm({
     componentProps: {
       class: 'w-full',
     },
-    labelWidth: 80,
   },
+  layout: 'vertical',
   schema: authModalSchemas(),
   showDefaultActions: false,
 });
@@ -99,7 +99,7 @@ function handleCheckStrictlyChange(value: boolean) {
 <template>
   <BasicModal
     :close-on-click-modal="false"
-    class="min-h-[450px] w-[550px]"
+    class="min-h-[600px] w-[550px]"
     title="分配权限"
   >
     <BasicForm>
