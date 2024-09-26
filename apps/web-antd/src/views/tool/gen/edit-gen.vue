@@ -22,7 +22,7 @@ const routes = useRoute();
 // 获取路由参数
 const tableId = routes.params.tableId as string;
 
-const genInfoData = ref<GenInfo>();
+const genInfoData = ref<GenInfo['info']>();
 
 provide('genInfoData', genInfoData);
 
@@ -30,7 +30,7 @@ onMounted(async () => {
   const resp = await genInfo(tableId);
   // 需要做菜单转换 严格相等 才能选中回显
   resp.info.parentMenuId = safeParseNumber(resp.info.parentMenuId);
-  genInfoData.value = resp;
+  genInfoData.value = resp.info;
   setTabTitle(`生成配置: ${resp.info.tableName}`);
 });
 

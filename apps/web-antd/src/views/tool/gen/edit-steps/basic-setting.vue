@@ -16,7 +16,7 @@ import { formSchema } from './basic';
 /**
  * 从父组件注入
  */
-const genInfoData = inject('genInfoData') as Ref<GenInfo>;
+const genInfoData = inject('genInfoData') as Ref<GenInfo['info']>;
 
 const [BasicForm, formApi] = useVbenForm({
   commonConfig: {
@@ -99,7 +99,7 @@ async function initMenuSelect() {
 }
 
 onMounted(async () => {
-  const { info } = genInfoData.value;
+  const info = genInfoData.value;
   for (const key in info) {
     formApi.setFieldValue(key, info[key as keyof typeof info]);
   }
@@ -113,7 +113,7 @@ async function handleNext() {
       return null;
     }
     const data = await formApi.getValues();
-    Object.assign(genInfoData.value.info, data);
+    Object.assign(genInfoData.value, data);
     toCurrentStep(1);
   } catch (error) {
     console.error(error);

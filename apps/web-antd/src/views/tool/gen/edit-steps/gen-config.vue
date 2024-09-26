@@ -4,6 +4,7 @@ import type { GenInfo } from '#/api/tool/gen/model';
 import { inject, type Ref, unref } from 'vue';
 
 import { Space, Table } from 'ant-design-vue';
+import { cloneDeep } from 'lodash-es';
 
 import { editSave } from '#/api/tool/gen';
 
@@ -12,15 +13,16 @@ import { toCurrentStep } from '../mitt';
 /**
  * 从父组件注入
  */
-const genInfoData = inject('genInfoData') as Ref<GenInfo>;
+const genInfoData = inject('genInfoData') as Ref<GenInfo['info']>;
 
 async function handleSubmit() {
   try {
-    const requestData = unref(genInfoData).info;
+    const requestData = cloneDeep(unref(genInfoData));
     // 树表需要添加这个参数
     if (requestData && requestData.tplCategory === 'tree') {
-      const { treeCode, treeName, treeParentCode } = requestData;
+      const { parentMenuId, treeCode, treeName, treeParentCode } = requestData;
       requestData.params = {
+        parentMenuId,
         treeCode,
         treeName,
         treeParentCode,
@@ -37,11 +39,6 @@ async function handleSubmit() {
         column.isQuery = transform(query);
         column.isRequired = transform(required);
       });
-      // 需要手动添加父级菜单
-      requestData.params = {
-        ...requestData.params,
-        parentMenuId: requestData.parentMenuId,
-      };
     }
     await editSave(requestData);
     // 跳转到成功页面
