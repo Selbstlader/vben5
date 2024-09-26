@@ -20,9 +20,8 @@ async function handleSubmit() {
     const requestData = cloneDeep(unref(genInfoData));
     // 树表需要添加这个参数
     if (requestData && requestData.tplCategory === 'tree') {
-      const { parentMenuId, treeCode, treeName, treeParentCode } = requestData;
+      const { treeCode, treeName, treeParentCode } = requestData;
       requestData.params = {
-        parentMenuId,
         treeCode,
         treeName,
         treeParentCode,
@@ -39,6 +38,12 @@ async function handleSubmit() {
         column.isQuery = transform(query);
         column.isRequired = transform(required);
       });
+      // 需要手动添加父级菜单 弹窗类型
+      requestData.params = {
+        ...requestData.params,
+        parentMenuId: requestData.parentMenuId,
+        popupComponent: requestData.popupComponent,
+      };
     }
     await editSave(requestData);
     // 跳转到成功页面

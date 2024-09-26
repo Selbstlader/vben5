@@ -100,8 +100,13 @@ async function initMenuSelect() {
 
 onMounted(async () => {
   const info = genInfoData.value;
-  for (const key in info) {
-    formApi.setFieldValue(key, info[key as keyof typeof info]);
+  await formApi.setValues(info);
+  // 弹出框类型需要手动赋值
+  if (info.options) {
+    const popupComponent = JSON.parse(info.options)?.popupComponent;
+    if (popupComponent) {
+      await formApi.setFieldValue('popupComponent', popupComponent);
+    }
   }
   await Promise.all([initTreeSelect(info.columns), initMenuSelect()]);
 });

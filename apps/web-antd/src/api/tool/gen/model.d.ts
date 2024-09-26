@@ -176,6 +176,7 @@ export interface Info {
   crud: boolean;
   // 树表需要添加此属性
   params?: any;
+  popupComponent?: string;
 }
 
 export interface GenInfo {

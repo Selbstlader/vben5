@@ -173,6 +173,20 @@ export const formSchema: FormSchemaGetter = () => [
     componentProps: {
       buttonStyle: 'solid',
       options: [
+        { label: 'modal弹窗', value: 'modal' },
+        { label: 'drawer抽屉', value: 'drawer' },
+      ],
+      optionType: 'button',
+    },
+    defaultValue: 'modal',
+    fieldName: 'popupComponent',
+    label: '弹窗组件类型',
+  },
+  {
+    component: 'RadioGroup',
+    componentProps: {
+      buttonStyle: 'solid',
+      options: [
         { label: 'zip压缩包', value: '0' },
         { label: '自定义路径', value: '1' },
       ],
