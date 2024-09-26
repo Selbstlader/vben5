@@ -26,7 +26,7 @@ function handleOpenChange(open: boolean) {
 </script>
 
 <template>
-  <BasicDrawer :footer="false" class="w-[700px]" title="查看日志">
+  <BasicDrawer :footer="false" class="w-[600px]" title="查看日志">
     <Description @register="registerDescription" />
   </BasicDrawer>
 </template>
