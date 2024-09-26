@@ -63,10 +63,10 @@ const poetrySrc = computed(() => {
             {{ profile.user.userName }}
           </DescriptionsItem>
           <DescriptionsItem label="手机号码">
-            {{ profile.user.phonenumber ?? '未绑定手机号' }}
+            {{ profile.user.phonenumber || '未绑定手机号' }}
           </DescriptionsItem>
           <DescriptionsItem label="邮箱">
-            {{ profile.user.email ?? '未绑定邮箱' }}
+            {{ profile.user.email || '未绑定邮箱' }}
           </DescriptionsItem>
           <DescriptionsItem label="部门">
             <Tag color="processing">
