@@ -8,9 +8,9 @@ import { cloneDeep } from '@vben/utils';
 import { useVbenForm } from '#/adapter';
 import { menuTreeSelect, roleMenuTreeSelect } from '#/api/system/menu';
 import { roleAdd, roleInfo, roleUpdate } from '#/api/system/role';
+import { TreeSelectPanel } from '#/components/tree';
 
 import { drawerSchema } from './data';
-import MenuSelect from './menu-select.vue';
 
 const emit = defineEmits<{ reload: [] }>();
 
@@ -115,11 +115,11 @@ function handleMenuCheckStrictlyChange(value: boolean) {
     <BasicForm>
       <template #menuIds="slotProps">
         <!-- check-strictly为readonly 不能通过v-model绑定 -->
-        <MenuSelect
+        <TreeSelectPanel
           ref="menuSelectRef"
           v-bind="slotProps"
           :check-strictly="formApi.form.values.menuCheckStrictly"
-          :menu-tree="menuTree"
+          :tree-data="menuTree"
           @check-strictly-change="handleMenuCheckStrictlyChange"
         />
       </template>

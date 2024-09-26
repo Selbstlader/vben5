@@ -9,6 +9,7 @@ import { findGroupParentIds, treeToList } from '@vben/utils';
 
 import { Checkbox, Tree } from 'ant-design-vue';
 
+/** 需要禁止透传 */
 defineOptions({ inheritAttrs: false });
 
 const props = defineProps({
@@ -23,6 +24,11 @@ const props = defineProps({
   fieldNames: {
     default: () => ({ key: 'id', title: 'label' }),
     type: Object as PropType<{ key: string; title: string }>,
+  },
+  /** 点击节点关联/独立时 清空已勾选的节点 */
+  resetOnStrictlyChange: {
+    default: true,
+    type: Boolean,
   },
   treeData: {
     default: () => [],
@@ -43,10 +49,6 @@ const innerCheckedStrictly = computed(() => {
   return !props.checkStrictly;
 });
 
-function handleCheckStrictlyChange(e: CheckboxChangeEvent) {
-  emit('checkStrictlyChange', e.target.checked);
-}
-
 const associationText = computed(() => {
   return props.checkStrictly ? '父子节点关联' : '父子节点独立';
 });
@@ -61,11 +63,11 @@ const checkedKeys = defineModel('value', {
 });
 // 所有节点的ID
 const allKeys = computed(() => {
-  const id = props.fieldNames.key;
-  return treeToList(props.treeData).map((item: any) => item[id]);
+  const idField = props.fieldNames.key;
+  return treeToList(props.treeData).map((item: any) => item[idField]);
 });
 
-/** 已经选择的所有节点  包括子/父节点 */
+/** 已经选择的所有节点  包括子/父节点 用于提交 */
 const checkedRealKeys = ref<(number | string)[]>([]);
 
 /**
@@ -122,29 +124,45 @@ function handleExpandOrCollapseAll(e: CheckboxChangeEvent) {
   expandedKeys.value = expand ? allKeys.value : [];
 }
 
+function handleCheckStrictlyChange(e: CheckboxChangeEvent) {
+  emit('checkStrictlyChange', e.target.checked);
+  if (props.resetOnStrictlyChange) {
+    checkedKeys.value = [];
+    checkedRealKeys.value = [];
+  }
+}
+
+/**
+ * 暴露方法来获取用于提交的全部节点
+ */
 defineExpose({
   getCheckedKeys: () => checkedRealKeys.value,
 });
 
-onMounted(() => {
+onMounted(async () => {
   if (props.expandAllOnInit) {
-    nextTick(() => {
-      expandedKeys.value = allKeys.value;
-    });
+    await nextTick();
+    expandedKeys.value = allKeys.value;
   }
 });
 </script>
 
 <template>
   <div class="bg-background w-full rounded-lg border-[1px] p-[12px]">
-    <div class="flex items-center gap-2 border-b-[1px] pb-2">
-      <span>节点状态: </span>
-      <span
-        :class="[props.checkStrictly ? 'text-primary' : 'text-red-500']"
-        class="font-semibold"
-      >
-        {{ associationText }}
-      </span>
+    <div class="flex items-center justify-between gap-2 border-b-[1px] pb-2">
+      <div>
+        <span>节点状态: </span>
+        <span :class="[props.checkStrictly ? 'text-primary' : 'text-red-500']">
+          {{ associationText }}
+        </span>
+      </div>
+      <div>
+        已选中
+        <span class="text-primary mx-1 font-semibold">
+          {{ checkedRealKeys.length }}
+        </span>
+        个节点
+      </div>
     </div>
     <div
       class="flex flex-wrap items-center justify-between border-b-[1px] py-2"
