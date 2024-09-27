@@ -23,3 +23,5 @@ export {
   SvgCardIcon,
   SvgDownloadIcon,
 };
+
+export { default as SvgMessageUrl } from './icons/message.svg';

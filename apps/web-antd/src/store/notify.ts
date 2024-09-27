@@ -3,13 +3,13 @@ import type { NotificationItem } from '@vben/layouts';
 import { computed, ref, watch } from 'vue';
 
 import { useAppConfig } from '@vben/hooks';
+import { SvgMessageUrl } from '@vben/icons';
 import { $t } from '@vben/locales';
 import { useAccessStore, useUserStore } from '@vben/stores';
 
 import { useEventSource } from '@vueuse/core';
 import { notification } from 'ant-design-vue';
 import dayjs from 'dayjs';
-import { random } from 'lodash-es';
 import { defineStore } from 'pinia';
 
 const { apiURL, clientId } = useAppConfig(
@@ -66,8 +66,8 @@ export const useNotifyStore = defineStore(
         });
 
         notificationList.value.unshift({
-          // 随机头像
-          avatar: `https://api.multiavatar.com/${random(0, 10_000)}.png`,
+          // avatar: `https://api.multiavatar.com/${random(0, 10_000)}.png`, 随机头像
+          avatar: SvgMessageUrl,
           date: dayjs().format('YYYY-MM-DD HH:mm:ss'),
           isRead: false,
           message,
