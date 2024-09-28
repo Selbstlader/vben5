@@ -11,6 +11,7 @@ import {
 } from '@vben/common-ui';
 import { Icon } from '@vben/icons';
 
+import { useClipboard } from '@vueuse/core';
 import { Skeleton, Tree } from 'ant-design-vue';
 
 import { previewCode } from '#/api/tool/gen';
@@ -148,6 +149,8 @@ function handleClose() {
   modalTitle.value = '代码预览';
   language.value = 'html';
 }
+
+const { copy } = useClipboard({ legacy: true });
 </script>
 
 <template>
@@ -181,6 +184,9 @@ function handleClose() {
         class="h-[calc(100vh-80px)] w-full overflow-y-scroll text-[16px]"
         readonly
       />
+      <div class="fixed right-20 top-20">
+        <a-button @click="copy(codeContent)">复制</a-button>
+      </div>
     </div>
     <Skeleton v-if="!currentCodeData" active />
   </BasicModal>
