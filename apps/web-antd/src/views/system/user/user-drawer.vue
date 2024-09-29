@@ -136,7 +136,17 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
       },
     ]);
     // 更新 && 赋值
-    const { postIds = [], roleIds = [], roles, user } = await findUserInfo(id);
+    const {
+      postIds = [],
+      posts,
+      roleIds = [],
+      roles,
+      user,
+    } = await findUserInfo(id);
+    const postOptions = posts.map((item) => ({
+      label: item.postName,
+      value: item.postId,
+    }));
     formApi.updateSchema([
       {
         componentProps: {
@@ -150,6 +160,12 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
           })),
         },
         fieldName: 'roleIds',
+      },
+      {
+        componentProps: {
+          options: postOptions,
+        },
+        fieldName: 'postIds',
       },
     ]);
     // 部门选择
