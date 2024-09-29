@@ -48,8 +48,8 @@ export function configRemove(configIds: IDS) {
 /**
  * 获取配置信息
  * @param configKey configKey
- * @returns info
+ * @returns value
  */
 export function configInfoByKey(configKey: string) {
-  return requestClient.get<Config>(`${Api.configInfoByKey}/${configKey}`);
+  return requestClient.get<string>(`${Api.configInfoByKey}/${configKey}`);
 }
