@@ -31,6 +31,9 @@ const title = computed(() => {
 const [BasicForm, formApi] = useVbenForm({
   commonConfig: {
     formItemClass: 'col-span-2',
+    componentProps: {
+      class: 'w-full',
+    },
     labelWidth: 80,
   },
   schema: drawerSchema(),
@@ -138,9 +141,9 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
     // 更新 && 赋值
     const {
       postIds = [],
-      posts,
+      posts = [],
       roleIds = [],
-      roles,
+      roles = [],
       user,
     } = await findUserInfo(id);
     const postOptions = posts.map((item) => ({

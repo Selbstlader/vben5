@@ -141,7 +141,6 @@ export const drawerSchema: FormSchemaGetter = () => [
   {
     component: 'Select',
     componentProps: {
-      class: 'w-full',
       getPopupContainer,
       mode: 'multiple',
       optionFilterProp: 'label',
@@ -155,7 +154,6 @@ export const drawerSchema: FormSchemaGetter = () => [
   {
     component: 'Select',
     componentProps: {
-      class: 'w-full',
       getPopupContainer,
       mode: 'multiple',
       optionFilterProp: 'label',
