@@ -139,14 +139,8 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
       },
     ]);
     // 更新 && 赋值
-    const {
-      postIds = [],
-      posts = [],
-      roleIds = [],
-      roles = [],
-      user,
-    } = await findUserInfo(id);
-    const postOptions = posts.map((item) => ({
+    const { postIds, posts, roleIds, roles, user } = await findUserInfo(id);
+    const postOptions = (posts ?? []).map((item) => ({
       label: item.postName,
       value: item.postId,
     }));

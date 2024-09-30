@@ -91,7 +91,7 @@ export interface UserInfoResponse {
   roleIds?: string[];
   roles: Role[];
   postIds?: number[];
-  posts: Post[];
+  posts?: Post[];
 }
 
 /**
