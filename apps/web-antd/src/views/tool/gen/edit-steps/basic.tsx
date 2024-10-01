@@ -178,6 +178,7 @@ export const formSchema: FormSchemaGetter = () => [
       ],
       optionType: 'button',
     },
+    help: '自定义功能, 需要后端支持',
     defaultValue: 'modal',
     fieldName: 'popupComponent',
     label: '弹窗组件类型',
