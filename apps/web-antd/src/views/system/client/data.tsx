@@ -8,17 +8,11 @@ import { getDictOptions } from '#/utils/dict';
 export const querySchema: FormSchemaGetter = () => [
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'clientKey',
     label: '客户端key',
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'clientSecret',
     label: '客户端密钥',
   },
@@ -26,7 +20,6 @@ export const querySchema: FormSchemaGetter = () => [
     component: 'Select',
     componentProps: {
       options: getDictOptions(DictEnum.SYS_NORMAL_DISABLE),
-      placeholder: '请选择',
     },
     fieldName: 'status',
     label: '状态',
@@ -47,7 +40,6 @@ export const drawerSchema: FormSchemaGetter = () => [
     component: 'Input',
     componentProps: {
       disabled: true,
-      placeholder: '请输入',
     },
     dependencies: {
       show: () => false,
@@ -58,9 +50,6 @@ export const drawerSchema: FormSchemaGetter = () => [
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'clientKey',
     label: '客户端key',
     rules: 'required',
@@ -79,7 +68,6 @@ export const drawerSchema: FormSchemaGetter = () => [
       mode: 'multiple',
       optionFilterProp: 'label',
       options: getDictOptions(DictEnum.SYS_GRANT_TYPE),
-      placeholder: '请选择',
     },
     fieldName: 'grantTypeList',
     label: '授权类型',
@@ -92,7 +80,6 @@ export const drawerSchema: FormSchemaGetter = () => [
       class: 'w-full',
       getPopupContainer,
       options: getDictOptions(DictEnum.SYS_DEVICE_TYPE),
-      placeholder: '请选择',
     },
     fieldName: 'deviceType',
     label: '设备类型',
@@ -115,7 +102,6 @@ export const drawerSchema: FormSchemaGetter = () => [
     component: 'InputNumber',
     componentProps: {
       addonAfter: '秒',
-      placeholder: '请输入',
     },
     defaultValue: 604_800,
     fieldName: 'timeout',

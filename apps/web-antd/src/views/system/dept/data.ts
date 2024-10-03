@@ -7,9 +7,6 @@ import { getDictOptions } from '#/utils/dict';
 export const querySchema: FormSchemaGetter = () => [
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'deptName',
     label: '部门名称',
   },
@@ -18,7 +15,6 @@ export const querySchema: FormSchemaGetter = () => [
     componentProps: {
       getPopupContainer,
       options: getDictOptions(DictEnum.SYS_NORMAL_DISABLE),
-      placeholder: '请选择',
     },
     fieldName: 'status',
     label: '部门状态',
@@ -38,7 +34,6 @@ export const drawerSchema: FormSchemaGetter = () => [
     component: 'TreeSelect',
     componentProps: {
       getPopupContainer,
-      placeholder: '请选择',
     },
     dependencies: {
       show: (model) => model.parentId !== 0,
@@ -50,27 +45,18 @@ export const drawerSchema: FormSchemaGetter = () => [
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'deptName',
     label: '部门名称',
     rules: 'required',
   },
   {
     component: 'InputNumber',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'orderNum',
     label: '显示排序',
     rules: 'required',
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'deptCategory',
     label: '类别编码',
   },
@@ -80,16 +66,12 @@ export const drawerSchema: FormSchemaGetter = () => [
       // 选中了就只能修改 不能重置为无负责人
       allowClear: false,
       getPopupContainer,
-      placeholder: '请选择',
     },
     fieldName: 'leader',
     label: '负责人',
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'phone',
     label: '联系电话',
     rules: z
@@ -99,9 +81,6 @@ export const drawerSchema: FormSchemaGetter = () => [
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'email',
     label: '邮箱',
     rules: z.string().email({ message: '请输入正确的邮箱' }).optional(),

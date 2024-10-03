@@ -19,17 +19,11 @@ export const authScopeOptions = [
 export const querySchema: FormSchemaGetter = () => [
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'roleName',
     label: '角色名称',
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'roleKey',
     label: '权限字符',
   },
@@ -37,7 +31,6 @@ export const querySchema: FormSchemaGetter = () => [
     component: 'Select',
     componentProps: {
       options: getDictOptions(DictEnum.SYS_NORMAL_DISABLE),
-      placeholder: '请选择',
     },
     fieldName: 'status',
     label: '状态',
@@ -61,18 +54,12 @@ export const drawerSchema: FormSchemaGetter = () => [
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'roleName',
     label: '角色名称',
     rules: 'required',
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'roleKey',
     help: '如: test simpleUser等',
     label: '权限标识',
@@ -80,9 +67,6 @@ export const drawerSchema: FormSchemaGetter = () => [
   },
   {
     component: 'InputNumber',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'roleSort',
     label: '角色排序',
     rules: 'required',
@@ -92,7 +76,6 @@ export const drawerSchema: FormSchemaGetter = () => [
     componentProps: {
       allowClear: false,
       options: getDictOptions(DictEnum.SYS_NORMAL_DISABLE),
-      placeholder: '请选择',
     },
     defaultValue: '0',
     fieldName: 'status',
@@ -108,9 +91,6 @@ export const drawerSchema: FormSchemaGetter = () => [
   },
   {
     component: 'Textarea',
-    componentProps: {
-      placeholder: '请输入',
-    },
     defaultValue: '',
     fieldName: 'remark',
     formItemClass: 'items-baseline',

@@ -14,36 +14,24 @@ export const formSchema: FormSchemaGetter = () => [
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'tableName',
     label: '表名称',
     rules: 'required',
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'tableComment',
     label: '表描述',
     rules: 'required',
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'className',
     label: '实体类名称',
     rules: 'required',
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'functionAuthor',
     label: '作者',
     rules: 'required',
@@ -76,7 +64,6 @@ export const formSchema: FormSchemaGetter = () => [
     component: 'Select',
     componentProps: {
       getPopupContainer,
-      placeholder: '请选择',
     },
     dependencies: {
       show: (values) => values.tplCategory === 'tree',
@@ -91,7 +78,6 @@ export const formSchema: FormSchemaGetter = () => [
     component: 'Select',
     componentProps: {
       allowClear: false,
-      placeholder: '请选择',
     },
     dependencies: {
       show: (values) => values.tplCategory === 'tree',
@@ -106,7 +92,6 @@ export const formSchema: FormSchemaGetter = () => [
     component: 'Select',
     componentProps: {
       allowClear: false,
-      placeholder: '请选择',
     },
     dependencies: {
       show: (values) => values.tplCategory === 'tree',
@@ -119,9 +104,6 @@ export const formSchema: FormSchemaGetter = () => [
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'packageName',
     help: '生成在哪个java包下, 例如 com.ruoyi.system',
     label: '生成包路径',
@@ -129,9 +111,6 @@ export const formSchema: FormSchemaGetter = () => [
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'moduleName',
     help: '可理解为子系统名，例如 system',
     label: '生成模块名',
@@ -139,9 +118,6 @@ export const formSchema: FormSchemaGetter = () => [
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'businessName',
     help: '可理解为功能英文名，例如 user',
     label: '生成业务名',
@@ -149,9 +125,6 @@ export const formSchema: FormSchemaGetter = () => [
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'functionName',
     help: '用作类描述，例如 用户',
     label: '生成功能名',
@@ -162,7 +135,6 @@ export const formSchema: FormSchemaGetter = () => [
     componentProps: {
       allowClear: false,
       getPopupContainer,
-      placeholder: '请选择',
     },
     defaultValue: 0,
     fieldName: 'parentMenuId',
@@ -200,9 +172,6 @@ export const formSchema: FormSchemaGetter = () => [
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     defaultValue: '/',
     dependencies: {
       show: (model) => model.genType === '1',
@@ -219,9 +188,6 @@ export const formSchema: FormSchemaGetter = () => [
   },
   {
     component: 'Textarea',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'remark',
     formItemClass: 'col-span-2 items-baseline',
     label: '备注',

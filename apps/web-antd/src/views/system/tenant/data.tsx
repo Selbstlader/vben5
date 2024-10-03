@@ -7,33 +7,21 @@ import { type FormSchemaGetter, z } from '#/adapter';
 export const querySchema: FormSchemaGetter = () => [
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'tenantId',
     label: '租户编号',
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'companyName',
     label: '租户名称',
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'contactUserName',
     label: '联系人',
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'contactPhone',
     label: '联系电话',
   },
@@ -76,27 +64,18 @@ export const drawerSchema: FormSchemaGetter = () => [
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'companyName',
     label: '企业名称',
     rules: 'required',
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'contactUserName',
     label: '联系人',
     rules: 'required',
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'contactPhone',
     label: '联系电话',
     rules: z
@@ -116,18 +95,12 @@ export const drawerSchema: FormSchemaGetter = () => [
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'username',
     label: '用户账号',
     rules: 'required',
   },
   {
     component: 'InputPassword',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'password',
     label: '密码',
     rules: 'required',
@@ -148,7 +121,6 @@ export const drawerSchema: FormSchemaGetter = () => [
     componentProps: {
       class: 'w-full',
       getPopupContainer,
-      placeholder: '请选择',
     },
     fieldName: 'packageId',
     label: '租户套餐',
@@ -170,7 +142,6 @@ export const drawerSchema: FormSchemaGetter = () => [
     component: 'InputNumber',
     componentProps: {
       min: -1,
-      placeholder: '请输入',
     },
     defaultValue: -1,
     fieldName: 'accountCount',
@@ -186,9 +157,6 @@ export const drawerSchema: FormSchemaGetter = () => [
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'domain',
     help: '可填写域名/端口 填写域名如: www.test.com 或者 www.test.com:8080 填写ip:端口如: 127.0.0.1:8080',
     label: '绑定域名',
@@ -219,34 +187,22 @@ export const drawerSchema: FormSchemaGetter = () => [
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'address',
     label: '企业地址',
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'licenseNumber',
     label: '企业代码',
   },
   {
     component: 'Textarea',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'intro',
     formItemClass: 'items-baseline',
     label: '企业介绍',
   },
   {
     component: 'Textarea',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'remark',
     formItemClass: 'items-baseline',
     label: '备注',

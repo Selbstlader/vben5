@@ -7,25 +7,16 @@ import { getDictOptions } from '#/utils/dict';
 export const querySchema: FormSchemaGetter = () => [
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'userName',
     label: '用户账号',
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'nickName',
     label: '用户昵称',
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'phonenumber',
     label: '手机号码',
     rules: z
@@ -38,7 +29,6 @@ export const querySchema: FormSchemaGetter = () => [
     componentProps: {
       getPopupContainer,
       options: getDictOptions(DictEnum.SYS_NORMAL_DISABLE),
-      placeholder: '请选择',
     },
     fieldName: 'status',
     label: '用户状态',
@@ -60,27 +50,18 @@ export const drawerSchema: FormSchemaGetter = () => [
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'userName',
     label: '用户账号',
     rules: 'required',
   },
   {
     component: 'InputPassword',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'password',
     label: '用户密码',
     rules: 'required',
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'nickName',
     label: '用户昵称',
     rules: 'required',
@@ -95,9 +76,6 @@ export const drawerSchema: FormSchemaGetter = () => [
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'phone',
     label: '手机号码',
     rules: z
@@ -107,9 +85,6 @@ export const drawerSchema: FormSchemaGetter = () => [
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'email',
     label: '邮箱',
     rules: z.string().email('请输入正确的邮箱').optional(),
@@ -158,16 +133,12 @@ export const drawerSchema: FormSchemaGetter = () => [
       mode: 'multiple',
       optionFilterProp: 'label',
       optionLabelProp: 'label',
-      placeholder: '请选择',
     },
     fieldName: 'roleIds',
     label: '角色',
   },
   {
     component: 'Textarea',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'remark',
     formItemClass: 'items-baseline',
     label: '备注',

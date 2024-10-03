@@ -20,9 +20,6 @@ const [BasicForm, formApi] = useVbenForm({
   schema: [
     {
       component: 'InputPassword',
-      componentProps: {
-        placeholder: '请输入',
-      },
       fieldName: 'oldPassword',
       label: '旧密码',
       rules: z
@@ -32,9 +29,6 @@ const [BasicForm, formApi] = useVbenForm({
     },
     {
       component: 'InputPassword',
-      componentProps: {
-        placeholder: '请输入',
-      },
       dependencies: {
         rules(values) {
           return z
@@ -54,9 +48,6 @@ const [BasicForm, formApi] = useVbenForm({
     },
     {
       component: 'InputPassword',
-      componentProps: {
-        placeholder: '请输入',
-      },
       dependencies: {
         rules(values) {
           return z

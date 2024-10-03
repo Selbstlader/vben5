@@ -13,17 +13,11 @@ import { renderBrowserIcon, renderDict, renderOsIcon } from '#/utils/render';
 export const querySchema: FormSchemaGetter = () => [
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'ipaddr',
     label: 'IP地址',
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'userName',
     label: '用户账号',
   },
@@ -31,7 +25,6 @@ export const querySchema: FormSchemaGetter = () => [
     component: 'Select',
     componentProps: {
       options: getDictOptions(DictEnum.SYS_COMMON_STATUS),
-      placeholder: '请选择',
     },
     fieldName: 'status',
     label: '登录状态',

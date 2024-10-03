@@ -17,17 +17,11 @@ import {
 export const querySchema: FormSchemaGetter = () => [
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'title',
     label: '系统模块',
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'operName',
     label: '操作人员',
   },
@@ -35,16 +29,12 @@ export const querySchema: FormSchemaGetter = () => [
     component: 'Select',
     componentProps: {
       options: getDictOptions(DictEnum.SYS_OPER_TYPE),
-      placeholder: '请选择',
     },
     fieldName: 'businessType',
     label: '操作类型',
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'operIp',
     label: '操作IP',
   },
@@ -52,7 +42,6 @@ export const querySchema: FormSchemaGetter = () => [
     component: 'Select',
     componentProps: {
       options: getDictOptions(DictEnum.SYS_COMMON_STATUS),
-      placeholder: '请选择',
     },
     fieldName: 'status',
     label: '状态',

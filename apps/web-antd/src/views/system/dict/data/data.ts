@@ -7,16 +7,12 @@ export const querySchema: FormSchemaGetter = () => [
     component: 'Select',
     componentProps: {
       getPopupContainer,
-      placeholder: '请选择',
     },
     fieldName: 'dictType',
     label: '字典类型',
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'dictLabel',
     label: '字典标签',
   },
@@ -46,18 +42,12 @@ export const drawerSchema: FormSchemaGetter = () => [
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'dictLabel',
     label: '数据标签',
     rules: 'required',
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'dictValue',
     label: '数据键值',
     rules: 'required',
@@ -74,18 +64,12 @@ export const drawerSchema: FormSchemaGetter = () => [
   },
   {
     component: 'InputNumber',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'dictSort',
     label: '显示排序',
     rules: 'required',
   },
   {
     component: 'Textarea',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'remark',
     formItemClass: 'items-baseline',
     label: '备注',

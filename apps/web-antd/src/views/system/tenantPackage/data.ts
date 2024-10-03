@@ -3,9 +3,6 @@ import type { FormSchemaGetter } from '#/adapter';
 export const querySchema: FormSchemaGetter = () => [
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'packageName',
     label: '套餐名称',
   },
@@ -30,9 +27,6 @@ export const drawerSchema: FormSchemaGetter = () => [
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'packageName',
     label: '套餐名称',
     rules: 'required',
@@ -45,9 +39,6 @@ export const drawerSchema: FormSchemaGetter = () => [
   },
   {
     component: 'Textarea',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'remark',
     formItemClass: 'items-baseline',
     label: '备注',

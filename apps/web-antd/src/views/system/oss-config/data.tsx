@@ -12,17 +12,11 @@ const accessPolicyOptions = [
 export const querySchema: FormSchemaGetter = () => [
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'configKey',
     label: '配置名称',
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'bucketName',
     label: '桶名称',
   },
@@ -30,7 +24,6 @@ export const querySchema: FormSchemaGetter = () => [
     component: 'Select',
     componentProps: {
       options: getDictOptions(DictEnum.SYS_YES_NO),
-      placeholder: '请选择',
     },
     fieldName: 'status',
     label: '是否默认',
@@ -59,18 +52,12 @@ export const drawerSchema: FormSchemaGetter = () => [
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'configKey',
     label: '配置名称',
     rules: 'required',
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'endpoint',
     label: '服务地址',
     renderComponentContent: (formModel) => ({
@@ -84,9 +71,6 @@ export const drawerSchema: FormSchemaGetter = () => [
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'domain',
     label: '自定义域名',
   },
@@ -103,18 +87,12 @@ export const drawerSchema: FormSchemaGetter = () => [
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'accessKey',
     label: 'accessKey',
     rules: 'required',
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'secretKey',
     label: 'secretKey',
     rules: 'required',
@@ -132,18 +110,12 @@ export const drawerSchema: FormSchemaGetter = () => [
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'bucketName',
     label: '桶名称',
     rules: 'required',
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'prefix',
     label: '前缀',
   },
@@ -174,17 +146,11 @@ export const drawerSchema: FormSchemaGetter = () => [
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'region',
     label: '区域',
   },
   {
     component: 'Textarea',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'remark',
     formItemClass: 'items-baseline',
     label: '备注',

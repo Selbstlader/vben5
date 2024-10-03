@@ -21,6 +21,9 @@ const title = computed(() => {
 const [BasicForm, formApi] = useVbenForm({
   commonConfig: {
     formItemClass: 'col-span-2',
+    componentProps: {
+      class: 'w-full',
+    },
   },
   schema: drawerSchema(),
   showDefaultActions: false,

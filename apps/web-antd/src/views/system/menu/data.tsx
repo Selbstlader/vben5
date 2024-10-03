@@ -7,9 +7,6 @@ import { getDictOptions } from '#/utils/dict';
 export const querySchema: FormSchemaGetter = () => [
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'menuName',
     label: '菜单名称 ',
   },
@@ -18,7 +15,6 @@ export const querySchema: FormSchemaGetter = () => [
     componentProps: {
       getPopupContainer,
       options: getDictOptions(DictEnum.SYS_NORMAL_DISABLE),
-      placeholder: '请选择',
     },
     fieldName: 'status',
     label: '菜单状态 ',
@@ -28,7 +24,6 @@ export const querySchema: FormSchemaGetter = () => [
     componentProps: {
       getPopupContainer,
       options: getDictOptions(DictEnum.SYS_SHOW_HIDE),
-      placeholder: '请选择',
     },
     fieldName: 'visible',
     label: '显示状态',
@@ -58,9 +53,6 @@ export const drawerSchema: FormSchemaGetter = () => [
   },
   {
     component: 'TreeSelect',
-    componentProps: {
-      placeholder: '请选择',
-    },
     defaultValue: 0,
     fieldName: 'parentId',
     label: '上级菜单',
@@ -72,7 +64,6 @@ export const drawerSchema: FormSchemaGetter = () => [
       buttonStyle: 'solid',
       options: menuTypeOptions,
       optionType: 'button',
-      placeholder: '请选择',
     },
     defaultValue: 'M',
     dependencies: {
@@ -91,9 +82,6 @@ export const drawerSchema: FormSchemaGetter = () => [
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     dependencies: {
       // 类型不为按钮时显示
       show: (values) => values.menuType !== 'F',
@@ -105,18 +93,12 @@ export const drawerSchema: FormSchemaGetter = () => [
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'name',
     label: '菜单名称',
     rules: 'required',
   },
   {
     component: 'InputNumber',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'orderNum',
     help: '排序, 数字越小越靠前',
     label: '显示排序',
@@ -161,7 +143,6 @@ export const drawerSchema: FormSchemaGetter = () => [
       return {
         // 为链接时组件disabled
         disabled: model.isFrame === '0',
-        placeholder: '请输入',
       };
     },
     defaultValue: '',
@@ -240,9 +221,6 @@ export const drawerSchema: FormSchemaGetter = () => [
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     dependencies: {
       // 类型为菜单/按钮时显示
       show: (values) => values.menuType !== 'M',
@@ -257,7 +235,6 @@ export const drawerSchema: FormSchemaGetter = () => [
     componentProps: (model) => ({
       // 为链接时组件disabled
       disabled: model.isFrame === '0',
-      placeholder: '请输入',
     }),
     dependencies: {
       // 类型为菜单时显示

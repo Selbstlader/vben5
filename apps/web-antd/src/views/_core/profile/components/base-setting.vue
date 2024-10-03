@@ -44,18 +44,12 @@ const [BasicForm, formApi] = useVbenForm({
     },
     {
       component: 'Input',
-      componentProps: {
-        placeholder: '请输入',
-      },
       fieldName: 'nickName',
       label: '昵称',
       rules: 'required',
     },
     {
       component: 'Input',
-      componentProps: {
-        placeholder: '请输入',
-      },
       fieldName: 'email',
       label: '邮箱',
       rules: z.string().email('请输入正确的邮箱'),
@@ -74,9 +68,6 @@ const [BasicForm, formApi] = useVbenForm({
     },
     {
       component: 'Input',
-      componentProps: {
-        placeholder: '请输入',
-      },
       fieldName: 'phonenumber',
       label: '电话',
       rules: z.string().regex(/^1[3-9]\d{9}$/, '请输入正确的电话'),

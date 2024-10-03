@@ -8,17 +8,11 @@ import { getDictOptions } from '#/utils/dict';
 export const querySchema: FormSchemaGetter = () => [
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'configName',
     label: '参数名称',
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'configKey',
     label: '参数键名',
   },
@@ -27,7 +21,6 @@ export const querySchema: FormSchemaGetter = () => [
     componentProps: {
       getPopupContainer,
       options: getDictOptions(DictEnum.SYS_YES_NO),
-      placeholder: '请选择',
     },
     fieldName: 'configType',
     label: '系统内置',
@@ -51,27 +44,18 @@ export const modalSchema: FormSchemaGetter = () => [
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'configName',
     label: '参数名称',
     rules: 'required',
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'configKey',
     label: '参数键名',
     rules: 'required',
   },
   {
     component: 'Input',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'configValue',
     label: '参数键值',
     rules: 'required',
@@ -90,9 +74,6 @@ export const modalSchema: FormSchemaGetter = () => [
   },
   {
     component: 'Textarea',
-    componentProps: {
-      placeholder: '请输入',
-    },
     fieldName: 'remark',
     formItemClass: 'items-baseline',
     label: '备注',
