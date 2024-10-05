@@ -1,32 +1,66 @@
 <script setup lang="ts">
 import type { Recordable } from '@vben/types';
 
-import type { LoginLog } from '#/api/monitor/logininfo/model';
+import { Page, useVbenModal, type VbenFormProps } from '@vben/common-ui';
 
-import { onMounted, ref } from 'vue';
+import { Modal, Popconfirm, Space } from 'ant-design-vue';
 
-import { Page, useVbenModal } from '@vben/common-ui';
-
-import { Card, Space, Table } from 'ant-design-vue';
-
-import { useVbenForm } from '#/adapter';
-import { loginInfoClean, loginInfoList } from '#/api/monitor/logininfo';
+import { useVbenVxeGrid, type VxeGridProps } from '#/adapter';
+import {
+  loginInfoClean,
+  loginInfoExport,
+  loginInfoList,
+  loginInfoRemove,
+} from '#/api/monitor/logininfo';
+import { downloadExcel } from '#/utils/file/download';
 import { confirmDeleteModal } from '#/utils/modal';
 
 import { columns, querySchema } from './data';
 import loginInfoModal from './login-info-modal.vue';
 
+const formOptions: VbenFormProps = {
+  schema: querySchema(),
+  wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
+};
+
+const gridOptions: VxeGridProps = {
+  checkboxConfig: {
+    // 高亮
+    highlight: true,
+    // 翻页时保留选中状态
+    reserve: true,
+    // 点击行选中
+    trigger: 'row',
+  },
+  columns,
+  height: 'auto',
+  keepSource: true,
+  pagerConfig: {},
+  proxyConfig: {
+    ajax: {
+      query: async ({ page }, formValues) => {
+        return await loginInfoList({
+          pageNum: page.currentPage,
+          pageSize: page.pageSize,
+          ...formValues,
+        });
+      },
+    },
+  },
+  rowConfig: {
+    isHover: true,
+    keyField: 'infoId',
+  },
+  round: true,
+  align: 'center',
+  showOverflow: true,
+};
+
+const [BasicTable, tableApi] = useVbenVxeGrid({ formOptions, gridOptions });
+
 const [LoginInfoModal, modalApi] = useVbenModal({
   connectedComponent: loginInfoModal,
 });
-
-const loginDataList = ref<LoginLog[]>([]);
-async function reload() {
-  const resp = await loginInfoList({ pageNum: 1, pageSize: 20 });
-  loginDataList.value = resp.rows;
-}
-
-onMounted(reload);
 
 function handlePreview(record: Recordable<any>) {
   modalApi.setData(record);
@@ -41,49 +75,71 @@ function handleClear() {
   });
 }
 
-const [QueryForm] = useVbenForm({
-  // 默认展开
-  collapsed: false,
-  // 所有表单项共用，可单独在表单内覆盖
-  commonConfig: {
-    // 所有表单项
-    componentProps: {
-      class: 'w-full',
+async function handleDelete(row: Recordable<any>) {
+  await loginInfoRemove(row.infoId);
+  await tableApi.reload();
+}
+
+function handleMultiDelete() {
+  const rows = tableApi.grid.getCheckboxRecords();
+  const ids = rows.map((row: any) => row.infoId);
+  Modal.confirm({
+    title: '提示',
+    okType: 'danger',
+    content: `确认删除选中的${ids.length}条记录吗？`,
+    onOk: async () => {
+      await loginInfoRemove(ids);
+      await tableApi.reload();
     },
-  },
-  schema: querySchema(),
-  // 是否可展开
-  showCollapseButton: true,
-  submitButtonOptions: {
-    text: '查询',
-  },
-  wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
-});
+  });
+}
 </script>
 
 <template>
-  <Page content-class="flex flex-col gap-[6px]">
-    <Card>
-      <QueryForm />
-    </Card>
-    <div class="flex justify-end">
-      <a-button @click="handleClear">{{ $t('pages.common.clear') }}</a-button>
-    </div>
-    <Table :columns="columns" :data-source="loginDataList" size="middle">
-      <template #bodyCell="{ column, record }">
-        <template v-if="column.dataIndex === 'action'">
-          <Space>
-            <a-button
-              size="small"
-              type="primary"
-              @click="handlePreview(record)"
-            >
-              {{ $t('pages.common.info') }}
-            </a-button>
-          </Space>
-        </template>
+  <Page auto-content-height>
+    <BasicTable>
+      <template #toolbar-actions>
+        <span class="pl-[7px] text-[16px]">登录日志列表</span>
       </template>
-    </Table>
+      <template #toolbar-tools>
+        <Space>
+          <a-button @click="handleClear">
+            {{ $t('pages.common.clear') }}
+          </a-button>
+          <a-button
+            v-access:code="['monitor:logininfor:export']"
+            @click="downloadExcel(loginInfoExport, '登录日志', {})"
+          >
+            {{ $t('pages.common.export') }}
+          </a-button>
+          <a-button
+            danger
+            type="primary"
+            v-access:code="['monitor:logininfor:delete']"
+            @click="handleMultiDelete"
+          >
+            {{ $t('pages.common.delete') }}
+          </a-button>
+          <a-button type="primary">解锁(没做)</a-button>
+        </Space>
+      </template>
+      <template #action="{ row }">
+        <Space>
+          <a-button size="small" type="link" @click.stop="handlePreview(row)">
+            {{ $t('pages.common.info') }}
+          </a-button>
+          <Popconfirm
+            placement="left"
+            title="确认删除?"
+            @confirm="() => handleDelete(row)"
+          >
+            <a-button danger size="small" type="link" @click.stop="">
+              删除
+            </a-button>
+          </Popconfirm>
+        </Space>
+      </template>
+    </BasicTable>
     <LoginInfoModal />
   </Page>
 </template>

@@ -1,11 +1,9 @@
-import type { ColumnsType } from 'ant-design-vue/es/table';
-
-import type { FormSchemaGetter } from '#/adapter';
+import type { FormSchemaGetter, VxeGridProps } from '#/adapter';
 import type { DescItem } from '#/components/description';
 
-import { DictEnum } from '@vben/constants';
+import type { VNode } from 'vue';
 
-import { Tooltip } from 'ant-design-vue';
+import { DictEnum } from '@vben/constants';
 
 import { getDictOptions } from '#/utils/dict';
 import { renderBrowserIcon, renderDict, renderOsIcon } from '#/utils/render';
@@ -36,82 +34,74 @@ export const querySchema: FormSchemaGetter = () => [
   },
 ];
 
-export const columns: ColumnsType = [
+export const columns: VxeGridProps['columns'] = [
+  { type: 'checkbox', width: 60 },
   {
-    align: 'center',
-    dataIndex: 'userName',
     title: '用户账号',
+    field: 'userName',
   },
   {
-    align: 'center',
-    dataIndex: 'clientKey',
     title: '登录平台',
+    field: 'clientKey',
   },
   {
-    align: 'center',
-    dataIndex: 'ipaddr',
     title: 'IP地址',
+    field: 'ipaddr',
   },
   {
-    align: 'center',
-    dataIndex: 'loginLocation',
     title: 'IP地点',
+    field: 'loginLocation',
     width: 200,
   },
   {
-    align: 'center',
-    customRender({ value }) {
-      return renderBrowserIcon(value, true);
-    },
-    dataIndex: 'browser',
     title: '浏览器',
+    field: 'browser',
+    slots: {
+      default: ({ row }) => {
+        return renderBrowserIcon(row.browser, true) as VNode;
+      },
+    },
   },
   {
-    align: 'center',
-    customRender({ value }) {
-      // Windows 10 or Windows Server 2016 太长了 分割一下 详情依旧能看到详细的
-      // 为什么不直接保存userAgent让前端解析 很奇怪
-      if (value) {
-        const split = value.split(' or ');
-        if (split.length === 2) {
-          value = split[0];
-        }
-      }
-      return renderOsIcon(value, true);
-    },
-    dataIndex: 'os',
     title: '系统',
+    field: 'os',
+    slots: {
+      default: ({ row }) => {
+        // Windows 10 or Windows Server 2016 太长了 分割一下 详情依旧能看到详细的
+        let value = row.os;
+        if (value) {
+          const split = value.split(' or ');
+          if (split.length === 2) {
+            value = split[0];
+          }
+        }
+        return renderOsIcon(value, true) as VNode;
+      },
+    },
   },
   {
-    align: 'center',
-    customRender({ value }) {
-      return renderDict(value, DictEnum.SYS_COMMON_STATUS);
-    },
-    dataIndex: 'status',
     title: '登录结果',
-  },
-  {
-    align: 'center',
-    customRender({ value }) {
-      return (
-        <Tooltip placement={'top'} title={value}>
-          {value}
-        </Tooltip>
-      );
+    field: 'status',
+    slots: {
+      default: ({ row }) => {
+        return renderDict(row.status, DictEnum.SYS_COMMON_STATUS);
+      },
     },
-    dataIndex: 'msg',
-    ellipsis: true,
+  },
+  {
     title: '信息',
+    field: 'msg',
   },
   {
-    align: 'center',
-    dataIndex: 'loginTime',
     title: '日期',
+    field: 'loginTime',
   },
   {
-    align: 'center',
-    dataIndex: 'action',
+    field: 'action',
+    fixed: 'right',
+    slots: { default: 'action' },
     title: '操作',
+    width: 120,
   },
 ];
 

@@ -126,7 +126,7 @@ async function handleDelete(row: Recordable<any>) {
 
 function handleMultiDelete() {
   const rows = tableApi.grid.getCheckboxRecords();
-  const ids = rows.map((row: any) => row.operId);
+  const ids = rows.map((row: any) => row.userId);
   Modal.confirm({
     title: '提示',
     okType: 'danger',

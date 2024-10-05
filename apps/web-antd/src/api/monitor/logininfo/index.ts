@@ -37,7 +37,7 @@ export function loginInfoExport(data: any) {
  * @returns void
  */
 export function loginInfoRemove(infoIds: IDS) {
-  return requestClient.deleteWithMsg<void>(`${Api.root}/${infoIds.join(',')}`);
+  return requestClient.deleteWithMsg<void>(`${Api.root}/${infoIds}`);
 }
 
 /**
