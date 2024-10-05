@@ -3,70 +3,160 @@ import type { Recordable } from '@vben/types';
 
 import type { OperationLog } from '#/api/monitor/operlog/model';
 
-import { onMounted, ref } from 'vue';
+import { computed } from 'vue';
 
-import { Page, useVbenDrawer } from '@vben/common-ui';
+import { Page, useVbenDrawer, type VbenFormProps } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 
-import { Card, Table } from 'ant-design-vue';
+import { Modal, Space } from 'ant-design-vue';
+import dayjs from 'dayjs';
 
-import { useVbenForm } from '#/adapter';
-import { operLogList } from '#/api/monitor/operlog';
+import { useVbenVxeGrid, type VxeGridProps } from '#/adapter';
+import {
+  operLogClean,
+  operLogDelete,
+  operLogExport,
+  operLogList,
+} from '#/api/monitor/operlog';
+import { downloadExcel } from '#/utils/file/download';
+import { confirmDeleteModal } from '#/utils/modal';
 
 import { columns, querySchema } from './data';
 import operationPreviewDrawer from './OperationPreviewDrawer.vue';
 
-const [QueryForm] = useVbenForm({
-  // 默认展开
-  collapsed: false,
-  // 所有表单项共用，可单独在表单内覆盖
-  commonConfig: {
-    // 所有表单项
-    componentProps: {
-      class: 'w-full',
+const formOptions: VbenFormProps = {
+  schema: querySchema(),
+  wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
+};
+
+const gridOptions: VxeGridProps<OperationLog> = {
+  checkboxConfig: {
+    // 高亮
+    highlight: true,
+    // 翻页时保留选中状态
+    reserve: true,
+    // 点击行选中
+    trigger: 'row',
+  },
+  columns,
+  height: 'auto',
+  keepSource: true,
+  pagerConfig: {},
+  proxyConfig: {
+    ajax: {
+      query: async ({ page }, formValues) => {
+        // 区间选择器处理
+        if (formValues?.createTime) {
+          formValues.params = {
+            beginTime: dayjs(formValues.createTime[0]).format(
+              'YYYY-MM-DD 00:00:00',
+            ),
+            endTime: dayjs(formValues.createTime[1]).format(
+              'YYYY-MM-DD 23:59:59',
+            ),
+          };
+          Reflect.deleteProperty(formValues, 'createTime');
+        } else {
+          Reflect.deleteProperty(formValues, 'params');
+        }
+        return await operLogList({
+          pageNum: page.currentPage,
+          pageSize: page.pageSize,
+          ...formValues,
+        });
+      },
     },
   },
-  schema: querySchema(),
-  // 是否可展开
-  showCollapseButton: true,
-  submitButtonOptions: {
-    text: '查询',
+  rowConfig: {
+    isHover: true,
+    keyField: 'operId',
   },
-  wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
-});
+  round: true,
+  align: 'center',
+  showOverflow: true,
+};
 
-const dataSource = ref<OperationLog[]>([]);
-
-onMounted(async () => {
-  const resp = await operLogList({ pageNum: 1, pageSize: 30 });
-  dataSource.value = resp.rows;
-});
+const [BasicTable, tableApi] = useVbenVxeGrid({ formOptions, gridOptions });
 
 const [OperationPreviewDrawer, drawerApi] = useVbenDrawer({
   connectedComponent: operationPreviewDrawer,
 });
 
+/**
+ * 预览
+ * @param record 操作日志记录
+ */
 function handlePreview(record: Recordable<any>) {
   drawerApi.setData({ record });
   drawerApi.open();
 }
+
+/**
+ * 清空全部日志
+ */
+function handleClear() {
+  confirmDeleteModal({
+    onValidated: async () => {
+      await operLogClean();
+    },
+  });
+}
+
+/**
+ * TODO: 选中条件的判断
+ */
+const checked = computed(() => {
+  return true;
+});
+
+/**
+ * 删除日志
+ */
+async function handleDelete() {
+  const rows = tableApi.grid.getCheckboxRecords();
+  const ids = rows.map((row: any) => row.operId);
+  Modal.confirm({
+    title: '提示',
+    okType: 'danger',
+    content: `确认删除选中的${ids.length}条操作日志吗？`,
+    onOk: async () => {
+      await operLogDelete(ids);
+      await tableApi.reload();
+    },
+  });
+}
 </script>
 
 <template>
-  <Page>
-    <Card>
-      <QueryForm />
-    </Card>
-    <div class="bg-background"></div>
-    <Table :columns="columns" :data-source="dataSource">
-      <template #bodyCell="{ record, column }">
-        <template v-if="column.dataIndex === 'action'">
-          <a-button size="small" type="link" @click="handlePreview(record)">
-            {{ $t('pages.common.preview') }}
-          </a-button>
-        </template>
+  <Page :auto-content-height="true">
+    <BasicTable>
+      <template #toolbar-actions>
+        <span class="pl-[7px] text-[16px]">操作日志列表</span>
       </template>
-    </Table>
+      <template #toolbar-tools>
+        <Space>
+          <a-button @click="handleClear">
+            {{ $t('pages.common.clear') }}
+          </a-button>
+          <a-button @click="downloadExcel(operLogExport, '操作日志', {})">
+            {{ $t('pages.common.export') }}
+          </a-button>
+          <a-button
+            :disabled="!checked"
+            danger
+            type="primary"
+            @click="handleDelete"
+          >
+            {{ $t('pages.common.delete') }}
+          </a-button>
+        </Space>
+      </template>
+      <template #action="{ row }">
+        <a-button size="small" type="link" @click="handlePreview(row)">
+          {{ $t('pages.common.preview') }}
+        </a-button>
+      </template>
+    </BasicTable>
     <OperationPreviewDrawer />
   </Page>
 </template>

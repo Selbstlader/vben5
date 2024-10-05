@@ -4,6 +4,8 @@ import { setupVbenVxeTable, useVbenVxeGrid } from '@vben/plugins/vxe-table';
 
 import { Button, Image } from 'ant-design-vue';
 
+import { renderDict } from '#/utils/render';
+
 import { useVbenForm } from './form';
 
 setupVbenVxeTable({
@@ -16,15 +18,15 @@ setupVbenVxeTable({
         proxyConfig: {
           autoLoad: true,
           response: {
-            result: 'items',
+            result: 'rows',
             total: 'total',
-            list: 'items',
+            list: 'rows',
           },
           showActiveMsg: true,
           showResponseMsg: false,
         },
         round: true,
-        size: 'small',
+        size: 'medium',
       },
     });
 
@@ -45,6 +47,23 @@ setupVbenVxeTable({
           { size: 'small', type: 'link' },
           { default: () => props?.text },
         );
+      },
+    });
+
+    /**
+     * 表格dict渲染 必传 props: { field: 参数名, dictName: 字典名 }
+     */
+    vxeUI.renderer.add('DictTag', {
+      renderDefault(renderOpts, params) {
+        const { props } = renderOpts;
+        const field = props?.field;
+        const dictName = props?.dictName;
+        if (!field || !dictName) {
+          console.warn('DictTag: field or dictName is not provided');
+          return 'error';
+        }
+        const { row } = params;
+        return renderDict(row[field], dictName);
       },
     });
 

@@ -1,6 +1,4 @@
-import type { ColumnType } from 'ant-design-vue/es/table';
-
-import type { FormSchemaGetter } from '#/adapter';
+import type { FormSchemaGetter, VxeGridProps } from '#/adapter';
 import type { DescItem } from '#/components/description';
 
 import { DictEnum } from '@vben/constants';
@@ -50,66 +48,48 @@ export const querySchema: FormSchemaGetter = () => [
     component: 'RangePicker',
     fieldName: 'createTime',
     label: '操作时间',
+    componentProps: {
+      valueFormat: 'YYYY-MM-DD HH:mm:ss',
+    },
   },
 ];
 
-export const columns: ColumnType[] = [
+export const columns: VxeGridProps['columns'] = [
+  { type: 'checkbox', width: 60 },
+  { field: 'title', title: '系统模块' },
   {
-    align: 'center',
-    dataIndex: 'title',
-    title: '系统模块',
-  },
-  {
-    align: 'center',
-    customRender({ value }) {
-      return renderDict(value, DictEnum.SYS_OPER_TYPE);
-    },
-    dataIndex: 'businessType',
     title: '操作类型',
-  },
-  {
-    align: 'center',
-    dataIndex: 'operName',
-    title: '操作人员',
-  },
-  {
-    align: 'center',
-    dataIndex: 'operIp',
-    title: 'IP地址',
-  },
-  {
-    align: 'center',
-    dataIndex: 'operLocation',
-    title: 'IP信息',
-  },
-  {
-    align: 'center',
-    customRender({ value }) {
-      return renderDict(value, DictEnum.SYS_COMMON_STATUS);
+    field: 'businessType',
+    cellRender: {
+      name: 'DictTag',
+      props: { field: 'businessType', dictName: DictEnum.SYS_OPER_TYPE },
     },
-    dataIndex: 'status',
+  },
+  { field: 'operName', title: '操作人员' },
+  { field: 'operIp', title: 'IP地址' },
+  { field: 'operLocation', title: 'IP信息' },
+  {
+    field: 'status',
     title: '操作状态',
-  },
-  {
-    align: 'center',
-    dataIndex: 'operTime',
-    sorter: true,
-    title: '操作日期',
-  },
-  {
-    align: 'center',
-    customRender({ text }) {
-      return `${text} ms`;
+    cellRender: {
+      name: 'DictTag',
+      props: { field: 'status', dictName: DictEnum.SYS_COMMON_STATUS },
     },
-    dataIndex: 'costTime',
-    sorter: true,
+  },
+  { field: 'operTime', title: '操作日期' },
+  {
+    field: 'costTime',
     title: '操作耗时',
+    formatter({ cellValue }) {
+      return `${cellValue} ms`;
+    },
   },
   {
-    align: 'center',
-    dataIndex: 'action',
+    field: 'action',
     fixed: 'right',
+    slots: { default: 'action' },
     title: '操作',
+    width: 120,
   },
 ];
 
