@@ -1,24 +1,77 @@
 <script setup lang="ts">
 import type { Recordable } from '@vben/types';
-import type { ColumnsType } from 'ant-design-vue/es/table';
 
-import type { Config } from '#/api/system/config/model';
+import { Page, useVbenModal, type VbenFormProps } from '@vben/common-ui';
 
-import { onMounted, ref } from 'vue';
+import { Modal, Popconfirm, Space } from 'ant-design-vue';
+import dayjs from 'dayjs';
 
-import { Page, useVbenModal } from '@vben/common-ui';
-import { DictEnum } from '@vben/constants';
-
-import { Card, Space, Table } from 'ant-design-vue';
-
-import { useVbenForm } from '#/adapter';
-import { configExport, configList } from '#/api/system/config';
+import { useVbenVxeGrid, type VxeGridProps } from '#/adapter';
+import {
+  configExport,
+  configList,
+  configRefreshCache,
+  configRemove,
+} from '#/api/system/config';
 import { downloadExcel } from '#/utils/file/download';
-import { renderDict } from '#/utils/render';
 
 import configModal from './config-modal.vue';
-import { querySchema } from './data';
+import { columns, querySchema } from './data';
 
+const formOptions: VbenFormProps = {
+  schema: querySchema(),
+  wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
+};
+
+const gridOptions: VxeGridProps = {
+  checkboxConfig: {
+    // 高亮
+    highlight: true,
+    // 翻页时保留选中状态
+    reserve: true,
+    // 点击行选中
+    trigger: 'row',
+  },
+  columns,
+  height: 'auto',
+  keepSource: true,
+  pagerConfig: {},
+  proxyConfig: {
+    ajax: {
+      query: async ({ page }, formValues) => {
+        // 区间选择器处理
+        if (formValues?.createTime) {
+          formValues.params = {
+            beginTime: dayjs(formValues.createTime[0]).format(
+              'YYYY-MM-DD 00:00:00',
+            ),
+            endTime: dayjs(formValues.createTime[1]).format(
+              'YYYY-MM-DD 23:59:59',
+            ),
+          };
+          Reflect.deleteProperty(formValues, 'createTime');
+        } else {
+          Reflect.deleteProperty(formValues, 'params');
+        }
+
+        return await configList({
+          pageNum: page.currentPage,
+          pageSize: page.pageSize,
+          ...formValues,
+        });
+      },
+    },
+  },
+  rowConfig: {
+    isHover: true,
+    keyField: 'configId',
+  },
+  round: true,
+  align: 'center',
+  showOverflow: true,
+};
+
+const [BasicTable, tableApi] = useVbenVxeGrid({ formOptions, gridOptions });
 const [ConfigModal, modalApi] = useVbenModal({
   connectedComponent: configModal,
 });
@@ -33,100 +86,91 @@ async function handleEdit(record: Recordable<any>) {
   modalApi.open();
 }
 
-const configDataList = ref<Config[]>([]);
-async function reload() {
-  const resp = await configList();
-  configDataList.value = resp.rows;
+async function handleDelete(row: Recordable<any>) {
+  await configRemove(row.configId);
+  await tableApi.reload();
 }
 
-onMounted(reload);
-
-const columns: ColumnsType = [
-  {
-    align: 'center',
-    dataIndex: 'configName',
-    title: '参数名称',
-  },
-  {
-    align: 'center',
-    dataIndex: 'configKey',
-    title: '参数KEY',
-  },
-  {
-    align: 'center',
-    dataIndex: 'configValue',
-    title: '参数Value',
-  },
-  {
-    align: 'center',
-    customRender: ({ value }) => {
-      return renderDict(value, DictEnum.SYS_YES_NO);
+function handleMultiDelete() {
+  const rows = tableApi.grid.getCheckboxRecords();
+  const ids = rows.map((row: any) => row.configId);
+  Modal.confirm({
+    title: '提示',
+    okType: 'danger',
+    content: `确认删除选中的${ids.length}条记录吗？`,
+    onOk: async () => {
+      await configRemove(ids);
+      await tableApi.reload();
     },
-    dataIndex: 'configType',
-    title: '系统内置',
-  },
-  {
-    align: 'center',
-    dataIndex: 'remark',
-    ellipsis: true,
-    title: '备注',
-  },
-  {
-    align: 'center',
-    dataIndex: 'createTime',
-    title: '创建时间',
-  },
-  {
-    align: 'center',
-    dataIndex: 'action',
-    title: '操作',
-  },
-];
+  });
+}
 
-const [QueryForm] = useVbenForm({
-  // 默认展开
-  collapsed: false,
-  // 所有表单项共用，可单独在表单内覆盖
-  commonConfig: {
-    // 所有表单项
-    componentProps: {
-      class: 'w-full',
-    },
-  },
-  schema: querySchema(),
-  // 是否可展开
-  showCollapseButton: true,
-  submitButtonOptions: {
-    text: '查询',
-  },
-  wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
-});
+async function handleRefreshCache() {
+  await configRefreshCache();
+  await tableApi.reload();
+}
 </script>
 
 <template>
-  <Page content-class="flex flex-col gap-3">
-    <Card>
-      <QueryForm />
-    </Card>
-    <div class="flex justify-end gap-[8px]">
-      <a-button @click="downloadExcel(configExport, '参数配置', {})">
-        {{ $t('pages.common.export') }}
-      </a-button>
-      <a-button type="primary" @click="handleAdd">
-        {{ $t('pages.common.add') }}
-      </a-button>
-    </div>
-    <Table :columns :data-source="configDataList" size="middle">
-      <template #bodyCell="{ column, record }">
-        <template v-if="column.dataIndex === 'action'">
-          <Space>
-            <a-button size="small" type="primary" @click="handleEdit(record)">
-              {{ $t('pages.common.edit') }}
-            </a-button>
-          </Space>
-        </template>
+  <Page :auto-content-height="true">
+    <BasicTable>
+      <template #toolbar-actions>
+        <span class="pl-[7px] text-[16px]">参数列表</span>
       </template>
-    </Table>
-    <ConfigModal @reload="reload" />
+      <template #toolbar-tools>
+        <Space>
+          <a-button @click="handleRefreshCache"> 刷新缓存 </a-button>
+          <a-button
+            v-access:code="['system:config:export']"
+            @click="downloadExcel(configExport, '参数配置', {})"
+          >
+            {{ $t('pages.common.export') }}
+          </a-button>
+          <a-button
+            danger
+            type="primary"
+            v-access:code="['system:config:delete']"
+            @click="handleMultiDelete"
+          >
+            {{ $t('pages.common.delete') }}
+          </a-button>
+          <a-button
+            type="primary"
+            v-access:code="['system:config:add']"
+            @click="handleAdd"
+          >
+            {{ $t('pages.common.add') }}
+          </a-button>
+        </Space>
+      </template>
+      <template #action="{ row }">
+        <Space>
+          <a-button
+            size="small"
+            type="link"
+            v-access:code="['system:config:edit']"
+            @click="handleEdit(row)"
+          >
+            {{ $t('pages.common.edit') }}
+          </a-button>
+          <Popconfirm
+            placement="left"
+            title="确认删除？"
+            @confirm="handleDelete(row)"
+          >
+            <a-button
+              danger
+              size="small"
+              type="link"
+              v-access:code="['system:config:delete']"
+              @click.stop=""
+            >
+              {{ $t('pages.common.delete') }}
+            </a-button>
+          </Popconfirm>
+        </Space>
+      </template>
+    </BasicTable>
+    <ConfigModal @reload="tableApi.reload()" />
   </Page>
 </template>
