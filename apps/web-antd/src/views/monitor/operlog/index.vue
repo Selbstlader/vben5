@@ -3,7 +3,7 @@ import type { Recordable } from '@vben/types';
 
 import type { OperationLog } from '#/api/monitor/operlog/model';
 
-import { computed } from 'vue';
+import { ref } from 'vue';
 
 import { Page, useVbenDrawer, type VbenFormProps } from '@vben/common-ui';
 import { $t } from '@vben/locales';
@@ -25,6 +25,9 @@ import { columns, querySchema } from './data';
 import operationPreviewDrawer from './OperationPreviewDrawer.vue';
 
 const formOptions: VbenFormProps = {
+  commonConfig: {
+    labelWidth: 80,
+  },
   schema: querySchema(),
   wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
 };
@@ -44,7 +47,7 @@ const gridOptions: VxeGridProps<OperationLog> = {
   pagerConfig: {},
   proxyConfig: {
     ajax: {
-      query: async ({ page }, formValues) => {
+      query: async ({ page }, formValues = {}) => {
         // 区间选择器处理
         if (formValues?.createTime) {
           formValues.params = {
@@ -76,7 +79,19 @@ const gridOptions: VxeGridProps<OperationLog> = {
   showOverflow: true,
 };
 
-const [BasicTable, tableApi] = useVbenVxeGrid({ formOptions, gridOptions });
+const checked = ref(false);
+const [BasicTable, tableApi] = useVbenVxeGrid({
+  formOptions,
+  gridOptions,
+  gridEvents: {
+    checkboxChange: (e: any) => {
+      checked.value = e.records.length > 0;
+    },
+    checkboxAll: (e: any) => {
+      checked.value = e.records.length > 0;
+    },
+  },
+});
 
 const [OperationPreviewDrawer, drawerApi] = useVbenDrawer({
   connectedComponent: operationPreviewDrawer,
@@ -101,14 +116,6 @@ function handleClear() {
     },
   });
 }
-
-/**
- * TODO: 选中条件的判断
- */
-const checked = computed(() => {
-  return true;
-});
-
 /**
  * 删除日志
  */
@@ -121,7 +128,7 @@ async function handleDelete() {
     content: `确认删除选中的${ids.length}条操作日志吗？`,
     onOk: async () => {
       await operLogDelete(ids);
-      await tableApi.reload();
+      await tableApi.query();
     },
   });
 }
@@ -135,16 +142,23 @@ async function handleDelete() {
       </template>
       <template #toolbar-tools>
         <Space>
-          <a-button @click="handleClear">
+          <a-button
+            v-access:code="['monitor:operlog:remove']"
+            @click="handleClear"
+          >
             {{ $t('pages.common.clear') }}
           </a-button>
-          <a-button @click="downloadExcel(operLogExport, '操作日志', {})">
+          <a-button
+            v-access:code="['monitor:operlog:export']"
+            @click="downloadExcel(operLogExport, '操作日志', {})"
+          >
             {{ $t('pages.common.export') }}
           </a-button>
           <a-button
             :disabled="!checked"
             danger
             type="primary"
+            v-access:code="['monitor:operlog:remove']"
             @click="handleDelete"
           >
             {{ $t('pages.common.delete') }}
@@ -152,7 +166,12 @@ async function handleDelete() {
         </Space>
       </template>
       <template #action="{ row }">
-        <a-button size="small" type="link" @click.stop="handlePreview(row)">
+        <a-button
+          size="small"
+          type="link"
+          v-access:code="['monitor:operlog:list']"
+          @click.stop="handlePreview(row)"
+        >
           {{ $t('pages.common.preview') }}
         </a-button>
       </template>
