@@ -25,6 +25,17 @@ setupVbenVxeTable({
           showActiveMsg: true,
           showResponseMsg: false,
         },
+        columnConfig: {
+          resizable: true,
+        },
+        toolbarConfig: {
+          // 自定义列
+          custom: true,
+          // 最大化
+          zoom: true,
+          // 刷新
+          refresh: true,
+        },
         round: true,
         size: 'medium',
       },

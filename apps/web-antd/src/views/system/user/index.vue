@@ -45,6 +45,9 @@ const selectDeptId = ref<string[]>([]);
 
 const formOptions: VbenFormProps = {
   schema: querySchema(),
+  commonConfig: {
+    labelWidth: 80,
+  },
   wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
 };
 
@@ -103,7 +106,19 @@ const gridOptions: VxeGridProps = {
   showOverflow: true,
 };
 
-const [BasicTable, tableApi] = useVbenVxeGrid({ formOptions, gridOptions });
+const checked = ref(false);
+const [BasicTable, tableApi] = useVbenVxeGrid({
+  formOptions,
+  gridOptions,
+  gridEvents: {
+    checkboxChange: (e: any) => {
+      checked.value = e.records.length > 0;
+    },
+    checkboxAll: (e: any) => {
+      checked.value = e.records.length > 0;
+    },
+  },
+});
 
 const [UserDrawer, userDrawerApi] = useVbenDrawer({
   connectedComponent: userDrawer,
@@ -121,7 +136,7 @@ function handleEdit(row: Recordable<any>) {
 
 async function handleDelete(row: Recordable<any>) {
   await userRemove(row.userId);
-  await tableApi.reload();
+  await tableApi.query();
 }
 
 function handleMultiDelete() {
@@ -133,7 +148,7 @@ function handleMultiDelete() {
     content: `确认删除选中的${ids.length}条记录吗？`,
     onOk: async () => {
       await userRemove(ids);
-      await tableApi.reload();
+      await tableApi.query();
     },
   });
 }
@@ -145,7 +160,7 @@ function handleMultiDelete() {
       v-model:select-dept-id="selectDeptId"
       :height="300"
       class="w-[260px]"
-      @select="() => tableApi.reload()"
+      @select="() => tableApi.query()"
     />
     <BasicTable class="flex-1">
       <template #toolbar-actions>
@@ -166,9 +181,10 @@ function handleMultiDelete() {
             {{ $t('pages.common.import') }}
           </a-button>
           <a-button
+            :disabled="!checked"
             danger
             type="primary"
-            v-access:code="['system:user:delete']"
+            v-access:code="['system:user:remove']"
             @click="handleMultiDelete"
           >
             {{ $t('pages.common.delete') }}
@@ -194,7 +210,7 @@ function handleMultiDelete() {
           v-model="row.status"
           :api="() => userStatusChange(row)"
           :disabled="row.userId === 1"
-          :reload="() => tableApi.reload()"
+          :reload="() => tableApi.query()"
         />
       </template>
       <template #action="{ row }">
@@ -215,7 +231,7 @@ function handleMultiDelete() {
             <a-button
               danger
               size="small"
-              v-access:code="['system:user:delete']"
+              v-access:code="['system:user:remove']"
               @click.stop=""
             >
               {{ $t('pages.common.delete') }}
@@ -225,6 +241,6 @@ function handleMultiDelete() {
       </template>
     </BasicTable>
     <UserImpotModal />
-    <UserDrawer @reload="tableApi.reload()" />
+    <UserDrawer @reload="tableApi.query()" />
   </Page>
 </template>

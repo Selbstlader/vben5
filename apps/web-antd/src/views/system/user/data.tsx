@@ -124,6 +124,7 @@ export const drawerSchema: FormSchemaGetter = () => [
     component: 'Input',
     fieldName: 'phone',
     label: '手机号码',
+    defaultValue: undefined,
     rules: z
       .string()
       .regex(/^1[3-9]\d{9}$/, '请输入正确的手机号码')
@@ -132,6 +133,7 @@ export const drawerSchema: FormSchemaGetter = () => [
   {
     component: 'Input',
     fieldName: 'email',
+    defaultValue: undefined,
     label: '邮箱',
     // TODO: 这里非必填未生效
     rules: z.string().email('请输入正确的邮箱').optional(),
