@@ -27,6 +27,9 @@ import { downloadByData } from '#/utils/file/download';
 import { columns, querySchema } from './data';
 
 const formOptions: VbenFormProps = {
+  commonConfig: {
+    labelWidth: 80,
+  },
   schema: querySchema(),
   wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
 };
@@ -78,6 +81,7 @@ const gridOptions: VxeGridProps = {
   rowConfig: {
     isHover: true,
     keyField: 'ossId',
+    height: 65,
   },
   sortConfig: {
     remote: true,
@@ -87,12 +91,19 @@ const gridOptions: VxeGridProps = {
   showOverflow: true,
 };
 
+const checked = ref(false);
 const [BasicTable, tableApi] = useVbenVxeGrid({
   formOptions,
   gridOptions,
   gridEvents: {
     sortChange: () => {
       tableApi.query();
+    },
+    checkboxChange: (e: any) => {
+      checked.value = e.records.length > 0;
+    },
+    checkboxAll: (e: any) => {
+      checked.value = e.records.length > 0;
     },
   },
 });
@@ -161,9 +172,10 @@ function isImageFile(ext: string) {
             配置管理
           </a-button>
           <a-button
+            :disabled="!checked"
             danger
             type="primary"
-            v-access:code="['system:oss:delete']"
+            v-access:code="['system:oss:remove']"
             @click="handleMultiDelete"
           >
             {{ $t('pages.common.delete') }}
@@ -180,31 +192,29 @@ function isImageFile(ext: string) {
         <span v-else>{{ row.url }}</span>
       </template>
       <template #action="{ row }">
-        <Space>
+        <a-button
+          size="small"
+          type="link"
+          v-access:code="['system:oss:edit']"
+          @click="handleDownload(row)"
+        >
+          {{ $t('pages.common.download') }}
+        </a-button>
+        <Popconfirm
+          placement="left"
+          title="确认删除？"
+          @confirm="handleDelete(row)"
+        >
           <a-button
+            danger
             size="small"
             type="link"
-            v-access:code="['system:oss:edit']"
-            @click="handleDownload(row)"
+            v-access:code="['system:oss:remove']"
+            @click.stop=""
           >
-            {{ $t('pages.common.download') }}
+            {{ $t('pages.common.delete') }}
           </a-button>
-          <Popconfirm
-            placement="left"
-            title="确认删除？"
-            @confirm="handleDelete(row)"
-          >
-            <a-button
-              danger
-              size="small"
-              type="link"
-              v-access:code="['system:oss:delete']"
-              @click.stop=""
-            >
-              {{ $t('pages.common.delete') }}
-            </a-button>
-          </Popconfirm>
-        </Space>
+        </Popconfirm>
       </template>
     </BasicTable>
   </Page>
