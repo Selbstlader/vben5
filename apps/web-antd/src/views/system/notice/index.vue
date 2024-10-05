@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { Recordable } from '@vben/types';
 
+import { ref } from 'vue';
+
 import { Page, useVbenModal, type VbenFormProps } from '@vben/common-ui';
 
 import { Modal, Popconfirm, Space } from 'ant-design-vue';
@@ -13,6 +15,9 @@ import { columns, querySchema } from './data';
 import noticeModal from './notice-modal.vue';
 
 const formOptions: VbenFormProps = {
+  commonConfig: {
+    labelWidth: 80,
+  },
   schema: querySchema(),
   wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
 };
@@ -65,7 +70,20 @@ const gridOptions: VxeGridProps = {
   showOverflow: true,
 };
 
-const [BasicTable, tableApi] = useVbenVxeGrid({ formOptions, gridOptions });
+const checked = ref(false);
+const [BasicTable, tableApi] = useVbenVxeGrid({
+  formOptions,
+  gridOptions,
+  gridEvents: {
+    checkboxChange: (e: any) => {
+      checked.value = e.records.length > 0;
+    },
+    checkboxAll: (e: any) => {
+      checked.value = e.records.length > 0;
+    },
+  },
+});
+
 const [NoticeModal, modalApi] = useVbenModal({
   connectedComponent: noticeModal,
 });
@@ -109,9 +127,10 @@ function handleMultiDelete() {
       <template #toolbar-tools>
         <Space>
           <a-button
+            :disabled="!checked"
             danger
             type="primary"
-            v-access:code="['system:notice:delete']"
+            v-access:code="['system:notice:remove']"
             @click="handleMultiDelete"
           >
             {{ $t('pages.common.delete') }}
@@ -126,31 +145,29 @@ function handleMultiDelete() {
         </Space>
       </template>
       <template #action="{ row }">
-        <Space>
+        <a-button
+          size="small"
+          type="link"
+          v-access:code="['system:notice:edit']"
+          @click="handleEdit(row)"
+        >
+          {{ $t('pages.common.edit') }}
+        </a-button>
+        <Popconfirm
+          placement="left"
+          title="确认删除？"
+          @confirm="handleDelete(row)"
+        >
           <a-button
+            danger
             size="small"
             type="link"
-            v-access:code="['system:notice:edit']"
-            @click="handleEdit(row)"
+            v-access:code="['system:notice:remove']"
+            @click.stop=""
           >
-            {{ $t('pages.common.edit') }}
+            {{ $t('pages.common.delete') }}
           </a-button>
-          <Popconfirm
-            placement="left"
-            title="确认删除？"
-            @confirm="handleDelete(row)"
-          >
-            <a-button
-              danger
-              size="small"
-              type="link"
-              v-access:code="['system:notice:delete']"
-              @click.stop=""
-            >
-              {{ $t('pages.common.delete') }}
-            </a-button>
-          </Popconfirm>
-        </Space>
+        </Popconfirm>
       </template>
     </BasicTable>
     <NoticeModal @reload="tableApi.reload()" />
