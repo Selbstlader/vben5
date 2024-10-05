@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { Recordable } from '@vben/types';
 
+import { ref } from 'vue';
+
 import { useAccess } from '@vben/access';
 import { Page, useVbenDrawer, type VbenFormProps } from '@vben/common-ui';
 
@@ -20,6 +22,9 @@ import clientDrawer from './client-drawer.vue';
 import { columns, querySchema } from './data';
 
 const formOptions: VbenFormProps = {
+  commonConfig: {
+    labelWidth: 80,
+  },
   schema: querySchema(),
   wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
 };
@@ -52,13 +57,27 @@ const gridOptions: VxeGridProps = {
   rowConfig: {
     isHover: true,
     keyField: 'id',
+    height: 90,
   },
   round: true,
   align: 'center',
   showOverflow: true,
 };
 
-const [BasicTable, tableApi] = useVbenVxeGrid({ formOptions, gridOptions });
+const checked = ref(false);
+const [BasicTable, tableApi] = useVbenVxeGrid({
+  formOptions,
+  gridOptions,
+  gridEvents: {
+    checkboxChange: (e: any) => {
+      checked.value = e.records.length > 0;
+    },
+    checkboxAll: (e: any) => {
+      checked.value = e.records.length > 0;
+    },
+  },
+});
+
 const [ClientDrawer, drawerApi] = useVbenDrawer({
   connectedComponent: clientDrawer,
 });
@@ -75,7 +94,7 @@ async function handleEdit(record: Recordable<any>) {
 
 async function handleDelete(row: Recordable<any>) {
   await clientRemove(row.id);
-  await tableApi.reload();
+  await tableApi.query();
 }
 
 function handleMultiDelete() {
@@ -87,7 +106,7 @@ function handleMultiDelete() {
     content: `确认删除选中的${ids.length}条记录吗？`,
     onOk: async () => {
       await clientRemove(ids);
-      await tableApi.reload();
+      await tableApi.query();
     },
   });
 }
@@ -110,6 +129,7 @@ const { hasAccessByCodes } = useAccess();
             {{ $t('pages.common.export') }}
           </a-button>
           <a-button
+            :disabled="!checked"
             danger
             type="primary"
             v-access:code="['system:client:remove']"
@@ -133,38 +153,36 @@ const { hasAccessByCodes } = useAccess();
           v-model="row.status"
           :api="() => clientChangeStatus(row)"
           :disabled="row.id === 1 || !hasAccessByCodes(['system:client:edit'])"
-          :reload="() => tableApi.reload()"
+          :reload="() => tableApi.query()"
         />
       </template>
       <template #action="{ row }">
-        <Space>
+        <a-button
+          size="small"
+          type="link"
+          v-access:code="['system:client:edit']"
+          @click="handleEdit(row)"
+        >
+          {{ $t('pages.common.edit') }}
+        </a-button>
+        <Popconfirm
+          placement="left"
+          title="确认删除？"
+          @confirm="handleDelete(row)"
+        >
           <a-button
+            :disabled="row.id === 1"
+            danger
             size="small"
             type="link"
-            v-access:code="['system:client:edit']"
-            @click="handleEdit(row)"
+            v-access:code="['system:client:remove']"
+            @click.stop=""
           >
-            {{ $t('pages.common.edit') }}
+            {{ $t('pages.common.delete') }}
           </a-button>
-          <Popconfirm
-            placement="left"
-            title="确认删除？"
-            @confirm="handleDelete(row)"
-          >
-            <a-button
-              :disabled="row.id === 1"
-              danger
-              size="small"
-              type="link"
-              v-access:code="['system:client:remove']"
-              @click.stop=""
-            >
-              {{ $t('pages.common.delete') }}
-            </a-button>
-          </Popconfirm>
-        </Space>
+        </Popconfirm>
       </template>
     </BasicTable>
-    <ClientDrawer @reload="tableApi.reload()" />
+    <ClientDrawer @reload="tableApi.query()" />
   </Page>
 </template>
