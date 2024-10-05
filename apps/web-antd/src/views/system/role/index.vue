@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Recordable } from '@vben/types';
 
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { useAccess } from '@vben/access';
@@ -10,6 +11,7 @@ import {
   useVbenModal,
   type VbenFormProps,
 } from '@vben/common-ui';
+import { getPopupContainer } from '@vben/utils';
 
 import {
   Dropdown,
@@ -89,7 +91,19 @@ const gridOptions: VxeGridProps = {
   showOverflow: true,
 };
 
-const [BasicTable, tableApi] = useVbenVxeGrid({ formOptions, gridOptions });
+const checked = ref(false);
+const [BasicTable, tableApi] = useVbenVxeGrid({
+  formOptions,
+  gridOptions,
+  gridEvents: {
+    checkboxChange: (e: any) => {
+      checked.value = e.records.length > 0;
+    },
+    checkboxAll: (e: any) => {
+      checked.value = e.records.length > 0;
+    },
+  },
+});
 const [RoleDrawer, drawerApi] = useVbenDrawer({
   connectedComponent: roleDrawer,
 });
@@ -106,7 +120,7 @@ async function handleEdit(record: Recordable<any>) {
 
 async function handleDelete(row: Recordable<any>) {
   await roleRemove(row.roleId);
-  await tableApi.reload();
+  await tableApi.query();
 }
 
 function handleMultiDelete() {
@@ -118,7 +132,7 @@ function handleMultiDelete() {
     content: `确认删除选中的${ids.length}条记录吗？`,
     onOk: async () => {
       await roleRemove(ids);
-      await tableApi.reload();
+      await tableApi.query();
     },
   });
 }
@@ -155,9 +169,10 @@ function handleAssignRole(record: Recordable<any>) {
             {{ $t('pages.common.export') }}
           </a-button>
           <a-button
+            :disabled="!checked"
             danger
             type="primary"
-            v-access:code="['system:role:delete']"
+            v-access:code="['system:role:remove']"
             @click="handleMultiDelete"
           >
             {{ $t('pages.common.delete') }}
@@ -180,11 +195,11 @@ function handleAssignRole(record: Recordable<any>) {
             row.roleKey === 'admin' ||
             !hasAccessByCodes(['system:role:edit'])
           "
-          :reload="() => tableApi.reload()"
+          :reload="() => tableApi.query()"
         />
       </template>
       <template #action="{ row }">
-        <Space v-if="row.roleId !== 1">
+        <template v-if="row.roleId !== 1">
           <a-button
             size="small"
             type="link"
@@ -202,13 +217,16 @@ function handleAssignRole(record: Recordable<any>) {
               danger
               size="small"
               type="link"
-              v-access:code="['system:role:delete']"
+              v-access:code="['system:role:remove']"
               @click.stop=""
             >
               {{ $t('pages.common.delete') }}
             </a-button>
           </Popconfirm>
-          <Dropdown>
+          <Dropdown
+            :get-popup-container="getPopupContainer"
+            placement="bottomRight"
+          >
             <template #overlay>
               <Menu>
                 <MenuItem key="1" @click="handleAuthEdit(row)">
@@ -221,10 +239,10 @@ function handleAssignRole(record: Recordable<any>) {
             </template>
             <a-button size="small" type="link">更多</a-button>
           </Dropdown>
-        </Space>
+        </template>
       </template>
     </BasicTable>
-    <RoleDrawer @reload="tableApi.reload()" />
-    <RoleAuthModal @reload="tableApi.reload()" />
+    <RoleDrawer @reload="tableApi.query()" />
+    <RoleAuthModal @reload="tableApi.query()" />
   </Page>
 </template>
