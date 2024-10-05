@@ -121,7 +121,7 @@ function handleMultiDelete() {
       class="w-[260px]"
       @select="() => tableApi.reload()"
     />
-    <BasicTable>
+    <BasicTable class="flex-1">
       <template #toolbar-actions>
         <span class="pl-[7px] text-[16px]">岗位列表</span>
       </template>
