@@ -7,6 +7,8 @@ import { Empty, Skeleton, Tree } from 'ant-design-vue';
 
 import { getDeptTree } from '#/api/system/user';
 
+defineOptions({ inheritAttrs: false });
+
 defineEmits<{ select: [] }>();
 
 const selectDeptId = defineModel('selectDeptId', {
@@ -33,6 +35,7 @@ onMounted(async () => {
       v-bind="$attrs"
       v-if="deptTreeArray.length > 0"
       v-model:selected-keys="selectDeptId"
+      :class="$attrs.class"
       :field-names="{ title: 'label', key: 'id' }"
       :show-line="{ showLeafIcon: false }"
       :tree-data="deptTreeArray"
