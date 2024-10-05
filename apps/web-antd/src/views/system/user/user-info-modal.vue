@@ -50,7 +50,7 @@ async function handleOpenChange(open: boolean) {
 </script>
 
 <template>
-  <BasicModal :footer="false" title="用户信息">
+  <BasicModal :footer="false" :fullscreen-button="false" title="用户信息">
     <Description @register="registerDescription" />
   </BasicModal>
 </template>
