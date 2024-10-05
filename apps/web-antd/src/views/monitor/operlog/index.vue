@@ -152,7 +152,7 @@ async function handleDelete() {
         </Space>
       </template>
       <template #action="{ row }">
-        <a-button size="small" type="link" @click="handlePreview(row)">
+        <a-button size="small" type="link" @click.stop="handlePreview(row)">
           {{ $t('pages.common.preview') }}
         </a-button>
       </template>
