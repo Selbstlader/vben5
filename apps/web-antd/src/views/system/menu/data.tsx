@@ -1,8 +1,9 @@
 import { DictEnum } from '@vben/constants';
 import { getPopupContainer } from '@vben/utils';
 
-import { type FormSchemaGetter, z } from '#/adapter';
+import { type FormSchemaGetter, type VxeGridProps, z } from '#/adapter';
 import { getDictOptions } from '#/utils/dict';
+import { renderDict, renderIcon } from '#/utils/render';
 
 export const querySchema: FormSchemaGetter = () => [
   {
@@ -40,6 +41,90 @@ export const menuTypeOptions = [
 export const yesNoOptions = [
   { label: '是', value: '0' },
   { label: '否', value: '1' },
+];
+
+// （M目录 C菜单 F按钮）
+const menuTypes = {
+  M: { value: '目录', icon: 'fxemoji:folder' },
+  C: { value: '菜单', icon: 'fluent-emoji-flat:open-book' },
+  F: { value: '按钮', icon: 'fluent-emoji:ok-button' },
+};
+
+export const columns: VxeGridProps['columns'] = [
+  {
+    title: '菜单名称',
+    field: 'menuName',
+    treeNode: true,
+    width: 200,
+  },
+  {
+    title: '图标',
+    field: 'icon',
+    width: 80,
+    slots: {
+      default: ({ row }) => {
+        if (row?.icon === '#') {
+          return '';
+        }
+        return renderIcon(row.icon);
+      },
+    },
+  },
+  {
+    title: '排序',
+    field: 'orderNum',
+    width: 120,
+  },
+  {
+    title: '组件类型',
+    field: 'menuType',
+    width: 150,
+    slots: {
+      default: ({ row }) => {
+        const current = menuTypes[row.menuType as 'C' | 'F' | 'M'];
+        return current as any;
+      },
+    },
+  },
+  {
+    title: '权限标识',
+    field: 'perms',
+  },
+  {
+    title: '组件路径',
+    field: 'component',
+  },
+  {
+    title: '状态',
+    field: 'status',
+    width: 100,
+    slots: {
+      default: ({ row }) => {
+        return renderDict(row.status, DictEnum.SYS_NORMAL_DISABLE);
+      },
+    },
+  },
+  {
+    title: '显示',
+    field: 'visible',
+    width: 100,
+    slots: {
+      default: ({ row }) => {
+        return renderDict(row.visible, DictEnum.SYS_SHOW_HIDE);
+      },
+    },
+  },
+  {
+    title: '创建时间',
+    field: 'createTime',
+  },
+  {
+    field: 'action',
+    fixed: 'right',
+    slots: { default: 'action' },
+    title: '操作',
+    width: 180,
+  },
 ];
 
 export const drawerSchema: FormSchemaGetter = () => [
