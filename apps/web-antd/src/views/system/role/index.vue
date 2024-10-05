@@ -1,41 +1,95 @@
 <script setup lang="ts">
 import type { Recordable } from '@vben/types';
-import type { ColumnsType } from 'ant-design-vue/es/table';
 
-import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { Page, useVbenDrawer, useVbenModal } from '@vben/common-ui';
-import { $t } from '@vben/locales';
+import { useAccess } from '@vben/access';
+import {
+  Page,
+  useVbenDrawer,
+  useVbenModal,
+  type VbenFormProps,
+} from '@vben/common-ui';
 
-import { Card, Space, Table } from 'ant-design-vue';
+import {
+  Dropdown,
+  Menu,
+  MenuItem,
+  Modal,
+  Popconfirm,
+  Space,
+} from 'ant-design-vue';
+import dayjs from 'dayjs';
 
-import { useVbenForm } from '#/adapter';
-import { roleList } from '#/api/system/role';
+import { useVbenVxeGrid, type VxeGridProps } from '#/adapter';
+import {
+  roleChangeStatus,
+  roleExport,
+  roleList,
+  roleRemove,
+} from '#/api/system/role';
+import { TableSwitch } from '#/components/table';
+import { downloadExcel } from '#/utils/file/download';
 
-import { querySchema } from './data';
+import { columns, querySchema } from './data';
 import roleAuthModal from './role-auth-modal.vue';
 import roleDrawer from './role-drawer.vue';
 
-const [QueryForm] = useVbenForm({
-  // 默认展开
-  collapsed: false,
-  // 所有表单项共用，可单独在表单内覆盖
-  commonConfig: {
-    // 所有表单项
-    componentProps: {
-      class: 'w-full',
+const formOptions: VbenFormProps = {
+  schema: querySchema(),
+  wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
+};
+
+const gridOptions: VxeGridProps = {
+  checkboxConfig: {
+    // 高亮
+    highlight: true,
+    // 翻页时保留选中状态
+    reserve: true,
+    // 点击行选中
+    // trigger: 'row',
+    checkMethod: ({ row }) => row.roleId !== 1,
+  },
+  columns,
+  height: 'auto',
+  keepSource: true,
+  pagerConfig: {},
+  proxyConfig: {
+    ajax: {
+      query: async ({ page }, formValues) => {
+        // 区间选择器处理
+        if (formValues?.createTime) {
+          formValues.params = {
+            beginTime: dayjs(formValues.createTime[0]).format(
+              'YYYY-MM-DD 00:00:00',
+            ),
+            endTime: dayjs(formValues.createTime[1]).format(
+              'YYYY-MM-DD 23:59:59',
+            ),
+          };
+          Reflect.deleteProperty(formValues, 'createTime');
+        } else {
+          Reflect.deleteProperty(formValues, 'params');
+        }
+
+        return await roleList({
+          pageNum: page.currentPage,
+          pageSize: page.pageSize,
+          ...formValues,
+        });
+      },
     },
   },
-  schema: querySchema(),
-  // 是否可展开
-  showCollapseButton: true,
-  submitButtonOptions: {
-    text: '查询',
+  rowConfig: {
+    isHover: true,
+    keyField: 'roleId',
   },
-  wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
-});
+  round: true,
+  align: 'center',
+  showOverflow: true,
+};
 
+const [BasicTable, tableApi] = useVbenVxeGrid({ formOptions, gridOptions });
 const [RoleDrawer, drawerApi] = useVbenDrawer({
   connectedComponent: roleDrawer,
 });
@@ -45,48 +99,31 @@ function handleAdd() {
   drawerApi.open();
 }
 
-const columns: ColumnsType = [
-  {
-    dataIndex: 'roleName',
-    title: '角色名称',
-  },
-  {
-    dataIndex: 'roleKey',
-    title: '权限字符',
-  },
-  {
-    dataIndex: 'dataScope',
-    title: '数据权限',
-  },
-  {
-    dataIndex: 'roleSort',
-    title: '排序',
-  },
-  {
-    dataIndex: 'status',
-    title: '状态',
-  },
-  {
-    dataIndex: 'createTime',
-    title: '创建时间',
-  },
-  {
-    align: 'center',
-    dataIndex: 'action',
-    title: '操作',
-  },
-];
-
-const dataSource = ref([]);
-onMounted(async () => {
-  const resp = await roleList();
-  dataSource.value = (resp as any).rows;
-});
-
-function handleEdit(record: Recordable<any>) {
+async function handleEdit(record: Recordable<any>) {
   drawerApi.setData({ id: record.roleId });
   drawerApi.open();
 }
+
+async function handleDelete(row: Recordable<any>) {
+  await roleRemove(row.roleId);
+  await tableApi.reload();
+}
+
+function handleMultiDelete() {
+  const rows = tableApi.grid.getCheckboxRecords();
+  const ids = rows.map((row: any) => row.roleId);
+  Modal.confirm({
+    title: '提示',
+    okType: 'danger',
+    content: `确认删除选中的${ids.length}条记录吗？`,
+    onOk: async () => {
+      await roleRemove(ids);
+      await tableApi.reload();
+    },
+  });
+}
+
+const { hasAccessByCodes } = useAccess();
 
 const [RoleAuthModal, authModalApi] = useVbenModal({
   connectedComponent: roleAuthModal,
@@ -104,31 +141,90 @@ function handleAssignRole(record: Recordable<any>) {
 </script>
 
 <template>
-  <Page content-class="flex flex-col gap-[16px]">
-    <Card class="flex-1">
-      <QueryForm />
-    </Card>
-    <a-button @click="handleAdd">{{ $t('pages.common.add') }}</a-button>
-    <RoleDrawer />
-    <RoleAuthModal />
-    <div class="bg-background rounded-lg p-[16px]">
-      <Table :columns="columns" :data-source="dataSource">
-        <template #bodyCell="{ column, record }">
-          <template v-if="column.dataIndex === 'action'">
-            <Space>
-              <a-button size="small" type="primary" @click="handleEdit(record)">
-                编辑
-              </a-button>
-              <a-button size="small" @click="handleAuthEdit(record)">
-                数据权限
-              </a-button>
-              <a-button size="small" @click="handleAssignRole(record)">
-                分配角色
-              </a-button>
-            </Space>
-          </template>
-        </template>
-      </Table>
-    </div>
+  <Page :auto-content-height="true">
+    <BasicTable>
+      <template #toolbar-actions>
+        <span class="pl-[7px] text-[16px]">参数列表</span>
+      </template>
+      <template #toolbar-tools>
+        <Space>
+          <a-button
+            v-access:code="['system:role:export']"
+            @click="downloadExcel(roleExport, '角色数据', {})"
+          >
+            {{ $t('pages.common.export') }}
+          </a-button>
+          <a-button
+            danger
+            type="primary"
+            v-access:code="['system:role:delete']"
+            @click="handleMultiDelete"
+          >
+            {{ $t('pages.common.delete') }}
+          </a-button>
+          <a-button
+            type="primary"
+            v-access:code="['system:role:add']"
+            @click="handleAdd"
+          >
+            {{ $t('pages.common.add') }}
+          </a-button>
+        </Space>
+      </template>
+      <template #status="{ row }">
+        <TableSwitch
+          v-model="row.status"
+          :api="() => roleChangeStatus(row)"
+          :disabled="
+            row.roleId === 1 ||
+            row.roleKey === 'admin' ||
+            !hasAccessByCodes(['system:role:edit'])
+          "
+          :reload="() => tableApi.reload()"
+        />
+      </template>
+      <template #action="{ row }">
+        <Space v-if="row.roleId !== 1">
+          <a-button
+            size="small"
+            type="link"
+            v-access:code="['system:role:edit']"
+            @click.stop="handleEdit(row)"
+          >
+            {{ $t('pages.common.edit') }}
+          </a-button>
+          <Popconfirm
+            placement="left"
+            title="确认删除？"
+            @confirm="handleDelete(row)"
+          >
+            <a-button
+              danger
+              size="small"
+              type="link"
+              v-access:code="['system:role:delete']"
+              @click.stop=""
+            >
+              {{ $t('pages.common.delete') }}
+            </a-button>
+          </Popconfirm>
+          <Dropdown>
+            <template #overlay>
+              <Menu>
+                <MenuItem key="1" @click="handleAuthEdit(row)">
+                  数据权限
+                </MenuItem>
+                <MenuItem key="2" @click="handleAssignRole(row)">
+                  分配用户
+                </MenuItem>
+              </Menu>
+            </template>
+            <a-button size="small" type="link">更多</a-button>
+          </Dropdown>
+        </Space>
+      </template>
+    </BasicTable>
+    <RoleDrawer @reload="tableApi.reload()" />
+    <RoleAuthModal @reload="tableApi.reload()" />
   </Page>
 </template>

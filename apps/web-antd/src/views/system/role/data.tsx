@@ -1,7 +1,9 @@
-import type { FormSchemaGetter } from '#/adapter';
+import type { FormSchemaGetter, VxeGridProps } from '#/adapter';
 
 import { DictEnum } from '@vben/constants';
 import { getPopupContainer } from '@vben/utils';
+
+import { Tag } from 'ant-design-vue';
 
 import { getDictOptions } from '#/utils/dict';
 
@@ -39,6 +41,58 @@ export const querySchema: FormSchemaGetter = () => [
     component: 'RangePicker',
     fieldName: 'createTime',
     label: '创建时间',
+  },
+];
+
+export const columns: VxeGridProps['columns'] = [
+  { type: 'checkbox', width: 60 },
+  {
+    title: '角色名称',
+    field: 'roleName',
+  },
+  {
+    title: '权限字符',
+    field: 'roleKey',
+    slots: {
+      default: ({ row }) => {
+        return <Tag color="processing">{row.roleKey}</Tag>;
+      },
+    },
+  },
+  {
+    title: '数据权限',
+    field: 'dataScope',
+    slots: {
+      default: ({ row }) => {
+        const found = authScopeOptions.find(
+          (item) => item.value === row.dataScope,
+        );
+        if (found) {
+          return <Tag color={found.color}>{found.label}</Tag>;
+        }
+        return <Tag>{row.dataScope}</Tag>;
+      },
+    },
+  },
+  {
+    title: '排序',
+    field: 'roleSort',
+  },
+  {
+    title: '状态',
+    field: 'status',
+    slots: { default: 'status' },
+  },
+  {
+    title: '创建时间',
+    field: 'createTime',
+  },
+  {
+    field: 'action',
+    fixed: 'right',
+    slots: { default: 'action' },
+    title: '操作',
+    width: 180,
   },
 ];
 
