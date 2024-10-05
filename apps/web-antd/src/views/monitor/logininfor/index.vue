@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { Recordable } from '@vben/types';
 
+import { ref } from 'vue';
+
 import { Page, useVbenModal, type VbenFormProps } from '@vben/common-ui';
 
 import { Modal, Popconfirm, Space } from 'ant-design-vue';
@@ -11,6 +13,7 @@ import {
   loginInfoExport,
   loginInfoList,
   loginInfoRemove,
+  userUnlock,
 } from '#/api/monitor/logininfo';
 import { downloadExcel } from '#/utils/file/download';
 import { confirmDeleteModal } from '#/utils/modal';
@@ -19,6 +22,9 @@ import { columns, querySchema } from './data';
 import loginInfoModal from './login-info-modal.vue';
 
 const formOptions: VbenFormProps = {
+  commonConfig: {
+    labelWidth: 80,
+  },
   schema: querySchema(),
   wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
 };
@@ -56,7 +62,21 @@ const gridOptions: VxeGridProps = {
   showOverflow: true,
 };
 
-const [BasicTable, tableApi] = useVbenVxeGrid({ formOptions, gridOptions });
+const checked = ref(false);
+const canUnlock = ref(false);
+const [BasicTable, tableApi] = useVbenVxeGrid({
+  formOptions,
+  gridOptions,
+  gridEvents: {
+    checkboxChange: (e: any) => {
+      checked.value = e.records.length > 0;
+      canUnlock.value = e.records.length === 1 && e.records[0]?.status === '1';
+    },
+    checkboxAll: (e: any) => {
+      checked.value = e.records.length > 0;
+    },
+  },
+});
 
 const [LoginInfoModal, modalApi] = useVbenModal({
   connectedComponent: loginInfoModal,
@@ -77,7 +97,7 @@ function handleClear() {
 
 async function handleDelete(row: Recordable<any>) {
   await loginInfoRemove(row.infoId);
-  await tableApi.reload();
+  await tableApi.query();
 }
 
 function handleMultiDelete() {
@@ -89,9 +109,19 @@ function handleMultiDelete() {
     content: `确认删除选中的${ids.length}条记录吗？`,
     onOk: async () => {
       await loginInfoRemove(ids);
-      await tableApi.reload();
+      await tableApi.query();
     },
   });
+}
+
+async function handleUnlock() {
+  const records = tableApi.grid.getCheckboxRecords();
+  if (records.length !== 1) {
+    return;
+  }
+  const { userName } = records[0];
+  await userUnlock(userName);
+  await tableApi.query();
 }
 </script>
 
@@ -113,6 +143,7 @@ function handleMultiDelete() {
             {{ $t('pages.common.export') }}
           </a-button>
           <a-button
+            :disabled="!checked"
             danger
             type="primary"
             v-access:code="['monitor:logininfor:delete']"
@@ -120,7 +151,9 @@ function handleMultiDelete() {
           >
             {{ $t('pages.common.delete') }}
           </a-button>
-          <a-button type="primary">解锁(没做)</a-button>
+          <a-button :disabled="!canUnlock" type="primary" @click="handleUnlock">
+            解锁
+          </a-button>
         </Space>
       </template>
       <template #action="{ row }">
