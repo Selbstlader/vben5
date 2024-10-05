@@ -1,7 +1,7 @@
 import { DictEnum } from '@vben/constants';
 import { getPopupContainer } from '@vben/utils';
 
-import { type FormSchemaGetter, z } from '#/adapter';
+import { type FormSchemaGetter, type VxeGridProps, z } from '#/adapter';
 import { getDictOptions } from '#/utils/dict';
 
 export const querySchema: FormSchemaGetter = () => [
@@ -39,6 +39,52 @@ export const querySchema: FormSchemaGetter = () => [
     label: '创建时间',
   },
 ];
+
+export const columns: VxeGridProps['columns'] = [
+  { type: 'checkbox', width: 60 },
+  {
+    field: 'userName',
+    title: '名称',
+  },
+  {
+    field: 'nickName',
+    title: '昵称',
+  },
+  {
+    field: 'avatar',
+    title: '头像',
+    slots: { default: 'avatar' },
+    width: 80,
+  },
+  {
+    field: 'deptName',
+    title: '部门',
+  },
+  {
+    field: 'phonenumber',
+    title: '手机号',
+    formatter({ cellValue }) {
+      return cellValue || '暂无';
+    },
+  },
+  {
+    field: 'status',
+    title: '状态',
+    slots: { default: 'status' },
+  },
+  {
+    field: 'createTime',
+    title: '创建时间',
+  },
+  {
+    field: 'action',
+    fixed: 'right',
+    slots: { default: 'action' },
+    title: '操作',
+    width: 180,
+  },
+];
+
 export const drawerSchema: FormSchemaGetter = () => [
   {
     component: 'Input',
@@ -87,6 +133,7 @@ export const drawerSchema: FormSchemaGetter = () => [
     component: 'Input',
     fieldName: 'email',
     label: '邮箱',
+    // TODO: 这里非必填未生效
     rules: z.string().email('请输入正确的邮箱').optional(),
   },
   {
