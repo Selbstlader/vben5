@@ -3,17 +3,36 @@ import type { GenInfo } from '#/api/tool/gen/model';
 
 import { inject, type Ref, unref } from 'vue';
 
-import { Space, Table } from 'ant-design-vue';
+import { Space } from 'ant-design-vue';
 import { cloneDeep } from 'lodash-es';
 
+import { useVbenVxeGrid, type VxeGridProps } from '#/adapter';
 import { editSave } from '#/api/tool/gen';
 
 import { toCurrentStep } from '../mitt';
+import { vxeTableColumns } from './gen-data';
 
 /**
  * 从父组件注入
  */
 const genInfoData = inject('genInfoData') as Ref<GenInfo['info']>;
+
+const gridOptions: VxeGridProps = {
+  columns: vxeTableColumns,
+  // height: 'auto',
+  keepSource: true,
+  pagerConfig: {},
+  rowConfig: {
+    isHover: true,
+    keyField: 'id',
+  },
+  data: genInfoData.value.columns,
+  round: true,
+  align: 'center',
+  showOverflow: true,
+};
+
+const [BasicTable] = useVbenVxeGrid({ gridOptions });
 
 async function handleSubmit() {
   try {
@@ -56,7 +75,7 @@ async function handleSubmit() {
 
 <template>
   <div class="flex flex-col gap-[16px] p-[12px]">
-    <Table />
+    <BasicTable />
     <div class="flex justify-center">
       <Space>
         <a-button @click="toCurrentStep(0)">上一步</a-button>
