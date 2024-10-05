@@ -80,7 +80,7 @@ async function handleSubmit() {
     if (!valid) {
       return;
     }
-    const data = formApi.getValues();
+    const data = await formApi.getValues();
     await userResetPassword(data as any);
     emit('reload');
     handleCancel();
