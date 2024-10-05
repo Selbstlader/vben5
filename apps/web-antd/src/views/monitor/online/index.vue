@@ -11,6 +11,9 @@ import { forceLogout, onlineList } from '#/api/monitor/online';
 import { columns, querySchema } from './data';
 
 const formOptions: VbenFormProps = {
+  commonConfig: {
+    labelWidth: 80,
+  },
   schema: querySchema(),
   wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
 };
@@ -44,7 +47,7 @@ const [BasicTable, tableApi] = useVbenVxeGrid({ formOptions, gridOptions });
 
 async function handleForceOffline(row: Recordable<any>) {
   await forceLogout(row.tokenId);
-  await tableApi.reload();
+  await tableApi.query();
 }
 </script>
 
