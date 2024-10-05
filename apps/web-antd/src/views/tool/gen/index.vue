@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Recordable } from '@vben/types';
 
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { Page, useVbenModal, type VbenFormProps } from '@vben/common-ui';
@@ -69,7 +70,19 @@ const gridOptions: VxeGridProps = {
   showOverflow: true,
 };
 
-const [BasicTable, tableApi] = useVbenVxeGrid({ formOptions, gridOptions });
+const checked = ref(false);
+const [BasicTable, tableApi] = useVbenVxeGrid({
+  formOptions,
+  gridOptions,
+  gridEvents: {
+    checkboxChange: (e: any) => {
+      checked.value = e.records.length > 0;
+    },
+    checkboxAll: (e: any) => {
+      checked.value = e.records.length > 0;
+    },
+  },
+});
 
 const [CodePreviewModal, previewModalApi] = useVbenModal({
   connectedComponent: codePreviewModal,
@@ -87,7 +100,7 @@ function handleEdit(record: Recordable<any>) {
 
 async function handleSync(record: Recordable<any>) {
   await syncDb(record.tableId);
-  await tableApi.reload();
+  await tableApi.query();
 }
 
 /**
@@ -130,7 +143,7 @@ async function handleDownload(record: Recordable<any>) {
  */
 async function handleDelete(record: Recordable<any>) {
   await genRemove(record.tableId);
-  await tableApi.reload();
+  await tableApi.query();
 }
 
 function handleMultiDelete() {
@@ -142,7 +155,8 @@ function handleMultiDelete() {
     content: `确认删除选中的${ids.length}条记录吗？`,
     onOk: async () => {
       await genRemove(ids);
-      await tableApi.reload();
+      await tableApi.query();
+      checked.value = false;
     },
   });
 }
@@ -164,10 +178,15 @@ function handleImport() {
       </template>
       <template #toolbar-tools>
         <Space>
-          <a-button danger type="primary" @click="handleMultiDelete">
+          <a-button
+            :disabled="!checked"
+            danger
+            type="primary"
+            @click="handleMultiDelete"
+          >
             {{ $t('pages.common.delete') }}
           </a-button>
-          <a-button @click="handleBatchGen">
+          <a-button :disabled="!checked" @click="handleBatchGen">
             {{ $t('pages.common.generate') }}
           </a-button>
           <a-button type="primary" @click="handleImport">
@@ -206,6 +225,6 @@ function handleImport() {
       </template>
     </BasicTable>
     <CodePreviewModal />
-    <TableImportModal @reload="tableApi.reload()" />
+    <TableImportModal @reload="tableApi.query()" />
   </Page>
 </template>
