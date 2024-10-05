@@ -91,10 +91,12 @@ export const vxeTableColumns: VxeGridProps['columns'] = [
     field: 'columnName',
     showOverflow: 'tooltip',
     fixed: 'left',
+    width: 150,
   },
   {
     title: '字段描述',
     field: 'columnComment',
+    width: 150,
     slots: {
       edit: ({ row }) => {
         return <Input v-model:value={row.columnComment}></Input>;
@@ -105,6 +107,7 @@ export const vxeTableColumns: VxeGridProps['columns'] = [
   {
     title: 'db类型',
     field: 'columnType',
+    width: 120,
     showOverflow: 'tooltip',
   },
   {
@@ -119,6 +122,7 @@ export const vxeTableColumns: VxeGridProps['columns'] = [
         }));
         return (
           <Select
+            class="w-full"
             getPopupContainer={getPopupContainer}
             options={javaTypeOptions}
             v-model:value={row.javaType}
@@ -222,6 +226,7 @@ export const vxeTableColumns: VxeGridProps['columns'] = [
       edit: ({ row }) => {
         return (
           <Select
+            class="w-full"
             getPopupContainer={getPopupContainer}
             options={queryTypeOptions}
             v-model:value={row.queryType}
@@ -265,6 +270,7 @@ export const vxeTableColumns: VxeGridProps['columns'] = [
       edit: ({ row }) => {
         return (
           <Select
+            class="w-full"
             getPopupContainer={getPopupContainer}
             options={componentsOptions}
             v-model:value={row.htmlType}
@@ -304,6 +310,7 @@ export const vxeTableColumns: VxeGridProps['columns'] = [
         return (
           <Select
             allowClear={true}
+            class="w-full"
             disabled={disabled}
             getPopupContainer={getPopupContainer}
             onDeselect={onDeselect}
