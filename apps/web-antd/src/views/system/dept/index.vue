@@ -1,62 +1,146 @@
 <script setup lang="ts">
-import { Page, useVbenDrawer } from '@vben/common-ui';
-import { $t } from '@vben/locales';
+import type { Recordable } from '@vben/types';
 
-import { Card } from 'ant-design-vue';
+import { nextTick } from 'vue';
 
-import { useVbenForm } from '#/adapter';
+import { Page, useVbenDrawer, type VbenFormProps } from '@vben/common-ui';
+import { listToTree } from '@vben/utils';
 
-import { querySchema } from './data';
+import { Popconfirm, Space } from 'ant-design-vue';
+
+import { useVbenVxeGrid, type VxeGridProps } from '#/adapter';
+import { deptList, deptRemove } from '#/api/system/dept';
+
+import { columns, querySchema } from './data';
 import deptDrawer from './dept-drawer.vue';
 
+const formOptions: VbenFormProps = {
+  schema: querySchema(),
+  wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
+};
+
+const gridOptions: VxeGridProps = {
+  columns,
+  height: 'auto',
+  keepSource: true,
+  pagerConfig: {
+    enabled: false,
+  },
+  proxyConfig: {
+    ajax: {
+      query: async (_, formValues) => {
+        const resp = await deptList({
+          ...formValues,
+        });
+        const treeData = listToTree(resp, {
+          id: 'deptId',
+          pid: 'parentId',
+          children: 'children',
+        });
+        return { rows: treeData };
+      },
+      // 默认请求接口后展开全部 不需要可以删除这段
+      querySuccess: () => {
+        nextTick(() => {
+          expandAll();
+        });
+      },
+    },
+  },
+  rowConfig: {
+    isHover: true,
+    keyField: 'deptId',
+  },
+  round: true,
+  align: 'center',
+  showOverflow: true,
+  treeConfig: {
+    parentField: 'parentId',
+    rowField: 'deptId',
+    transform: false,
+  },
+};
+
+const [BasicTable, tableApi] = useVbenVxeGrid({ formOptions, gridOptions });
 const [DeptDrawer, drawerApi] = useVbenDrawer({
   connectedComponent: deptDrawer,
 });
 
 function handleAdd() {
-  drawerApi.setData({});
+  drawerApi.setData({ update: false });
   drawerApi.open();
 }
 
-function handleTest(id: number | string) {
-  drawerApi.setData({ id });
+async function handleEdit(record: Recordable<any>) {
+  drawerApi.setData({ id: record.deptId, update: true });
   drawerApi.open();
 }
 
-const [QueryForm] = useVbenForm({
-  // 默认展开
-  collapsed: false,
-  // 所有表单项共用，可单独在表单内覆盖
-  commonConfig: {
-    // 所有表单项
-    componentProps: {
-      class: 'w-full',
-    },
-  },
-  schema: querySchema(),
-  // 是否可展开
-  showCollapseButton: true,
-  submitButtonOptions: {
-    text: '查询',
-  },
-  wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
-});
+async function handleDelete(row: Recordable<any>) {
+  await deptRemove(row.deptId);
+  await tableApi.reload();
+}
+
+function expandAll() {
+  tableApi.grid?.setAllTreeExpand(true);
+}
+
+function collapseAll() {
+  tableApi.grid?.setAllTreeExpand(false);
+}
 </script>
 
 <template>
-  <Page content-class="flex flex-col gap-4">
-    <Card>
-      <QueryForm />
-    </Card>
-    <Card>
-      <div class="flex justify-end gap-2">
-        <a-button type="primary" @click="handleAdd">
-          {{ $t('pages.common.add') }}
-        </a-button>
-        <a-button @click="handleTest(103)"> 新增 上级id=103 </a-button>
-        <a-button @click="handleTest(105)"> 新增 上级id=105 </a-button>
-      </div>
-    </Card>
-    <DeptDrawer />
+  <Page :auto-content-height="true">
+    <BasicTable>
+      <template #toolbar-actions>
+        <span class="pl-[7px] text-[16px]">部门列表</span>
+      </template>
+      <template #toolbar-tools>
+        <Space>
+          <a-button @click="collapseAll">
+            {{ $t('pages.common.collapse') }}
+          </a-button>
+          <a-button @click="expandAll">
+            {{ $t('pages.common.expand') }}
+          </a-button>
+          <a-button
+            type="primary"
+            v-access:code="['system:dept:add']"
+            @click="handleAdd"
+          >
+            {{ $t('pages.common.add') }}
+          </a-button>
+        </Space>
+      </template>
+      <template #action="{ row }">
+        <Space>
+          <a-button
+            size="small"
+            type="link"
+            v-access:code="['system:dept:edit']"
+            @click="handleEdit(row)"
+          >
+            {{ $t('pages.common.edit') }}
+          </a-button>
+          <Popconfirm
+            placement="left"
+            title="确认删除？"
+            @confirm="handleDelete(row)"
+          >
+            <a-button
+              danger
+              size="small"
+              type="link"
+              v-access:code="['system:dept:remove']"
+              @click.stop=""
+            >
+              {{ $t('pages.common.delete') }}
+            </a-button>
+          </Popconfirm>
+        </Space>
+      </template>
+    </BasicTable>
+    <DeptDrawer @reload="tableApi.reload()" />
   </Page>
 </template>

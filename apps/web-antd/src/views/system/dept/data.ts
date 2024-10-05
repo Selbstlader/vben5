@@ -1,8 +1,9 @@
 import { DictEnum } from '@vben/constants';
 import { getPopupContainer } from '@vben/utils';
 
-import { type FormSchemaGetter, z } from '#/adapter';
+import { type FormSchemaGetter, type VxeGridProps, z } from '#/adapter';
 import { getDictOptions } from '#/utils/dict';
+import { renderDict } from '#/utils/render';
 
 export const querySchema: FormSchemaGetter = () => [
   {
@@ -18,6 +19,45 @@ export const querySchema: FormSchemaGetter = () => [
     },
     fieldName: 'status',
     label: '部门状态',
+  },
+];
+
+export const columns: VxeGridProps['columns'] = [
+  {
+    field: 'deptName',
+    title: '部门名称',
+    treeNode: true,
+    width: 200,
+  },
+  {
+    field: 'deptCategory',
+    title: '类别编码',
+  },
+  {
+    field: 'orderNum',
+    title: '排序',
+    width: 180,
+  },
+  {
+    field: 'status',
+    width: 180,
+    title: '状态',
+    slots: {
+      default: ({ row }) => {
+        return renderDict(row.status, DictEnum.SYS_NORMAL_DISABLE);
+      },
+    },
+  },
+  {
+    field: 'createTime',
+    title: '创建时间',
+  },
+  {
+    field: 'action',
+    fixed: 'right',
+    slots: { default: 'action' },
+    title: '操作',
+    width: 180,
   },
 ];
 
@@ -76,7 +116,7 @@ export const drawerSchema: FormSchemaGetter = () => [
     label: '联系电话',
     rules: z
       .string()
-      .regex(/^\d{1,3}-\d{8,11}$/, { message: '请输入正确的手机号' })
+      .regex(/^1[3,4578]\d{9}$/, { message: '请输入正确的手机号' })
       .optional(),
   },
   {

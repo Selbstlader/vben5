@@ -18,14 +18,6 @@ const formOptions: VbenFormProps = {
 };
 
 const gridOptions: VxeGridProps = {
-  checkboxConfig: {
-    // 高亮
-    highlight: true,
-    // 翻页时保留选中状态
-    reserve: true,
-    // 点击行选中
-    // trigger: 'row',
-  },
   columns,
   height: 'auto',
   keepSource: true,
