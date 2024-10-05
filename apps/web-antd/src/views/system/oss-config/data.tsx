@@ -1,6 +1,8 @@
 import { DictEnum } from '@vben/constants';
 
-import { type FormSchemaGetter, z } from '#/adapter';
+import { Tag } from 'ant-design-vue';
+
+import { type FormSchemaGetter, type VxeGridProps, z } from '#/adapter';
 import { getDictOptions } from '#/utils/dict';
 
 const accessPolicyOptions = [
@@ -27,6 +29,56 @@ export const querySchema: FormSchemaGetter = () => [
     },
     fieldName: 'status',
     label: '是否默认',
+  },
+];
+
+export const columns: VxeGridProps['columns'] = [
+  { type: 'checkbox', width: 60 },
+  {
+    title: '配置名称',
+    field: 'configKey',
+  },
+  {
+    title: '访问站点',
+    field: 'endpoint',
+    showOverflow: true,
+  },
+  {
+    title: '桶名称',
+    field: 'bucketName',
+  },
+  {
+    title: '域',
+    field: 'region',
+  },
+  {
+    title: '权限桶类型',
+    field: 'accessPolicy',
+    slots: {
+      default: ({ row }) => {
+        const current = accessPolicyOptions.find(
+          (item) => item.value === row.accessPolicy,
+        );
+        if (current) {
+          return <Tag color={current.color}>{current.label}</Tag>;
+        }
+        return '未知类型';
+      },
+    },
+  },
+  {
+    title: '是否默认',
+    field: 'status',
+    slots: {
+      default: 'status',
+    },
+  },
+  {
+    field: 'action',
+    fixed: 'right',
+    slots: { default: 'action' },
+    title: '操作',
+    width: 180,
   },
 ];
 
