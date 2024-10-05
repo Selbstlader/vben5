@@ -14,6 +14,7 @@ import { downloadByData } from '#/utils/file/download';
 
 import codePreviewModal from './code-preview-modal.vue';
 import { columns, querySchema } from './data';
+import tableImportModal from './table-import-modal.vue';
 
 const formOptions: VbenFormProps = {
   schema: querySchema(),
@@ -145,6 +146,14 @@ function handleMultiDelete() {
     },
   });
 }
+
+const [TableImportModal, tableImportModalApi] = useVbenModal({
+  connectedComponent: tableImportModal,
+});
+
+function handleImport() {
+  tableImportModalApi.open();
+}
 </script>
 
 <template>
@@ -161,7 +170,7 @@ function handleMultiDelete() {
           <a-button @click="handleBatchGen">
             {{ $t('pages.common.generate') }}
           </a-button>
-          <a-button type="primary">
+          <a-button type="primary" @click="handleImport">
             {{ $t('pages.common.import') }}
           </a-button>
         </Space>
@@ -197,5 +206,6 @@ function handleMultiDelete() {
       </template>
     </BasicTable>
     <CodePreviewModal />
+    <TableImportModal @reload="tableApi.reload()" />
   </Page>
 </template>
