@@ -15,6 +15,9 @@ import { columns, querySchema } from './data';
 import deptDrawer from './dept-drawer.vue';
 
 const formOptions: VbenFormProps = {
+  commonConfig: {
+    labelWidth: 80,
+  },
   schema: querySchema(),
   wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
 };
@@ -78,7 +81,7 @@ async function handleEdit(record: Recordable<any>) {
 
 async function handleDelete(row: Recordable<any>) {
   await deptRemove(row.deptId);
-  await tableApi.reload();
+  await tableApi.query();
 }
 
 function expandAll() {
@@ -141,6 +144,6 @@ function collapseAll() {
         </Space>
       </template>
     </BasicTable>
-    <DeptDrawer @reload="tableApi.reload()" />
+    <DeptDrawer @reload="tableApi.query()" />
   </Page>
 </template>
