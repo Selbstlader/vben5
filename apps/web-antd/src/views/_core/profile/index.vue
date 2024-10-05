@@ -40,7 +40,12 @@ async function handleUploadFinish() {
       <!-- 左侧 -->
       <ProfilePanel :profile="profile" @upload-finish="handleUploadFinish" />
       <!-- 右侧 -->
-      <SettingPanel v-if="profile" :profile="profile" @reload="loadProfile" />
+      <SettingPanel
+        v-if="profile"
+        :profile="profile"
+        class="flex-1 overflow-hidden"
+        @reload="loadProfile"
+      />
     </div>
   </Page>
 </template>
