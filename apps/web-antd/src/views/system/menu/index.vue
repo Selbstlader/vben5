@@ -13,6 +13,9 @@ import { columns, querySchema } from './data';
 import menuDrawer from './menu-drawer.vue';
 
 const formOptions: VbenFormProps = {
+  commonConfig: {
+    labelWidth: 80,
+  },
   schema: querySchema(),
   wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
 };
@@ -70,7 +73,7 @@ async function handleEdit(record: Recordable<any>) {
 
 async function handleDelete(row: Recordable<any>) {
   await menuRemove(row.menuId);
-  await tableApi.reload();
+  await tableApi.query();
 }
 
 function expandAll() {
@@ -133,6 +136,6 @@ function collapseAll() {
         </Space>
       </template>
     </BasicTable>
-    <MenuDrawer @reload="tableApi.reload()" />
+    <MenuDrawer @reload="tableApi.query()" />
   </Page>
 </template>

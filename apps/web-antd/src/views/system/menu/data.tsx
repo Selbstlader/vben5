@@ -82,7 +82,15 @@ export const columns: VxeGridProps['columns'] = [
     slots: {
       default: ({ row }) => {
         const current = menuTypes[row.menuType as 'C' | 'F' | 'M'];
-        return current as any;
+        if (!current) {
+          return '未知';
+        }
+        return (
+          <span class={['flex', 'items-center', 'justify-center']}>
+            {renderIcon(current.icon)}
+            <span style={{ marginLeft: '2px' }}>{current.value}</span>
+          </span>
+        );
       },
     },
   },
