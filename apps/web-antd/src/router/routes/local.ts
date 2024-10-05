@@ -96,7 +96,7 @@ const profileRoute: RouteRecordStringComponent[] = [
       {
         component: '/system/role-assign/index',
         meta: {
-          activePath: '/tool/gen',
+          activePath: '/system/role',
           icon: 'mingcute:profile-line',
           keepAlive: true,
           title: '分配角色',
