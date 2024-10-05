@@ -1,6 +1,6 @@
 import type { OnlineUser } from './model';
 
-import type { PageQuery } from '#/api/common';
+import type { PageQuery, PageResult } from '#/api/common';
 
 import { requestClient } from '#/api/request';
 
@@ -14,11 +14,11 @@ enum Api {
  * @returns OnlineUser[]
  */
 export function onlineDeviceList() {
-  return requestClient.get<OnlineUser[]>(Api.root);
+  return requestClient.get<PageResult<OnlineUser>>(Api.root);
 }
 
 export function onlineList(params?: PageQuery) {
-  return requestClient.get<OnlineUser[]>(Api.onlineList, { params });
+  return requestClient.get<PageResult<OnlineUser>>(Api.onlineList, { params });
 }
 
 /**
@@ -27,7 +27,7 @@ export function onlineList(params?: PageQuery) {
  * @returns void
  */
 export function forceLogout(tokenId: string) {
-  return requestClient.delete<void>(`${Api.root}/${tokenId}`);
+  return requestClient.deleteWithMsg<void>(`${Api.root}/${tokenId}`);
 }
 
 /**
@@ -36,5 +36,5 @@ export function forceLogout(tokenId: string) {
  * @returns void
  */
 export function forceLogout2(tokenId: string) {
-  return requestClient.post<void>(`${Api.root}/${tokenId}`);
+  return requestClient.postWithMsg<void>(`${Api.root}/${tokenId}`);
 }
