@@ -17,6 +17,7 @@ import {
   Tooltip,
 } from 'ant-design-vue';
 import dayjs from 'dayjs';
+import { isEmpty } from 'lodash-es';
 
 import { useVbenVxeGrid, type VxeGridProps } from '#/adapter';
 import { configInfoByKey } from '#/api/system/config';
@@ -45,7 +46,7 @@ const gridOptions: VxeGridProps = {
   pagerConfig: {},
   proxyConfig: {
     ajax: {
-      query: async ({ page }, formValues) => {
+      query: async ({ page, sort }, formValues = {}) => {
         // 区间选择器处理
         if (formValues?.createTime) {
           formValues.params = {
@@ -61,11 +62,16 @@ const gridOptions: VxeGridProps = {
           Reflect.deleteProperty(formValues, 'params');
         }
 
-        return await ossList({
+        const params: any = {
           pageNum: page.currentPage,
           pageSize: page.pageSize,
           ...formValues,
-        });
+        };
+        if (!isEmpty(sort)) {
+          params.orderByColumn = sort.field;
+          params.isAsc = sort.order;
+        }
+        return await ossList(params);
       },
     },
   },
@@ -73,12 +79,23 @@ const gridOptions: VxeGridProps = {
     isHover: true,
     keyField: 'ossId',
   },
+  sortConfig: {
+    remote: true,
+  },
   round: true,
   align: 'center',
   showOverflow: true,
 };
 
-const [BasicTable, tableApi] = useVbenVxeGrid({ formOptions, gridOptions });
+const [BasicTable, tableApi] = useVbenVxeGrid({
+  formOptions,
+  gridOptions,
+  gridEvents: {
+    sortChange: () => {
+      tableApi.query();
+    },
+  },
+});
 
 async function handleDownload(row: Recordable<any>) {
   const hideLoading = message.loading($t('pages.common.downloadLoading'), 0);
@@ -92,7 +109,7 @@ async function handleDownload(row: Recordable<any>) {
 
 async function handleDelete(row: Recordable<any>) {
   await ossRemove(row.ossId);
-  await tableApi.reload();
+  await tableApi.query();
 }
 
 function handleMultiDelete() {
@@ -104,7 +121,7 @@ function handleMultiDelete() {
     content: `确认删除选中的${ids.length}条记录吗？`,
     onOk: async () => {
       await ossRemove(ids);
-      await tableApi.reload();
+      await tableApi.query();
     },
   });
 }

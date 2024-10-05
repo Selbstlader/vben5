@@ -53,6 +53,7 @@ export const columns: VxeGridProps['columns'] = [
   {
     title: '创建时间',
     field: 'createTime',
+    sortable: true,
   },
   {
     title: '上传人',
