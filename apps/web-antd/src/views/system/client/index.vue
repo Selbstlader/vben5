@@ -166,6 +166,7 @@ const { hasAccessByCodes } = useAccess();
           {{ $t('pages.common.edit') }}
         </a-button>
         <Popconfirm
+          :disabled="row.id === 1"
           placement="left"
           title="确认删除？"
           @confirm="handleDelete(row)"
