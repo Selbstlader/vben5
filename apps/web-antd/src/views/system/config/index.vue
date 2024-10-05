@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { Recordable } from '@vben/types';
 
+import { ref } from 'vue';
+
 import { Page, useVbenModal, type VbenFormProps } from '@vben/common-ui';
 
 import { Modal, Popconfirm, Space } from 'ant-design-vue';
@@ -19,6 +21,9 @@ import configModal from './config-modal.vue';
 import { columns, querySchema } from './data';
 
 const formOptions: VbenFormProps = {
+  commonConfig: {
+    labelWidth: 80,
+  },
   schema: querySchema(),
   wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
 };
@@ -71,7 +76,19 @@ const gridOptions: VxeGridProps = {
   showOverflow: true,
 };
 
-const [BasicTable, tableApi] = useVbenVxeGrid({ formOptions, gridOptions });
+const checked = ref(false);
+const [BasicTable, tableApi] = useVbenVxeGrid({
+  formOptions,
+  gridOptions,
+  gridEvents: {
+    checkboxChange: (e: any) => {
+      checked.value = e.records.length > 0;
+    },
+    checkboxAll: (e: any) => {
+      checked.value = e.records.length > 0;
+    },
+  },
+});
 const [ConfigModal, modalApi] = useVbenModal({
   connectedComponent: configModal,
 });
@@ -127,9 +144,10 @@ async function handleRefreshCache() {
             {{ $t('pages.common.export') }}
           </a-button>
           <a-button
+            :disabled="!checked"
             danger
             type="primary"
-            v-access:code="['system:config:delete']"
+            v-access:code="['system:config:remove']"
             @click="handleMultiDelete"
           >
             {{ $t('pages.common.delete') }}
@@ -144,31 +162,29 @@ async function handleRefreshCache() {
         </Space>
       </template>
       <template #action="{ row }">
-        <Space>
+        <a-button
+          size="small"
+          type="link"
+          v-access:code="['system:config:edit']"
+          @click="handleEdit(row)"
+        >
+          {{ $t('pages.common.edit') }}
+        </a-button>
+        <Popconfirm
+          placement="left"
+          title="确认删除？"
+          @confirm="handleDelete(row)"
+        >
           <a-button
+            danger
             size="small"
             type="link"
-            v-access:code="['system:config:edit']"
-            @click="handleEdit(row)"
+            v-access:code="['system:config:remove']"
+            @click.stop=""
           >
-            {{ $t('pages.common.edit') }}
+            {{ $t('pages.common.delete') }}
           </a-button>
-          <Popconfirm
-            placement="left"
-            title="确认删除？"
-            @confirm="handleDelete(row)"
-          >
-            <a-button
-              danger
-              size="small"
-              type="link"
-              v-access:code="['system:config:delete']"
-              @click.stop=""
-            >
-              {{ $t('pages.common.delete') }}
-            </a-button>
-          </Popconfirm>
-        </Space>
+        </Popconfirm>
       </template>
     </BasicTable>
     <ConfigModal @reload="tableApi.reload()" />
