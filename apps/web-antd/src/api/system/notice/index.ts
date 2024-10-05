@@ -26,7 +26,5 @@ export function noticeUpdate(data: any) {
 }
 
 export function noticeRemove(noticeIds: IDS) {
-  return requestClient.deleteWithMsg<void>(
-    `${Api.root}/${noticeIds.join(',')}`,
-  );
+  return requestClient.deleteWithMsg<void>(`${Api.root}/${noticeIds}`);
 }
