@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { Recordable } from '@vben/types';
 
+import { ref } from 'vue';
+
 import { useAccess } from '@vben/access';
 import { Page, useVbenDrawer, type VbenFormProps } from '@vben/common-ui';
 
@@ -71,7 +73,20 @@ const gridOptions: VxeGridProps = {
   showOverflow: true,
 };
 
-const [BasicTable, tableApi] = useVbenVxeGrid({ formOptions, gridOptions });
+const checked = ref(false);
+const [BasicTable, tableApi] = useVbenVxeGrid({
+  formOptions,
+  gridOptions,
+  gridEvents: {
+    checkboxChange: (e: any) => {
+      checked.value = e.records.length > 0;
+    },
+    checkboxAll: (e: any) => {
+      checked.value = e.records.length > 0;
+    },
+  },
+});
+
 const [OssConfigDrawer, drawerApi] = useVbenDrawer({
   connectedComponent: ossConfigDrawer,
 });
@@ -88,7 +103,7 @@ async function handleEdit(record: Recordable<any>) {
 
 async function handleDelete(row: Recordable<any>) {
   await ossConfigRemove(row.ossConfigId);
-  await tableApi.reload();
+  await tableApi.query();
 }
 
 function handleMultiDelete() {
@@ -100,7 +115,7 @@ function handleMultiDelete() {
     content: `确认删除选中的${ids.length}条记录吗？`,
     onOk: async () => {
       await ossConfigRemove(ids);
-      await tableApi.reload();
+      await tableApi.query();
     },
   });
 }
@@ -117,6 +132,7 @@ const { hasAccessByCodes } = useAccess();
       <template #toolbar-tools>
         <Space>
           <a-button
+            :disabled="!checked"
             danger
             type="primary"
             v-access:code="['system:ossConfig:remove']"
@@ -138,37 +154,35 @@ const { hasAccessByCodes } = useAccess();
           v-model="row.status"
           :api="() => ossConfigChangeStatus(row)"
           :disabled="!hasAccessByCodes(['system:ossConfig:edit'])"
-          :reload="() => tableApi.reload()"
+          :reload="() => tableApi.query()"
         />
       </template>
       <template #action="{ row }">
-        <Space>
+        <a-button
+          size="small"
+          type="link"
+          v-access:code="['system:ossConfig:edit']"
+          @click="handleEdit(row)"
+        >
+          {{ $t('pages.common.edit') }}
+        </a-button>
+        <Popconfirm
+          placement="left"
+          title="确认删除？"
+          @confirm="handleDelete(row)"
+        >
           <a-button
+            danger
             size="small"
             type="link"
-            v-access:code="['system:ossConfig:edit']"
-            @click="handleEdit(row)"
+            v-access:code="['system:ossConfig:remove']"
+            @click.stop=""
           >
-            {{ $t('pages.common.edit') }}
+            {{ $t('pages.common.delete') }}
           </a-button>
-          <Popconfirm
-            placement="left"
-            title="确认删除？"
-            @confirm="handleDelete(row)"
-          >
-            <a-button
-              danger
-              size="small"
-              type="link"
-              v-access:code="['system:ossConfig:remove']"
-              @click.stop=""
-            >
-              {{ $t('pages.common.delete') }}
-            </a-button>
-          </Popconfirm>
-        </Space>
+        </Popconfirm>
       </template>
     </BasicTable>
-    <OssConfigDrawer @reload="tableApi.reload()" />
+    <OssConfigDrawer @reload="tableApi.query()" />
   </Page>
 </template>
