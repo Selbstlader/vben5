@@ -210,10 +210,14 @@ function handleMultiDelete() {
           <Popconfirm
             placement="left"
             title="确认删除？"
-            v-access:code="['system:user:delete']"
             @confirm="handleDelete(row)"
           >
-            <a-button danger size="small" @click.stop="">
+            <a-button
+              danger
+              size="small"
+              v-access:code="['system:user:delete']"
+              @click.stop=""
+            >
               {{ $t('pages.common.delete') }}
             </a-button>
           </Popconfirm>
