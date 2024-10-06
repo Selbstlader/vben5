@@ -17,6 +17,7 @@ import {
   tenantStatusChange,
 } from '#/api/system/tenant';
 import { TableSwitch } from '#/components/table';
+import { useTenantStore } from '#/store/tenant';
 import { downloadExcel } from '#/utils/file/download';
 
 import { columns, querySchema } from './data';
@@ -106,9 +107,12 @@ async function handleEdit(record: Recordable<any>) {
   drawerApi.open();
 }
 
+const tenantStore = useTenantStore();
 async function handleDelete(row: Recordable<any>) {
   await tenantRemove(row.id);
   await tableApi.query();
+  // 重新加载租户信息
+  tenantStore.initTenant();
 }
 
 function handleMultiDelete() {
@@ -122,6 +126,8 @@ function handleMultiDelete() {
       await tenantRemove(ids);
       await tableApi.query();
       checked.value = false;
+      // 重新加载租户信息
+      tenantStore.initTenant();
     },
   });
 }
@@ -130,7 +136,6 @@ const { hasAccessByCodes } = useAccess();
 
 <template>
   <Page :auto-content-height="true">
-    todo 新增修改删除与store同步 修改不显示密码
     <BasicTable>
       <template #toolbar-actions>
         <span class="pl-[7px] text-[16px]">租户列表 </span>

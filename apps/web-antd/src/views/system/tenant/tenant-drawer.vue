@@ -11,6 +11,7 @@ import { useVbenForm } from '#/adapter';
 import { clientAdd, clientUpdate } from '#/api/system/client';
 import { tenantInfo } from '#/api/system/tenant';
 import { packageSelectList } from '#/api/system/tenant-package';
+import { useTenantStore } from '#/store/tenant';
 
 import { drawerSchema } from './data';
 
@@ -70,10 +71,19 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
       const record = await tenantInfo(id);
       await formApi.setValues(record);
     }
+    formApi.updateSchema([
+      {
+        fieldName: 'packageId',
+        componentProps: {
+          disabled: isUpdate.value,
+        },
+      },
+    ]);
     drawerApi.drawerLoading(false);
   },
 });
 
+const tenantStore = useTenantStore();
 async function handleConfirm() {
   try {
     drawerApi.drawerLoading(true);
@@ -85,6 +95,8 @@ async function handleConfirm() {
     await (isUpdate.value ? clientUpdate(data) : clientAdd(data));
     emit('reload');
     await handleCancel();
+    // 重新加载租户信息
+    tenantStore.initTenant();
   } catch (error) {
     console.error(error);
   } finally {

@@ -134,18 +134,30 @@ export const drawerSchema: FormSchemaGetter = () => [
     renderComponentContent: () => ({
       default: () => '管理员信息',
     }),
+    dependencies: {
+      if: (values) => !values?.tenantId,
+      triggerFields: ['tenantId'],
+    },
   },
   {
     component: 'Input',
     fieldName: 'username',
     label: '用户账号',
     rules: 'required',
+    dependencies: {
+      if: (values) => !values?.tenantId,
+      triggerFields: ['tenantId'],
+    },
   },
   {
     component: 'InputPassword',
     fieldName: 'password',
     label: '密码',
     rules: 'required',
+    dependencies: {
+      if: (values) => !values?.tenantId,
+      triggerFields: ['tenantId'],
+    },
   },
   {
     component: 'Divider',
