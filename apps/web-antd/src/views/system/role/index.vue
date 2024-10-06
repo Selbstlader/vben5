@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Recordable } from '@vben/types';
 
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { useAccess } from '@vben/access';
@@ -141,7 +141,9 @@ function handleMultiDelete() {
   });
 }
 
-const { hasAccessByCodes } = useAccess();
+const { hasAccessByCodes, hasAccessByRoles } = useAccess();
+
+const isSuperAdmin = computed(() => hasAccessByRoles(['superadmin']));
 
 const [RoleAuthModal, authModalApi] = useVbenModal({
   connectedComponent: roleAuthModal,
@@ -203,7 +205,11 @@ function handleAssignRole(record: Recordable<any>) {
         />
       </template>
       <template #action="{ row }">
-        <template v-if="row.roleId !== 1">
+        <!-- 租户管理员不可修改admin角色 防止误操作 -->
+        <!-- 超级管理员可通过租户切换来操作租户管理员角色 -->
+        <template
+          v-if="!row.superAdmin && (row.roleKey !== 'admin' || isSuperAdmin)"
+        >
           <a-button
             size="small"
             type="link"
