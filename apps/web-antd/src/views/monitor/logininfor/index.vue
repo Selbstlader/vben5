@@ -110,6 +110,7 @@ function handleMultiDelete() {
     onOk: async () => {
       await loginInfoRemove(ids);
       await tableApi.query();
+      checked.value = false;
     },
   });
 }

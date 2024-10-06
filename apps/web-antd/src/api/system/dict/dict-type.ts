@@ -1,6 +1,6 @@
 import type { DictType } from './dict-type-model';
 
-import type { ID, IDS, PageQuery } from '#/api/common';
+import type { ID, IDS, PageQuery, PageResult } from '#/api/common';
 
 import { commonExport } from '#/api/helper';
 import { requestClient } from '#/api/request';
@@ -18,8 +18,8 @@ enum Api {
  * @param params 请求参数
  * @returns list
  */
-export function dictList(params?: PageQuery) {
-  return requestClient.get<DictType[]>(Api.dictTypeList, { params });
+export function dictTypeList(params?: PageQuery) {
+  return requestClient.get<PageResult<DictType>>(Api.dictTypeList, { params });
 }
 
 /**
@@ -27,7 +27,7 @@ export function dictList(params?: PageQuery) {
  * @param data 表单参数
  * @returns blob
  */
-export function dictExport(data: any) {
+export function dictTypeExport(data: any) {
   return commonExport(Api.dictTypeExport, data);
 }
 

@@ -2,7 +2,7 @@ import { getPopupContainer } from '@vben/utils';
 
 import dayjs from 'dayjs';
 
-import { type FormSchemaGetter, z } from '#/adapter';
+import { type FormSchemaGetter, type VxeGridProps, z } from '#/adapter';
 
 export const querySchema: FormSchemaGetter = () => [
   {
@@ -24,6 +24,48 @@ export const querySchema: FormSchemaGetter = () => [
     component: 'Input',
     fieldName: 'contactPhone',
     label: '联系电话',
+  },
+];
+
+export const columns: VxeGridProps['columns'] = [
+  { type: 'checkbox', width: 60 },
+  {
+    title: '租户编号',
+    field: 'tenantId',
+  },
+  {
+    title: '租户名称',
+    field: 'companyName',
+  },
+  {
+    title: '联系人',
+    field: 'contactUserName',
+  },
+  {
+    title: '联系电话',
+    field: 'contactPhone',
+  },
+  {
+    title: '到期时间',
+    field: 'expireTime',
+    formatter: ({ cellValue }) => {
+      if (!cellValue) {
+        return '无期限';
+      }
+      return cellValue;
+    },
+  },
+  {
+    title: '租户状态',
+    field: 'status',
+    slots: { default: 'status' },
+  },
+  {
+    field: 'action',
+    fixed: 'right',
+    slots: { default: 'action' },
+    title: '操作',
+    width: 180,
   },
 ];
 

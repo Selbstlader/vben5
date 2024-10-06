@@ -16,21 +16,28 @@ import DeptTree from '#/views/system/user/dept-tree.vue';
 import { columns, querySchema } from './data';
 import postDrawer from './post-drawer.vue';
 
-const formOptions: VbenFormProps = {
-  schema: querySchema(),
-  wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
-};
-
 // 左边部门用
 const selectDeptId = ref<string[]>([]);
+const formOptions: VbenFormProps = {
+  commonConfig: {
+    labelWidth: 80,
+  },
+  schema: querySchema(),
+  wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
+  handleReset: async () => {
+    selectDeptId.value = [];
+    // eslint-disable-next-line no-use-before-define
+    await tableApi.query();
+  },
+};
+
 const gridOptions: VxeGridProps = {
   checkboxConfig: {
     // 高亮
     highlight: true,
     // 翻页时保留选中状态
     reserve: true,
-    // 点击行选中
-    // trigger: 'row',
+    trigger: 'cell',
   },
   columns,
   height: 'auto',
@@ -78,7 +85,20 @@ const gridOptions: VxeGridProps = {
   showOverflow: true,
 };
 
-const [BasicTable, tableApi] = useVbenVxeGrid({ formOptions, gridOptions });
+const checked = ref(false);
+const [BasicTable, tableApi] = useVbenVxeGrid({
+  formOptions,
+  gridOptions,
+  gridEvents: {
+    checkboxChange: (e: any) => {
+      checked.value = e.records.length > 0;
+    },
+    checkboxAll: (e: any) => {
+      checked.value = e.records.length > 0;
+    },
+  },
+});
+
 const [PostDrawer, drawerApi] = useVbenDrawer({
   connectedComponent: postDrawer,
 });
@@ -95,7 +115,7 @@ async function handleEdit(record: Recordable<any>) {
 
 async function handleDelete(row: Recordable<any>) {
   await postRemove(row.postId);
-  await tableApi.reload();
+  await tableApi.query();
 }
 
 function handleMultiDelete() {
@@ -119,9 +139,9 @@ function handleMultiDelete() {
       v-model:select-dept-id="selectDeptId"
       :height="300"
       class="w-[260px]"
-      @select="() => tableApi.reload()"
+      @select="() => tableApi.query()"
     />
-    <BasicTable class="flex-1">
+    <BasicTable class="flex-1 overflow-hidden">
       <template #toolbar-actions>
         <span class="pl-[7px] text-[16px]">岗位列表</span>
       </template>
@@ -134,9 +154,10 @@ function handleMultiDelete() {
             {{ $t('pages.common.export') }}
           </a-button>
           <a-button
+            :disabled="!checked"
             danger
             type="primary"
-            v-access:code="['system:post:delete']"
+            v-access:code="['system:post:remove']"
             @click="handleMultiDelete"
           >
             {{ $t('pages.common.delete') }}
@@ -169,7 +190,7 @@ function handleMultiDelete() {
               danger
               size="small"
               type="link"
-              v-access:code="['system:post:delete']"
+              v-access:code="['system:post:remove']"
               @click.stop=""
             >
               {{ $t('pages.common.delete') }}
@@ -178,6 +199,6 @@ function handleMultiDelete() {
         </Space>
       </template>
     </BasicTable>
-    <PostDrawer @reload="tableApi.reload()" />
+    <PostDrawer @reload="tableApi.query()" />
   </Page>
 </template>

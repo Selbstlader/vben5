@@ -46,7 +46,7 @@ const [BasicForm, formApi] = useVbenForm({
       rules: 'required',
     },
     {
-      component: 'StrengthMeter',
+      component: 'InputPassword',
       componentProps: {
         placeholder: '请输入新的密码, 密码长度为5 - 20',
       },
@@ -58,6 +58,10 @@ const [BasicForm, formApi] = useVbenForm({
         .max(20, { message: '密码长度为5 - 20' }),
     },
   ],
+  showDefaultActions: false,
+  commonConfig: {
+    labelWidth: 80,
+  },
 });
 
 async function handleOpenChange(open: boolean) {
@@ -76,7 +80,7 @@ async function handleSubmit() {
     if (!valid) {
       return;
     }
-    const data = formApi.getValues();
+    const data = await formApi.getValues();
     await userResetPassword(data as any);
     emit('reload');
     handleCancel();
@@ -94,8 +98,14 @@ async function handleCancel() {
 </script>
 
 <template>
-  <BasicModal :close-on-click-modal="false" title="重置密码">
-    <Description @register="registerDescription" />
-    <BasicForm />
+  <BasicModal
+    :close-on-click-modal="false"
+    :fullscreen-button="false"
+    title="重置密码"
+  >
+    <div class="flex flex-col gap-[12px]">
+      <Description @register="registerDescription" />
+      <BasicForm />
+    </div>
   </BasicModal>
 </template>

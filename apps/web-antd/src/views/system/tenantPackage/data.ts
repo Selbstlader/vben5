@@ -1,10 +1,34 @@
-import type { FormSchemaGetter } from '#/adapter';
+import type { FormSchemaGetter, VxeGridProps } from '#/adapter';
 
 export const querySchema: FormSchemaGetter = () => [
   {
     component: 'Input',
     fieldName: 'packageName',
     label: '套餐名称',
+  },
+];
+
+export const columns: VxeGridProps['columns'] = [
+  { type: 'checkbox', width: 60 },
+  {
+    title: '套餐名称',
+    field: 'packageName',
+  },
+  {
+    title: '备注',
+    field: 'remark',
+  },
+  {
+    title: '租户状态',
+    field: 'status',
+    slots: { default: 'status' },
+  },
+  {
+    field: 'action',
+    fixed: 'right',
+    slots: { default: 'action' },
+    title: '操作',
+    width: 180,
   },
 ];
 

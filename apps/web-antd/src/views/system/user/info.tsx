@@ -5,10 +5,12 @@ import { DictEnum } from '@vben/constants';
 import { Tag } from 'ant-design-vue';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
+import relativeTime from 'dayjs/plugin/relativeTime';
 
 import { renderDict } from '#/utils/render';
 
 dayjs.extend(duration);
+dayjs.extend(relativeTime);
 
 function renderTags(list: string[]) {
   return (
@@ -100,7 +102,7 @@ export const descSchema: DescItem[] = [
       // 默认en显示
       dayjs.locale('zh-cn');
       // 计算相差秒数
-      const diffSeconds = dayjs(new Date()).diff(dayjs(value), 'second');
+      const diffSeconds = dayjs().diff(dayjs(value), 'second');
       /**
        * 转为时间显示(x月 x天)
        * https://dayjs.fenxianglu.cn/category/duration.html#%E4%BA%BA%E6%80%A7%E5%8C%96
