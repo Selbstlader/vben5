@@ -18,7 +18,7 @@ v5版本采用分仓(包)目录结构, 具体开发路径为: `根目录/apps/we
 
 ## 简介
 
-基于 [vben5 & ant-design-vue)](https://github.com/vbenjs/vue-vben-admin) 的 RuoYi-Vue-Plus 前端项目
+基于 [vben5 & ant-design-vue](https://github.com/vbenjs/vue-vben-admin) 的 RuoYi-Vue-Plus 前端项目
 
 | 组件/框架      | 版本   |
 | :------------- | :----- |
@@ -142,6 +142,12 @@ pnpm dev:antd
 ```bash
 pnpm build:antd
 ```
+
+## 这是一个特性 而不是一个bug!
+
+1. 菜单管理可分配 但只有`admin`/`superadmin`角色能访问 其他角色访问会到403页面
+2. 租户相关菜单可分配 但只有`superadmin`角色能访问 其他角色访问会到403页面
+3. 分配的租户管理员无法修改自己的角色的菜单(即管理员角色的菜单) 防止自己把自己权限弄没了
 
 ## Git 贡献提交规范
 
