@@ -5,7 +5,15 @@ import { ref } from 'vue';
 
 import { Page, useVbenModal, type VbenFormProps } from '@vben/common-ui';
 
-import { Modal, Popconfirm, Space } from 'ant-design-vue';
+import {
+  Dropdown,
+  Menu,
+  MenuItem,
+  type MenuProps,
+  Modal,
+  Popconfirm,
+  Space,
+} from 'ant-design-vue';
 import dayjs from 'dayjs';
 
 import { useVbenVxeGrid, type VxeGridProps } from '#/adapter';
@@ -13,7 +21,9 @@ import {
   dictTypeExport,
   dictTypeList,
   dictTypeRemove,
+  refreshDictTypeCache,
 } from '#/api/system/dict/dict-type';
+import { dictSyncTenant } from '#/api/system/tenant';
 import { downloadExcel } from '#/utils/file/download';
 
 import { emitter } from '../mitt';
@@ -132,6 +142,35 @@ function handleMultiDelete() {
     },
   });
 }
+
+const handleMenuClick: MenuProps['onClick'] = (e) => {
+  switch (e.key) {
+    case '1': {
+      handleRefreshCache();
+      break;
+    }
+    case '2': {
+      handleSyncTenantDict();
+      break;
+    }
+  }
+};
+async function handleRefreshCache() {
+  await refreshDictTypeCache();
+  await tableApi.query();
+}
+
+function handleSyncTenantDict() {
+  Modal.confirm({
+    title: '提示',
+    iconType: 'warning',
+    content: '确认同步租户字典？',
+    onOk: async () => {
+      await dictSyncTenant();
+      await tableApi.query();
+    },
+  });
+}
 </script>
 
 <template>
@@ -142,7 +181,19 @@ function handleMultiDelete() {
       </template>
       <template #toolbar-tools>
         <Space>
-          <a-button danger type="primary">缓存(TODO)</a-button>
+          <Dropdown>
+            <template #overlay>
+              <Menu @click="handleMenuClick">
+                <span v-access:code="['system:dict:edit']">
+                  <MenuItem key="1">刷新字典缓存</MenuItem>
+                </span>
+                <span v-access:role="['superadmin']">
+                  <MenuItem key="2"> 同步租户字典 </MenuItem>
+                </span>
+              </Menu>
+            </template>
+            <a-button> 更多 </a-button>
+          </Dropdown>
           <a-button
             v-access:code="['system:dict:export']"
             @click="downloadExcel(dictTypeExport, '字典类型数据', {})"
