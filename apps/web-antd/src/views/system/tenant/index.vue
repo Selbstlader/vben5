@@ -16,6 +16,7 @@ import {
   tenantList,
   tenantRemove,
   tenantStatusChange,
+  tenantSyncPackage,
 } from '#/api/system/tenant';
 import { TableSwitch } from '#/components/table';
 import { useTenantStore } from '#/store/tenant';
@@ -108,6 +109,12 @@ async function handleEdit(record: Recordable<any>) {
   drawerApi.open();
 }
 
+async function handleSync(record: Recordable<any>) {
+  const { tenantId, packageId } = record;
+  await tenantSyncPackage(tenantId, packageId);
+  await tableApi.query();
+}
+
 const tenantStore = useTenantStore();
 async function handleDelete(row: Recordable<any>) {
   await tenantRemove(row.id);
@@ -192,6 +199,19 @@ const isSuperAdmin = computed(() => {
         >
           {{ $t('pages.common.edit') }}
         </a-button>
+        <Popconfirm
+          :title="`确认同步[${row.companyName}]的套餐吗?`"
+          placement="left"
+          @confirm="handleSync(row)"
+        >
+          <a-button
+            size="small"
+            type="link"
+            v-access:code="['system:tenant:edit']"
+          >
+            {{ $t('pages.common.sync') }}
+          </a-button>
+        </Popconfirm>
         <Popconfirm
           placement="left"
           title="确认删除？"
