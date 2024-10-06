@@ -128,15 +128,21 @@ export const drawerSchema: FormSchemaGetter = () => [
     rules: z
       .string()
       .regex(/^1[3-9]\d{9}$/, '请输入正确的手机号码')
-      .optional(),
+      .optional()
+      .or(z.literal('')),
   },
   {
     component: 'Input',
     fieldName: 'email',
     defaultValue: undefined,
     label: '邮箱',
-    // TODO: 这里非必填未生效
-    rules: z.string().email('请输入正确的邮箱').optional(),
+    /**
+     * z.literal 是 Zod 中的一种类型，用于定义一个特定的字面量值。
+     * 它可以用于确保输入的值与指定的字面量完全匹配。
+     * 例如，你可以使用 z.literal 来确保某个字段的值只能是特定的字符串、数字、布尔值等。
+     * 即空字符串也可通过校验
+     */
+    rules: z.string().email('请输入正确的邮箱').optional().or(z.literal('')),
   },
   {
     component: 'RadioGroup',
