@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { Recordable } from '@vben/types';
 
+import { Popconfirm } from 'ant-design-vue';
+
 import { useVbenVxeGrid, type VxeGridProps } from '#/adapter';
 import { forceLogout2, onlineDeviceList } from '#/api/monitor/online';
 import { columns } from '#/views/monitor/online/data';
