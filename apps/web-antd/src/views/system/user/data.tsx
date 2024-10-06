@@ -122,7 +122,7 @@ export const drawerSchema: FormSchemaGetter = () => [
   },
   {
     component: 'Input',
-    fieldName: 'phone',
+    fieldName: 'phonenumber',
     label: '手机号码',
     defaultValue: undefined,
     rules: z
