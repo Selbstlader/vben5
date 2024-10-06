@@ -1,18 +1,30 @@
-[![license](https://img.shields.io/github/license/anncwb/vue-vben-admin.svg)](LICENSE) <h1>ruoYi plus vben5</h1>
+[![license](https://img.shields.io/github/license/anncwb/vue-vben-admin.svg)](LICENSE)
 
 ## 提示
 
-该仓库使用vben最新版本v5开发, 老版本v2地址[前往](https://gitee.com/dapppp/ruoyi-plus-vben)
+该仓库使用vben最新版本v5开发, 老版本v2地址 [前往](https://gitee.com/dapppp/ruoyi-plus-vben)
+
+v5版本采用分仓(包)目录结构, 具体开发路径为: `根目录/apps/web-antd`
+
+## 进度
+
+目前为beta版本 等待最后收尾
+
+**工作流相关模块等待后端重构后开发**
+
+基础功能大致完成，有一部分需要等待官方更新
+
+除文件上传(不包含图片上传) 基本功能都已完成
 
 ## 简介
 
 基于 [vben5 & ant-design-vue)](https://github.com/vbenjs/vue-vben-admin) 的 RuoYi-Vue-Plus 前端项目
 
-| 组件/框架      | 版本  |
-| :------------- | :---- |
-| vben           | 5.31  |
-| ant-design-vue | 4.2.5 |
-| vue            | 3.5.1 |
+| 组件/框架      | 版本   |
+| :------------- | :----- |
+| vben           | 5.3.2  |
+| ant-design-vue | 4.2.5  |
+| vue            | 3.5.11 |
 
 对应后端项目: **(分布式 5.X 分支 微服务 2.分支)**
 
@@ -38,7 +50,7 @@ admin 账号: admin admin123
 
 ## 预览图
 
-![图片](https://gitee.com/dapppp/ruoyi-plus-vben/raw/main/preview/1.png) ![图片](https://gitee.com/dapppp/ruoyi-plus-vben/raw/main/preview/2.png) ![图片](https://gitee.com/dapppp/ruoyi-plus-vben/raw/main/preview/3.png) ![图片](https://gitee.com/dapppp/ruoyi-plus-vben/raw/main/preview/4.png) ![图片](https://gitee.com/dapppp/ruoyi-plus-vben/raw/main/preview/5.png) ![图片](https://gitee.com/dapppp/ruoyi-plus-vben/raw/main/preview/6.png) ![图片](https://gitee.com/dapppp/ruoyi-plus-vben/raw/main/preview/7.png) ![图片](https://gitee.com/dapppp/ruoyi-plus-vben/raw/main/preview/8.png) ![图片](https://gitee.com/dapppp/ruoyi-plus-vben/raw/main/preview/9.png) ![图片](https://gitee.com/dapppp/ruoyi-plus-vben/raw/main/preview/10.png) ![图片](https://gitee.com/dapppp/ruoyi-plus-vben/raw/main/preview/11.png) ![图片](https://gitee.com/dapppp/ruoyi-plus-vben/raw/main/preview/12.png)
+![图片](https://gitee.com/dapppp/ruoyi-plus-vben5/raw/main/scripts/preview/1.png) ![图片](https://gitee.com/dapppp/ruoyi-plus-vben5/raw/main/scripts/preview/2.png) ![图片](https://gitee.com/dapppp/ruoyi-plus-vben5/raw/main/scripts/preview/3.png) ![图片](https://gitee.com/dapppp/ruoyi-plus-vben5/raw/main/scripts/preview/4.png) ![图片](https://gitee.com/dapppp/ruoyi-plus-vben5/raw/main/scripts/preview/5.png) ![图片](https://gitee.com/dapppp/ruoyi-plus-vben5/raw/main/scripts/preview/6.png) ![图片](https://gitee.com/dapppp/ruoyi-plus-vben5/raw/main/scripts/preview/7.png) ![图片](https://gitee.com/dapppp/ruoyi-plus-vben5/raw/main/scripts/preview/8.png) ![图片](https://gitee.com/dapppp/ruoyi-plus-vben5/raw/main/scripts/preview/9.png) ![图片](https://gitee.com/dapppp/ruoyi-plus-vben5/raw/main/scripts/preview/10.png)
 
 ## 安装使用
 
@@ -66,9 +78,9 @@ cd ruoyi-plus-vben5
 pnpm install
 ```
 
-- 关于代码生成(非必选)
+- 关于代码生成
 
-v5版本代码生成模板为付费功能
+v5版本代码生成模板为付费功能(暂未开放)
 
 - 关于一些监控的地址配置(微服务版本可以跳过这一小节)
 
@@ -122,13 +134,13 @@ VITE_GLOB_WEBSOCKET_ENABLE=false
 - 运行
 
 ```bash
-pnpm serve
+pnpm dev:antd
 ```
 
 - 打包
 
 ```bash
-pnpm build
+pnpm build:antd
 ```
 
 ## Git 贡献提交规范
