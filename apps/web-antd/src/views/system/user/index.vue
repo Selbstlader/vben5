@@ -10,6 +10,7 @@ import {
   type VbenFormProps,
 } from '@vben/common-ui';
 import { $t } from '@vben/locales';
+import { preferences } from '@vben/preferences';
 import { getPopupContainer } from '@vben/utils';
 
 import {
@@ -122,7 +123,6 @@ const gridOptions: VxeGridProps = {
   align: 'center',
   showOverflow: true,
 };
-
 const checked = ref(false);
 const [BasicTable, tableApi] = useVbenVxeGrid({
   formOptions,
@@ -236,10 +236,7 @@ function handleResetPwd(record: Recordable<any>) {
         </template>
         <template #avatar="{ row }">
           <Avatar v-if="row.avatar" :src="row.avatar" />
-          <Avatar
-            v-else
-            src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
-          />
+          <Avatar v-else :src="preferences.app.defaultAvatar" />
         </template>
         <template #status="{ row }">
           <TableSwitch
