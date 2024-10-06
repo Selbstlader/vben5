@@ -1,6 +1,6 @@
 import type { Dept } from './model';
 
-import type { ID, PageQuery } from '#/api/common';
+import type { ID } from '#/api/common';
 
 import { requestClient } from '#/api/request';
 
@@ -10,7 +10,7 @@ enum Api {
   root = '/system/dept',
 }
 
-export function deptList(params?: PageQuery) {
+export function deptList(params?: any) {
   return requestClient.get<Dept[]>(Api.deptList, { params });
 }
 

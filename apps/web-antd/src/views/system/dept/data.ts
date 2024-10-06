@@ -117,13 +117,18 @@ export const drawerSchema: FormSchemaGetter = () => [
     rules: z
       .string()
       .regex(/^1[3,4578]\d{9}$/, { message: '请输入正确的手机号' })
-      .optional(),
+      .optional()
+      .or(z.literal('')),
   },
   {
     component: 'Input',
     fieldName: 'email',
     label: '邮箱',
-    rules: z.string().email({ message: '请输入正确的邮箱' }).optional(),
+    rules: z
+      .string()
+      .email({ message: '请输入正确的邮箱' })
+      .optional()
+      .or(z.literal('')),
   },
   {
     component: 'RadioGroup',

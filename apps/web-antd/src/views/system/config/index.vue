@@ -43,7 +43,7 @@ const gridOptions: VxeGridProps = {
   pagerConfig: {},
   proxyConfig: {
     ajax: {
-      query: async ({ page }, formValues) => {
+      query: async ({ page }, formValues = {}) => {
         // 区间选择器处理
         if (formValues?.createTime) {
           formValues.params = {
@@ -105,7 +105,7 @@ async function handleEdit(record: Recordable<any>) {
 
 async function handleDelete(row: Recordable<any>) {
   await configRemove(row.configId);
-  await tableApi.reload();
+  await tableApi.query();
 }
 
 function handleMultiDelete() {
@@ -117,14 +117,14 @@ function handleMultiDelete() {
     content: `确认删除选中的${ids.length}条记录吗？`,
     onOk: async () => {
       await configRemove(ids);
-      await tableApi.reload();
+      await tableApi.query();
     },
   });
 }
 
 async function handleRefreshCache() {
   await configRefreshCache();
-  await tableApi.reload();
+  await tableApi.query();
 }
 </script>
 
@@ -187,6 +187,6 @@ async function handleRefreshCache() {
         </Popconfirm>
       </template>
     </BasicTable>
-    <ConfigModal @reload="tableApi.reload()" />
+    <ConfigModal @reload="tableApi.query()" />
   </Page>
 </template>

@@ -44,7 +44,7 @@ const gridOptions: VxeGridProps = {
   pagerConfig: {},
   proxyConfig: {
     ajax: {
-      query: async ({ page }, formValues) => {
+      query: async ({ page }, formValues = {}) => {
         return await loginInfoList({
           pageNum: page.currentPage,
           pageSize: page.pageSize,
@@ -147,7 +147,7 @@ async function handleUnlock() {
             :disabled="!checked"
             danger
             type="primary"
-            v-access:code="['monitor:logininfor:delete']"
+            v-access:code="['monitor:logininfor:remove']"
             @click="handleMultiDelete"
           >
             {{ $t('pages.common.delete') }}
@@ -158,20 +158,24 @@ async function handleUnlock() {
         </Space>
       </template>
       <template #action="{ row }">
-        <Space>
-          <a-button size="small" type="link" @click.stop="handlePreview(row)">
-            {{ $t('pages.common.info') }}
-          </a-button>
-          <Popconfirm
-            placement="left"
-            title="确认删除?"
-            @confirm="() => handleDelete(row)"
+        <a-button size="small" type="link" @click.stop="handlePreview(row)">
+          {{ $t('pages.common.info') }}
+        </a-button>
+        <Popconfirm
+          placement="left"
+          title="确认删除?"
+          @confirm="() => handleDelete(row)"
+        >
+          <a-button
+            danger
+            size="small"
+            type="link"
+            v-access:code="['monitor:logininfor:remove']"
+            @click.stop=""
           >
-            <a-button danger size="small" type="link" @click.stop="">
-              删除
-            </a-button>
-          </Popconfirm>
-        </Space>
+            删除
+          </a-button>
+        </Popconfirm>
       </template>
     </BasicTable>
     <LoginInfoModal />

@@ -61,7 +61,7 @@ const gridOptions: VxeGridProps = {
   pagerConfig: {},
   proxyConfig: {
     ajax: {
-      query: async ({ page }, formValues) => {
+      query: async ({ page }, formValues = {}) => {
         // 区间选择器处理
         if (formValues?.createTime) {
           formValues.params = {

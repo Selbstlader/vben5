@@ -29,7 +29,7 @@ const gridOptions: VxeGridProps = {
   },
   proxyConfig: {
     ajax: {
-      query: async (_, formValues) => {
+      query: async (_, formValues = {}) => {
         const resp = await menuList({
           ...formValues,
         });
@@ -109,31 +109,29 @@ function collapseAll() {
         </Space>
       </template>
       <template #action="{ row }">
-        <Space>
+        <a-button
+          size="small"
+          type="link"
+          v-access:code="['system:menu:edit']"
+          @click="handleEdit(row)"
+        >
+          {{ $t('pages.common.edit') }}
+        </a-button>
+        <Popconfirm
+          placement="left"
+          title="确认删除？"
+          @confirm="handleDelete(row)"
+        >
           <a-button
+            danger
             size="small"
             type="link"
-            v-access:code="['system:menu:edit']"
-            @click="handleEdit(row)"
+            v-access:code="['system:menu:remove']"
+            @click.stop=""
           >
-            {{ $t('pages.common.edit') }}
+            {{ $t('pages.common.delete') }}
           </a-button>
-          <Popconfirm
-            placement="left"
-            title="确认删除？"
-            @confirm="handleDelete(row)"
-          >
-            <a-button
-              danger
-              size="small"
-              type="link"
-              v-access:code="['system:menu:delete']"
-              @click.stop=""
-            >
-              {{ $t('pages.common.delete') }}
-            </a-button>
-          </Popconfirm>
-        </Space>
+        </Popconfirm>
       </template>
     </BasicTable>
     <MenuDrawer @reload="tableApi.query()" />

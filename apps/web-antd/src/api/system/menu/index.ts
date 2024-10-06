@@ -1,6 +1,6 @@
 import type { Menu, MenuOption, MenuResp } from './model';
 
-import type { ID, IDS, PageQuery } from '#/api/common';
+import type { ID, IDS } from '#/api/common';
 
 import { requestClient } from '#/api/request';
 
@@ -12,7 +12,7 @@ enum Api {
   tenantPackageMenuTreeselect = '/system/menu/tenantPackageMenuTreeselect',
 }
 
-export function menuList(params?: PageQuery) {
+export function menuList(params?: any) {
   return requestClient.get<Menu[]>(Api.menuList, { params });
 }
 

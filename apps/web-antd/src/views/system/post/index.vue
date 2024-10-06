@@ -45,7 +45,7 @@ const gridOptions: VxeGridProps = {
   pagerConfig: {},
   proxyConfig: {
     ajax: {
-      query: async ({ page }, formValues) => {
+      query: async ({ page }, formValues = {}) => {
         // 区间选择器处理
         if (formValues?.createTime) {
           formValues.params = {
@@ -127,7 +127,7 @@ function handleMultiDelete() {
     content: `确认删除选中的${ids.length}条记录吗？`,
     onOk: async () => {
       await postRemove(ids);
-      await tableApi.reload();
+      await tableApi.query();
     },
   });
 }
@@ -172,31 +172,29 @@ function handleMultiDelete() {
         </Space>
       </template>
       <template #action="{ row }">
-        <Space>
+        <a-button
+          size="small"
+          type="link"
+          v-access:code="['system:post:edit']"
+          @click="handleEdit(row)"
+        >
+          {{ $t('pages.common.edit') }}
+        </a-button>
+        <Popconfirm
+          placement="left"
+          title="确认删除？"
+          @confirm="handleDelete(row)"
+        >
           <a-button
+            danger
             size="small"
             type="link"
-            v-access:code="['system:post:edit']"
-            @click="handleEdit(row)"
+            v-access:code="['system:post:remove']"
+            @click.stop=""
           >
-            {{ $t('pages.common.edit') }}
+            {{ $t('pages.common.delete') }}
           </a-button>
-          <Popconfirm
-            placement="left"
-            title="确认删除？"
-            @confirm="handleDelete(row)"
-          >
-            <a-button
-              danger
-              size="small"
-              type="link"
-              v-access:code="['system:post:remove']"
-              @click.stop=""
-            >
-              {{ $t('pages.common.delete') }}
-            </a-button>
-          </Popconfirm>
-        </Space>
+        </Popconfirm>
       </template>
     </BasicTable>
     <PostDrawer @reload="tableApi.query()" />
