@@ -128,7 +128,7 @@ async function handleDownload(record: Recordable<any>) {
   const hideLoading = message.loading('下载中...');
   try {
     const blob = await batchGenCode(record.tableId);
-    const filename = `代码生成_${record.tableName}_${new Date().toLocaleString()}.zip`;
+    const filename = `代码生成_${record.tableName}_${dayjs().valueOf()}.zip`;
     downloadByData(blob, filename);
   } catch (error) {
     console.error(error);
