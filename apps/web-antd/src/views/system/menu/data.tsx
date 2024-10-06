@@ -186,7 +186,7 @@ export const drawerSchema: FormSchemaGetter = () => [
   },
   {
     component: 'Input',
-    fieldName: 'name',
+    fieldName: 'menuName',
     label: '菜单名称',
     rules: 'required',
   },
