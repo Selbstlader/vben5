@@ -136,6 +136,7 @@ function handleMultiDelete() {
     onOk: async () => {
       await roleRemove(ids);
       await tableApi.query();
+      checked.value = false;
     },
   });
 }

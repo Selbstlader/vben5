@@ -107,6 +107,7 @@ function handleMultiDelete() {
     onOk: async () => {
       await clientRemove(ids);
       await tableApi.query();
+      checked.value = false;
     },
   });
 }

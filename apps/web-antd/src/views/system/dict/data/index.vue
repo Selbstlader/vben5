@@ -129,6 +129,7 @@ function handleMultiDelete() {
     onOk: async () => {
       await dictDataRemove(ids);
       await tableApi.query();
+      checked.value = false;
     },
   });
 }

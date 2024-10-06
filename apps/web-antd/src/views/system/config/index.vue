@@ -118,6 +118,7 @@ function handleMultiDelete() {
     onOk: async () => {
       await configRemove(ids);
       await tableApi.query();
+      checked.value = false;
     },
   });
 }

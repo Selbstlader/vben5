@@ -129,6 +129,7 @@ async function handleDelete() {
     onOk: async () => {
       await operLogDelete(ids);
       await tableApi.query();
+      checked.value = false;
     },
   });
 }

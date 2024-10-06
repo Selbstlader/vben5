@@ -123,6 +123,9 @@ async function handleUnlock() {
   const { userName } = records[0];
   await userUnlock(userName);
   await tableApi.query();
+  checked.value = false;
+  canUnlock.value = false;
+  tableApi.grid.clearCheckboxRow();
 }
 </script>
 
