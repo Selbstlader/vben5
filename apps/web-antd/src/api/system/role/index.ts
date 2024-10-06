@@ -62,7 +62,7 @@ export function roleOptionSelect(params?: any) {
 }
 
 export function roleAllocatedList(params: any) {
-  return requestClient.get(Api.roleAllocatedList, params);
+  return requestClient.get(Api.roleAllocatedList, { params });
 }
 
 /**
