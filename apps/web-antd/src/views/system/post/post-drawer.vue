@@ -24,6 +24,7 @@ const [BasicForm, formApi] = useVbenForm({
     componentProps: {
       class: 'w-full',
     },
+    labelWidth: 80,
   },
   schema: drawerSchema(),
   showDefaultActions: false,
