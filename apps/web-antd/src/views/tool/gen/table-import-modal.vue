@@ -66,8 +66,7 @@ const gridOptions: VxeGridProps = {
   pagerConfig: {},
   proxyConfig: {
     ajax: {
-      query: async ({ page }, formValues) => {
-        console.log(page);
+      query: async ({ page }, formValues = {}) => {
         return await readyToGenList({
           pageNum: page.currentPage,
           pageSize: page.pageSize,

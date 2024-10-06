@@ -182,23 +182,42 @@ function handleImport() {
             :disabled="!checked"
             danger
             type="primary"
+            v-access:code="['tool:gen:remove']"
             @click="handleMultiDelete"
           >
             {{ $t('pages.common.delete') }}
           </a-button>
-          <a-button :disabled="!checked" @click="handleBatchGen">
+          <a-button
+            :disabled="!checked"
+            v-access:code="['tool:gen:code']"
+            @click="handleBatchGen"
+          >
             {{ $t('pages.common.generate') }}
           </a-button>
-          <a-button type="primary" @click="handleImport">
+          <a-button
+            type="primary"
+            v-access:code="['tool:gen:import']"
+            @click="handleImport"
+          >
             {{ $t('pages.common.import') }}
           </a-button>
         </Space>
       </template>
       <template #action="{ row }">
-        <a-button size="small" type="link" @click.stop="handlePreview(row)">
+        <a-button
+          size="small"
+          type="link"
+          v-access:code="['tool:gen:preview']"
+          @click.stop="handlePreview(row)"
+        >
           {{ $t('pages.common.preview') }}
         </a-button>
-        <a-button size="small" type="link" @click.stop="handleEdit(row)">
+        <a-button
+          size="small"
+          type="link"
+          v-access:code="['tool:gen:edit']"
+          @click.stop="handleEdit(row)"
+        >
           {{ $t('pages.common.edit') }}
         </a-button>
         <Popconfirm
@@ -206,11 +225,21 @@ function handleImport() {
           placement="left"
           @confirm="handleSync(row)"
         >
-          <a-button size="small" type="link" @click.stop="">
+          <a-button
+            size="small"
+            type="link"
+            v-access:code="['tool:gen:edit']"
+            @click.stop=""
+          >
             {{ $t('pages.common.sync') }}
           </a-button>
         </Popconfirm>
-        <a-button size="small" type="link" @click.stop="handleDownload(row)">
+        <a-button
+          size="small"
+          type="link"
+          v-access:code="['tool:gen:code']"
+          @click.stop="handleDownload(row)"
+        >
           生成代码
         </a-button>
         <Popconfirm
@@ -218,7 +247,13 @@ function handleImport() {
           placement="left"
           @confirm="handleDelete(row)"
         >
-          <a-button danger size="small" type="link" @click.stop="">
+          <a-button
+            danger
+            size="small"
+            type="link"
+            v-access:code="['tool:gen:remove']"
+            @click.stop=""
+          >
             {{ $t('pages.common.delete') }}
           </a-button>
         </Popconfirm>
