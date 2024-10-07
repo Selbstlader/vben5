@@ -64,7 +64,9 @@ const formOptions: VbenFormProps = {
   handleReset: async () => {
     selectDeptId.value = [];
     // eslint-disable-next-line no-use-before-define
-    await tableApi.query();
+    const { formApi, reload } = tableApi;
+    await formApi.resetForm();
+    await reload();
   },
 };
 
@@ -194,7 +196,7 @@ function handleResetPwd(record: Recordable<any>) {
     <div class="flex h-full gap-[8px]">
       <DeptTree
         v-model:select-dept-id="selectDeptId"
-        :height="300"
+        :height="360"
         class="w-[260px]"
         @select="() => tableApi.query()"
       />
