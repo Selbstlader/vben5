@@ -153,7 +153,13 @@ function handleMultiDelete() {
         <Space>
           <a-button
             v-access:code="['system:post:export']"
-            @click="downloadExcel(postExport, '岗位信息数据', {})"
+            @click="
+              downloadExcel(
+                postExport,
+                '岗位信息数据',
+                tableApi.formApi.form.values,
+              )
+            "
           >
             {{ $t('pages.common.export') }}
           </a-button>

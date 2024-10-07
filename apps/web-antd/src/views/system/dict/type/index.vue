@@ -197,7 +197,13 @@ function handleSyncTenantDict() {
           </Dropdown>
           <a-button
             v-access:code="['system:dict:export']"
-            @click="downloadExcel(dictTypeExport, '字典类型数据', {})"
+            @click="
+              downloadExcel(
+                dictTypeExport,
+                '字典类型数据',
+                tableApi.formApi.form.values,
+              )
+            "
           >
             {{ $t('pages.common.export') }}
           </a-button>

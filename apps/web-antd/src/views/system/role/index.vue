@@ -170,7 +170,13 @@ function handleAssignRole(record: Recordable<any>) {
         <Space>
           <a-button
             v-access:code="['system:role:export']"
-            @click="downloadExcel(roleExport, '角色数据', {})"
+            @click="
+              downloadExcel(
+                roleExport,
+                '角色数据',
+                tableApi.formApi.form.values,
+              )
+            "
           >
             {{ $t('pages.common.export') }}
           </a-button>

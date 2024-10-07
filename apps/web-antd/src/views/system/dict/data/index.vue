@@ -151,7 +151,13 @@ emitter.on('rowClick', async (value) => {
         <Space>
           <a-button
             v-access:code="['system:dict:export']"
-            @click="downloadExcel(dictDataExport, '字典数据', {})"
+            @click="
+              downloadExcel(
+                dictDataExport,
+                '字典数据',
+                tableApi.formApi.form.values,
+              )
+            "
           >
             {{ $t('pages.common.export') }}
           </a-button>

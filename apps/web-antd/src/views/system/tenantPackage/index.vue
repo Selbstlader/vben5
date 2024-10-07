@@ -149,7 +149,13 @@ const isSuperAdmin = computed(() => {
         <Space>
           <a-button
             v-access:code="['system:tenantPackage:export']"
-            @click="downloadExcel(packageExport, '租户套餐数据', {})"
+            @click="
+              downloadExcel(
+                packageExport,
+                '租户套餐数据',
+                tableApi.formApi.form.values,
+              )
+            "
           >
             {{ $t('pages.common.export') }}
           </a-button>

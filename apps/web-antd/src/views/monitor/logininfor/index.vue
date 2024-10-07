@@ -146,7 +146,13 @@ async function handleUnlock() {
           </a-button>
           <a-button
             v-access:code="['monitor:logininfor:export']"
-            @click="downloadExcel(loginInfoExport, '登录日志', {})"
+            @click="
+              downloadExcel(
+                loginInfoExport,
+                '登录日志',
+                tableApi.formApi.form.values,
+              )
+            "
           >
             {{ $t('pages.common.export') }}
           </a-button>

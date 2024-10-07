@@ -126,7 +126,13 @@ const { hasAccessByCodes } = useAccess();
         <Space>
           <a-button
             v-access:code="['system:client:export']"
-            @click="downloadExcel(clientExport, '系统授权数据', {})"
+            @click="
+              downloadExcel(
+                clientExport,
+                '客户端数据',
+                tableApi.formApi.form.values,
+              )
+            "
           >
             {{ $t('pages.common.export') }}
           </a-button>

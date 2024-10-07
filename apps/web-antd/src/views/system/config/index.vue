@@ -139,7 +139,13 @@ async function handleRefreshCache() {
           <a-button @click="handleRefreshCache"> 刷新缓存 </a-button>
           <a-button
             v-access:code="['system:config:export']"
-            @click="downloadExcel(configExport, '参数配置', {})"
+            @click="
+              downloadExcel(
+                configExport,
+                '参数配置',
+                tableApi.formApi.form.values,
+              )
+            "
           >
             {{ $t('pages.common.export') }}
           </a-button>

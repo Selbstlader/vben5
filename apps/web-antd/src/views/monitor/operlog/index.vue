@@ -151,7 +151,13 @@ async function handleDelete() {
           </a-button>
           <a-button
             v-access:code="['monitor:operlog:export']"
-            @click="downloadExcel(operLogExport, '操作日志', {})"
+            @click="
+              downloadExcel(
+                operLogExport,
+                '操作日志',
+                tableApi.formApi.form.values,
+              )
+            "
           >
             {{ $t('pages.common.export') }}
           </a-button>

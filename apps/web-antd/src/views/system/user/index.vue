@@ -208,7 +208,13 @@ function handleResetPwd(record: Recordable<any>) {
           <Space>
             <a-button
               v-access:code="['system:user:export']"
-              @click="downloadExcel(userExport, '用户管理', {})"
+              @click="
+                downloadExcel(
+                  userExport,
+                  '用户管理',
+                  tableApi.formApi.form.values,
+                )
+              "
             >
               {{ $t('pages.common.export') }}
             </a-button>
