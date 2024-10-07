@@ -60,9 +60,10 @@ export const columns: VxeGridProps['columns'] = [
   {
     title: '操作类型',
     field: 'businessType',
-    cellRender: {
-      name: 'DictTag',
-      props: { field: 'businessType', dictName: DictEnum.SYS_OPER_TYPE },
+    slots: {
+      default: ({ row }) => {
+        return renderDict(row.businessType, DictEnum.SYS_OPER_TYPE);
+      },
     },
   },
   { field: 'operName', title: '操作人员' },
@@ -71,9 +72,10 @@ export const columns: VxeGridProps['columns'] = [
   {
     field: 'status',
     title: '操作状态',
-    cellRender: {
-      name: 'DictTag',
-      props: { field: 'status', dictName: DictEnum.SYS_COMMON_STATUS },
+    slots: {
+      default: ({ row }) => {
+        return renderDict(row.status, DictEnum.SYS_COMMON_STATUS);
+      },
     },
   },
   { field: 'operTime', title: '操作日期' },
