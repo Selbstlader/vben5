@@ -4,7 +4,7 @@ import type { Recordable } from '@vben/types';
 import { nextTick } from 'vue';
 
 import { Page, useVbenModal, type VbenFormProps } from '@vben/common-ui';
-import { listToTree } from '@vben/utils';
+import { getPopupContainer, listToTree } from '@vben/utils';
 
 import { Popconfirm, Space } from 'ant-design-vue';
 
@@ -109,7 +109,7 @@ function collapseAll() {
           </a-button>
           <a-button
             type="primary"
-            v-access:code="['demo:tree:add']"
+            v-access:code="['system:tree:add']"
             @click="handleAdd"
           >
             {{ $t('pages.common.add') }}
@@ -117,29 +117,28 @@ function collapseAll() {
         </Space>
       </template>
       <template #action="{ row }">
-        <a-button
-          size="small"
-          type="link"
-          v-access:code="['demo:tree:edit']"
-          @click="handleEdit(row)"
-        >
-          {{ $t('pages.common.edit') }}
-        </a-button>
-        <Popconfirm
-          placement="left"
-          title="确认删除？"
-          @confirm="handleDelete(row)"
-        >
-          <a-button
-            danger
-            size="small"
-            type="link"
-            v-access:code="['demo:tree:remove']"
-            @click.stop=""
+        <Space>
+          <ghost-button
+            v-access:code="['system:tree:edit']"
+            @click.stop="handleEdit(row)"
           >
-            {{ $t('pages.common.delete') }}
-          </a-button>
-        </Popconfirm>
+            {{ $t('pages.common.edit') }}
+          </ghost-button>
+          <Popconfirm
+            :get-popup-container="getPopupContainer"
+            placement="left"
+            title="确认删除？"
+            @confirm="handleDelete(row)"
+          >
+            <ghost-button
+              danger
+              v-access:code="['system:tree:remove']"
+              @click.stop=""
+            >
+              {{ $t('pages.common.delete') }}
+            </ghost-button>
+          </Popconfirm>
+        </Space>
       </template>
     </BasicTable>
     <TreeModal @reload="tableApi.query()" />

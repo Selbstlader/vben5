@@ -4,6 +4,7 @@ import type { Recordable } from '@vben/types';
 import { ref } from 'vue';
 
 import { Page, useVbenModal, type VbenFormProps } from '@vben/common-ui';
+import { getPopupContainer } from '@vben/utils';
 
 import { Modal, Popconfirm, Space } from 'ant-design-vue';
 import dayjs from 'dayjs';
@@ -124,13 +125,19 @@ function handleMultiDelete() {
   <Page :auto-content-height="true">
     <BasicTable>
       <template #toolbar-actions>
-        <span class="pl-[7px] text-[16px]">测试单表列表</span>
+        <span class="pl-[7px] text-[16px]">测试单列表</span>
       </template>
       <template #toolbar-tools>
         <Space>
           <a-button
-            v-access:code="['demo:demo:export']"
-            @click="downloadExcel(demoExport, '测试单表数据', {})"
+            v-access:code="['system:demo:export']"
+            @click="
+              downloadExcel(
+                demoExport,
+                '测试单数据',
+                tableApi.formApi.form.values,
+              )
+            "
           >
             {{ $t('pages.common.export') }}
           </a-button>
@@ -138,14 +145,14 @@ function handleMultiDelete() {
             :disabled="!checked"
             danger
             type="primary"
-            v-access:code="['demo:demo:remove']"
+            v-access:code="['system:demo:remove']"
             @click="handleMultiDelete"
           >
             {{ $t('pages.common.delete') }}
           </a-button>
           <a-button
             type="primary"
-            v-access:code="['demo:demo:add']"
+            v-access:code="['system:demo:add']"
             @click="handleAdd"
           >
             {{ $t('pages.common.add') }}
@@ -153,29 +160,28 @@ function handleMultiDelete() {
         </Space>
       </template>
       <template #action="{ row }">
-        <a-button
-          size="small"
-          type="link"
-          v-access:code="['demo:demo:edit']"
-          @click="handleEdit(row)"
-        >
-          {{ $t('pages.common.edit') }}
-        </a-button>
-        <Popconfirm
-          placement="left"
-          title="确认删除？"
-          @confirm="handleDelete(row)"
-        >
-          <a-button
-            danger
-            size="small"
-            type="link"
-            v-access:code="['demo:demo:remove']"
-            @click.stop=""
+        <Space>
+          <ghost-button
+            v-access:code="['system:demo:edit']"
+            @click.stop="handleEdit(row)"
           >
-            {{ $t('pages.common.delete') }}
-          </a-button>
-        </Popconfirm>
+            {{ $t('pages.common.edit') }}
+          </ghost-button>
+          <Popconfirm
+            :get-popup-container="getPopupContainer"
+            placement="left"
+            title="确认删除？"
+            @confirm="handleDelete(row)"
+          >
+            <ghost-button
+              danger
+              v-access:code="['system:demo:remove']"
+              @click.stop=""
+            >
+              {{ $t('pages.common.delete') }}
+            </ghost-button>
+          </Popconfirm>
+        </Space>
       </template>
     </BasicTable>
     <DemoModal @reload="tableApi.query()" />
