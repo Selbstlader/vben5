@@ -154,7 +154,7 @@ const vbenFormOptions = computed(() => {
     },
     showCollapseButton: true,
     submitButtonOptions: {
-      text: $t('common.query'),
+      content: $t('common.query'),
     },
     wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3',
   };
@@ -215,7 +215,6 @@ async function init() {
     );
   }
 }
-
 onMounted(() => {
   props.api?.mount?.(gridRef.value, formApi);
   init();
@@ -246,7 +245,7 @@ onMounted(() => {
         <slot :name="slotName" v-bind="slotProps"></slot>
       </template>
       <template #form>
-        <div v-if="formOptions" class="relative rounded py-3 pb-6">
+        <div v-if="formOptions" class="relative rounded py-3 pb-4">
           <slot name="form">
             <Form v-bind="vbenFormOptions">
               <template
