@@ -1,9 +1,10 @@
 <script lang="ts" setup>
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { AuthenticationLoginExpiredModal } from '@vben/common-ui';
 import { VBEN_DOC_URL, VBEN_GITHUB_URL } from '@vben/constants';
+import { useWatermark } from '@vben/hooks';
 import { BookOpenText, CircleHelp, MdiGithub, ProfileIcon } from '@vben/icons';
 import {
   BasicLayout,
@@ -28,6 +29,7 @@ const userStore = useUserStore();
 const authStore = useAuthStore();
 const accessStore = useAccessStore();
 const router = useRouter();
+const { destroyWatermark, updateWatermark } = useWatermark();
 
 const tenantStore = useTenantStore();
 const menus = computed(() => {
@@ -91,6 +93,21 @@ onMounted(() => notifyStore.startListeningMessage());
 function handleViewAll() {
   message.warning('暂未开放');
 }
+watch(
+  () => preferences.app.watermark,
+  async (enable) => {
+    if (enable) {
+      await updateWatermark({
+        content: `${userStore.userInfo?.username}`,
+      });
+    } else {
+      destroyWatermark();
+    }
+  },
+  {
+    immediate: true,
+  },
+);
 </script>
 
 <template>
