@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Recordable } from '@vben/types';
 
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { Page, useVbenModal, type VbenFormProps } from '@vben/common-ui';
@@ -10,7 +10,13 @@ import { message, Modal, Popconfirm, Space } from 'ant-design-vue';
 import dayjs from 'dayjs';
 
 import { useVbenVxeGrid, type VxeGridProps } from '#/adapter';
-import { batchGenCode, generatedList, genRemove, syncDb } from '#/api/tool/gen';
+import {
+  batchGenCode,
+  generatedList,
+  genRemove,
+  getDataSourceNames,
+  syncDb,
+} from '#/api/tool/gen';
 import { downloadByData } from '#/utils/file/download';
 
 import codePreviewModal from './code-preview-modal.vue';
@@ -82,6 +88,23 @@ const [BasicTable, tableApi] = useVbenVxeGrid({
       checked.value = e.records.length > 0;
     },
   },
+});
+
+onMounted(async () => {
+  // 获取数据源
+  const ret = await getDataSourceNames();
+  const dataSourceOptions = [{ label: '全部', value: '' }];
+  const transOptions = ret.map((item) => ({ label: item, value: item }));
+  dataSourceOptions.push(...transOptions);
+  // 更新selectOptions
+  tableApi.formApi.updateSchema([
+    {
+      fieldName: 'dataName',
+      componentProps: {
+        options: dataSourceOptions,
+      },
+    },
+  ]);
 });
 
 const [CodePreviewModal, previewModalApi] = useVbenModal({

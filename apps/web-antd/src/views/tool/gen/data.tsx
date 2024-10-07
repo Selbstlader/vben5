@@ -3,7 +3,6 @@ import type { FormSchemaGetter, VxeGridProps } from '#/adapter';
 export const querySchema: FormSchemaGetter = () => [
   {
     component: 'Select',
-    defaultValue: '',
     fieldName: 'dataName',
     label: '数据源',
   },
