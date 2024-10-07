@@ -1,15 +1,36 @@
 import type { FormSchemaGetter, VxeGridProps } from '#/adapter';
 
+import { reactive } from 'vue';
+
 import { getPopupContainer } from '@vben/utils';
 
+import { dictOptionSelectList } from '#/api/system/dict/dict-type';
 import { renderDictTag } from '#/utils/render';
+
+/**
+ * updateSchema无法赋值
+ * TODO: 使用updateSchema重构
+ */
+const dictTypeOptions = reactive<{ label: string; value: string }[]>([]);
+(async () => {
+  const resp = await dictOptionSelectList();
+  const options = resp.map((item) => ({
+    label: item.dictName,
+    value: item.dictType,
+  }));
+  dictTypeOptions.push(...options);
+})();
 
 export const querySchema: FormSchemaGetter = () => [
   {
     component: 'Select',
+    dependencies: {
+      show: () => false,
+      triggerFields: [''],
+    },
     componentProps: {
-      placeholder: 'TODO: 字典类型',
       getPopupContainer,
+      options: dictTypeOptions,
     },
     fieldName: 'dictType',
     label: '字典类型',
