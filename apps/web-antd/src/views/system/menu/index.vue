@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import type { Recordable } from '@vben/types';
 
+import { computed } from 'vue';
+
+import { useAccess } from '@vben/access';
 import { Page, useVbenDrawer, type VbenFormProps } from '@vben/common-ui';
+import { Fallback } from '@vben/common-ui';
 import { listToTree } from '@vben/utils';
 
 import { Popconfirm, Space } from 'ant-design-vue';
@@ -83,10 +87,23 @@ function expandAll() {
 function collapseAll() {
   tableApi.grid?.setAllTreeExpand(false);
 }
+
+/**
+ * 与后台逻辑相同
+ * 只有租户管理和超级管理能访问菜单管理
+ */
+const { hasAccessByRoles } = useAccess();
+const isAdmin = computed(() => {
+  return hasAccessByRoles(['admin', 'superadmin']);
+});
+
+/**
+ * 不要问为什么有两个根节点 v-if会控制只会渲染一个
+ */
 </script>
 
 <template>
-  <Page :auto-content-height="true">
+  <Page v-if="isAdmin" :auto-content-height="true">
     <BasicTable>
       <template #toolbar-actions>
         <span class="pl-[7px] text-[16px]">菜单权限列表</span>
@@ -136,4 +153,5 @@ function collapseAll() {
     </BasicTable>
     <MenuDrawer @reload="tableApi.query()" />
   </Page>
+  <Fallback v-else description="您没有菜单管理的访问权限" status="403" />
 </template>

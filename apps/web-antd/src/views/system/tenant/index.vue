@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import type { Recordable } from '@vben/types';
 
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 import { useAccess } from '@vben/access';
 import { Page, useVbenDrawer, type VbenFormProps } from '@vben/common-ui';
+import { Fallback } from '@vben/common-ui';
 
 import { Modal, Popconfirm, Space } from 'ant-design-vue';
 import dayjs from 'dayjs';
@@ -15,6 +16,7 @@ import {
   tenantList,
   tenantRemove,
   tenantStatusChange,
+  tenantSyncPackage,
 } from '#/api/system/tenant';
 import { TableSwitch } from '#/components/table';
 import { useTenantStore } from '#/store/tenant';
@@ -107,6 +109,12 @@ async function handleEdit(record: Recordable<any>) {
   drawerApi.open();
 }
 
+async function handleSync(record: Recordable<any>) {
+  const { tenantId, packageId } = record;
+  await tenantSyncPackage(tenantId, packageId);
+  await tableApi.query();
+}
+
 const tenantStore = useTenantStore();
 async function handleDelete(row: Recordable<any>) {
   await tenantRemove(row.id);
@@ -131,11 +139,19 @@ function handleMultiDelete() {
     },
   });
 }
-const { hasAccessByCodes } = useAccess();
+/**
+ * 与后台逻辑相同
+ * 只有超级管理员能访问租户相关
+ */
+const { hasAccessByCodes, hasAccessByRoles } = useAccess();
+
+const isSuperAdmin = computed(() => {
+  return hasAccessByRoles(['superadmin']);
+});
 </script>
 
 <template>
-  <Page :auto-content-height="true">
+  <Page v-if="isSuperAdmin" :auto-content-height="true">
     <BasicTable>
       <template #toolbar-actions>
         <span class="pl-[7px] text-[16px]">租户列表 </span>
@@ -184,6 +200,19 @@ const { hasAccessByCodes } = useAccess();
           {{ $t('pages.common.edit') }}
         </a-button>
         <Popconfirm
+          :title="`确认同步[${row.companyName}]的套餐吗?`"
+          placement="left"
+          @confirm="handleSync(row)"
+        >
+          <a-button
+            size="small"
+            type="link"
+            v-access:code="['system:tenant:edit']"
+          >
+            {{ $t('pages.common.sync') }}
+          </a-button>
+        </Popconfirm>
+        <Popconfirm
           placement="left"
           title="确认删除？"
           @confirm="handleDelete(row)"
@@ -202,4 +231,5 @@ const { hasAccessByCodes } = useAccess();
     </BasicTable>
     <TenantDrawer @reload="tableApi.query()" />
   </Page>
+  <Fallback v-else description="您没有租户的访问权限" status="403" />
 </template>

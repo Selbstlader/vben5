@@ -137,7 +137,10 @@ async function handleUnlock() {
       </template>
       <template #toolbar-tools>
         <Space>
-          <a-button @click="handleClear">
+          <a-button
+            v-access:code="['monitor:logininfor:remove']"
+            @click="handleClear"
+          >
             {{ $t('pages.common.clear') }}
           </a-button>
           <a-button
@@ -155,7 +158,12 @@ async function handleUnlock() {
           >
             {{ $t('pages.common.delete') }}
           </a-button>
-          <a-button :disabled="!canUnlock" type="primary" @click="handleUnlock">
+          <a-button
+            :disabled="!canUnlock"
+            type="primary"
+            v-access:code="['monitor:logininfor:unlock']"
+            @click="handleUnlock"
+          >
             解锁
           </a-button>
         </Space>

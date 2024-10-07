@@ -36,6 +36,7 @@ import {
 import { isArray } from 'lodash-es';
 
 import { Tinymce as RichTextarea } from '#/components/tinymce';
+import { ImageUpload } from '#/components/upload';
 
 // 这里需要自行根据业务组件库进行适配，需要用到的组件都需要在这里类型说明
 export type FormComponentType =
@@ -44,6 +45,7 @@ export type FormComponentType =
   | 'CheckboxGroup'
   | 'DatePicker'
   | 'Divider'
+  | 'ImageUpload'
   | 'Input'
   | 'InputNumber'
   | 'InputPassword'
@@ -104,6 +106,7 @@ setupVbenForm<FormComponentType>({
     TimePicker,
     TreeSelect: withDefaultPlaceholder(TreeSelect, 'select'),
     Upload,
+    ImageUpload,
   },
   config: {
     // ant design vue组件库默认都是 v-model:value

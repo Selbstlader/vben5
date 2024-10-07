@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import type { Recordable } from '@vben/types';
 
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 import { useAccess } from '@vben/access';
 import { Page, useVbenDrawer, type VbenFormProps } from '@vben/common-ui';
+import { Fallback } from '@vben/common-ui';
 
 import { Modal, Popconfirm, Space } from 'ant-design-vue';
 import dayjs from 'dayjs';
@@ -126,11 +127,19 @@ function handleMultiDelete() {
   });
 }
 
-const { hasAccessByCodes } = useAccess();
+/**
+ * 与后台逻辑相同
+ * 只有超级管理员能访问租户相关
+ */
+const { hasAccessByCodes, hasAccessByRoles } = useAccess();
+
+const isSuperAdmin = computed(() => {
+  return hasAccessByRoles(['superadmin']);
+});
 </script>
 
 <template>
-  <Page :auto-content-height="true">
+  <Page v-if="isSuperAdmin" :auto-content-height="true">
     <BasicTable>
       <template #toolbar-actions>
         <span class="pl-[7px] text-[16px]">租户套餐列表</span>
@@ -197,4 +206,5 @@ const { hasAccessByCodes } = useAccess();
     </BasicTable>
     <TenantPackageDrawer @reload="tableApi.query()" />
   </Page>
+  <Fallback v-else description="您没有租户的访问权限" status="403" />
 </template>
