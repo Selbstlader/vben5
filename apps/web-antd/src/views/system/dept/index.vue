@@ -98,6 +98,12 @@ function handleAdd() {
   drawerApi.open();
 }
 
+function handleSubAdd(row: Recordable<any>) {
+  const { deptId } = row;
+  drawerApi.setData({ id: deptId, update: false });
+  drawerApi.open();
+}
+
 async function handleEdit(record: Recordable<any>) {
   drawerApi.setData({ id: record.deptId, update: true });
   drawerApi.open();
@@ -155,6 +161,15 @@ function setExpandOrCollapse(expand: boolean) {
         >
           {{ $t('pages.common.edit') }}
         </a-button>
+        <a-button
+          class="btn-add"
+          size="small"
+          type="link"
+          v-access:code="['system:dept:add']"
+          @click="handleSubAdd(row)"
+        >
+          {{ $t('pages.common.add') }}
+        </a-button>
         <Popconfirm
           placement="left"
           title="确认删除？"
@@ -175,3 +190,13 @@ function setExpandOrCollapse(expand: boolean) {
     <DeptDrawer @reload="tableApi.query()" />
   </Page>
 </template>
+
+<style lang="scss" scoped>
+.btn-add {
+  color: hsl(var(--success)) !important;
+
+  &:hover {
+    color: hsl(var(--success) / 50%) !important;
+  }
+}
+</style>
