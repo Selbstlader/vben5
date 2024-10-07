@@ -100,6 +100,12 @@ function handleAdd() {
   drawerApi.open();
 }
 
+function handleSubAdd(row: Recordable<any>) {
+  const { menuId } = row;
+  drawerApi.setData({ id: menuId, update: false });
+  drawerApi.open();
+}
+
 async function handleEdit(record: Recordable<any>) {
   drawerApi.setData({ id: record.menuId });
   drawerApi.open();
@@ -165,6 +171,15 @@ const isAdmin = computed(() => {
           >
             {{ $t('pages.common.edit') }}
           </ghost-button>
+          <!-- '按钮类型'无法再添加子菜单 -->
+          <ghost-button
+            v-if="row.menuType !== 'F'"
+            class="btn-add"
+            v-access:code="['system:menu:add']"
+            @click="handleSubAdd(row)"
+          >
+            {{ $t('pages.common.add') }}
+          </ghost-button>
           <Popconfirm
             :get-popup-container="getPopupContainer"
             placement="left"
@@ -186,3 +201,15 @@ const isAdmin = computed(() => {
   </Page>
   <Fallback v-else description="您没有菜单管理的访问权限" status="403" />
 </template>
+
+<style lang="scss" scoped>
+.btn-add {
+  color: hsl(var(--success)) !important;
+  border-color: hsl(var(--success)) !important;
+
+  &:hover {
+    color: hsl(var(--success) / 50%) !important;
+    border-color: hsl(var(--success) / 50%) !important;
+  }
+}
+</style>

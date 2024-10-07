@@ -15,6 +15,11 @@ import { menuAdd, menuInfo, menuList, menuUpdate } from '#/api/system/menu';
 
 import { drawerSchema } from './data';
 
+interface ModalProps {
+  id?: number | string;
+  update: boolean;
+}
+
 const emit = defineEmits<{ reload: [] }>();
 
 const isUpdate = ref(false);
@@ -28,6 +33,7 @@ const [BasicForm, formApi] = useVbenForm({
       class: 'w-full',
     },
     formItemClass: 'col-span-2',
+    labelWidth: 90,
   },
   schema: drawerSchema(),
   showDefaultActions: false,
@@ -81,13 +87,17 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
       return null;
     }
     drawerApi.drawerLoading(true);
-    const { id } = drawerApi.getData() as { id?: number | string };
-    isUpdate.value = !!id;
+    const { id, update } = drawerApi.getData() as ModalProps;
+    isUpdate.value = update;
+
     // 加载菜单树选择
     await setupMenuSelect();
-    if (isUpdate.value && id) {
-      const record = await menuInfo(id);
-      await formApi.setValues(record);
+    if (id) {
+      await formApi.setFieldValue('parentId', id);
+      if (update) {
+        const record = await menuInfo(id);
+        await formApi.setValues(record);
+      }
     }
     drawerApi.drawerLoading(false);
   },
