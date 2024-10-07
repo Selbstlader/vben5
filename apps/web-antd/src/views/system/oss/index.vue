@@ -181,7 +181,7 @@ function isImageFile(ext: string) {
           >
             {{ $t('pages.common.delete') }}
           </a-button>
-          <a-button> 上传 没做 </a-button>
+          <a-button v-access:code="['system:oss:upload']"> 上传 没做 </a-button>
         </Space>
       </template>
       <template #url="{ row }">
@@ -195,7 +195,7 @@ function isImageFile(ext: string) {
       <template #action="{ row }">
         <Space>
           <ghost-button
-            v-access:code="['system:oss:edit']"
+            v-access:code="['system:oss:download']"
             @click="handleDownload(row)"
           >
             {{ $t('pages.common.download') }}
