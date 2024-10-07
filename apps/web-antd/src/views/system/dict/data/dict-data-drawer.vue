@@ -6,8 +6,11 @@ import { $t } from '@vben/locales';
 import { cloneDeep } from '@vben/utils';
 
 import { useVbenForm } from '#/adapter';
-import { clientAdd, clientUpdate } from '#/api/system/client';
-import { dictDetailInfo } from '#/api/system/dict/dict-data';
+import {
+  dictDataAdd,
+  dictDataUpdate,
+  dictDetailInfo,
+} from '#/api/system/dict/dict-data';
 import { tagTypes } from '#/components/dict';
 
 import { drawerSchema } from './data';
@@ -85,7 +88,7 @@ async function handleConfirm() {
       return;
     }
     const data = cloneDeep(await formApi.getValues());
-    await (isUpdate.value ? clientUpdate(data) : clientAdd(data));
+    await (isUpdate.value ? dictDataUpdate(data) : dictDataAdd(data));
     emit('reload');
     await handleCancel();
   } catch (error) {
