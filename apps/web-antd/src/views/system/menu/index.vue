@@ -6,15 +6,20 @@ import { computed } from 'vue';
 import { useAccess } from '@vben/access';
 import { Page, useVbenDrawer, type VbenFormProps } from '@vben/common-ui';
 import { Fallback } from '@vben/common-ui';
-import { listToTree } from '@vben/utils';
+import { eachTree, listToTree, removeEmptyChildren } from '@vben/utils';
 
-import { Popconfirm, Space } from 'ant-design-vue';
+import { Popconfirm, Space, Tooltip } from 'ant-design-vue';
 
 import { useVbenVxeGrid, type VxeGridProps } from '#/adapter';
 import { menuList, menuRemove } from '#/api/system/menu';
 
 import { columns, querySchema } from './data';
 import menuDrawer from './menu-drawer.vue';
+
+/**
+ * 不要问为什么有两个根节点 v-if会控制只会渲染一个
+ */
+import { QuestionCircleOutlined } from '@ant-design/icons-vue';
 
 const formOptions: VbenFormProps = {
   commonConfig: {
@@ -42,6 +47,7 @@ const gridOptions: VxeGridProps = {
           pid: 'parentId',
           children: 'children',
         });
+        removeEmptyChildren(treeData);
         return { rows: treeData };
       },
     },
@@ -60,7 +66,21 @@ const gridOptions: VxeGridProps = {
   },
 };
 
-const [BasicTable, tableApi] = useVbenVxeGrid({ formOptions, gridOptions });
+const [BasicTable, tableApi] = useVbenVxeGrid({
+  formOptions,
+  gridOptions,
+  gridEvents: {
+    cellDblclick: (e: any) => {
+      const { row = {} } = e;
+      if (!row?.children) {
+        return;
+      }
+      const isExpanded = row?.expand;
+      tableApi.grid.setTreeExpand(row, !isExpanded);
+      row.expand = !isExpanded;
+    },
+  },
+});
 const [MenuDrawer, drawerApi] = useVbenDrawer({
   connectedComponent: menuDrawer,
 });
@@ -80,12 +100,13 @@ async function handleDelete(row: Recordable<any>) {
   await tableApi.query();
 }
 
-function expandAll() {
-  tableApi.grid?.setAllTreeExpand(true);
-}
-
-function collapseAll() {
-  tableApi.grid?.setAllTreeExpand(false);
+/**
+ * 全部展开/折叠
+ * @param expand 是否展开
+ */
+function setExpandOrCollapse(expand: boolean) {
+  eachTree(tableApi.grid.getData(), (item) => (item.expand = expand));
+  tableApi.grid?.setAllTreeExpand(expand);
 }
 
 /**
@@ -96,24 +117,25 @@ const { hasAccessByRoles } = useAccess();
 const isAdmin = computed(() => {
   return hasAccessByRoles(['admin', 'superadmin']);
 });
-
-/**
- * 不要问为什么有两个根节点 v-if会控制只会渲染一个
- */
 </script>
 
 <template>
   <Page v-if="isAdmin" :auto-content-height="true">
     <BasicTable>
       <template #toolbar-actions>
-        <span class="pl-[7px] text-[16px]">菜单权限列表</span>
+        <div class="flex items-center gap-[6px]">
+          <span class="pl-[7px] text-[16px]">菜单列表</span>
+          <Tooltip title="提示：双击展开/收起子菜单">
+            <QuestionCircleOutlined class="text-center" />
+          </Tooltip>
+        </div>
       </template>
       <template #toolbar-tools>
         <Space>
-          <a-button @click="collapseAll">
+          <a-button @click="setExpandOrCollapse(false)">
             {{ $t('pages.common.collapse') }}
           </a-button>
-          <a-button @click="expandAll">
+          <a-button @click="setExpandOrCollapse(true)">
             {{ $t('pages.common.expand') }}
           </a-button>
           <a-button

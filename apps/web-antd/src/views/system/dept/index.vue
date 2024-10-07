@@ -4,9 +4,10 @@ import type { Recordable } from '@vben/types';
 import { nextTick } from 'vue';
 
 import { Page, useVbenDrawer, type VbenFormProps } from '@vben/common-ui';
-import { listToTree } from '@vben/utils';
+import { eachTree, listToTree, removeEmptyChildren } from '@vben/utils';
 
-import { Popconfirm, Space } from 'ant-design-vue';
+import { QuestionCircleOutlined } from '@ant-design/icons-vue';
+import { Popconfirm, Space, Tooltip } from 'ant-design-vue';
 
 import { useVbenVxeGrid, type VxeGridProps } from '#/adapter';
 import { deptList, deptRemove } from '#/api/system/dept';
@@ -40,12 +41,16 @@ const gridOptions: VxeGridProps = {
           pid: 'parentId',
           children: 'children',
         });
+        removeEmptyChildren(treeData);
         return { rows: treeData };
       },
       // 默认请求接口后展开全部 不需要可以删除这段
       querySuccess: () => {
+        // 默认展开 需要加上标记
+        // eslint-disable-next-line no-use-before-define
+        eachTree(tableApi.grid.getData(), (item) => (item.expand = true));
         nextTick(() => {
-          expandAll();
+          setExpandOrCollapse(true);
         });
       },
     },
@@ -64,7 +69,21 @@ const gridOptions: VxeGridProps = {
   },
 };
 
-const [BasicTable, tableApi] = useVbenVxeGrid({ formOptions, gridOptions });
+const [BasicTable, tableApi] = useVbenVxeGrid({
+  formOptions,
+  gridOptions,
+  gridEvents: {
+    cellDblclick: (e: any) => {
+      const { row = {} } = e;
+      if (!row?.children) {
+        return;
+      }
+      const isExpanded = row?.expand;
+      tableApi.grid.setTreeExpand(row, !isExpanded);
+      row.expand = !isExpanded;
+    },
+  },
+});
 const [DeptDrawer, drawerApi] = useVbenDrawer({
   connectedComponent: deptDrawer,
 });
@@ -84,12 +103,13 @@ async function handleDelete(row: Recordable<any>) {
   await tableApi.query();
 }
 
-function expandAll() {
-  tableApi.grid?.setAllTreeExpand(true);
-}
-
-function collapseAll() {
-  tableApi.grid?.setAllTreeExpand(false);
+/**
+ * 全部展开/折叠
+ * @param expand 是否展开
+ */
+function setExpandOrCollapse(expand: boolean) {
+  eachTree(tableApi.grid.getData(), (item) => (item.expand = expand));
+  tableApi.grid?.setAllTreeExpand(expand);
 }
 </script>
 
@@ -97,14 +117,19 @@ function collapseAll() {
   <Page :auto-content-height="true">
     <BasicTable>
       <template #toolbar-actions>
-        <span class="pl-[7px] text-[16px]">部门列表</span>
+        <div class="flex items-center gap-[6px]">
+          <span class="pl-[7px] text-[16px]">部门列表</span>
+          <Tooltip title="提示：双击展开/收起子菜单">
+            <QuestionCircleOutlined class="text-center" />
+          </Tooltip>
+        </div>
       </template>
       <template #toolbar-tools>
         <Space>
-          <a-button @click="collapseAll">
+          <a-button @click="setExpandOrCollapse(false)">
             {{ $t('pages.common.collapse') }}
           </a-button>
-          <a-button @click="expandAll">
+          <a-button @click="setExpandOrCollapse(true)">
             {{ $t('pages.common.expand') }}
           </a-button>
           <a-button
