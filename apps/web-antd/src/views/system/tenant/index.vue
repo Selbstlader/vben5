@@ -42,6 +42,7 @@ const gridOptions: VxeGridProps = {
     reserve: true,
     // 点击行选中
     // trigger: 'row',
+    checkMethod: ({ row }) => row?.id !== 1,
   },
   columns,
   height: 'auto',
@@ -155,7 +156,7 @@ const isSuperAdmin = computed(() => {
   <Page v-if="isSuperAdmin" :auto-content-height="true">
     <BasicTable>
       <template #toolbar-actions>
-        <span class="pl-[7px] text-[16px]">租户列表 </span>
+        <span class="pl-[7px] text-[16px]">租户列表</span>
       </template>
       <template #toolbar-tools>
         <Space>

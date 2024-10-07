@@ -152,7 +152,7 @@ export const drawerSchema: FormSchemaGetter = () => [
   {
     component: 'InputPassword',
     fieldName: 'password',
-    label: '密码',
+    label: '用户密码',
     rules: 'required',
     dependencies: {
       if: (values) => !values?.tenantId,
