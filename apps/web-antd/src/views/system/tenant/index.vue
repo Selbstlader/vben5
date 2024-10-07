@@ -6,6 +6,7 @@ import { computed, ref } from 'vue';
 import { useAccess } from '@vben/access';
 import { Page, useVbenDrawer, type VbenFormProps } from '@vben/common-ui';
 import { Fallback } from '@vben/common-ui';
+import { getPopupContainer } from '@vben/utils';
 
 import { Modal, Popconfirm, Space } from 'ant-design-vue';
 import dayjs from 'dayjs';
@@ -191,42 +192,46 @@ const isSuperAdmin = computed(() => {
         />
       </template>
       <template #action="{ row }">
-        <a-button
-          size="small"
-          type="link"
-          v-access:code="['system:tenant:edit']"
-          @click="handleEdit(row)"
-        >
-          {{ $t('pages.common.edit') }}
-        </a-button>
-        <Popconfirm
-          :title="`确认同步[${row.companyName}]的套餐吗?`"
-          placement="left"
-          @confirm="handleSync(row)"
-        >
+        <template v-if="row.id !== 1">
           <a-button
             size="small"
             type="link"
             v-access:code="['system:tenant:edit']"
+            @click="handleEdit(row)"
           >
-            {{ $t('pages.common.sync') }}
+            {{ $t('pages.common.edit') }}
           </a-button>
-        </Popconfirm>
-        <Popconfirm
-          placement="left"
-          title="确认删除？"
-          @confirm="handleDelete(row)"
-        >
-          <a-button
-            danger
-            size="small"
-            type="link"
-            v-access:code="['system:tenant:remove']"
-            @click.stop=""
+          <Popconfirm
+            :get-popup-container="getPopupContainer"
+            :title="`确认同步[${row.companyName}]的套餐吗?`"
+            placement="left"
+            @confirm="handleSync(row)"
           >
-            {{ $t('pages.common.delete') }}
-          </a-button>
-        </Popconfirm>
+            <a-button
+              size="small"
+              type="link"
+              v-access:code="['system:tenant:edit']"
+            >
+              {{ $t('pages.common.sync') }}
+            </a-button>
+          </Popconfirm>
+          <Popconfirm
+            :get-popup-container="getPopupContainer"
+            placement="left"
+            title="确认删除？"
+            @confirm="handleDelete(row)"
+          >
+            <a-button
+              danger
+              size="small"
+              type="link"
+              v-access:code="['system:tenant:remove']"
+              @click.stop=""
+            >
+              {{ $t('pages.common.delete') }}
+            </a-button>
+          </Popconfirm>
+        </template>
       </template>
     </BasicTable>
     <TenantDrawer @reload="tableApi.query()" />
