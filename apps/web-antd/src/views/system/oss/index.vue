@@ -4,7 +4,7 @@ import type { Recordable } from '@vben/types';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { Page, type VbenFormProps } from '@vben/common-ui';
+import { Page, useVbenModal, type VbenFormProps } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 import { getPopupContainer } from '@vben/utils';
 
@@ -26,6 +26,7 @@ import { ossDownload, ossList, ossRemove } from '#/api/system/oss';
 import { downloadByData } from '#/utils/file/download';
 
 import { columns, querySchema } from './data';
+import imageUploadModal from './image-upload-modal.vue';
 
 const formOptions: VbenFormProps = {
   commonConfig: {
@@ -153,6 +154,9 @@ function isImageFile(ext: string) {
   const supportList = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
   return supportList.some((item) => ext.toLocaleLowerCase().includes(item));
 }
+const [ImageUploadModal, imageUploadApi] = useVbenModal({
+  connectedComponent: imageUploadModal,
+});
 </script>
 
 <template>
@@ -181,7 +185,12 @@ function isImageFile(ext: string) {
           >
             {{ $t('pages.common.delete') }}
           </a-button>
-          <a-button v-access:code="['system:oss:upload']"> 上传 没做 </a-button>
+          <a-button
+            v-access:code="['system:oss:upload']"
+            @click="imageUploadApi.open"
+          >
+            图片上传
+          </a-button>
         </Space>
       </template>
       <template #url="{ row }">
@@ -217,5 +226,6 @@ function isImageFile(ext: string) {
         </Space>
       </template>
     </BasicTable>
+    <ImageUploadModal @reload="tableApi.query" />
   </Page>
 </template>
