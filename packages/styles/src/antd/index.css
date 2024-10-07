@@ -65,7 +65,7 @@
 }
 
 /**
-vxe表格右上角toolbar 间距
+vxe表格右上角toolbar元素之间的间距
 */
 .vxe-button + .vxe-button.type--button {
   margin-left: 8px !important;
@@ -76,4 +76,11 @@ vxe表格右上角toolbar和左边元素的间距
 */
 .vxe-tools--operate {
   margin-left: 8px;
+}
+
+/**
+覆盖vxe-table的toolbar样式 由于默认已经有了padding 需要去除上边的padding
+*/
+.vxe-toolbar {
+  padding: 0 0 0.6em !important;
 }
