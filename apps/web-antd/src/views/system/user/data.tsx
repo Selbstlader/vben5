@@ -19,10 +19,6 @@ export const querySchema: FormSchemaGetter = () => [
     component: 'Input',
     fieldName: 'phonenumber',
     label: '手机号码',
-    rules: z
-      .string()
-      .regex(/^1[3-9]\d{9}$/, '请输入正确的手机号码')
-      .optional(),
   },
   {
     component: 'Select',
