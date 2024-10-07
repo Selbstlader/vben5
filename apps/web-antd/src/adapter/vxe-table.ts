@@ -4,8 +4,6 @@ import { setupVbenVxeTable, useVbenVxeGrid } from '@vben/plugins/vxe-table';
 
 import { Button, Image } from 'ant-design-vue';
 
-import { renderDict } from '#/utils/render';
-
 import { useVbenForm } from './form';
 
 setupVbenVxeTable({
@@ -13,7 +11,7 @@ setupVbenVxeTable({
     vxeUI.setConfig({
       grid: {
         align: 'center',
-        border: true,
+        border: false,
         minHeight: 180,
         proxyConfig: {
           autoLoad: true,
@@ -25,9 +23,21 @@ setupVbenVxeTable({
           showActiveMsg: true,
           showResponseMsg: false,
         },
+        pagerConfig: {
+          // pageSize: 10,
+          // pageSizes: [10, 20, 30, 40, 50],
+        },
+        rowConfig: {
+          // 鼠标移入行显示 hover 样式
+          isHover: true,
+          // 点击行高亮
+          isCurrent: true,
+        },
         columnConfig: {
+          // 可拖拽列宽
           resizable: true,
         },
+        // 右上角工具栏
         toolbarConfig: {
           // 自定义列
           custom: true,
@@ -36,7 +46,9 @@ setupVbenVxeTable({
           // 刷新
           refresh: true,
         },
+        // 圆角按钮
         round: true,
+        // 表格尺寸
         size: 'medium',
       },
     });
@@ -58,23 +70,6 @@ setupVbenVxeTable({
           { size: 'small', type: 'link' },
           { default: () => props?.text },
         );
-      },
-    });
-
-    /**
-     * 表格dict渲染 必传 props: { field: 参数名, dictName: 字典名 }
-     */
-    vxeUI.renderer.add('DictTag', {
-      renderDefault(renderOpts, params) {
-        const { props } = renderOpts;
-        const field = props?.field;
-        const dictName = props?.dictName;
-        if (!field || !dictName) {
-          console.warn('DictTag: field or dictName is not provided');
-          return 'error';
-        }
-        const { row } = params;
-        return renderDict(row[field], dictName);
       },
     });
 
