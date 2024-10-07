@@ -171,6 +171,8 @@ async function generateAccess(options: GenerateMenuAndRoutesOptions) {
   return await generateAccessible(preferences.app.accessMode, {
     ...options,
     fetchMenuListAsync: async () => {
+      // 清除以前的message
+      message.destroy();
       message.loading({
         content: `${$t('common.loadingMenu')}...`,
         duration: 1,
