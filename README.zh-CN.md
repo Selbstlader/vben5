@@ -8,11 +8,7 @@ v5版本采用分仓(包)目录结构, 具体开发路径为: `根目录/apps/we
 
 ## 进度
 
-目前为beta版本 等待最后收尾
-
 **工作流相关模块等待后端重构后开发**
-
-基础功能大致完成，有一部分需要等待官方更新
 
 除文件上传(不包含图片上传) 基本功能都已完成
 
@@ -80,7 +76,7 @@ pnpm install
 
 - 关于代码生成
 
-v5版本代码生成模板为付费功能(暂未开放)
+V5版本代码生成模板为付费功能(暂未开放)
 
 - 关于一些监控的地址配置(微服务版本可以跳过这一小节)
 
@@ -88,9 +84,14 @@ v5版本代码生成模板为付费功能(暂未开放)
 
 1. 修改源码`/views/monitor/admin` `views/monitor/snailjob`
 
-```ts
-// 修改地址
-const url = ref<string>('http://127.0.0.1:7700/#/oms/home');
+```html
+<!-- 修改地址 -->
+<template>
+  <iframe
+    class="size-full"
+    src="http://localhost:9090/admin/applications"
+  ></iframe>
+</template>
 ```
 
 2. **推荐** 使用菜单自行配置 (跟 cloud 版本打开方式一致)
@@ -106,7 +107,7 @@ const url = ref<string>('http://127.0.0.1:7700/#/oms/home');
 ```properties
 # 端口号
 VITE_PORT=5666
-
+# 打包路径
 VITE_BASE=/
 # 是否开启 Nitro Mock服务，true 为开启，false 为关闭
 VITE_NITRO_MOCK=false
@@ -117,7 +118,6 @@ VITE_INJECT_APP_LOADING=true
 
 # 后台请求路径 具体在vite.config.mts配置代理
 VITE_GLOB_API_URL=/api
-
 # 全局加密开关(即开启了加解密功能才会生效 不是全部接口加密 需要和后端对应)
 VITE_GLOB_ENABLE_ENCRYPT=true
 # RSA公钥 请求加密使用 注意这两个是两对RSA公私钥 请求加密-后端解密是一对 响应解密-后端加密是一对
@@ -126,7 +126,6 @@ VITE_GLOB_RSA_PUBLIC_KEY=
 VITE_GLOB_RSA_PRIVATE_KEY=
 # 客户端id
 VITE_GLOB_APP_CLIENT_ID=e5cd7e4891bf95d1d19206ce24a7b32e
-
 # 开启WEBSOCKET
 VITE_GLOB_WEBSOCKET_ENABLE=false
 ```
