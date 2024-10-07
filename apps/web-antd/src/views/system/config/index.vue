@@ -34,8 +34,6 @@ const gridOptions: VxeGridProps = {
     highlight: true,
     // 翻页时保留选中状态
     reserve: true,
-    // 点击行选中
-    trigger: 'row',
   },
   columns,
   height: 'auto',
