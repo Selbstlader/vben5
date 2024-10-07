@@ -167,14 +167,12 @@ async function handleDelete() {
         </Space>
       </template>
       <template #action="{ row }">
-        <a-button
-          size="small"
-          type="link"
+        <ghost-button
           v-access:code="['monitor:operlog:list']"
           @click.stop="handlePreview(row)"
         >
           {{ $t('pages.common.preview') }}
-        </a-button>
+        </ghost-button>
       </template>
     </BasicTable>
     <OperationPreviewDrawer />

@@ -210,29 +210,28 @@ function handleAssignRole(record: Recordable<any>) {
         <template
           v-if="!row.superAdmin && (row.roleKey !== 'admin' || isSuperAdmin)"
         >
-          <a-button
-            size="small"
-            type="link"
-            v-access:code="['system:role:edit']"
-            @click.stop="handleEdit(row)"
-          >
-            {{ $t('pages.common.edit') }}
-          </a-button>
-          <Popconfirm
-            placement="left"
-            title="确认删除？"
-            @confirm="handleDelete(row)"
-          >
-            <a-button
-              danger
-              size="small"
-              type="link"
-              v-access:code="['system:role:remove']"
-              @click.stop=""
+          <Space>
+            <ghost-button
+              v-access:code="['system:role:edit']"
+              @click.stop="handleEdit(row)"
             >
-              {{ $t('pages.common.delete') }}
-            </a-button>
-          </Popconfirm>
+              {{ $t('pages.common.edit') }}
+            </ghost-button>
+            <Popconfirm
+              :get-popup-container="getPopupContainer"
+              placement="left"
+              title="确认删除？"
+              @confirm="handleDelete(row)"
+            >
+              <ghost-button
+                danger
+                v-access:code="['system:role:remove']"
+                @click.stop=""
+              >
+                {{ $t('pages.common.delete') }}
+              </ghost-button>
+            </Popconfirm>
+          </Space>
           <Dropdown
             :get-popup-container="getPopupContainer"
             placement="bottomRight"

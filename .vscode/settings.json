@@ -221,5 +221,6 @@
   "vue.server.hybridMode": true,
   "vitest.disableWorkspaceWarning": true,
   "cSpell.words": ["tinymce"],
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "editor.linkedEditing": true // 自动同步更改html标签
 }

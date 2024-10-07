@@ -4,7 +4,12 @@ import type { Recordable } from '@vben/types';
 import { nextTick } from 'vue';
 
 import { Page, useVbenDrawer, type VbenFormProps } from '@vben/common-ui';
-import { eachTree, listToTree, removeEmptyChildren } from '@vben/utils';
+import {
+  eachTree,
+  getPopupContainer,
+  listToTree,
+  removeEmptyChildren,
+} from '@vben/utils';
 
 import { QuestionCircleOutlined } from '@ant-design/icons-vue';
 import { Popconfirm, Space, Tooltip } from 'ant-design-vue';
@@ -153,38 +158,35 @@ function setExpandOrCollapse(expand: boolean) {
         </Space>
       </template>
       <template #action="{ row }">
-        <a-button
-          size="small"
-          type="link"
-          v-access:code="['system:dept:edit']"
-          @click="handleEdit(row)"
-        >
-          {{ $t('pages.common.edit') }}
-        </a-button>
-        <a-button
-          class="btn-add"
-          size="small"
-          type="link"
-          v-access:code="['system:dept:add']"
-          @click="handleSubAdd(row)"
-        >
-          {{ $t('pages.common.add') }}
-        </a-button>
-        <Popconfirm
-          placement="left"
-          title="确认删除？"
-          @confirm="handleDelete(row)"
-        >
-          <a-button
-            danger
-            size="small"
-            type="link"
-            v-access:code="['system:dept:remove']"
-            @click.stop=""
+        <Space>
+          <ghost-button
+            v-access:code="['system:dept:edit']"
+            @click="handleEdit(row)"
           >
-            {{ $t('pages.common.delete') }}
-          </a-button>
-        </Popconfirm>
+            {{ $t('pages.common.edit') }}
+          </ghost-button>
+          <ghost-button
+            class="btn-add"
+            v-access:code="['system:dept:add']"
+            @click="handleSubAdd(row)"
+          >
+            {{ $t('pages.common.add') }}
+          </ghost-button>
+          <Popconfirm
+            :get-popup-container="getPopupContainer"
+            placement="left"
+            title="确认删除？"
+            @confirm="handleDelete(row)"
+          >
+            <ghost-button
+              danger
+              v-access:code="['system:dept:remove']"
+              @click.stop=""
+            >
+              {{ $t('pages.common.delete') }}
+            </ghost-button>
+          </Popconfirm>
+        </Space>
       </template>
     </BasicTable>
     <DeptDrawer @reload="tableApi.query()" />
@@ -194,9 +196,11 @@ function setExpandOrCollapse(expand: boolean) {
 <style lang="scss" scoped>
 .btn-add {
   color: hsl(var(--success)) !important;
+  border-color: hsl(var(--success)) !important;
 
   &:hover {
     color: hsl(var(--success) / 50%) !important;
+    border-color: hsl(var(--success) / 50%) !important;
   }
 }
 </style>

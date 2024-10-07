@@ -4,6 +4,7 @@ import type { Recordable } from '@vben/types';
 import { ref } from 'vue';
 
 import { Page, useVbenModal, type VbenFormProps } from '@vben/common-ui';
+import { getPopupContainer } from '@vben/utils';
 
 import { Modal, Popconfirm, Space } from 'ant-design-vue';
 
@@ -169,24 +170,25 @@ async function handleUnlock() {
         </Space>
       </template>
       <template #action="{ row }">
-        <a-button size="small" type="link" @click.stop="handlePreview(row)">
-          {{ $t('pages.common.info') }}
-        </a-button>
-        <Popconfirm
-          placement="left"
-          title="确认删除?"
-          @confirm="() => handleDelete(row)"
-        >
-          <a-button
-            danger
-            size="small"
-            type="link"
-            v-access:code="['monitor:logininfor:remove']"
-            @click.stop=""
+        <Space>
+          <ghost-button @click.stop="handlePreview(row)">
+            {{ $t('pages.common.info') }}
+          </ghost-button>
+          <Popconfirm
+            :get-popup-container="getPopupContainer"
+            placement="left"
+            title="确认删除?"
+            @confirm="() => handleDelete(row)"
           >
-            删除
-          </a-button>
-        </Popconfirm>
+            <ghost-button
+              danger
+              v-access:code="['monitor:logininfor:remove']"
+              @click.stop=""
+            >
+              删除
+            </ghost-button>
+          </Popconfirm>
+        </Space>
       </template>
     </BasicTable>
     <LoginInfoModal />

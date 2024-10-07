@@ -4,6 +4,7 @@ import type { Recordable } from '@vben/types';
 import { ref } from 'vue';
 
 import { Page, useVbenDrawer, type VbenFormProps } from '@vben/common-ui';
+import { getPopupContainer } from '@vben/utils';
 
 import { Modal, Popconfirm, Space } from 'ant-design-vue';
 import dayjs from 'dayjs';
@@ -175,29 +176,28 @@ function handleMultiDelete() {
         </Space>
       </template>
       <template #action="{ row }">
-        <a-button
-          size="small"
-          type="link"
-          v-access:code="['system:post:edit']"
-          @click="handleEdit(row)"
-        >
-          {{ $t('pages.common.edit') }}
-        </a-button>
-        <Popconfirm
-          placement="left"
-          title="确认删除？"
-          @confirm="handleDelete(row)"
-        >
-          <a-button
-            danger
-            size="small"
-            type="link"
-            v-access:code="['system:post:remove']"
-            @click.stop=""
+        <Space>
+          <GhostButton
+            v-access:code="['system:post:edit']"
+            @click="handleEdit(row)"
           >
-            {{ $t('pages.common.delete') }}
-          </a-button>
-        </Popconfirm>
+            {{ $t('pages.common.edit') }}
+          </GhostButton>
+          <Popconfirm
+            :get-popup-container="getPopupContainer"
+            placement="left"
+            title="确认删除？"
+            @confirm="handleDelete(row)"
+          >
+            <GhostButton
+              danger
+              v-access:code="['system:post:remove']"
+              @click.stop=""
+            >
+              {{ $t('pages.common.delete') }}
+            </GhostButton>
+          </Popconfirm>
+        </Space>
       </template>
     </BasicTable>
     <PostDrawer @reload="tableApi.query()" />

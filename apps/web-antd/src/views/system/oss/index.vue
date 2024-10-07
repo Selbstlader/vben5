@@ -6,6 +6,7 @@ import { useRouter } from 'vue-router';
 
 import { Page, type VbenFormProps } from '@vben/common-ui';
 import { $t } from '@vben/locales';
+import { getPopupContainer } from '@vben/utils';
 
 import {
   Image,
@@ -192,29 +193,28 @@ function isImageFile(ext: string) {
         <span v-else>{{ row.url }}</span>
       </template>
       <template #action="{ row }">
-        <a-button
-          size="small"
-          type="link"
-          v-access:code="['system:oss:edit']"
-          @click="handleDownload(row)"
-        >
-          {{ $t('pages.common.download') }}
-        </a-button>
-        <Popconfirm
-          placement="left"
-          title="确认删除？"
-          @confirm="handleDelete(row)"
-        >
-          <a-button
-            danger
-            size="small"
-            type="link"
-            v-access:code="['system:oss:remove']"
-            @click.stop=""
+        <Space>
+          <ghost-button
+            v-access:code="['system:oss:edit']"
+            @click="handleDownload(row)"
           >
-            {{ $t('pages.common.delete') }}
-          </a-button>
-        </Popconfirm>
+            {{ $t('pages.common.download') }}
+          </ghost-button>
+          <Popconfirm
+            :get-popup-container="getPopupContainer"
+            placement="left"
+            title="确认删除？"
+            @confirm="handleDelete(row)"
+          >
+            <ghost-button
+              danger
+              v-access:code="['system:oss:remove']"
+              @click.stop=""
+            >
+              {{ $t('pages.common.delete') }}
+            </ghost-button>
+          </Popconfirm>
+        </Space>
       </template>
     </BasicTable>
   </Page>

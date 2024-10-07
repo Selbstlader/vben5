@@ -193,28 +193,22 @@ const isSuperAdmin = computed(() => {
         />
       </template>
       <template #action="{ row }">
-        <template v-if="row.id !== 1">
-          <a-button
-            size="small"
-            type="link"
+        <Space v-if="row.id !== 1">
+          <ghost-button
             v-access:code="['system:tenant:edit']"
             @click="handleEdit(row)"
           >
             {{ $t('pages.common.edit') }}
-          </a-button>
+          </ghost-button>
           <Popconfirm
             :get-popup-container="getPopupContainer"
             :title="`确认同步[${row.companyName}]的套餐吗?`"
             placement="left"
             @confirm="handleSync(row)"
           >
-            <a-button
-              size="small"
-              type="link"
-              v-access:code="['system:tenant:edit']"
-            >
+            <ghost-button v-access:code="['system:tenant:edit']">
               {{ $t('pages.common.sync') }}
-            </a-button>
+            </ghost-button>
           </Popconfirm>
           <Popconfirm
             :get-popup-container="getPopupContainer"
@@ -222,17 +216,15 @@ const isSuperAdmin = computed(() => {
             title="确认删除？"
             @confirm="handleDelete(row)"
           >
-            <a-button
+            <ghost-button
               danger
-              size="small"
-              type="link"
               v-access:code="['system:tenant:remove']"
               @click.stop=""
             >
               {{ $t('pages.common.delete') }}
-            </a-button>
+            </ghost-button>
           </Popconfirm>
-        </template>
+        </Space>
       </template>
     </BasicTable>
     <TenantDrawer @reload="tableApi.query()" />

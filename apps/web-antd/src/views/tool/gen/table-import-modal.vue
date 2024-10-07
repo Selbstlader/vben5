@@ -63,6 +63,7 @@ const gridOptions: VxeGridProps = {
   ],
   keepSource: true,
   size: 'small',
+  minHeight: 400,
   pagerConfig: {},
   proxyConfig: {
     ajax: {
