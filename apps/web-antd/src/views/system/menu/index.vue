@@ -79,6 +79,11 @@ const [BasicTable, tableApi] = useVbenVxeGrid({
       tableApi.grid.setTreeExpand(row, !isExpanded);
       row.expand = !isExpanded;
     },
+    // 需要监听使用箭头展开的情况 否则展开/折叠的数据不一致
+    toggleTreeExpand: (e: any) => {
+      const { row = {}, expanded } = e;
+      row.expand = expanded;
+    },
   },
 });
 const [MenuDrawer, drawerApi] = useVbenDrawer({
