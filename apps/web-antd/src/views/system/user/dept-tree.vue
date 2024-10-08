@@ -3,17 +3,23 @@ import type { DeptTree } from '#/api/system/user/model';
 
 import { onMounted, type PropType, ref } from 'vue';
 
-import { Empty, Skeleton, Tree } from 'ant-design-vue';
+import { SyncOutlined } from '@ant-design/icons-vue';
+import { Empty, InputSearch, Skeleton, Tree } from 'ant-design-vue';
 
 import { getDeptTree } from '#/api/system/user';
 
 defineOptions({ inheritAttrs: false });
 
-defineEmits<{ select: [] }>();
+const emit = defineEmits<{ select: [] }>();
 
 const selectDeptId = defineModel('selectDeptId', {
   required: true,
   type: Array as PropType<string[]>,
+});
+
+const searchValue = defineModel('searchValue', {
+  type: String,
+  default: '',
 });
 
 /** 部门数据源 */
@@ -22,30 +28,65 @@ const deptTreeArray = ref<DeptTreeArray>([]);
 /** 骨架屏加载 */
 const showTreeSkeleton = ref<boolean>(true);
 
-onMounted(async () => {
+async function reload() {
+  showTreeSkeleton.value = true;
+  searchValue.value = '';
+  selectDeptId.value = [];
+
   const ret = await getDeptTree();
+  emit('select');
+
   deptTreeArray.value = ret;
   showTreeSkeleton.value = false;
-});
+}
+
+onMounted(reload);
 </script>
 
 <template>
   <Skeleton :loading="showTreeSkeleton" :paragraph="{ rows: 8 }" active>
-    <Tree
-      v-bind="$attrs"
-      v-if="deptTreeArray.length > 0"
-      v-model:selected-keys="selectDeptId"
-      :class="$attrs.class"
-      :field-names="{ title: 'label', key: 'id' }"
-      :show-line="{ showLeafIcon: false }"
-      :tree-data="deptTreeArray"
-      class="p-[8px]"
-      default-expand-all
-      @select="$emit('select')"
-    />
-    <!-- 仅本人数据权限 可以考虑直接不显示 -->
-    <div v-else class="mt-5">
-      <Empty :image="Empty.PRESENTED_IMAGE_SIMPLE" description="无部门数据" />
+    <div class="bg-background flex h-fit flex-col rounded-lg p-[8px]">
+      <div>
+        <InputSearch
+          v-model:value="searchValue"
+          class="mb-[8px]"
+          placeholder="Search"
+          size="small"
+        >
+          <template #enterButton>
+            <a-button @click="reload">
+              <SyncOutlined class="text-primary" />
+            </a-button>
+          </template>
+        </InputSearch>
+      </div>
+      <Tree
+        v-bind="$attrs"
+        v-if="deptTreeArray.length > 0"
+        v-model:selected-keys="selectDeptId"
+        :class="$attrs.class"
+        :field-names="{ title: 'label', key: 'id' }"
+        :show-line="{ showLeafIcon: false }"
+        :tree-data="deptTreeArray"
+        :virtual="false"
+        default-expand-all
+        @select="$emit('select')"
+      >
+        <template #title="{ label }">
+          <span v-if="label.indexOf(searchValue) > -1">
+            {{ label.substring(0, label.indexOf(searchValue)) }}
+            <span style="color: #f50">{{ searchValue }}</span>
+            {{
+              label.substring(label.indexOf(searchValue) + searchValue.length)
+            }}
+          </span>
+          <span v-else>{{ label }}</span>
+        </template>
+      </Tree>
+      <!-- 仅本人数据权限 可以考虑直接不显示 -->
+      <div v-else class="mt-5">
+        <Empty :image="Empty.PRESENTED_IMAGE_SIMPLE" description="无部门数据" />
+      </div>
     </div>
   </Skeleton>
 </template>
