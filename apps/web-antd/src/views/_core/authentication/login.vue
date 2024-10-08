@@ -69,7 +69,7 @@ const formSchema = computed((): VbenFormSchema[] => {
       defaultValue: '000000',
       dependencies: {
         if: () => tenantInfo.value.tenantEnabled,
-        triggerFields: [],
+        triggerFields: [''],
       },
       fieldName: 'tenantId',
       label: $t('authentication.selectAccount'),
