@@ -60,7 +60,7 @@ const formSchema = computed((): VbenFormSchema[] => {
       component: 'VbenSelect',
       componentProps: {
         class: 'bg-background h-[40px] focus:border-primary',
-        options: tenantInfo.value.voList.map((item) => ({
+        options: tenantInfo.value.voList?.map((item) => ({
           label: item.companyName,
           value: item.tenantId,
         })),
