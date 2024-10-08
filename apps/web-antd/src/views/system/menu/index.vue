@@ -107,7 +107,7 @@ function handleSubAdd(row: Recordable<any>) {
 }
 
 async function handleEdit(record: Recordable<any>) {
-  drawerApi.setData({ id: record.menuId });
+  drawerApi.setData({ id: record.menuId, update: true });
   drawerApi.open();
 }
 
