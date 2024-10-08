@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import type { Recordable } from '@vben/types';
 import type { UploadFile, UploadProps } from 'ant-design-vue';
 import type { UploadRequestOption } from 'ant-design-vue/lib/vc-upload/interface';
 
@@ -29,7 +28,6 @@ const props = withDefaults(
     accept?: string[];
     api?: (...args: any[]) => Promise<any>;
     disabled?: boolean;
-    filename?: null | string;
     helpText?: string;
     // eslint-disable-next-line no-use-before-define
     listType?: ListType;
@@ -37,11 +35,11 @@ const props = withDefaults(
     maxNumber?: number;
     // 文件最大多少MB
     maxSize?: number;
+    // 是否支持多选
     multiple?: boolean;
-    name?: string;
     // support xxx.xxx.xx
-    resultField?: string;
-    uploadParams?: Recordable<any>;
+    // 返回的字段 默认url
+    resultField?: 'fileName' | 'ossId' | 'url' | string;
     value?: string[];
   }>(),
   {
@@ -53,10 +51,7 @@ const props = withDefaults(
     maxNumber: 1,
     accept: () => [],
     multiple: false,
-    uploadParams: () => ({}),
     api: uploadApi,
-    name: 'file',
-    filename: null,
     resultField: '',
   },
 );
