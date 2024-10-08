@@ -76,6 +76,10 @@ cd ruoyi-plus-vben5
 pnpm install
 ```
 
+- 菜单图标替换
+
+[根目录/scripts/菜单图标替换sql/update_icon.sql](https://gitee.com/dapppp/ruoyi-plus-vben5/blob/main/scripts/%E8%8F%9C%E5%8D%95%E5%9B%BE%E6%A0%87%E6%9B%BF%E6%8D%A2sql/update_icon.sql)
+
 - 关于代码生成
 
 V5版本代码生成模板为付费功能(暂未开放)
