@@ -12,6 +12,8 @@ v5版本采用分仓(包)目录结构, 具体开发路径为: `根目录/apps/we
 
 基础功能已经开发完毕
 
+👉 [更新日志](https://gitee.com/dapppp/ruoyi-plus-vben5/blob/main/CHANGELOG.md)
+
 ## 简介
 
 基于 [vben5 & ant-design-vue](https://github.com/vbenjs/vue-vben-admin) 的 RuoYi-Vue-Plus 前端项目
