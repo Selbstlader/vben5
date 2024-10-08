@@ -26,6 +26,7 @@ import { ossDownload, ossList, ossRemove } from '#/api/system/oss';
 import { downloadByData } from '#/utils/file/download';
 
 import { columns, querySchema } from './data';
+import fileUploadModal from './file-upload-modal.vue';
 import imageUploadModal from './image-upload-modal.vue';
 
 const formOptions: VbenFormProps = {
@@ -157,6 +158,10 @@ function isImageFile(ext: string) {
 const [ImageUploadModal, imageUploadApi] = useVbenModal({
   connectedComponent: imageUploadModal,
 });
+
+const [FileUploadModal, fileUploadApi] = useVbenModal({
+  connectedComponent: fileUploadModal,
+});
 </script>
 
 <template>
@@ -184,6 +189,12 @@ const [ImageUploadModal, imageUploadApi] = useVbenModal({
             @click="handleMultiDelete"
           >
             {{ $t('pages.common.delete') }}
+          </a-button>
+          <a-button
+            v-access:code="['system:oss:upload']"
+            @click="fileUploadApi.open"
+          >
+            文件上传
           </a-button>
           <a-button
             v-access:code="['system:oss:upload']"
@@ -227,5 +238,6 @@ const [ImageUploadModal, imageUploadApi] = useVbenModal({
       </template>
     </BasicTable>
     <ImageUploadModal @reload="tableApi.query" />
+    <FileUploadModal @reload="tableApi.query" />
   </Page>
 </template>
