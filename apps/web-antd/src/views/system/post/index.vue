@@ -141,7 +141,6 @@ function handleMultiDelete() {
   <Page :auto-content-height="true" content-class="flex gap-[8px]">
     <DeptTree
       v-model:select-dept-id="selectDeptId"
-      :height="360"
       class="w-[260px]"
       @select="() => tableApi.query()"
     />

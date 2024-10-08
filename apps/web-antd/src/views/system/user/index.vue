@@ -196,7 +196,6 @@ function handleResetPwd(record: Recordable<any>) {
     <div class="flex h-full gap-[8px]">
       <DeptTree
         v-model:select-dept-id="selectDeptId"
-        :height="360"
         class="w-[260px]"
         @select="() => tableApi.query()"
       />

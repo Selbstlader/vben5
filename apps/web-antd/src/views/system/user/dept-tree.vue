@@ -45,7 +45,9 @@ onMounted(reload);
 
 <template>
   <Skeleton :loading="showTreeSkeleton" :paragraph="{ rows: 8 }" active>
-    <div class="bg-background flex h-fit flex-col rounded-lg p-[8px]">
+    <div
+      class="bg-background flex h-full flex-col overflow-y-auto rounded-lg p-[8px]"
+    >
       <div>
         <InputSearch
           v-model:value="searchValue"
