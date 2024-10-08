@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import type { Recordable } from '@vben/types';
 
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
+import { useAccess } from '@vben/access';
 import { Page, useVbenModal, type VbenFormProps } from '@vben/common-ui';
 import { getPopupContainer } from '@vben/utils';
 
@@ -25,6 +26,7 @@ import {
   refreshDictTypeCache,
 } from '#/api/system/dict/dict-type';
 import { dictSyncTenant } from '#/api/system/tenant';
+import { useTenantStore } from '#/store/tenant';
 import { downloadExcel } from '#/utils/file/download';
 
 import { emitter } from '../mitt';
@@ -172,6 +174,15 @@ function handleSyncTenantDict() {
     },
   });
 }
+
+const { hasAccessByRoles } = useAccess();
+const tenantStore = useTenantStore();
+/**
+ * 开启租户 & 超级管理员才可以同步租户字典
+ */
+const couldSyncTenantDict = computed(() => {
+  return tenantStore.tenantEnable && hasAccessByRoles(['superadmin']);
+});
 </script>
 
 <template>
@@ -188,7 +199,7 @@ function handleSyncTenantDict() {
                 <span v-access:code="['system:dict:edit']">
                   <MenuItem key="1">刷新字典缓存</MenuItem>
                 </span>
-                <span v-access:role="['superadmin']">
+                <span v-if="couldSyncTenantDict">
                   <MenuItem key="2"> 同步租户字典 </MenuItem>
                 </span>
               </Menu>
