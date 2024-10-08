@@ -42,7 +42,7 @@ admin 账号: admin admin123
 
 ## 文档
 
-[vben 文档地址](https://doc.vvbin.cn/)
+[Vben V5 文档地址](https://doc.vben.pro/)
 
 [RuoYi-Plus 文档地址](https://plus-doc.dromara.org/#/)
 
