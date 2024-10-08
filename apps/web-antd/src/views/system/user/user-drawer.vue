@@ -10,6 +10,7 @@ import { addFullName, cloneDeep, getPopupContainer } from '@vben/utils';
 import { Tag } from 'ant-design-vue';
 
 import { useVbenForm } from '#/adapter';
+import { configInfoByKey } from '#/api/system/config';
 import { postOptionSelect } from '#/api/system/post';
 import {
   findUserInfo,
@@ -113,6 +114,16 @@ async function setupDeptSelect() {
   ]);
 }
 
+/**
+ * 新增时候 从参数设置获取默认密码
+ */
+async function loadDefaultPassword(update: boolean) {
+  if (!update) {
+    const defaultPassword = await configInfoByKey('sys.user.initPassword');
+    defaultPassword && formApi.setFieldValue('password', defaultPassword);
+  }
+}
+
 const [BasicDrawer, drawerApi] = useVbenDrawer({
   onCancel: handleCancel,
   onConfirm: handleConfirm,
@@ -165,8 +176,8 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
         fieldName: 'postIds',
       },
     ]);
-    // 部门选择
-    await setupDeptSelect();
+    // 部门选择 && 初始密码
+    await Promise.all([setupDeptSelect(), loadDefaultPassword(isUpdate.value)]);
     if (user) {
       await Promise.all([
         // 添加基础信息
