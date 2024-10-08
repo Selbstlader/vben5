@@ -84,3 +84,10 @@ vxe表格右上角toolbar和左边元素的间距
 .vxe-toolbar {
   padding: 0 0 0.6em !important;
 }
+
+/**
+vxe默认圆角
+*/
+html {
+  --vxe-ui-border-radius: 8px !important;
+}
