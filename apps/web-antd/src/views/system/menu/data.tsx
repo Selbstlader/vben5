@@ -325,9 +325,11 @@ export const drawerSchema: FormSchemaGetter = () => [
   },
   {
     component: 'Input',
-    componentProps: (model) => ({
+    componentProps: () => ({
       // 为链接时组件disabled
-      disabled: model.isFrame === '0',
+      // disabled: model.isFrame === '0',
+      placeholder: '暂未实现功能',
+      disabled: true,
     }),
     dependencies: {
       // 类型为菜单时显示
