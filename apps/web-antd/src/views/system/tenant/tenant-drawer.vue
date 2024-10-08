@@ -8,8 +8,7 @@ import { cloneDeep } from '@vben/utils';
 import { Tag } from 'ant-design-vue';
 
 import { useVbenForm } from '#/adapter';
-import { clientAdd, clientUpdate } from '#/api/system/client';
-import { tenantInfo } from '#/api/system/tenant';
+import { tenantAdd, tenantInfo, tenantUpdate } from '#/api/system/tenant';
 import { packageSelectList } from '#/api/system/tenant-package';
 import { useTenantStore } from '#/store/tenant';
 
@@ -92,7 +91,7 @@ async function handleConfirm() {
       return;
     }
     const data = cloneDeep(await formApi.getValues());
-    await (isUpdate.value ? clientUpdate(data) : clientAdd(data));
+    await (isUpdate.value ? tenantUpdate(data) : tenantAdd(data));
     emit('reload');
     await handleCancel();
     // 重新加载租户信息
