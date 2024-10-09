@@ -6,7 +6,6 @@ import { requestClient } from '#/api/request';
  * @returns 上传结果
  */
 export function uploadApi(file: Blob | File) {
-  console.log('uploadApi', file);
   return requestClient.upload('/resource/oss/upload', { file });
 }
 /**
