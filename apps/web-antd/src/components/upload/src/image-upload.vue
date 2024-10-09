@@ -40,7 +40,7 @@ const props = withDefaults(
     // support xxx.xxx.xx
     // 返回的字段 默认url
     resultField?: 'fileName' | 'ossId' | 'url' | string;
-    value?: string[];
+    value?: string | string[];
   }>(),
   {
     value: () => [],
@@ -81,14 +81,18 @@ watch(
       isInnerOperate.value = false;
       return;
     }
-    let value: string[] = [];
+    let value: string | string[] = [];
     if (v) {
-      if (isArray(v)) {
-        value = v;
-      } else {
-        value.push(v);
+      const _fileList: string[] = [];
+      if (isString(v)) {
+        _fileList.push(v);
       }
-      fileList.value = value.map((item, i) => {
+      if (isArray(v)) {
+        _fileList.push(...v);
+      }
+      // 直接赋值 可能为string | string[]
+      value = v;
+      fileList.value = _fileList.map((item, i) => {
         if (item && isString(item)) {
           return {
             uid: `${-i}`,
@@ -205,9 +209,21 @@ function getValue() {
       if (item?.response && props?.resultField) {
         return item?.response?.[props.resultField];
       }
+      // 适用于已经有图片 回显的情况 会默认在init处理为{url: 'xx'}
+      if (item?.url) {
+        return item.url;
+      }
       // 注意这里取的key为 url
       return item?.response?.url;
     });
+  // 只有一张图片 默认绑定string而非string[]
+  if (props.maxNumber === 1 && list.length === 1) {
+    return list[0];
+  }
+  // 只有一张图片 && 删除图片时 可自行修改
+  if (props.maxNumber === 1 && list.length === 0) {
+    return '';
+  }
   return list;
 }
 </script>

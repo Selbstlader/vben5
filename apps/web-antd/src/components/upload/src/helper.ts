@@ -1,5 +1,4 @@
 export function checkFileType(file: File, accepts: string[]) {
-  console.log(file.name, accepts);
   let reg;
   if (!accepts || accepts.length === 0) {
     reg = /.(?:jpg|jpeg|png|gif|webp)$/i;
