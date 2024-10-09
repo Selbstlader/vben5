@@ -2,7 +2,11 @@
 import { useVbenModal, type VbenFormProps } from '@vben/common-ui';
 
 import { useVbenVxeGrid, type VxeGridProps } from '#/adapter';
-import { importTable, readyToGenList } from '#/api/tool/gen';
+import {
+  getDataSourceNames,
+  importTable,
+  readyToGenList,
+} from '#/api/tool/gen';
 
 const emit = defineEmits<{ reload: [] }>();
 
@@ -93,6 +97,16 @@ const [BasicModal, modalApi] = useVbenModal({
       tableApi.grid.clearCheckboxRow();
       return null;
     }
+    const ret = await getDataSourceNames();
+    const dataSourceOptions = ret.map((item) => ({ label: item, value: item }));
+    tableApi.formApi.updateSchema([
+      {
+        fieldName: 'dataName',
+        componentProps: {
+          options: dataSourceOptions,
+        },
+      },
+    ]);
   },
   onConfirm: handleSubmit,
 });
@@ -106,10 +120,8 @@ async function handleSubmit() {
       return;
     }
     modalApi.modalLoading(true);
-    // const data = await validate();
-    // const dataSource = data.dataName;
-    // TODO: 这里为写死
-    await importTable(tables.join(','), 'master');
+    const { dataName } = await tableApi.formApi.getValues();
+    await importTable(tables.join(','), dataName);
     emit('reload');
     modalApi.close();
   } catch (error) {
