@@ -84,7 +84,7 @@ pnpm install
 
 - 关于代码生成
 
-V5版本代码生成模板为付费功能 [详见](http://dapdap.top/other/template.html)
+V5版本代码生成模板为付费功能 [详见](https://dapdap.top/other/template.html)
 
 - 关于一些监控的地址配置(微服务版本可以跳过这一小节)
 
