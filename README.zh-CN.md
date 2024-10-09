@@ -42,6 +42,8 @@ admin 账号: admin admin123
 
 ## 文档
 
+[本框架文档 强烈建议阅读](https://dapdap.top/)
+
 [Vben V5 文档地址](https://doc.vben.pro/)
 
 [RuoYi-Plus 文档地址](https://plus-doc.dromara.org/#/)
@@ -82,7 +84,7 @@ pnpm install
 
 - 关于代码生成
 
-V5版本代码生成模板为付费功能(暂未开放)
+V5版本代码生成模板为付费功能 [详见](http://dapdap.top/other/template.html)
 
 - 关于一些监控的地址配置(微服务版本可以跳过这一小节)
 
