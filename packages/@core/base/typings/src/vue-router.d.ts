@@ -103,6 +103,10 @@ interface RouteMeta {
    */
   order?: number;
   /**
+   * 路由参数 对象形式
+   */
+  query?: Record<string, any>;
+  /**
    * 标题名称
    */
   title: string;

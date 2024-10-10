@@ -10,6 +10,7 @@ import {
   generateRoutesByBackend,
   generateRoutesByFrontend,
   mapTree,
+  setObjToUrlParams,
 } from '@vben/utils';
 
 async function generateAccessible(
@@ -82,7 +83,14 @@ async function generateRoutes(
       return route;
     }
 
-    route.redirect = firstChild.path;
+    // 第一个路由如果有query参数 需要加上参数
+    const fistChildQuery = route.children[0]?.meta?.query;
+    // 根目录菜单固定只有一个children 且path为/ 不需要添加redirect
+    route.redirect =
+      fistChildQuery && route.children.length !== 1 && route.path !== '/'
+        ? setObjToUrlParams(firstChild.path, fistChildQuery)
+        : firstChild.path;
+
     return route;
   });
 

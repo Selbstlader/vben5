@@ -85,6 +85,16 @@ async function generateAccess(options: GenerateMenuAndRoutesOptions) {
         path: menu.path,
       };
 
+      // 添加路由参数信息
+      if (menu.query) {
+        try {
+          const query = JSON.parse(menu.query);
+          vbenRoute.meta && (vbenRoute.meta.query = query);
+        } catch {
+          console.error('错误的路由参数类型, 必须为[json]格式');
+        }
+      }
+
       /**
        * 处理不同组件
        */
