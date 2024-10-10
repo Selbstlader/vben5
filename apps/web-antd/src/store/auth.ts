@@ -13,6 +13,8 @@ import { defineStore } from 'pinia';
 import { doLogout, getUserInfoApi, loginApi, seeConnectionClose } from '#/api';
 import { $t } from '#/locales';
 
+import { useDictStore } from './dict';
+
 export const useAuthStore = defineStore('auth', () => {
   const accessStore = useAccessStore();
   const userStore = useUserStore();
@@ -115,6 +117,12 @@ export const useAuthStore = defineStore('auth', () => {
       username: user.userName,
     };
     userStore.setUserInfo(userInfo);
+    /**
+     * 需要重新加载字典
+     * 比如退出登录切换到其他租户
+     */
+    const dictStore = useDictStore();
+    dictStore.resetCache();
     return userInfo;
   }
 
