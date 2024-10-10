@@ -69,6 +69,7 @@ const gridOptions: VxeGridProps = {
     rowField: 'menuId',
     transform: false,
   },
+  id: 'system-menu-index',
 };
 
 const [BasicTable, tableApi] = useVbenVxeGrid({

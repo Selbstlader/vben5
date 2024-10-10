@@ -52,6 +52,11 @@ setupVbenVxeTable({
         round: true,
         // 表格尺寸
         size: 'medium',
+        customConfig: {
+          // 表格右上角自定义列配置 是否保存到localStorage
+          // 必须存在id参数才能使用
+          storage: false,
+        },
       },
     });
 

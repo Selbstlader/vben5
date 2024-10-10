@@ -90,6 +90,7 @@ const gridOptions: VxeGridProps<OperationLog> = {
   round: true,
   align: 'center',
   showOverflow: true,
+  id: 'monitor-operlog-index',
 };
 
 const checked = ref(false);

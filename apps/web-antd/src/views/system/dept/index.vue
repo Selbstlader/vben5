@@ -72,6 +72,7 @@ const gridOptions: VxeGridProps = {
     rowField: 'deptId',
     transform: false,
   },
+  id: 'system-dept-index',
 };
 
 const [BasicTable, tableApi] = useVbenVxeGrid({

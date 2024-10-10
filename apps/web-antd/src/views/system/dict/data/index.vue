@@ -82,6 +82,7 @@ const gridOptions: VxeGridProps = {
   round: true,
   align: 'center',
   showOverflow: true,
+  id: 'system-dict-data-index',
 };
 
 const checked = ref(false);

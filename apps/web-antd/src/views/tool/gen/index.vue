@@ -74,6 +74,7 @@ const gridOptions: VxeGridProps = {
   round: true,
   align: 'center',
   showOverflow: true,
+  id: 'tool-gen-index',
 };
 
 const checked = ref(false);

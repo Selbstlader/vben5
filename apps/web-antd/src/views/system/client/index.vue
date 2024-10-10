@@ -63,6 +63,7 @@ const gridOptions: VxeGridProps = {
   round: true,
   align: 'center',
   showOverflow: true,
+  id: 'system-client-index',
 };
 
 const checked = ref(false);

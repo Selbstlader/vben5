@@ -62,6 +62,7 @@ const gridOptions: VxeGridProps = {
   round: true,
   align: 'center',
   showOverflow: true,
+  id: 'system-role-assign-index',
 };
 
 const checked = ref(false);

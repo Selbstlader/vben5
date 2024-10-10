@@ -61,6 +61,7 @@ const gridOptions: VxeGridProps = {
   round: true,
   align: 'center',
   showOverflow: true,
+  id: 'monitor-logininfo-index',
 };
 
 const checked = ref(false);

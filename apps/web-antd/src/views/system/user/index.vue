@@ -124,6 +124,7 @@ const gridOptions: VxeGridProps = {
   round: true,
   align: 'center',
   showOverflow: true,
+  id: 'system-user-index',
 };
 const checked = ref(false);
 const [BasicTable, tableApi] = useVbenVxeGrid({

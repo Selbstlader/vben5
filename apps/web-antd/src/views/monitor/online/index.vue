@@ -42,6 +42,7 @@ const gridOptions: VxeGridProps = {
   round: true,
   align: 'center',
   showOverflow: true,
+  id: 'monitor-online-index',
 };
 
 const [BasicTable, tableApi] = useVbenVxeGrid({ formOptions, gridOptions });
