@@ -78,10 +78,11 @@ export const columns: VxeGridProps['columns'] = [
       },
     },
   },
-  { field: 'operTime', title: '操作日期' },
+  { field: 'operTime', title: '操作日期', sortable: true },
   {
     field: 'costTime',
     title: '操作耗时',
+    sortable: true,
     formatter({ cellValue }) {
       return `${cellValue} ms`;
     },

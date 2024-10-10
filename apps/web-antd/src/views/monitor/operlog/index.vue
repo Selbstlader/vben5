@@ -10,6 +10,7 @@ import { $t } from '@vben/locales';
 
 import { Modal, Space } from 'ant-design-vue';
 import dayjs from 'dayjs';
+import { isEmpty } from 'lodash-es';
 
 import { useVbenVxeGrid, type VxeGridProps } from '#/adapter';
 import {
@@ -47,7 +48,7 @@ const gridOptions: VxeGridProps<OperationLog> = {
   pagerConfig: {},
   proxyConfig: {
     ajax: {
-      query: async ({ page }, formValues = {}) => {
+      query: async ({ page, sort }, formValues = {}) => {
         // 区间选择器处理
         if (formValues?.createTime) {
           formValues.params = {
@@ -62,17 +63,29 @@ const gridOptions: VxeGridProps<OperationLog> = {
         } else {
           Reflect.deleteProperty(formValues, 'params');
         }
-        return await operLogList({
+
+        const params: any = {
           pageNum: page.currentPage,
           pageSize: page.pageSize,
           ...formValues,
-        });
+        };
+
+        console.log(sort);
+        if (!isEmpty(sort)) {
+          params.orderByColumn = sort.field;
+          params.isAsc = sort.order;
+        }
+        console.log(params);
+        return await operLogList(params);
       },
     },
   },
   rowConfig: {
     isHover: true,
     keyField: 'operId',
+  },
+  sortConfig: {
+    remote: true,
   },
   round: true,
   align: 'center',
@@ -84,6 +97,9 @@ const [BasicTable, tableApi] = useVbenVxeGrid({
   formOptions,
   gridOptions,
   gridEvents: {
+    sortChange: () => {
+      tableApi.query();
+    },
     checkboxChange: (e: any) => {
       checked.value = e.records.length > 0;
     },
