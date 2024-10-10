@@ -24,8 +24,10 @@ setupVbenVxeTable({
           showResponseMsg: false,
         },
         pagerConfig: {
-          // pageSize: 10,
-          // pageSizes: [10, 20, 30, 40, 50],
+          // 默认条数
+          pageSize: 10,
+          // 分页可选条数
+          pageSizes: [10, 20, 30, 40, 50],
         },
         rowConfig: {
           // 鼠标移入行显示 hover 样式
