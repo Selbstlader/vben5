@@ -12,7 +12,7 @@ import { isArray, isFunction, isObject, isString } from 'lodash-es';
 
 import { uploadApi } from '#/api';
 
-import { checkFileType } from './helper';
+import { checkImageFileType, defaultImageAccept } from './helper';
 import { UploadResultStatus } from './typing';
 import { useUploadType } from './use-upload';
 
@@ -21,9 +21,7 @@ defineOptions({ name: 'ImageUpload', inheritAttrs: false });
 const props = withDefaults(
   defineProps<{
     /**
-     * 建议使用拓展名(不带.)
-     * 或者文件头 image/png等(测试判断不准确)  不支持image/*类似的写法
-     * 需自行改造 ./helper/checkFileType方法
+     * 包括拓展名(不带点) 文件头(image/png等 不包括泛写法即image/*)
      */
     accept?: string[];
     api?: (...args: any[]) => Promise<any>;
@@ -49,7 +47,7 @@ const props = withDefaults(
     helpText: '',
     maxSize: 2,
     maxNumber: 1,
-    accept: () => [],
+    accept: () => defaultImageAccept,
     multiple: false,
     api: uploadApi,
     resultField: '',
@@ -158,9 +156,9 @@ const handleCancel = () => {
   previewTitle.value = '';
 };
 
-const beforeUpload = (file: File) => {
+const beforeUpload = async (file: File) => {
   const { maxSize, accept } = props;
-  const isAct = checkFileType(file, accept);
+  const isAct = await checkImageFileType(file, accept);
   if (!isAct) {
     message.error($t('component.upload.acceptUpload', [accept]));
     isActMsg.value = false;
