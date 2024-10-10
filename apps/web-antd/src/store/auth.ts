@@ -95,8 +95,14 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function fetchUserInfo() {
-    const { permissions = [], roles = [], user } = await getUserInfoApi();
-
+    const backUserInfo = await getUserInfoApi();
+    /**
+     * 登录超时的情况
+     */
+    if (!backUserInfo) {
+      throw new Error('获取用户信息失败.');
+    }
+    const { permissions = [], roles = [], user } = backUserInfo;
     /**
      * 从后台user -> vben user转换
      */
