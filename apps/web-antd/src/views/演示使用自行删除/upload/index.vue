@@ -10,7 +10,7 @@ import { FileUpload, ImageUpload } from '#/components/upload';
 const resultField = ref<'ossId' | 'url'>('ossId');
 
 const imageList = ref([]);
-const fileList = ref([]);
+const fileList = ref(['111', '2222']);
 const fieldOptions = [
   { label: 'ossId', value: 'ossId' },
   { label: '链接地址', value: 'url' },
@@ -25,13 +25,9 @@ const signleImage = ref<string>('');
     <div class="bg-background flex flex-col gap-[12px] rounded-lg p-6">
       <Alert
         :show-icon="true"
-        message="新特性: 单张图片会被绑定为string而非string[]类型 省去手动转换"
+        message="新特性: 设置max-number为1时, 会被绑定为string而非string[]类型 省去手动转换"
       />
       <ImageUpload v-model:value="signleImage" :max-number="1" />
-      <Alert
-        :show-icon="true"
-        message="默认给空字符串会被转为[], 上传之后为正常string类型"
-      />
       <JsonPreview :data="signleImage" />
     </div>
     <div class="bg-background flex flex-col gap-[12px] rounded-lg p-6">
@@ -39,7 +35,11 @@ const signleImage = ref<string>('');
         <span>返回字段: </span>
         <RadioGroup v-model:value="resultField" :options="fieldOptions" />
       </div>
-      <ImageUpload v-model:value="imageList" :result-field="resultField" />
+      <ImageUpload
+        v-model:value="imageList"
+        :max-number="3"
+        :result-field="resultField"
+      />
       <JsonPreview :data="imageList" />
     </div>
     <div class="bg-background flex flex-col gap-[12px] rounded-lg p-6">
@@ -55,6 +55,7 @@ const signleImage = ref<string>('');
       <FileUpload
         v-model:value="fileList"
         :accept="fileAccept"
+        :max-number="3"
         :result-field="resultField"
       />
       <JsonPreview :data="fileList" />

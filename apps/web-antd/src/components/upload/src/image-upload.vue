@@ -16,7 +16,7 @@ import { checkFileType } from './helper';
 import { UploadResultStatus } from './typing';
 import { useUploadType } from './use-upload';
 
-defineOptions({ name: 'ImageUpload' });
+defineOptions({ name: 'ImageUpload', inheritAttrs: false });
 
 const props = withDefaults(
   defineProps<{
@@ -106,7 +106,6 @@ watch(
         return null;
       }) as UploadProps['fileList'];
     }
-    emit('update:value', value);
     if (!isFirstRender.value) {
       emit('change', value);
       isFirstRender.value = false;

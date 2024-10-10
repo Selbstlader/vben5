@@ -16,7 +16,7 @@ import { checkFileType } from './helper';
 import { UploadResultStatus } from './typing';
 import { useUploadType } from './use-upload';
 
-defineOptions({ name: 'FileUpload' });
+defineOptions({ name: 'FileUpload', inheritAttrs: false });
 
 const props = withDefaults(
   defineProps<{
@@ -95,7 +95,6 @@ watch(
         return null;
       }) as UploadProps['fileList'];
     }
-    emit('update:value', value);
     if (!isFirstRender.value) {
       emit('change', value);
       isFirstRender.value = false;
@@ -168,6 +167,10 @@ function getValue() {
     .map((item: any) => {
       if (item?.response && props?.resultField) {
         return item?.response?.[props.resultField];
+      }
+      // 适用于已经有图片 回显的情况 会默认在init处理为{url: 'xx'}
+      if (item?.url) {
+        return item.url;
       }
       // 注意这里取的key为 url
       return item?.response?.url;
