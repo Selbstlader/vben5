@@ -23,6 +23,8 @@ setupVbenVxeTable({
           showActiveMsg: true,
           showResponseMsg: false,
         },
+        // 溢出展示形式
+        showOverflow: true,
         pagerConfig: {
           // 默认条数
           pageSize: 10,
