@@ -3,7 +3,7 @@ import { computed, ref } from 'vue';
 
 import { useVbenDrawer } from '@vben/common-ui';
 import { $t } from '@vben/locales';
-import { cloneDeep } from '@vben/utils';
+import { cloneDeep, eachTree } from '@vben/utils';
 
 import { useVbenForm } from '#/adapter';
 import { menuTreeSelect, roleMenuTreeSelect } from '#/api/system/menu';
@@ -37,11 +37,20 @@ async function setupMenuTree(id?: number | string) {
   if (id) {
     const resp = await roleMenuTreeSelect(id);
     formApi.setFieldValue('menuIds', resp.checkedKeys);
+    const menus = resp.menus;
+    // i18n处理
+    eachTree(menus, (node) => {
+      node.label = $t(node.label);
+    });
     // 设置菜单信息
     menuTree.value = resp.menus;
   } else {
     const resp = await menuTreeSelect();
     formApi.setFieldValue('menuIds', []);
+    // i18n处理
+    eachTree(resp, (node) => {
+      node.label = $t(node.label);
+    });
     // 设置菜单信息
     menuTree.value = resp;
   }

@@ -3,7 +3,7 @@ import { computed, ref } from 'vue';
 
 import { useVbenDrawer } from '@vben/common-ui';
 import { $t } from '@vben/locales';
-import { cloneDeep, listToTree } from '@vben/utils';
+import { cloneDeep, eachTree, listToTree } from '@vben/utils';
 
 import { useVbenForm } from '#/adapter';
 import { menuList, tenantPackageMenuTreeSelect } from '#/api/system/menu';
@@ -45,6 +45,10 @@ const menuTree = ref<any[]>([]);
 async function setupMenuTree() {
   const resp = await menuList();
   const treeData = listToTree(resp, { id: 'menuId' });
+  // i18n处理
+  eachTree(treeData, (node) => {
+    node.menuName = $t(node.menuName);
+  });
   // 设置菜单信息
   menuTree.value = treeData;
 }
@@ -122,7 +126,7 @@ function handleMenuCheckStrictlyChange(value: boolean) {
           ref="menuSelectRef"
           v-bind="slotProps"
           :check-strictly="formApi.form.values.menuCheckStrictly"
-          :expand-all-on-init="true"
+          :expand-all-on-init="false"
           :field-names="{ title: 'menuName', key: 'menuId' }"
           :tree-data="menuTree"
           @check-strictly-change="handleMenuCheckStrictlyChange"
