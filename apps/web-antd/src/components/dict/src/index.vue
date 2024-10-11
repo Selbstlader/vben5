@@ -41,11 +41,14 @@ const label = computed<number | string>(() => {
   const current = props.dicts.find((item) => item.dictValue == props.value);
   return current?.dictLabel ?? 'unknown';
 });
+
+const tagComponent = computed(() => (color.value ? Tag : 'div'));
 </script>
 
 <template>
   <div>
-    <Tag v-if="color" :class="cssClass" :color="color">{{ label }}</Tag>
-    <div v-if="!color" :class="cssClass">{{ label }}</div>
+    <component :is="tagComponent" :class="cssClass" :color="color">
+      {{ label }}
+    </component>
   </div>
 </template>
