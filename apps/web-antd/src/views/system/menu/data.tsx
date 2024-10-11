@@ -200,6 +200,7 @@ export const drawerSchema: FormSchemaGetter = () => [
     component: 'Input',
     fieldName: 'menuName',
     label: '菜单名称',
+    help: '支持i18n写法, 如: menu.system.user',
     rules: 'required',
   },
   {
