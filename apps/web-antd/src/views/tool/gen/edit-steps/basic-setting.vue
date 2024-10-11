@@ -4,6 +4,7 @@ import type { Column, GenInfo } from '#/api/tool/gen/model';
 import { inject, onMounted, type Ref } from 'vue';
 
 import { useVbenForm } from '@vben/common-ui';
+import { $t } from '@vben/locales';
 import { addFullName, listToTree } from '@vben/utils';
 
 import { Col, Row } from 'ant-design-vue';
@@ -66,12 +67,16 @@ async function initTreeSelect(columns: Column[]) {
  */
 async function initMenuSelect() {
   const list = await menuList();
+  // support i18n
+  list.forEach((item) => {
+    item.menuName = $t(item.menuName);
+  });
   const tree = listToTree(list, { id: 'menuId', pid: 'parentId' });
   const treeData = [
     {
-      fullName: '根目录',
+      fullName: $t('menu.root'),
       menuId: 0,
-      menuName: '根目录',
+      menuName: $t('menu.root'),
       children: tree,
     },
   ];

@@ -84,6 +84,7 @@
     }
   },
   "menu": {
+    "root": "Root",
     "system": {
       "root": "System",
       "user": "User",
