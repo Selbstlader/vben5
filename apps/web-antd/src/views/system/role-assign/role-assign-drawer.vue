@@ -60,9 +60,6 @@ const gridOptions: VxeGridProps = {
     isHover: true,
     keyField: 'userId',
   },
-  round: true,
-  align: 'center',
-  showOverflow: true,
 };
 
 const checked = ref(false);

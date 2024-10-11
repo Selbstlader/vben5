@@ -71,9 +71,6 @@ const gridOptions: VxeGridProps = {
     isHover: true,
     keyField: 'tableId',
   },
-  round: true,
-  align: 'center',
-  showOverflow: true,
   id: 'tool-gen-index',
 };
 

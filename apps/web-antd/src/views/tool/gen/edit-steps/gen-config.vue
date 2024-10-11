@@ -34,9 +34,6 @@ const gridOptions: VxeGridProps = {
     enabled: true,
   },
   data: genInfoData.value.columns,
-  round: true,
-  align: 'center',
-  showOverflow: true,
 };
 
 const [BasicTable, tableApi] = useVbenVxeGrid({ gridOptions });

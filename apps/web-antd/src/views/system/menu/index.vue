@@ -61,9 +61,7 @@ const gridOptions: VxeGridProps = {
     isHover: true,
     keyField: 'menuId',
   },
-  round: true,
-  align: 'center',
-  showOverflow: true,
+
   treeConfig: {
     parentField: 'parentId',
     rowField: 'menuId',

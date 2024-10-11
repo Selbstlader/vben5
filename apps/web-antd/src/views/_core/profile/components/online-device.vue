@@ -22,9 +22,6 @@ const gridOptions: VxeGridProps = {
     isHover: true,
     keyField: 'tokenId',
   },
-  round: true,
-  align: 'center',
-  showOverflow: true,
 };
 
 const [BasicTable, tableApi] = useVbenVxeGrid({ gridOptions });

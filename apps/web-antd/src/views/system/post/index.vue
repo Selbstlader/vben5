@@ -83,9 +83,6 @@ const gridOptions: VxeGridProps = {
     isHover: true,
     keyField: 'postId',
   },
-  round: true,
-  align: 'center',
-  showOverflow: true,
   id: 'system-post-index',
 };
 

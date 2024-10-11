@@ -89,9 +89,6 @@ const gridOptions: VxeGridProps = {
     isHover: true,
     keyField: 'roleId',
   },
-  round: true,
-  align: 'center',
-  showOverflow: true,
   id: 'system-role-index',
 };
 

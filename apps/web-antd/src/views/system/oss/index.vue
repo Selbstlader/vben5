@@ -89,9 +89,6 @@ const gridOptions: VxeGridProps = {
   sortConfig: {
     remote: true,
   },
-  round: true,
-  align: 'center',
-  showOverflow: true,
   id: 'system-oss-index',
 };
 

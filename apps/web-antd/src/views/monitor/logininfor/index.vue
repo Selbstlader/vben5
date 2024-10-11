@@ -73,9 +73,6 @@ const gridOptions: VxeGridProps = {
     isHover: true,
     keyField: 'infoId',
   },
-  round: true,
-  align: 'center',
-  showOverflow: true,
   id: 'monitor-logininfo-index',
 };
 

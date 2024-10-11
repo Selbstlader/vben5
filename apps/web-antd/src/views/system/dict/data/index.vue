@@ -79,9 +79,6 @@ const gridOptions: VxeGridProps = {
     isHover: true,
     keyField: 'dictCode',
   },
-  round: true,
-  align: 'center',
-  showOverflow: true,
   id: 'system-dict-data-index',
 };
 

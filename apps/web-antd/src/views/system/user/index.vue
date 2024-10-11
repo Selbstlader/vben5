@@ -121,9 +121,6 @@ const gridOptions: VxeGridProps = {
     keyField: 'userId',
     height: 48,
   },
-  round: true,
-  align: 'center',
-  showOverflow: true,
   id: 'system-user-index',
 };
 const checked = ref(false);

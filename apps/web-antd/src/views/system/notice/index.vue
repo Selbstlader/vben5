@@ -66,9 +66,6 @@ const gridOptions: VxeGridProps = {
     isHover: true,
     keyField: 'noticeId',
   },
-  round: true,
-  align: 'center',
-  showOverflow: true,
   id: 'system-notice-index',
 };
 

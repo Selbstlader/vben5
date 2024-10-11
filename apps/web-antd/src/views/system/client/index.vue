@@ -60,9 +60,6 @@ const gridOptions: VxeGridProps = {
     keyField: 'id',
     height: 90,
   },
-  round: true,
-  align: 'center',
-  showOverflow: true,
   id: 'system-client-index',
 };
 

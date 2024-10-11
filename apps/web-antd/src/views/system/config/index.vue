@@ -70,9 +70,6 @@ const gridOptions: VxeGridProps = {
     isHover: true,
     keyField: 'configId',
   },
-  round: true,
-  align: 'center',
-  showOverflow: true,
   id: 'system-config-index',
 };
 

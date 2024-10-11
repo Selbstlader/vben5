@@ -69,9 +69,6 @@ const gridOptions: VxeGridProps = {
     isHover: true,
     keyField: 'ossConfigId',
   },
-  round: true,
-  align: 'center',
-  showOverflow: true,
   id: 'system-oss-config-index',
 };
 

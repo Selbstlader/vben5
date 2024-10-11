@@ -87,9 +87,6 @@ const gridOptions: VxeGridProps<OperationLog> = {
   sortConfig: {
     remote: true,
   },
-  round: true,
-  align: 'center',
-  showOverflow: true,
   id: 'monitor-operlog-index',
 };
 

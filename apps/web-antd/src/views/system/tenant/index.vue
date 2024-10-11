@@ -78,9 +78,6 @@ const gridOptions: VxeGridProps = {
     isHover: true,
     keyField: 'id',
   },
-  round: true,
-  align: 'center',
-  showOverflow: true,
   id: 'system-tenant-index',
 };
 

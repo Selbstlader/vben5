@@ -39,9 +39,6 @@ const gridOptions: VxeGridProps = {
     isHover: true,
     keyField: 'tokenId',
   },
-  round: true,
-  align: 'center',
-  showOverflow: true,
   id: 'monitor-online-index',
 };
 

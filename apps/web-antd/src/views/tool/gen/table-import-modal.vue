@@ -84,9 +84,6 @@ const gridOptions: VxeGridProps = {
     isHover: true,
     keyField: 'tableId',
   },
-  round: true,
-  align: 'center',
-  showOverflow: true,
 };
 
 const [BasicTable, tableApi] = useVbenVxeGrid({ formOptions, gridOptions });
