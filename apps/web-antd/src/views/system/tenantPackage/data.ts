@@ -19,7 +19,7 @@ export const columns: VxeGridProps['columns'] = [
     field: 'remark',
   },
   {
-    title: '租户状态',
+    title: '状态',
     field: 'status',
     slots: { default: 'status' },
   },
