@@ -43,12 +43,16 @@ const [BasicForm, formApi] = useVbenForm({
 async function setupMenuSelect() {
   // menu
   const menuArray = await menuList();
+  // support i18n
+  menuArray.forEach((item) => {
+    item.menuName = $t(item.menuName);
+  });
   // const folderArray = menuArray.filter((item) => item.menuType === 'M');
   const menuTree = listToTree(menuArray, { id: 'menuId', pid: 'parentId' });
   const fullMenuTree = [
     {
       menuId: 0,
-      menuName: '根目录',
+      menuName: $t('menu.root'),
       children: menuTree,
     },
   ];
