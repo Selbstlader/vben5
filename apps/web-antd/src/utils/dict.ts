@@ -12,13 +12,16 @@ export function getDict(dictName: string): DictData[] {
   if (dictList.length === 0 && !dictRequestCache.has(dictName)) {
     dictRequestCache.set(
       dictName,
-      dictDataInfo(dictName).then((resp) => {
-        // 缓存到store 这样就不用重复获取了
-        // 内部处理了push的逻辑 这里不用push
-        setDictInfo(dictName, resp);
-        // 移除请求状态缓存
-        dictRequestCache.delete(dictName);
-      }),
+      dictDataInfo(dictName)
+        .then((resp) => {
+          // 缓存到store 这样就不用重复获取了
+          // 内部处理了push的逻辑 这里不用push
+          setDictInfo(dictName, resp);
+        })
+        .finally(() => {
+          // 移除请求状态缓存
+          dictRequestCache.delete(dictName);
+        }),
     );
   }
   return dictList;
@@ -31,13 +34,16 @@ export function getDictOptions(dictName: string): Option[] {
   if (dictOptionList.length === 0 && !dictRequestCache.has(dictName)) {
     dictRequestCache.set(
       dictName,
-      dictDataInfo(dictName).then((resp) => {
-        // 缓存到store 这样就不用重复获取了
-        // 内部处理了push的逻辑 这里不用push
-        setDictInfo(dictName, resp);
-        // 移除请求状态缓存
-        dictRequestCache.delete(dictName);
-      }),
+      dictDataInfo(dictName)
+        .then((resp) => {
+          // 缓存到store 这样就不用重复获取了
+          // 内部处理了push的逻辑 这里不用push
+          setDictInfo(dictName, resp);
+        })
+        .finally(() => {
+          // 移除请求状态缓存
+          dictRequestCache.delete(dictName);
+        }),
     );
   }
   return dictOptionList;

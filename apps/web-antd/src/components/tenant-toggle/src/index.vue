@@ -75,7 +75,6 @@ const onSelected: SelectHandler = async (tenantId: string, option: any) => {
 
 async function onDeselect() {
   await tenantDynamicClear();
-  dictStore.resetCache();
   message.success($t('component.tenantToggle.reset'));
   lastSelected.value = '';
   close(false);
