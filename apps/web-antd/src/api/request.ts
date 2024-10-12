@@ -34,8 +34,11 @@ const { apiURL, clientId, enableEncrypt } = useAppConfig(
   import.meta.env.PROD,
 );
 
-/** 控制是否弹窗 防止登录超时请求多个api会弹窗多次 */
-let showTimeoutToast = true;
+/**
+ * 是否已经处在登出过程中了 一个标志位
+ * 主要是防止一个页面会请求多个api 都401 会导致登出执行多次
+ */
+let isLogoutProcessing = false;
 
 function createRequestClient(baseURL: string) {
   const client = new RequestClient({
@@ -234,18 +237,16 @@ function createRequestClient(baseURL: string) {
       let timeoutMsg = '';
       switch (code) {
         case 401: {
+          // 已经在登出过程中 不再执行
+          if (isLogoutProcessing) {
+            return;
+          }
+          isLogoutProcessing = true;
           const _msg = '登录超时, 请重新登录';
           const userStore = useAuthStore();
-          userStore.logout().then(() => {
-            /** 只弹窗一次 */
-            if (showTimeoutToast) {
-              showTimeoutToast = false;
-              message.error(_msg);
-              /** 定时器 3s后再开启弹窗 */
-              setTimeout(() => {
-                showTimeoutToast = true;
-              }, 3000);
-            }
+          userStore.logout().finally(() => {
+            message.error(_msg);
+            isLogoutProcessing = false;
           });
           // 不再执行下面逻辑
           return;
