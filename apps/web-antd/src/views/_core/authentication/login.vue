@@ -70,7 +70,15 @@ const formSchema = computed((): VbenFormSchema[] => {
       defaultValue: '000000',
       dependencies: {
         if: () => tenantInfo.value.tenantEnabled,
-        triggerFields: [''],
+        // 这里大致上是watch的一个效果
+        componentProps: (model) => {
+          localStorage.setItem(
+            '__oauth_tenant_id',
+            model?.tenantId ?? '000000',
+          );
+          return {};
+        },
+        triggerFields: ['', 'tenantId'],
       },
       fieldName: 'tenantId',
       label: $t('authentication.selectAccount'),
