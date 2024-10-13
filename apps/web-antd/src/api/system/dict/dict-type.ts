@@ -37,7 +37,7 @@ export function dictTypeExport(data: any) {
  * @returns void
  */
 export function dictTypeRemove(dictIds: IDS) {
-  return requestClient.deleteWithMsg<void>(`${Api.root}/${dictIds.join(',')}`);
+  return requestClient.deleteWithMsg<void>(`${Api.root}/${dictIds}`);
 }
 
 /**

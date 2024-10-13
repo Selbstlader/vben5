@@ -37,5 +37,5 @@ export function clientChangeStatus(data: any) {
 }
 
 export function clientRemove(ids: IDS) {
-  return requestClient.deleteWithMsg(`${Api.root}/${ids.join(',')}`);
+  return requestClient.deleteWithMsg(`${Api.root}/${ids}`);
 }
