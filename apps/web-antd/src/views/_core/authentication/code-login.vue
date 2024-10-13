@@ -1,17 +1,61 @@
 <script lang="ts" setup>
 import type { LoginCodeParams, VbenFormSchema } from '@vben/common-ui';
 
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref, useTemplateRef } from 'vue';
 
 import { AuthenticationCodeLogin, z } from '@vben/common-ui';
 import { $t } from '@vben/locales';
+
+import { Alert, message } from 'ant-design-vue';
+
+import { tenantList, type TenantResp } from '#/api';
+import { sendSmsCode } from '#/api/core/captcha';
+import { useAuthStore } from '#/store';
 
 defineOptions({ name: 'CodeLogin' });
 
 const loading = ref(false);
 
+const tenantInfo = ref<TenantResp>({
+  tenantEnabled: false,
+  voList: [],
+});
+
+const codeLoginRef = useTemplateRef('codeLoginRef');
+async function loadTenant() {
+  const resp = await tenantList();
+  tenantInfo.value = resp;
+  // 选中第一个租户
+  if (resp.tenantEnabled && resp.voList.length > 0) {
+    const firstTenantId = resp.voList[0]!.tenantId;
+    codeLoginRef.value?.setFieldValue('tenantId', firstTenantId);
+  }
+}
+
+onMounted(loadTenant);
+
 const formSchema = computed((): VbenFormSchema[] => {
   return [
+    {
+      component: 'VbenSelect',
+      componentProps: {
+        class: 'bg-background h-[40px] focus:border-primary',
+        contentClass: 'max-h-[256px] overflow-y-auto',
+        options: tenantInfo.value.voList?.map((item) => ({
+          label: item.companyName,
+          value: item.tenantId,
+        })),
+        placeholder: $t('authentication.selectAccount'),
+      },
+      defaultValue: '000000',
+      dependencies: {
+        if: () => tenantInfo.value.tenantEnabled,
+        triggerFields: [''],
+      },
+      fieldName: 'tenantId',
+      label: $t('authentication.selectAccount'),
+      rules: z.string().min(1, { message: $t('authentication.selectAccount') }),
+    },
     {
       component: 'VbenInput',
       componentProps: {
@@ -28,15 +72,29 @@ const formSchema = computed((): VbenFormSchema[] => {
     },
     {
       component: 'VbenPinInput',
-      componentProps: {
-        createText: (countdown: number) => {
-          const text =
-            countdown > 0
-              ? $t('authentication.sendText', [countdown])
-              : $t('authentication.sendCode');
-          return text;
-        },
-        placeholder: $t('authentication.code'),
+      componentProps(_, form) {
+        return {
+          createText: (countdown: number) => {
+            const text =
+              countdown > 0
+                ? $t('authentication.sendText', [countdown])
+                : $t('authentication.sendCode');
+            return text;
+          },
+          // 验证码长度 在这设置
+          codeLength: 4,
+          placeholder: $t('authentication.code'),
+          handleSendCode: async () => {
+            const { valid, value } = await form.validateField('phoneNumber');
+            if (!valid) {
+              // 必须抛异常 不能直接return
+              throw new Error('未填写手机号');
+            }
+            // 调用接口发送
+            await sendSmsCode(value);
+            message.success('验证码发送成功');
+          },
+        };
       },
       fieldName: 'code',
       label: $t('authentication.code'),
@@ -44,20 +102,36 @@ const formSchema = computed((): VbenFormSchema[] => {
     },
   ];
 });
-/**
- * 异步处理登录操作
- * Asynchronously handle the login process
- * @param values 登录表单数据
- */
+
+const authStore = useAuthStore();
 async function handleLogin(values: LoginCodeParams) {
-  console.log(values);
+  try {
+    const requestParams: any = {
+      tenantId: values.tenantId,
+      phonenumber: values.phoneNumber,
+      smsCode: values.code,
+      grantType: 'sms',
+    };
+    await authStore.authLogin(requestParams);
+  } catch (error) {
+    console.error(error);
+  }
 }
 </script>
 
 <template>
-  <AuthenticationCodeLogin
-    :form-schema="formSchema"
-    :loading="loading"
-    @submit="handleLogin"
-  />
+  <div>
+    <Alert
+      class="mb-4"
+      how-icon
+      message="测试手机号: 15888888888 正确验证码: 1234 演示使用 不会真的发送"
+      type="info"
+    />
+    <AuthenticationCodeLogin
+      ref="codeLoginRef"
+      :form-schema="formSchema"
+      :loading="loading"
+      @submit="handleLogin"
+    />
+  </div>
 </template>
