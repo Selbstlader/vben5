@@ -220,7 +220,7 @@
   "commentTranslate.multiLineMerge": true,
   "vue.server.hybridMode": true,
   "vitest.disableWorkspaceWarning": true,
-  "cSpell.words": ["tinymce"],
+  "cSpell.words": ["tinymce", "vditor"],
   "typescript.tsdk": "node_modules/typescript/lib",
   "editor.linkedEditing": true, // 自动同步更改html标签,
   "vscodeCustomCodeColor.highlightValue": "v-access", // v-access显示的颜色
