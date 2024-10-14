@@ -20,6 +20,12 @@ export const overridesPreferences = defineOverridesPreferences({
      */
     // defaultAvatar: '',
     name: import.meta.env.VITE_APP_TITLE,
+    /**
+     * 不支持modal模式 需要改动的地方太多
+     * 1. 正常重新登录后不会再触发接口请求 即触发登录超时的页面为空数据
+     * 2. 切换租户登录后不会重新加载菜单
+     */
+    // loginExpiredMode: 'modal',
   },
   footer: {
     /**
