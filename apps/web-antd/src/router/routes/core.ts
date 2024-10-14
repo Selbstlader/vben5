@@ -40,6 +40,7 @@ const coreRoutes: RouteRecordRaw[] = [
   {
     component: AuthPageLayout,
     meta: {
+      hideInTab: true,
       title: 'Authentication',
     },
     name: 'Authentication',

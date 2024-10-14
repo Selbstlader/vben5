@@ -204,7 +204,7 @@ async function init() {
       '[Vben Vxe Table]: The formConfig in the grid is not supported, please use the `formOptions` props',
     );
   }
-
+  props.api?.setState?.({ gridOptions: defaultGridOptions });
   // form 由 vben-form 代替，所以需要保证query相关事件可以拿到参数
   extendProxyOptions(props.api, defaultGridOptions, () =>
     // 这里默认是readonly的  需要深拷贝才能进行修改操作
@@ -270,7 +270,10 @@ onMounted(() => {
                 :key="slotName"
                 #[slotName]="slotProps"
               >
-                <slot :name="slotName" v-bind="slotProps"></slot>
+                <slot
+                  :name="`${FORM_SLOT_PREFIX}${slotName}`"
+                  v-bind="slotProps"
+                ></slot>
               </template>
             </Form>
           </slot>
