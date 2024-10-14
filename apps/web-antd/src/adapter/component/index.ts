@@ -36,6 +36,9 @@ import {
   Upload,
 } from 'ant-design-vue';
 
+import { Tinymce as RichTextarea } from '#/components/tinymce';
+import { FileUpload, ImageUpload } from '#/components/upload';
+
 const withDefaultPlaceholder = <T extends Component>(
   component: T,
   type: 'input' | 'select',
@@ -54,6 +57,8 @@ export type ComponentType =
   | 'DatePicker'
   | 'DefaultButton'
   | 'Divider'
+  | 'FileUpload'
+  | 'ImageUpload'
   | 'Input'
   | 'InputNumber'
   | 'InputPassword'
@@ -63,6 +68,7 @@ export type ComponentType =
   | 'RadioGroup'
   | 'RangePicker'
   | 'Rate'
+  | 'RichTextarea'
   | 'Select'
   | 'Space'
   | 'Switch'
@@ -106,6 +112,9 @@ async function initComponentAdapter() {
     TimePicker,
     TreeSelect: withDefaultPlaceholder(TreeSelect, 'select'),
     Upload,
+    ImageUpload,
+    FileUpload,
+    RichTextarea,
   };
 
   // 将组件注册到全局共享状态中
