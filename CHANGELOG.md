@@ -7,6 +7,7 @@
 - 支持菜单名称i18n
 - 登录页 验证码登录
 - Markdown编辑/预览组件(基于vditor)
+- VxeTable搜索表单 enter提交
 
 **BUG FIXES**
 
