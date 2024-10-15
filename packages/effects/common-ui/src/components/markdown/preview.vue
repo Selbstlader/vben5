@@ -17,17 +17,9 @@ import 'vditor/dist/index.css';
 const props = defineProps({
   // 编辑器高度
   height: {
-    type: Number,
+    // string或者number类型
+    type: [String, Number],
     default: 500,
-  },
-  // 编辑器唯一ID 缓存使用
-  id: {
-    type: String,
-    required: true,
-  },
-  enableCache: {
-    type: Boolean,
-    default: false,
   },
   // 其他配置项
   options: {
@@ -65,10 +57,11 @@ onMounted(() => {
     height: props.height,
     lang: locale.value.replace('-', '_') as any,
     cache: {
-      enable: props.enableCache,
-      id: props.id,
+      enable: false,
     },
     theme: isDark.value ? 'dark' : 'classic',
+    // 预览(只读模式) 不显示工具栏
+    toolbar: [],
     // 手动响应式
     input(value) {
       content.value = value;
@@ -76,6 +69,8 @@ onMounted(() => {
     // 加载完成的事件
     after() {
       emit('mounted');
+      // 禁用编辑器
+      vditorInstance.value?.disabled();
     },
     ...props.options,
   });
@@ -90,3 +85,10 @@ onBeforeUnmount(() => {
 <template>
   <div ref="vditorRef"></div>
 </template>
+
+<style>
+.vditor-ir pre.vditor-reset[contenteditable='false'] {
+  cursor: unset;
+  opacity: 1;
+}
+</style>

@@ -21,12 +21,35 @@ const props = defineProps({
     type: [String, Number],
     default: 500,
   },
-  // 编辑器唯一ID 缓存使用
+  /**
+   * 编辑模式。默认值: 'wysiwyg'
+   * wysiwyg: 所见即所得
+   * ir: 即时渲染
+   * sv: 分屏预览
+   */
+  mode: {
+    type: String as PropType<'ir' | 'sv' | 'wysiwyg'>,
+    default: 'wysiwyg',
+  },
+  // 编辑器唯一ID 缓存使用 可记录上次输入
   id: {
     type: String,
-    required: true,
+    required: false,
+    default: '',
+    validator(value, props) {
+      if (!value && props.enableCache) {
+        console.warn('The id is required when enableCache is true');
+        return false;
+      }
+      return true;
+    },
   },
   enableCache: {
+    type: Boolean,
+    default: false,
+  },
+  // 禁用编辑器
+  disabled: {
     type: Boolean,
     default: false,
   },
@@ -60,8 +83,19 @@ const content = defineModel('value', {
   default: '',
 });
 
+// 监听禁用
+function changeDisabled(disabled: boolean) {
+  if (disabled) {
+    vditorInstance.value?.disabled();
+  } else {
+    vditorInstance.value?.enable();
+  }
+}
+watch(() => props.disabled, changeDisabled);
+
 onMounted(() => {
   vditorInstance.value = new Vditor(vditorRef.value!, {
+    mode: props.mode,
     value: content.value,
     height: props.height,
     lang: locale.value.replace('-', '_') as any,
@@ -76,6 +110,8 @@ onMounted(() => {
     },
     // 加载完成的事件
     after() {
+      // 需要初始化就禁用的情况
+      changeDisabled(props.disabled);
       emit('mounted');
     },
     ...props.options,
