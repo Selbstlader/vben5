@@ -118,9 +118,9 @@ const handleRemove = async (file: UploadFile) => {
   }
 };
 
-const beforeUpload = (file: File) => {
+const beforeUpload = async (file: File) => {
   const { maxSize, accept } = props;
-  const isAct = checkFileType(file, accept);
+  const isAct = await checkFileType(file, accept);
   if (!isAct) {
     message.error($t('component.upload.acceptUpload', [accept]));
     isActMsg.value = false;

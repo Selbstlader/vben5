@@ -15,7 +15,7 @@ const fieldOptions = [
   { label: 'ossId', value: 'ossId' },
   { label: '链接地址', value: 'url' },
 ];
-const fileAccept = ['txt', 'excel', 'word', 'pdf'];
+const fileAccept = ['xlsx', 'word', 'pdf'];
 
 const signleImage = ref<string>('');
 </script>

@@ -24,7 +24,7 @@ const [BasicModal, modalApi] = useVbenModal({
   },
 });
 
-const accept = ref(['txt', 'excel', 'word', 'pdf']);
+const accept = ref(['xlsx', 'word', 'pdf']);
 const maxNumber = ref(3);
 
 const message = computed(() => {
