@@ -48,7 +48,10 @@ setupVbenVxeTable({
           // 最大化
           zoom: true,
           // 刷新
-          refresh: true,
+          refresh: {
+            // 默认为reload 修改为在当前页刷新
+            code: 'query',
+          },
         },
         // 圆角按钮
         round: true,

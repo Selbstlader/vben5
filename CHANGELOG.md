@@ -16,6 +16,7 @@
 - 登录日志 漏掉了登录日志日期查询
 - 登出相关逻辑在并发(非await)情况下重复执行的问题
 - VxeTable在开启/关闭查询表单时 需要使用不同的padding
+- VxeTable表格刷新 默认为reload 修改为在当前页刷新(query)
 
 **OTHERS**
 
