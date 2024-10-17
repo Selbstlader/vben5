@@ -10,7 +10,7 @@ import {
   listToTree,
 } from '@vben/utils';
 
-import { useVbenForm } from '#/adapter';
+import { useVbenForm } from '#/adapter/form';
 import { menuAdd, menuInfo, menuList, menuUpdate } from '#/api/system/menu';
 
 import { drawerSchema } from './data';

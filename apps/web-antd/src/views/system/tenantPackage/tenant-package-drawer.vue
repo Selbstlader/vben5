@@ -5,7 +5,7 @@ import { useVbenDrawer } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 import { cloneDeep, eachTree, listToTree } from '@vben/utils';
 
-import { useVbenForm } from '#/adapter';
+import { useVbenForm } from '#/adapter/form';
 import { menuList, tenantPackageMenuTreeSelect } from '#/api/system/menu';
 import {
   packageAdd,

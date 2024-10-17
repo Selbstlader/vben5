@@ -4,7 +4,7 @@ import { ref } from 'vue';
 import { useVbenModal } from '@vben/common-ui';
 import { cloneDeep } from '@vben/utils';
 
-import { useVbenForm } from '#/adapter';
+import { useVbenForm } from '#/adapter/form';
 import { roleDataScope, roleDeptTree, roleInfo } from '#/api/system/role';
 import { TreeSelectPanel } from '#/components/tree';
 

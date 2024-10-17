@@ -1,8 +1,10 @@
+import type { VxeGridProps } from '#/adapter/vxe-table';
+
 import { DictEnum } from '@vben/constants';
 
 import { Tag } from 'ant-design-vue';
 
-import { type FormSchemaGetter, type VxeGridProps, z } from '#/adapter';
+import { type FormSchemaGetter, z } from '#/adapter/form';
 import { getDictOptions } from '#/utils/dict';
 
 const accessPolicyOptions = [

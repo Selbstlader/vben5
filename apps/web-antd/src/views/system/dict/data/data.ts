@@ -1,9 +1,10 @@
-import type { FormSchemaGetter, VxeGridProps } from '#/adapter';
+import type { VxeGridProps } from '#/adapter/vxe-table';
 
 import { reactive } from 'vue';
 
 import { getPopupContainer } from '@vben/utils';
 
+import { type FormSchemaGetter } from '#/adapter/form';
 import { dictOptionSelectList } from '#/api/system/dict/dict-type';
 import { renderDictTag } from '#/utils/render';
 

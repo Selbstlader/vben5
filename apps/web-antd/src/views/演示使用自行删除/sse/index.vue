@@ -3,7 +3,7 @@ import { Page, useVbenModal } from '@vben/common-ui';
 
 import { Space } from 'ant-design-vue';
 
-import { useVbenVxeGrid, type VxeGridProps } from '#/adapter';
+import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
 
 import { sseList } from './api';
 import sendMsgModal from './send-msg-modal.vue';

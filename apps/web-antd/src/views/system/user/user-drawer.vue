@@ -9,7 +9,7 @@ import { addFullName, cloneDeep, getPopupContainer } from '@vben/utils';
 
 import { Tag } from 'ant-design-vue';
 
-import { useVbenForm } from '#/adapter';
+import { useVbenForm } from '#/adapter/form';
 import { configInfoByKey } from '#/api/system/config';
 import { postOptionSelect } from '#/api/system/post';
 import {

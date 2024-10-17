@@ -14,7 +14,7 @@ import {
 import { QuestionCircleOutlined } from '@ant-design/icons-vue';
 import { Popconfirm, Space, Tooltip } from 'ant-design-vue';
 
-import { useVbenVxeGrid, type VxeGridProps } from '#/adapter';
+import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
 import { deptList, deptRemove } from '#/api/system/dept';
 
 import { columns, querySchema } from './data';

@@ -12,7 +12,7 @@ import { Modal, Space } from 'ant-design-vue';
 import dayjs from 'dayjs';
 import { isEmpty } from 'lodash-es';
 
-import { useVbenVxeGrid, type VxeGridProps } from '#/adapter';
+import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
 import {
   operLogClean,
   operLogDelete,

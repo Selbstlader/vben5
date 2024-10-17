@@ -5,7 +5,7 @@ import { useVbenModal } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 import { cloneDeep, listToTree } from '@vben/utils';
 
-import { useVbenForm } from '#/adapter';
+import { useVbenForm } from '#/adapter/form';
 
 import { treeAdd, treeInfo, treeList, treeUpdate } from './api';
 import { modalSchema } from './data';

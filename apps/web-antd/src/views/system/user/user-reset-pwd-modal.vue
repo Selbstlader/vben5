@@ -3,7 +3,7 @@ import type { Recordable } from '@vben/types';
 
 import { useVbenModal, z } from '@vben/common-ui';
 
-import { useVbenForm } from '#/adapter';
+import { useVbenForm } from '#/adapter/form';
 import { userResetPassword } from '#/api/system/user';
 import { Description, useDescription } from '#/components/description';
 

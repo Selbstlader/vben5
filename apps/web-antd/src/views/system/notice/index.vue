@@ -9,7 +9,7 @@ import { getPopupContainer } from '@vben/utils';
 import { Modal, Popconfirm, Space } from 'ant-design-vue';
 import dayjs from 'dayjs';
 
-import { useVbenVxeGrid, type VxeGridProps } from '#/adapter';
+import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
 import { noticeList, noticeRemove } from '#/api/system/notice';
 
 import { columns, querySchema } from './data';

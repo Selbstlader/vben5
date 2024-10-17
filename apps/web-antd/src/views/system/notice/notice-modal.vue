@@ -5,7 +5,7 @@ import { useVbenModal } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 import { cloneDeep } from '@vben/utils';
 
-import { useVbenForm } from '#/adapter';
+import { useVbenForm } from '#/adapter/form';
 import { noticeAdd, noticeInfo, noticeUpdate } from '#/api/system/notice';
 
 import { modalSchema } from './data';

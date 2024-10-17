@@ -9,7 +9,7 @@ import { Page, useVbenModal, type VbenFormProps } from '@vben/common-ui';
 import { message, Modal, Popconfirm, Space } from 'ant-design-vue';
 import dayjs from 'dayjs';
 
-import { useVbenVxeGrid, type VxeGridProps } from '#/adapter';
+import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
 import {
   batchGenCode,
   generatedList,

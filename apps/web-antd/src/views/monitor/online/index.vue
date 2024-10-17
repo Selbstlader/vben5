@@ -6,7 +6,7 @@ import { getPopupContainer } from '@vben/utils';
 
 import { Popconfirm } from 'ant-design-vue';
 
-import { useVbenVxeGrid, type VxeGridProps } from '#/adapter';
+import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
 import { forceLogout, onlineList } from '#/api/monitor/online';
 
 import { columns, querySchema } from './data';

@@ -15,7 +15,7 @@ import {
 
 import { Popconfirm, Space, Tooltip } from 'ant-design-vue';
 
-import { useVbenVxeGrid, type VxeGridProps } from '#/adapter';
+import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
 import { menuList, menuRemove } from '#/api/system/menu';
 
 import { columns, querySchema } from './data';

@@ -9,7 +9,7 @@ import { getPopupContainer } from '@vben/utils';
 import { Modal, Popconfirm, Space } from 'ant-design-vue';
 import dayjs from 'dayjs';
 
-import { useVbenVxeGrid, type VxeGridProps } from '#/adapter';
+import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
 import { postExport, postList, postRemove } from '#/api/system/post';
 import { downloadExcel } from '#/utils/file/download';
 import DeptTree from '#/views/system/user/dept-tree.vue';

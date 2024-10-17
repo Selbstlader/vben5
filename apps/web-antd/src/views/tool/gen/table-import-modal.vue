@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useVbenModal, type VbenFormProps } from '@vben/common-ui';
 
-import { useVbenVxeGrid, type VxeGridProps } from '#/adapter';
+import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
 import {
   getDataSourceNames,
   importTable,

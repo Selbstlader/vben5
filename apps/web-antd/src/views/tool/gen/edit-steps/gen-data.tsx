@@ -1,6 +1,6 @@
 import type { Recordable } from '@vben/types';
 
-import type { VxeGridProps } from '#/adapter';
+import type { VxeGridProps } from '#/adapter/vxe-table';
 
 import { reactive } from 'vue';
 

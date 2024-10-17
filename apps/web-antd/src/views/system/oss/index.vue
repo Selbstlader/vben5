@@ -20,7 +20,7 @@ import {
 import dayjs from 'dayjs';
 import { isEmpty } from 'lodash-es';
 
-import { useVbenVxeGrid, type VxeGridProps } from '#/adapter';
+import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
 import { configInfoByKey } from '#/api/system/config';
 import { ossDownload, ossList, ossRemove } from '#/api/system/oss';
 import { downloadByData } from '#/utils/file/download';

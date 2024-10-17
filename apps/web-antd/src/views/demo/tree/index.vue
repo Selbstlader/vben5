@@ -8,7 +8,7 @@ import { getPopupContainer, listToTree } from '@vben/utils';
 
 import { Popconfirm, Space } from 'ant-design-vue';
 
-import { useVbenVxeGrid, type VxeGridProps } from '#/adapter';
+import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
 
 import { treeList, treeRemove } from './api';
 import { columns, querySchema } from './data';
