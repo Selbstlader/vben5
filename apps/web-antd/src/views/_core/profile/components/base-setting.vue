@@ -10,7 +10,7 @@ import { useUserStore } from '@vben/stores';
 
 import { pick } from 'lodash-es';
 
-import { useVbenForm, z } from '#/adapter';
+import { useVbenForm, z } from '#/adapter/form';
 import { userProfileUpdate } from '#/api/system/profile';
 import { useAuthStore } from '#/store';
 import { getDictOptions } from '#/utils/dict';
@@ -74,7 +74,7 @@ const [BasicForm, formApi] = useVbenForm({
     },
   ],
   submitButtonOptions: {
-    text: '更新信息',
+    content: '更新信息',
   },
 });
 

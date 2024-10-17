@@ -2,13 +2,9 @@
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
 
-import { useVbenDrawer } from '@vben/common-ui';
+import { useVbenDrawer, type VbenFormProps } from '@vben/common-ui';
 
-import {
-  useVbenVxeGrid,
-  type VbenFormProps,
-  type VxeGridProps,
-} from '#/adapter';
+import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
 import { roleSelectAll, roleUnallocatedList } from '#/api/system/role';
 
 import { columns, querySchema } from './data';
