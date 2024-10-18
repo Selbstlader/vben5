@@ -4,7 +4,11 @@ import { useRoute } from 'vue-router';
 
 import { useVbenDrawer, type VbenFormProps } from '@vben/common-ui';
 
-import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
+import {
+  tableCheckboxEvent,
+  useVbenVxeGrid,
+  type VxeGridProps,
+} from '#/adapter/vxe-table';
 import { roleSelectAll, roleUnallocatedList } from '#/api/system/role';
 
 import { columns, querySchema } from './data';
@@ -63,12 +67,8 @@ const [BasicTable, tableApi] = useVbenVxeGrid({
   formOptions,
   gridOptions,
   gridEvents: {
-    checkboxChange: (e: any) => {
-      checked.value = e.records.length > 0;
-    },
-    checkboxAll: (e: any) => {
-      checked.value = e.records.length > 0;
-    },
+    checkboxChange: tableCheckboxEvent(checked),
+    checkboxAll: tableCheckboxEvent(checked),
   },
 });
 

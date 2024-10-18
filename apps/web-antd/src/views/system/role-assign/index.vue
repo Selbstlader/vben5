@@ -9,7 +9,11 @@ import { getPopupContainer } from '@vben/utils';
 
 import { Modal, Popconfirm, Space } from 'ant-design-vue';
 
-import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
+import {
+  tableCheckboxEvent,
+  useVbenVxeGrid,
+  type VxeGridProps,
+} from '#/adapter/vxe-table';
 import {
   roleAllocatedList,
   roleAuthCancel,
@@ -67,12 +71,8 @@ const [BasicTable, tableApi] = useVbenVxeGrid({
   formOptions,
   gridOptions,
   gridEvents: {
-    checkboxChange: (e: any) => {
-      checked.value = e.records.length > 0;
-    },
-    checkboxAll: (e: any) => {
-      checked.value = e.records.length > 0;
-    },
+    checkboxChange: tableCheckboxEvent(checked),
+    checkboxAll: tableCheckboxEvent(checked),
   },
 });
 

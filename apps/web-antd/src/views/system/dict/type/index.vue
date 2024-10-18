@@ -18,7 +18,11 @@ import {
 } from 'ant-design-vue';
 import dayjs from 'dayjs';
 
-import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
+import {
+  tableCheckboxEvent,
+  useVbenVxeGrid,
+  type VxeGridProps,
+} from '#/adapter/vxe-table';
 import {
   dictTypeExport,
   dictTypeList,
@@ -102,12 +106,8 @@ const [BasicTable, tableApi] = useVbenVxeGrid({
       emitter.emit('rowClick', row.dictType);
       lastDictType.value = row.dictType;
     },
-    checkboxChange: (e: any) => {
-      checked.value = e.records.length > 0;
-    },
-    checkboxAll: (e: any) => {
-      checked.value = e.records.length > 0;
-    },
+    checkboxChange: tableCheckboxEvent(checked),
+    checkboxAll: tableCheckboxEvent(checked),
   },
 });
 const [DictTypeModal, modalApi] = useVbenModal({

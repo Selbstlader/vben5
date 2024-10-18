@@ -12,7 +12,11 @@ import { Modal, Space } from 'ant-design-vue';
 import dayjs from 'dayjs';
 import { isEmpty } from 'lodash-es';
 
-import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
+import {
+  tableCheckboxEvent,
+  useVbenVxeGrid,
+  type VxeGridProps,
+} from '#/adapter/vxe-table';
 import {
   operLogClean,
   operLogDelete,
@@ -98,12 +102,8 @@ const [BasicTable, tableApi] = useVbenVxeGrid({
     sortChange: () => {
       tableApi.query();
     },
-    checkboxChange: (e: any) => {
-      checked.value = e.records.length > 0;
-    },
-    checkboxAll: (e: any) => {
-      checked.value = e.records.length > 0;
-    },
+    checkboxChange: tableCheckboxEvent(checked),
+    checkboxAll: tableCheckboxEvent(checked),
   },
 });
 

@@ -100,7 +100,6 @@ export { useVbenVxeGrid };
 export type * from '@vben/plugins/vxe-table';
 
 /**
- * 暂时没用上，先保留
  * 通用的表格复选框是否选中事件
  * @param checked 是否选中
  * @returns function

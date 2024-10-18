@@ -9,7 +9,12 @@ import { getPopupContainer } from '@vben/utils';
 import { Modal, Popconfirm, Space } from 'ant-design-vue';
 import dayjs from 'dayjs';
 
-import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
+import {
+  tableCheckboxEvent,
+  useVbenVxeGrid,
+  type VxeGridDefines,
+  type VxeGridProps,
+} from '#/adapter/vxe-table';
 import {
   loginInfoClean,
   loginInfoExport,
@@ -82,13 +87,12 @@ const [BasicTable, tableApi] = useVbenVxeGrid({
   formOptions,
   gridOptions,
   gridEvents: {
-    checkboxChange: (e: any) => {
-      checked.value = e.records.length > 0;
-      canUnlock.value = e.records.length === 1 && e.records[0]?.status === '1';
+    checkboxChange: (e: VxeGridDefines.CheckboxChangeEventParams) => {
+      const records = e.$table.getCheckboxRecords();
+      checked.value = records.length > 0;
+      canUnlock.value = records.length === 1 && records[0]?.status === '1';
     },
-    checkboxAll: (e: any) => {
-      checked.value = e.records.length > 0;
-    },
+    checkboxAll: tableCheckboxEvent(checked),
   },
 });
 
