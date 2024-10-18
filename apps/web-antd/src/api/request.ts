@@ -48,7 +48,7 @@ function createRequestClient(baseURL: string) {
     errorMessageMode: 'message',
     // 格式化提交参数时间
     formatDate: true,
-    // 是否返回原生响应头 比如：需要获取响应头时使用该属性
+    // 是否返回原生响应 比如：需要获取响应头时使用该属性
     isReturnNativeResponse: false,
     // 需要对返回数据进行处理
     isTransformResponse: true,
@@ -99,11 +99,13 @@ function createRequestClient(baseURL: string) {
        */
       const language = preferences.app.locale.replace('-', '_');
       config.headers['Accept-Language'] = language;
+      // 添加全局clientId
       config.headers.clientId = clientId;
 
       const { encrypt, formatDate, joinParamsToUrl, joinTime = true } = config;
       const params = config.params || {};
       const data = config.data || false;
+      // TODO: 这块要重构 复杂度太高了
       formatDate && data && !isString(data) && formatRequestDate(data);
       if (config.method?.toUpperCase() === 'GET') {
         if (isString(params)) {
@@ -145,7 +147,7 @@ function createRequestClient(baseURL: string) {
           }
         }
       }
-      // 全局开启 && 该请求开启 && 是post/put请求
+      // 全局开启请求加密功能 && 该请求开启 && 是post/put请求
       if (
         enableEncrypt &&
         encrypt &&
@@ -189,7 +191,7 @@ function createRequestClient(baseURL: string) {
       }
 
       const { isReturnNativeResponse, isTransformResponse } = response.config;
-      // 是否返回原生响应头 比如：需要获取响应头时使用该属性
+      // 是否返回原生响应 比如：需要获取响应时使用该属性
       if (isReturnNativeResponse) {
         return response;
       }
@@ -224,7 +226,6 @@ function createRequestClient(baseURL: string) {
         } else if (response.config.successMessageMode === 'message') {
           message.success(successMsg);
         }
-        // ruoyi-plus没有采用严格的{code, msg, data}模式
         // 如果有data 直接返回data 没有data将剩余参数(...other)封装为data返回
         // 需要考虑data为null的情况(比如查询为空)
         if (data !== undefined) {

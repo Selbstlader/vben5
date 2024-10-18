@@ -75,6 +75,7 @@ export const useNotifyStore = defineStore(
           userId: userId.value,
         });
 
+        // 需要手动置空 vue3在值相同时不会触发watch
         data.value = null;
       });
     }

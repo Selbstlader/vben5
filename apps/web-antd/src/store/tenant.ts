@@ -7,11 +7,17 @@ import {
   type TenantOption,
 } from '#/api/core/auth';
 
+/**
+ * 用于超级管理员切换租户
+ */
 export const useTenantStore = defineStore('app-tenant', () => {
+  // 是否已经选中租户
   const checked = ref(false);
+  // 是否开启租户功能
   const tenantEnable = ref(true);
   const tenantList = ref<TenantOption[]>([]);
 
+  // 初始化 获取租户信息
   async function initTenant() {
     const { tenantEnabled, voList } = await tenantListApi();
     tenantEnable.value = tenantEnabled;
