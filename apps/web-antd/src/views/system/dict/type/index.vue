@@ -4,7 +4,7 @@ import type { Recordable } from '@vben/types';
 import { computed, ref } from 'vue';
 
 import { useAccess } from '@vben/access';
-import { Page, useVbenModal, type VbenFormProps } from '@vben/common-ui';
+import { useVbenModal, type VbenFormProps } from '@vben/common-ui';
 import { getPopupContainer } from '@vben/utils';
 
 import {
@@ -184,7 +184,7 @@ const couldSyncTenantDict = computed(() => {
 </script>
 
 <template>
-  <Page :auto-content-height="true">
+  <div>
     <BasicTable>
       <template #toolbar-actions>
         <span class="pl-[7px] text-[16px]">字典类型列表</span>
@@ -260,5 +260,5 @@ const couldSyncTenantDict = computed(() => {
       </template>
     </BasicTable>
     <DictTypeModal @reload="tableApi.query()" />
-  </Page>
+  </div>
 </template>

@@ -6,17 +6,11 @@ import DictTypePanel from './type/index.vue';
 </script>
 
 <template>
-  <Page :auto-content-height="true" content-class="flex flex-col lg:flex-row">
+  <Page
+    :auto-content-height="true"
+    content-class="flex flex-col lg:flex-row gap-4"
+  >
     <DictTypePanel class="flex-1 overflow-hidden" />
     <DictDataPanel class="flex-1 overflow-hidden" />
   </Page>
 </template>
-
-<style scoped>
-/**
-TODO: ugly code
-*/
-:deep(.p-4) {
-  padding: 6px;
-}
-</style>
