@@ -103,9 +103,9 @@ interface RouteMeta {
    */
   order?: number;
   /**
-   * 路由参数 对象形式
+   * 菜单所携带的参数
    */
-  query?: Record<string, any>;
+  query?: Recordable;
   /**
    * 标题名称
    */
