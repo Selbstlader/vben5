@@ -27,7 +27,7 @@ import { downloadExcel } from '#/utils/file/download';
 import { confirmDeleteModal } from '#/utils/modal';
 
 import { columns, querySchema } from './data';
-import operationPreviewDrawer from './OperationPreviewDrawer.vue';
+import operationPreviewDrawer from './operation-preview-drawer.vue';
 
 const formOptions: VbenFormProps = {
   commonConfig: {
@@ -74,12 +74,10 @@ const gridOptions: VxeGridProps<OperationLog> = {
           ...formValues,
         };
 
-        console.log(sort);
         if (!isEmpty(sort)) {
           params.orderByColumn = sort.field;
           params.isAsc = sort.order;
         }
-        console.log(params);
         return await operLogList(params);
       },
     },
