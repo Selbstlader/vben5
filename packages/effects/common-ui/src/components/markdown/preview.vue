@@ -53,6 +53,7 @@ const content = defineModel('value', {
 
 onMounted(() => {
   vditorInstance.value = new Vditor(vditorRef.value!, {
+    mode: 'wysiwyg',
     value: content.value,
     height: props.height,
     lang: locale.value.replace('-', '_') as any,
@@ -87,7 +88,7 @@ onBeforeUnmount(() => {
 </template>
 
 <style>
-.vditor-ir pre.vditor-reset[contenteditable='false'] {
+.vditor-wysiwyg pre.vditor-reset[contenteditable='false'] {
   cursor: unset;
   opacity: 1;
 }
