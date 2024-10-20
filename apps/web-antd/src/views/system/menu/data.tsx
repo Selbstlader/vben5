@@ -73,7 +73,9 @@ export const columns: VxeGridProps['columns'] = [
         if (row?.icon === '#') {
           return '';
         }
-        return renderIcon(row.icon);
+        return (
+          <span class={'flex justify-center'}>{renderIcon(row.icon)}</span>
+        );
       },
     },
   },
