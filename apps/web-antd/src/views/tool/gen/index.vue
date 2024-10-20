@@ -29,6 +29,12 @@ import tableImportModal from './table-import-modal.vue';
 
 const formOptions: VbenFormProps = {
   schema: querySchema(),
+  commonConfig: {
+    labelWidth: 80,
+    componentProps: {
+      allowClear: true,
+    },
+  },
   wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
 };
 

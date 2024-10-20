@@ -40,6 +40,9 @@ import dictTypeModal from './dict-type-modal.vue';
 const formOptions: VbenFormProps = {
   commonConfig: {
     labelWidth: 70,
+    componentProps: {
+      allowClear: true,
+    },
   },
   schema: querySchema(),
   wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3',

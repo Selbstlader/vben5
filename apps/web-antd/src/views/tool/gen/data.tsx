@@ -8,6 +8,9 @@ export const querySchema: FormSchemaGetter = () => [
     fieldName: 'dataName',
     label: '数据源',
     defaultValue: '',
+    componentProps: {
+      allowClear: false,
+    },
   },
   {
     component: 'Input',
