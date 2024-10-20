@@ -250,7 +250,9 @@ function handleAssignRole(record: Recordable<any>) {
                 </MenuItem>
               </Menu>
             </template>
-            <a-button size="small" type="link">更多</a-button>
+            <a-button size="small" type="link">
+              {{ $t('pages.common.more') }}
+            </a-button>
           </Dropdown>
         </template>
       </template>

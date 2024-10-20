@@ -15,7 +15,7 @@ const profileRoute: RouteRecordStringComponent[] = [
     meta: {
       hideChildrenInMenu: true,
       hideInMenu: true,
-      title: $t('widgets.profile'),
+      title: $t('ui.widgets.profile'),
     },
     name: 'Profile',
     path: '/',
@@ -26,7 +26,7 @@ const profileRoute: RouteRecordStringComponent[] = [
         meta: {
           icon: 'mingcute:profile-line',
           keepAlive: true,
-          title: $t('widgets.profile'),
+          title: $t('ui.widgets.profile'),
         },
         name: 'ProfileIndex',
         path: '/profile',
@@ -147,7 +147,7 @@ export const localMenuList: RouteRecordStringComponent[] = [
           icon: 'lucide:book-open-text',
           iframeSrc: 'https://dapdap.top',
           keepAlive: true,
-          title: $t('page.vben.document'),
+          title: $t('demos.vben.document'),
         },
       },
     ],
@@ -158,7 +158,7 @@ export const localMenuList: RouteRecordStringComponent[] = [
       hideChildrenInMenu: true,
       icon: 'lucide:copyright',
       order: 9999,
-      title: $t('page.vben.about'),
+      title: $t('demos.vben.about'),
     },
     name: 'About',
     path: '/about',
@@ -166,7 +166,7 @@ export const localMenuList: RouteRecordStringComponent[] = [
       {
         component: '/_core/about/index',
         meta: {
-          title: $t('page.vben.about'),
+          title: $t('demos.vben.about'),
         },
         name: 'VbenAbout',
         path: '/vben-admin/about',

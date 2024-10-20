@@ -41,14 +41,14 @@ const menus = computed(() => {
         });
       },
       icon: BookOpenText,
-      text: $t('widgets.document'),
+      text: $t('ui.widgets.document'),
     },
     {
       handler: () => {
         router.push('/profile');
       },
       icon: ProfileIcon,
-      text: $t('widgets.profile'),
+      text: $t('ui.widgets.profile'),
     },
     {
       handler: () => {
@@ -66,7 +66,7 @@ const menus = computed(() => {
         });
       },
       icon: CircleHelp,
-      text: $t('widgets.qa'),
+      text: $t('ui.widgets.qa'),
     },
   ];
   /**
