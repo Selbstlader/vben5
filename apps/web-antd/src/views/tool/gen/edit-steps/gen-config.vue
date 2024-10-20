@@ -33,6 +33,10 @@ const gridOptions: VxeGridProps = {
   proxyConfig: {
     enabled: true,
   },
+  height: 'auto',
+  pagerConfig: {
+    enabled: false,
+  },
   data: genInfoData.value.columns,
 };
 
@@ -85,7 +89,7 @@ async function handleSubmit() {
 </script>
 
 <template>
-  <div class="flex flex-col gap-[16px] p-[12px]">
+  <div class="flex h-[calc(100vh-165px)] flex-col gap-[16px] p-[12px]">
     <BasicTable />
     <div class="flex justify-center">
       <Space>
