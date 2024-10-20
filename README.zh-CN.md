@@ -38,7 +38,7 @@ admin 账号: admin admin123
 
 ## WX Group
 
-暂不开放
+演示站 - 微信群菜单
 
 ## 文档
 
