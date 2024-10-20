@@ -70,9 +70,9 @@ const gridOptions: VxeGridProps = {
 
         // 部门树选择处理
         if (selectDeptId.value.length === 1) {
-          formValues.deptId = selectDeptId.value[0];
+          formValues.belongDeptId = selectDeptId.value[0];
         } else {
-          Reflect.deleteProperty(formValues, 'deptId');
+          Reflect.deleteProperty(formValues, 'belongDeptId');
         }
 
         return await postList({
