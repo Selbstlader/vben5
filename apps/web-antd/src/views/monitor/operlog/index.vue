@@ -125,6 +125,7 @@ function handleClear() {
   confirmDeleteModal({
     onValidated: async () => {
       await operLogClean();
+      await tableApi.reload();
     },
   });
 }

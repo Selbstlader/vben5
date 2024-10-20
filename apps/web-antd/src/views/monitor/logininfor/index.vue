@@ -109,6 +109,7 @@ function handleClear() {
   confirmDeleteModal({
     onValidated: async () => {
       await loginInfoClean();
+      await tableApi.reload();
     },
   });
 }
