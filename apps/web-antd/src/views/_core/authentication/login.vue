@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { VbenFormSchema } from '@vben/common-ui';
+import type { LoginAndRegisterParams, VbenFormSchema } from '@vben/common-ui';
 
 import { computed, onMounted, ref, useTemplateRef } from 'vue';
 
@@ -125,15 +125,7 @@ const formSchema = computed((): VbenFormSchema[] => {
   ];
 });
 
-interface LoginForm {
-  code?: string;
-  grantType: string;
-  password: string;
-  tenantId: string;
-  username: string;
-}
-
-async function handleAccountLogin(values: LoginForm) {
+async function handleAccountLogin(values: LoginAndRegisterParams) {
   try {
     const requestParam: any = omit(values, ['code']);
     // 验证码

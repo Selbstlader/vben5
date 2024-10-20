@@ -112,6 +112,7 @@ async function handleLogin(values: LoginCodeParams) {
       smsCode: values.code,
       grantType: 'sms',
     };
+    console.log('login params', requestParams);
     await authStore.authLogin(requestParams);
   } catch (error) {
     console.error(error);
