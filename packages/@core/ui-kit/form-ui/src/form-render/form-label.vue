@@ -16,7 +16,10 @@ const props = defineProps<Props>();
     <span v-if="required" class="text-destructive mr-[2px]">*</span>
     <slot></slot>
     <VbenHelpTooltip v-if="help" trigger-class="size-3.5 ml-1">
-      {{ help }}
+      <!-- 可通过\n换行 -->
+      <span class="whitespace-pre-line">
+        {{ help }}
+      </span>
     </VbenHelpTooltip>
   </FormLabel>
 </template>

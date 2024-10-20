@@ -242,7 +242,7 @@ export const drawerSchema: FormSchemaGetter = () => [
       triggerFields: ['isFrame', 'menuType'],
     },
     fieldName: 'path',
-    help: `路由地址不带/, 如: menu, user 链接为http(s)://开头 链接默认使用内部iframe打开, 可通过{是否外链}控制打开方式`,
+    help: `路由地址不带/, 如: menu, user\n 链接为http(s)://开头\n 链接默认使用内部iframe打开, 可通过{是否外链}控制打开方式`,
     label: '路由地址',
   },
   {
@@ -290,7 +290,7 @@ export const drawerSchema: FormSchemaGetter = () => [
       triggerFields: ['menuType'],
     },
     fieldName: 'isFrame',
-    help: '外链为http(s)://开头 选择否时, 使用iframe从内部打开页面, 否则新窗口打开',
+    help: '外链为http(s)://开头\n 选择否时, 使用iframe从内部打开页面, 否则新窗口打开',
     label: '是否外链',
   },
   {
@@ -335,7 +335,7 @@ export const drawerSchema: FormSchemaGetter = () => [
       triggerFields: ['menuType'],
     },
     fieldName: 'perms',
-    help: `控制器中定义的权限字符, 如: @SaCheckPermission("system:user:import")`,
+    help: `控制器中定义的权限字符\n 如: @SaCheckPermission("system:user:import")`,
     label: '权限标识',
   },
   {
@@ -351,7 +351,7 @@ export const drawerSchema: FormSchemaGetter = () => [
       triggerFields: ['menuType'],
     },
     fieldName: 'queryParam',
-    help: 'vue-router中的query属性, 如{"name": "xxx", "age": 16}',
+    help: 'vue-router中的query属性\n 如{"name": "xxx", "age": 16}',
     label: '路由参数',
   },
   {
