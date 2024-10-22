@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Icon } from '@vben/icons';
+import { IconifyIcon } from '@vben/icons';
 import { buildUUID } from '@vben/utils';
 
 import { Input } from 'ant-design-vue';
@@ -38,7 +38,7 @@ defineExpose({ refreshSecret });
     <template v-if="!disabled" #addonAfter>
       <a-button type="primary" @click="refreshSecret">
         <div class="flex items-center gap-[4px]">
-          <Icon icon="charm:refresh" />
+          <IconifyIcon icon="charm:refresh" />
           <span>随机生成</span>
         </div>
       </a-button>

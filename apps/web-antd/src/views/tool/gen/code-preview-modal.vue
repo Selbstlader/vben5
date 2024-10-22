@@ -9,7 +9,7 @@ import {
   type LanguageSupport,
   useVbenModal,
 } from '@vben/common-ui';
-import { Icon } from '@vben/icons';
+import { IconifyIcon } from '@vben/icons';
 
 import { useClipboard } from '@vueuse/core';
 import { Skeleton, Tree } from 'ant-design-vue';
@@ -172,7 +172,7 @@ const { copy } = useClipboard({ legacy: true });
         >
           <template #title="{ title, icon }">
             <div class="flex items-center gap-[16px]">
-              <Icon :icon="icon" />
+              <IconifyIcon :icon="icon" />
               <span>{{ title }}</span>
             </div>
           </template>
