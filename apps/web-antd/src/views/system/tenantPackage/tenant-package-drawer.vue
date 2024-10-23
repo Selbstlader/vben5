@@ -5,6 +5,8 @@ import { useVbenDrawer } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 import { cloneDeep, eachTree, listToTree } from '@vben/utils';
 
+import { omit } from 'lodash-es';
+
 import { useVbenForm } from '#/adapter/form';
 import { menuList, tenantPackageMenuTreeSelect } from '#/api/system/menu';
 import {
@@ -66,7 +68,9 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
     isUpdate.value = !!id;
     if (isUpdate.value && id) {
       const record = await packageInfo(id);
-      await formApi.setValues(record);
+      // 需要排除menuIds menuIds为string
+      // 通过setupMenuTreeSelect设置
+      await formApi.setValues(omit(record, ['menuIds']));
     }
     /**
      * 加载菜单树和已勾选菜单
