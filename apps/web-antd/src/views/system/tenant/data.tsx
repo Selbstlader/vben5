@@ -188,6 +188,7 @@ export const drawerSchema: FormSchemaGetter = () => [
       format: 'YYYY-MM-DD HH:mm:ss',
       showTime: true,
       valueFormat: 'YYYY-MM-DD HH:mm:ss',
+      getPopupContainer,
     },
     defaultValue: defaultExpireTime,
     fieldName: 'expireTime',
