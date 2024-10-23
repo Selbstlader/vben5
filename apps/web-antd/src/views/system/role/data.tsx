@@ -139,6 +139,15 @@ export const drawerSchema: FormSchemaGetter = () => [
     rules: 'required',
   },
   {
+    component: 'Radio',
+    dependencies: {
+      show: () => false,
+      triggerFields: [''],
+    },
+    fieldName: 'menuCheckStrictly',
+    label: '菜单权限',
+  },
+  {
     component: 'Input',
     defaultValue: [],
     fieldName: 'menuIds',

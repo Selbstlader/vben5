@@ -18,6 +18,7 @@
 - VxeTable在开启/关闭查询表单时 需要使用不同的padding
 - VxeTable表格刷新 默认为reload 修改为在当前页刷新(query)
 - 岗位管理 部门参数错误
+- 角色管理 菜单分配 节点独立下的回显及提交问题
 
 **OTHERS**
 
