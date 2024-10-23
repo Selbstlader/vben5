@@ -131,6 +131,7 @@ export const drawerSchema: FormSchemaGetter = () => [
     componentProps: {
       allowClear: false,
       options: getDictOptions(DictEnum.SYS_NORMAL_DISABLE),
+      getPopupContainer,
     },
     defaultValue: '0',
     fieldName: 'status',
