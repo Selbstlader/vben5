@@ -61,6 +61,24 @@ function genRoleOptionlabel(role: Role) {
 }
 
 /**
+ * 岗位的加载
+ */
+async function setupPostOptions(deptId: number | string) {
+  const postListResp = await postOptionSelect(deptId);
+  const options = postListResp.map((item) => ({
+    label: item.postName,
+    value: item.postId,
+  }));
+  const placeholder = options.length > 0 ? '请选择' : '该部门下暂无岗位';
+  formApi.updateSchema([
+    {
+      componentProps: { options, placeholder },
+      fieldName: 'postIds',
+    },
+  ]);
+}
+
+/**
  * 初始化部门选择
  */
 async function setupDeptSelect() {
@@ -80,22 +98,7 @@ async function setupDeptSelect() {
         getPopupContainer,
         async onSelect(deptId: number | string) {
           /** 根据部门ID加载岗位 */
-          const postListResp = await postOptionSelect(deptId);
-          const options = postListResp.map((item) => ({
-            label: item.postName,
-            value: item.postId,
-          }));
-          const placeholder =
-            options.length > 0 ? '请选择' : '该部门下暂无岗位';
-          /**
-           * TODO: 可以考虑加上post编码
-           */
-          formApi.updateSchema([
-            {
-              componentProps: { options, placeholder },
-              fieldName: 'postIds',
-            },
-          ]);
+          await setupPostOptions(deptId);
           /** 变化后需要重新选择岗位 */
           formModel.postIds = [];
         },
@@ -185,6 +188,8 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
         // 添加角色和岗位
         formApi.setFieldValue('postIds', postIds),
         formApi.setFieldValue('roleIds', roleIds),
+        // 更新时不会触发onSelect 需要手动调用
+        setupPostOptions(user.deptId),
       ]);
     }
     drawerApi.drawerLoading(false);
