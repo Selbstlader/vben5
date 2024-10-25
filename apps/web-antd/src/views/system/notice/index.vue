@@ -123,10 +123,7 @@ function handleMultiDelete() {
 
 <template>
   <Page :auto-content-height="true">
-    <BasicTable>
-      <template #toolbar-actions>
-        <span class="pl-[7px] text-[16px]">通知公告列表</span>
-      </template>
+    <BasicTable table-title="通知公告列表">
       <template #toolbar-tools>
         <Space>
           <a-button

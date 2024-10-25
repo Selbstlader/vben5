@@ -11,8 +11,7 @@ import {
   removeEmptyChildren,
 } from '@vben/utils';
 
-import { QuestionCircleOutlined } from '@ant-design/icons-vue';
-import { Popconfirm, Space, Tooltip } from 'ant-design-vue';
+import { Popconfirm, Space } from 'ant-design-vue';
 
 import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
 import { deptList, deptRemove } from '#/api/system/dept';
@@ -133,15 +132,7 @@ function setExpandOrCollapse(expand: boolean) {
 
 <template>
   <Page :auto-content-height="true">
-    <BasicTable>
-      <template #toolbar-actions>
-        <div class="flex items-center gap-[6px]">
-          <span class="pl-[7px] text-[16px]">部门列表</span>
-          <Tooltip title="提示：双击展开/收起子菜单">
-            <QuestionCircleOutlined class="text-center" />
-          </Tooltip>
-        </div>
-      </template>
+    <BasicTable table-title="部门列表" table-title-help="双击展开/收起子菜单">
       <template #toolbar-tools>
         <Space>
           <a-button @click="setExpandOrCollapse(false)">

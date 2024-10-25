@@ -200,10 +200,7 @@ function handleResetPwd(record: Recordable<any>) {
         class="w-[260px]"
         @select="() => tableApi.query()"
       />
-      <BasicTable class="flex-1 overflow-hidden">
-        <template #toolbar-actions>
-          <span class="pl-[7px] text-[16px]">用户列表</span>
-        </template>
+      <BasicTable class="flex-1 overflow-hidden" table-title="用户列表">
         <template #toolbar-tools>
           <Space>
             <a-button

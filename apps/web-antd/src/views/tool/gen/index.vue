@@ -199,10 +199,7 @@ function handleImport() {
 
 <template>
   <Page :auto-content-height="true">
-    <BasicTable>
-      <template #toolbar-actions>
-        <span class="pl-[7px] text-[16px]">代码生成列表</span>
-      </template>
+    <BasicTable table-title="代码生成列表">
       <template #toolbar-tools>
         <a
           class="text-primary mr-2"

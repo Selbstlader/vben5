@@ -13,7 +13,7 @@ import {
   removeEmptyChildren,
 } from '@vben/utils';
 
-import { Popconfirm, Space, Tooltip } from 'ant-design-vue';
+import { Popconfirm, Space } from 'ant-design-vue';
 
 import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
 import { menuList, menuRemove } from '#/api/system/menu';
@@ -24,7 +24,6 @@ import menuDrawer from './menu-drawer.vue';
 /**
  * 不要问为什么有两个根节点 v-if会控制只会渲染一个
  */
-import { QuestionCircleOutlined } from '@ant-design/icons-vue';
 
 const formOptions: VbenFormProps = {
   commonConfig: {
@@ -139,15 +138,7 @@ const isAdmin = computed(() => {
 
 <template>
   <Page v-if="isAdmin" :auto-content-height="true">
-    <BasicTable>
-      <template #toolbar-actions>
-        <div class="flex items-center gap-[6px]">
-          <span class="pl-[7px] text-[16px]">菜单列表</span>
-          <Tooltip title="提示：双击展开/收起子菜单">
-            <QuestionCircleOutlined class="text-center" />
-          </Tooltip>
-        </div>
-      </template>
+    <BasicTable table-title="菜单列表" table-title-help="双击展开/收起子菜单">
       <template #toolbar-tools>
         <Space>
           <a-button @click="setExpandOrCollapse(false)">

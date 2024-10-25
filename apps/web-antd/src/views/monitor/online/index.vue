@@ -55,10 +55,7 @@ async function handleForceOffline(row: Recordable<any>) {
 
 <template>
   <Page :auto-content-height="true">
-    <BasicTable>
-      <template #toolbar-actions>
-        <span class="pl-[7px] text-[16px]">在线用户列表</span>
-      </template>
+    <BasicTable table-title="在线用户列表">
       <template #action="{ row }">
         <Popconfirm
           :get-popup-container="getPopupContainer"

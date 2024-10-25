@@ -188,10 +188,7 @@ const couldSyncTenantDict = computed(() => {
 
 <template>
   <div>
-    <BasicTable>
-      <template #toolbar-actions>
-        <span class="pl-[7px] text-[16px]">字典类型列表</span>
-      </template>
+    <BasicTable table-title="字典类型列表">
       <template #toolbar-tools>
         <Space>
           <Dropdown>

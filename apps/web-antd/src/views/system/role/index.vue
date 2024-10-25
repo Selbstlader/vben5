@@ -163,10 +163,7 @@ function handleAssignRole(record: Recordable<any>) {
 
 <template>
   <Page :auto-content-height="true">
-    <BasicTable>
-      <template #toolbar-actions>
-        <span class="pl-[7px] text-[16px]">角色列表</span>
-      </template>
+    <BasicTable table-title="角色列表">
       <template #toolbar-tools>
         <Space>
           <a-button

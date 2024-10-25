@@ -153,10 +153,7 @@ async function handleUnlock() {
 
 <template>
   <Page auto-content-height>
-    <BasicTable>
-      <template #toolbar-actions>
-        <span class="pl-[7px] text-[16px]">登录日志列表</span>
-      </template>
+    <BasicTable table-title="登录日志列表">
       <template #toolbar-tools>
         <Space>
           <a-button

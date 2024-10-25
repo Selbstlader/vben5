@@ -131,10 +131,7 @@ async function handleRefreshCache() {
 
 <template>
   <Page :auto-content-height="true">
-    <BasicTable>
-      <template #toolbar-actions>
-        <span class="pl-[7px] text-[16px]">参数列表</span>
-      </template>
+    <BasicTable table-title="参数列表">
       <template #toolbar-tools>
         <Space>
           <a-button @click="handleRefreshCache"> 刷新缓存 </a-button>

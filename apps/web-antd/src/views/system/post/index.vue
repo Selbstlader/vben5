@@ -139,16 +139,13 @@ function handleMultiDelete() {
 </script>
 
 <template>
-  <Page :auto-content-height="true" content-class="flex gap-[8px]">
+  <Page :auto-content-height="true" content-class="flex gap-[8px] w-full">
     <DeptTree
       v-model:select-dept-id="selectDeptId"
       class="w-[260px]"
       @select="() => tableApi.query()"
     />
-    <BasicTable class="flex-1 overflow-hidden">
-      <template #toolbar-actions>
-        <span class="pl-[7px] text-[16px]">岗位列表</span>
-      </template>
+    <BasicTable class="flex-1 overflow-hidden" table-title="岗位列表">
       <template #toolbar-tools>
         <Space>
           <a-button

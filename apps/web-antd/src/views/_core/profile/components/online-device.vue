@@ -34,10 +34,7 @@ async function handleForceOffline(row: Recordable<any>) {
 
 <template>
   <div>
-    <BasicTable>
-      <template #toolbar-actions>
-        <span class="pl-[7px] text-[16px]">我的在线设备</span>
-      </template>
+    <BasicTable table-title="我的在线设备">
       <template #action="{ row }">
         <Popconfirm
           :title="`确认强制下线[${row.userName}]?`"

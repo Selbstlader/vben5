@@ -167,10 +167,7 @@ const [FileUploadModal, fileUploadApi] = useVbenModal({
 
 <template>
   <Page :auto-content-height="true">
-    <BasicTable>
-      <template #toolbar-actions>
-        <span class="pl-[7px] text-[16px]">文件列表</span>
-      </template>
+    <BasicTable table-title="文件列表">
       <template #toolbar-tools>
         <Space>
           <Tooltip title="预览图片">

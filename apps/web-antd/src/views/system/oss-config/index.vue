@@ -131,10 +131,7 @@ const { hasAccessByCodes } = useAccess();
 
 <template>
   <Page :auto-content-height="true">
-    <BasicTable>
-      <template #toolbar-actions>
-        <span class="pl-[7px] text-[16px]">oss配置列表</span>
-      </template>
+    <BasicTable table-title="oss配置列表">
       <template #toolbar-tools>
         <Space>
           <a-button

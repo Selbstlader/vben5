@@ -155,10 +155,7 @@ const isSuperAdmin = computed(() => {
 
 <template>
   <Page v-if="isSuperAdmin" :auto-content-height="true">
-    <BasicTable>
-      <template #toolbar-actions>
-        <span class="pl-[7px] text-[16px]">租户列表</span>
-      </template>
+    <BasicTable table-title="租户列表">
       <template #toolbar-tools>
         <Space>
           <a-button
