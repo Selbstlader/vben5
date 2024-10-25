@@ -2,9 +2,11 @@
 
 ## 提示
 
-该仓库使用vben最新版本v5开发, 老版本v2地址 [前往](https://gitee.com/dapppp/ruoyi-plus-vben)
+该仓库使用vben最新版本v5开发, ~~老版本v2地址(不维护)~~ [前往](https://gitee.com/dapppp/ruoyi-plus-vben)
 
 v5版本采用分仓(包)目录结构, 具体开发路径为: `根目录/apps/web-antd`
+
+目前对应后端版本: **5.2.3/2.2.3**
 
 ## 进度
 
