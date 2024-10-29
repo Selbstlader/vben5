@@ -184,8 +184,8 @@ export const drawerSchema: FormSchemaGetter = () => [
     componentProps: {
       getPopupContainer,
       mode: 'multiple',
-      optionFilterProp: 'label',
-      optionLabelProp: 'label',
+      optionFilterProp: 'title',
+      optionLabelProp: 'title',
     },
     fieldName: 'roleIds',
     label: '角色',
