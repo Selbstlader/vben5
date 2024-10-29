@@ -1,6 +1,6 @@
 import type { DeptResp, Role } from './model';
 
-import type { ID, IDS, PageQuery } from '#/api/common';
+import type { ID, IDS, PageQuery, PageResult } from '#/api/common';
 
 import { commonExport } from '#/api/helper';
 import { requestClient } from '#/api/request';
@@ -21,7 +21,7 @@ enum Api {
 }
 
 export function roleList(params?: PageQuery) {
-  return requestClient.get<Role[]>(Api.roleList, { params });
+  return requestClient.get<PageResult<Role>>(Api.roleList, { params });
 }
 
 export function roleExport(data: any) {
