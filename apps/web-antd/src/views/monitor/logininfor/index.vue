@@ -189,7 +189,7 @@ async function handleUnlock() {
             v-access:code="['monitor:logininfor:unlock']"
             @click="handleUnlock"
           >
-            解锁
+            {{ $t('pages.common.unlock') }}
           </a-button>
         </Space>
       </template>
@@ -209,7 +209,7 @@ async function handleUnlock() {
               v-access:code="['monitor:logininfor:remove']"
               @click.stop=""
             >
-              删除
+              {{ $t('pages.common.delete') }}
             </ghost-button>
           </Popconfirm>
         </Space>
