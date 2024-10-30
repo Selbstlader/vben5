@@ -152,7 +152,6 @@ const initOptions = computed((): InitOptions => {
     image_caption: true,
     importcss_append: true,
     language: langName.value,
-    license_key: 'gpl',
     link_title: false,
     menubar: 'file edit view insert format tools table help',
     noneditable_class: 'mceNonEditable',
@@ -345,6 +344,7 @@ function handleDone(name: string, url: string) {
       :init="initOptions"
       :style="{ visibility: 'hidden' }"
       :tinymce-script-src="tinymceScriptSrc"
+      license-key="gpl"
     />
     <slot v-else></slot>
   </div>
