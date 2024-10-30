@@ -70,8 +70,8 @@ const [CategoryModal, modalApi] = useVbenModal({
   connectedComponent: categoryModal,
 });
 
-function handleAdd() {
-  modalApi.setData({});
+function handleAdd(row?: Recordable<any>) {
+  modalApi.setData({ parentId: row?.id });
   modalApi.open();
 }
 
@@ -121,6 +121,12 @@ function collapseAll() {
             @click.stop="handleEdit(row)"
           >
             {{ $t('pages.common.edit') }}
+          </ghost-button>
+          <ghost-button
+            v-access:code="['workflow:category:edit']"
+            @click.stop="handleAdd(row)"
+          >
+            {{ $t('pages.common.add') }}
           </ghost-button>
           <Popconfirm
             :get-popup-container="getPopupContainer"

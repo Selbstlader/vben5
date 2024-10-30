@@ -3,7 +3,7 @@ import { computed, ref } from 'vue';
 
 import { useVbenModal } from '@vben/common-ui';
 import { $t } from '@vben/locales';
-import { cloneDeep, listToTree } from '@vben/utils';
+import { cloneDeep, getPopupContainer, listToTree } from '@vben/utils';
 
 import { useVbenForm } from '#/adapter/form';
 import {
@@ -59,6 +59,7 @@ async function setupCategorySelect() {
         treeLine: { showLeafIcon: false },
         fieldNames: { label: 'categoryName', value: 'id' },
         treeDefaultExpandAll: true,
+        getPopupContainer,
       },
     },
   ]);
@@ -74,12 +75,18 @@ const [BasicModal, modalApi] = useVbenModal({
     }
     modalApi.modalLoading(true);
 
-    const { id } = modalApi.getData() as { id?: number | string };
+    const { id, parentId } = modalApi.getData() as {
+      id?: number | string;
+      parentId?: number | string;
+    };
     isUpdate.value = !!id;
 
     if (isUpdate.value && id) {
       const record = await categoryInfo(id);
       await formApi.setValues(record);
+    }
+    if (parentId) {
+      await formApi.setValues({ parentId });
     }
     await setupCategorySelect();
 
