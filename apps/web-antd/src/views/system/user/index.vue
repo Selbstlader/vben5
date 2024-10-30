@@ -3,6 +3,7 @@ import type { Recordable } from '@vben/types';
 
 import { ref } from 'vue';
 
+import { useAccess } from '@vben/access';
 import {
   Page,
   useVbenDrawer,
@@ -190,6 +191,8 @@ function handleResetPwd(record: Recordable<any>) {
   userResetPwdModalApi.setData({ record });
   userResetPwdModalApi.open();
 }
+
+const { hasAccessByCodes } = useAccess();
 </script>
 
 <template>
@@ -247,7 +250,9 @@ function handleResetPwd(record: Recordable<any>) {
           <TableSwitch
             v-model="row.status"
             :api="() => userStatusChange(row)"
-            :disabled="row.userId === 1"
+            :disabled="
+              row.userId === 1 || !hasAccessByCodes(['system:user:edit'])
+            "
             :reload="() => tableApi.query()"
           />
         </template>
