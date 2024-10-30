@@ -284,9 +284,11 @@ function handleResetPwd(record: Recordable<any>) {
                   <MenuItem key="1" @click="handleUserInfo(row)">
                     用户信息
                   </MenuItem>
-                  <MenuItem key="2" @click="handleResetPwd(row)">
-                    重置密码
-                  </MenuItem>
+                  <span v-access:code="['system:user:resetPwd']">
+                    <MenuItem key="2" @click="handleResetPwd(row)">
+                      重置密码
+                    </MenuItem>
+                  </span>
                 </Menu>
               </template>
               <a-button size="small" type="link">
