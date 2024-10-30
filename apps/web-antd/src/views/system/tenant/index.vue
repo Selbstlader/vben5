@@ -210,7 +210,10 @@ const isSuperAdmin = computed(() => {
             placement="left"
             @confirm="handleSync(row)"
           >
-            <ghost-button v-access:code="['system:tenant:edit']">
+            <ghost-button
+              class="btn-success"
+              v-access:code="['system:tenant:edit']"
+            >
               {{ $t('pages.common.sync') }}
             </ghost-button>
           </Popconfirm>

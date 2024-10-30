@@ -159,7 +159,7 @@ function setExpandOrCollapse(expand: boolean) {
             {{ $t('pages.common.edit') }}
           </ghost-button>
           <ghost-button
-            class="btn-add"
+            class="btn-success"
             v-access:code="['system:dept:add']"
             @click="handleSubAdd(row)"
           >
@@ -185,15 +185,3 @@ function setExpandOrCollapse(expand: boolean) {
     <DeptDrawer @reload="tableApi.query()" />
   </Page>
 </template>
-
-<style lang="scss" scoped>
-.btn-add {
-  color: hsl(var(--success)) !important;
-  border-color: hsl(var(--success)) !important;
-
-  &:hover {
-    color: hsl(var(--success) / 50%) !important;
-    border-color: hsl(var(--success) / 50%) !important;
-  }
-}
-</style>

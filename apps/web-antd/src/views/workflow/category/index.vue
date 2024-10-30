@@ -123,6 +123,7 @@ function collapseAll() {
             {{ $t('pages.common.edit') }}
           </ghost-button>
           <ghost-button
+            class="btn-success"
             v-access:code="['workflow:category:edit']"
             @click.stop="handleAdd(row)"
           >
