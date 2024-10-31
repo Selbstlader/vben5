@@ -14,6 +14,12 @@ body:
       options:
         - label: 我已经搜索过现有的问题 (https://gitee.com/../../issues)
           required: true
+  - type: checkboxes
+    attributes:
+      label: 我已经给项目点赞(star)
+      options:
+        - label: 未点赞(star)问题直接删除, 不予理会
+          required: true
   - type: textarea
     attributes:
       label: 如何复现
