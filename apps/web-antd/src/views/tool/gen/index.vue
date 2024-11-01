@@ -196,15 +196,11 @@ const [TableImportModal, tableImportModalApi] = useVbenModal({
    * 临时解决方案 for https://github.com/vbenjs/vue-vben-admin/issues/4752
    * 通过在关闭时使用v-if切换来造成Modal的重新渲染
    * 目前Modal逻辑为每次打开 内部的元素会重新mount 但是Modal本身不会重新渲染
-   * 该方案会造成关闭动画丢失(应该放在afterClose中)
-   * @param isOpen 是否打开
    */
-  onOpenChange: async (isOpen) => {
-    if (!isOpen) {
-      init.value = false;
-      await nextTick();
-      init.value = true;
-    }
+  async onClosed() {
+    init.value = false;
+    await nextTick();
+    init.value = true;
   },
 });
 
