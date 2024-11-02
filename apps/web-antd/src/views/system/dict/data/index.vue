@@ -4,7 +4,7 @@ import type { Recordable } from '@vben/types';
 import { ref } from 'vue';
 
 import { useVbenDrawer, type VbenFormProps } from '@vben/common-ui';
-import { getPopupContainer } from '@vben/utils';
+import { getVxePopupContainer } from '@vben/utils';
 
 import { Modal, Popconfirm, Space } from 'ant-design-vue';
 import dayjs from 'dayjs';
@@ -144,7 +144,7 @@ emitter.on('rowClick', async (value) => {
 
 <template>
   <div>
-    <BasicTable table-title="字典数据列表">
+    <BasicTable id="dict-data" table-title="字典数据列表">
       <template #toolbar-tools>
         <Space>
           <a-button
@@ -187,7 +187,9 @@ emitter.on('rowClick', async (value) => {
             {{ $t('pages.common.edit') }}
           </ghost-button>
           <Popconfirm
-            :get-popup-container="getPopupContainer"
+            :get-popup-container="
+              (node) => getVxePopupContainer(node, 'dict-data')
+            "
             placement="left"
             title="确认删除？"
             @confirm="handleDelete(row)"

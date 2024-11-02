@@ -6,7 +6,7 @@ import { useRouter } from 'vue-router';
 
 import { Page, useVbenModal, type VbenFormProps } from '@vben/common-ui';
 import { $t } from '@vben/locales';
-import { getPopupContainer } from '@vben/utils';
+import { getVxePopupContainer } from '@vben/utils';
 
 import {
   Image,
@@ -219,7 +219,7 @@ const [FileUploadModal, fileUploadApi] = useVbenModal({
             {{ $t('pages.common.download') }}
           </ghost-button>
           <Popconfirm
-            :get-popup-container="getPopupContainer"
+            :get-popup-container="getVxePopupContainer"
             placement="left"
             title="确认删除？"
             @confirm="handleDelete(row)"

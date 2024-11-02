@@ -6,7 +6,7 @@ import { nextTick } from 'vue';
 import { Page, useVbenDrawer, type VbenFormProps } from '@vben/common-ui';
 import {
   eachTree,
-  getPopupContainer,
+  getVxePopupContainer,
   listToTree,
   removeEmptyChildren,
 } from '@vben/utils';
@@ -166,7 +166,7 @@ function setExpandOrCollapse(expand: boolean) {
             {{ $t('pages.common.add') }}
           </ghost-button>
           <Popconfirm
-            :get-popup-container="getPopupContainer"
+            :get-popup-container="getVxePopupContainer"
             placement="left"
             title="确认删除？"
             @confirm="handleDelete(row)"

@@ -4,7 +4,7 @@ import type { Recordable } from '@vben/types';
 import { ref } from 'vue';
 
 import { Page, useVbenModal, type VbenFormProps } from '@vben/common-ui';
-import { getPopupContainer } from '@vben/utils';
+import { getVxePopupContainer } from '@vben/utils';
 
 import { Modal, Popconfirm, Space } from 'ant-design-vue';
 import dayjs from 'dayjs';
@@ -153,7 +153,7 @@ function handleMultiDelete() {
             {{ $t('pages.common.edit') }}
           </ghost-button>
           <Popconfirm
-            :get-popup-container="getPopupContainer"
+            :get-popup-container="getVxePopupContainer"
             placement="left"
             title="确认删除？"
             @confirm="handleDelete(row)"

@@ -11,7 +11,7 @@ import {
   useVbenModal,
   type VbenFormProps,
 } from '@vben/common-ui';
-import { getPopupContainer } from '@vben/utils';
+import { getVxePopupContainer } from '@vben/utils';
 
 import {
   Dropdown,
@@ -222,7 +222,7 @@ function handleAssignRole(record: Recordable<any>) {
               {{ $t('pages.common.edit') }}
             </ghost-button>
             <Popconfirm
-              :get-popup-container="getPopupContainer"
+              :get-popup-container="getVxePopupContainer"
               placement="left"
               title="确认删除？"
               @confirm="handleDelete(row)"
@@ -237,7 +237,7 @@ function handleAssignRole(record: Recordable<any>) {
             </Popconfirm>
           </Space>
           <Dropdown
-            :get-popup-container="getPopupContainer"
+            :get-popup-container="getVxePopupContainer"
             placement="bottomRight"
           >
             <template #overlay>

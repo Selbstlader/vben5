@@ -5,7 +5,7 @@ import { computed, ref } from 'vue';
 
 import { useAccess } from '@vben/access';
 import { useVbenModal, type VbenFormProps } from '@vben/common-ui';
-import { getPopupContainer } from '@vben/utils';
+import { getVxePopupContainer } from '@vben/utils';
 
 import {
   Dropdown,
@@ -188,7 +188,7 @@ const couldSyncTenantDict = computed(() => {
 
 <template>
   <div>
-    <BasicTable table-title="字典类型列表">
+    <BasicTable id="dict-type" table-title="字典类型列表">
       <template #toolbar-tools>
         <Space>
           <Dropdown>
@@ -243,7 +243,9 @@ const couldSyncTenantDict = computed(() => {
             {{ $t('pages.common.edit') }}
           </ghost-button>
           <Popconfirm
-            :get-popup-container="getPopupContainer"
+            :get-popup-container="
+              (node) => getVxePopupContainer(node, 'dict-type')
+            "
             placement="left"
             title="确认删除？"
             @confirm="handleDelete(row)"

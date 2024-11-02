@@ -4,7 +4,7 @@ import type { Recordable } from '@vben/types';
 import { nextTick } from 'vue';
 
 import { Page, useVbenModal, type VbenFormProps } from '@vben/common-ui';
-import { getPopupContainer, listToTree } from '@vben/utils';
+import { getVxePopupContainer, listToTree } from '@vben/utils';
 
 import { Popconfirm, Space } from 'ant-design-vue';
 
@@ -130,7 +130,7 @@ function collapseAll() {
             {{ $t('pages.common.add') }}
           </ghost-button>
           <Popconfirm
-            :get-popup-container="getPopupContainer"
+            :get-popup-container="getVxePopupContainer"
             placement="left"
             title="确认删除？"
             @confirm="handleDelete(row)"

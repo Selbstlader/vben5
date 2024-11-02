@@ -2,7 +2,7 @@
 import type { Recordable } from '@vben/types';
 
 import { Page, type VbenFormProps } from '@vben/common-ui';
-import { getPopupContainer } from '@vben/utils';
+import { getVxePopupContainer } from '@vben/utils';
 
 import { Popconfirm } from 'ant-design-vue';
 
@@ -58,7 +58,7 @@ async function handleForceOffline(row: Recordable<any>) {
     <BasicTable table-title="在线用户列表">
       <template #action="{ row }">
         <Popconfirm
-          :get-popup-container="getPopupContainer"
+          :get-popup-container="getVxePopupContainer"
           :title="`确认强制下线[${row.userName}]?`"
           placement="left"
           @confirm="handleForceOffline(row)"

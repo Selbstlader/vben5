@@ -12,7 +12,7 @@ import {
 } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 import { preferences } from '@vben/preferences';
-import { getPopupContainer } from '@vben/utils';
+import { getVxePopupContainer } from '@vben/utils';
 
 import {
   Avatar,
@@ -266,7 +266,7 @@ const { hasAccessByCodes } = useAccess();
                 {{ $t('pages.common.edit') }}
               </ghost-button>
               <Popconfirm
-                :get-popup-container="getPopupContainer"
+                :get-popup-container="getVxePopupContainer"
                 placement="left"
                 title="确认删除？"
                 @confirm="handleDelete(row)"
@@ -281,7 +281,7 @@ const { hasAccessByCodes } = useAccess();
               </Popconfirm>
             </Space>
             <Dropdown
-              :get-popup-container="getPopupContainer"
+              :get-popup-container="getVxePopupContainer"
               placement="bottomRight"
             >
               <template #overlay>
