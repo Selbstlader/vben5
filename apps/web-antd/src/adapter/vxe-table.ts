@@ -17,6 +17,10 @@ setupVbenVxeTable({
         align: 'center',
         border: false,
         minHeight: 180,
+        formConfig: {
+          // 全局禁用vxe-table的表单配置，使用formOptions
+          enabled: false,
+        },
         proxyConfig: {
           autoLoad: true,
           response: {
