@@ -4,6 +4,10 @@
 
 - 在VxeTable固定列时, getPopupContainer会导致宽度不够, 弹出层样式异常 解决办法(将弹窗元素挂载到VXe滚动容器上)
 
+**OTHERS**
+
+- 代码生成 - 字段信息修改 改为minWidth 防止在高分辨率屏幕出现空白
+
 # 1.0.0
 
 **FEATURES**
