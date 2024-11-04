@@ -28,7 +28,7 @@ async function loadTenant() {
   // 选中第一个租户
   if (resp.tenantEnabled && resp.voList.length > 0) {
     const firstTenantId = resp.voList[0]!.tenantId;
-    codeLoginRef.value?.setFieldValue('tenantId', firstTenantId);
+    codeLoginRef.value?.getFormApi().setFieldValue('tenantId', firstTenantId);
   }
 }
 

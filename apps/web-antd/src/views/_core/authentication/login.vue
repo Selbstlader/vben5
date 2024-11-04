@@ -45,7 +45,7 @@ async function loadTenant() {
   // 选中第一个租户
   if (resp.tenantEnabled && resp.voList.length > 0) {
     const firstTenantId = resp.voList[0]!.tenantId;
-    loginFormRef.value?.setFieldValue('tenantId', firstTenantId);
+    loginFormRef.value?.getFormApi().setFieldValue('tenantId', firstTenantId);
   }
 }
 
@@ -140,7 +140,7 @@ async function handleAccountLogin(values: LoginAndRegisterParams) {
     // 处理验证码错误
     if (error instanceof Error) {
       // 刷新验证码
-      loginFormRef.value?.setFieldValue('code', '');
+      loginFormRef.value?.getFormApi().setFieldValue('code', '');
       await loadCaptcha();
     }
   }

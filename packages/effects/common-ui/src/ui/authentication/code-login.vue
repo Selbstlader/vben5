@@ -52,7 +52,7 @@ const emit = defineEmits<{
 
 const router = useRouter();
 
-const [Form, { validate, setFieldValue, getValues }] = useVbenForm(
+const [Form, formApi] = useVbenForm(
   reactive({
     commonConfig: {
       hideLabel: true,
@@ -64,8 +64,8 @@ const [Form, { validate, setFieldValue, getValues }] = useVbenForm(
 );
 
 async function handleSubmit() {
-  const { valid } = await validate();
-  const values = await getValues();
+  const { valid } = await formApi.validate();
+  const values = await formApi.getValues();
   if (valid) {
     emit('submit', {
       tenantId: values?.tenantId,
@@ -79,7 +79,9 @@ function goToLogin() {
   router.push(props.loginPath);
 }
 
-defineExpose({ setFieldValue });
+defineExpose({
+  getFormApi: () => formApi,
+});
 </script>
 
 <template>
