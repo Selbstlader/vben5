@@ -92,4 +92,11 @@ onBeforeUnmount(() => {
   cursor: unset;
   opacity: 1;
 }
+
+/**
+dark模式样式需要重置
+*/
+.vditor--dark .vditor-reset {
+  color: #d1d5da;
+}
 </style>
