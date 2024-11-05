@@ -50,8 +50,7 @@ async function loadTenant() {
 }
 
 onMounted(async () => {
-  await loadCaptcha();
-  await loadTenant();
+  await Promise.all([loadCaptcha(), loadTenant()]);
 });
 
 const formSchema = computed((): VbenFormSchema[] => {
