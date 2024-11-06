@@ -87,6 +87,7 @@ const iconArrowStyle = computed(() => {
       :class="nsMenu.e('icon')"
       :icon="icon"
       fallback
+      offline
     />
 
     <div v-if="!hiddenTitle" :class="[e('title')]">

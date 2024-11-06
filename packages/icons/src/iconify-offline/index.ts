@@ -31,6 +31,8 @@ import githubOAuthIcon from '@iconify/icons-uiw/github';
 import excelIcon from '@iconify/icons-vscode-icons/file-type-excel';
 import osxIcon from '@iconify/icons-wpf/macos';
 
+import './other';
+
 // 用户 下拉菜单
 export const GitHubOutlined = createIconifyOfflineIcon(
   'ant-design:github-outlined',
