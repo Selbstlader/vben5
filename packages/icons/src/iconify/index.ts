@@ -14,6 +14,5 @@ export const MdiQqchat = createIconifyIcon('mdi:qqchat');
 
 export const EosSystem = createIconifyIcon('eos-icons:system-group');
 
-export const GiteeIcon = createIconifyIcon('simple-icons:gitee');
 // 个人中心
 export const ProfileIcon = createIconifyIcon('mingcute:profile-line');
