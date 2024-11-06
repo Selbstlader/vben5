@@ -4,6 +4,8 @@ import githubOutlined from '@iconify/icons-ant-design/github-outlined';
 import inboxIcon from '@iconify/icons-ant-design/inbox-outlined';
 import userOutlined from '@iconify/icons-ant-design/user-outlined';
 import ucIcon from '@iconify/icons-arcticons/uc-browser';
+import defaultFileIcon from '@iconify/icons-bx/file';
+import sqlIcon from '@iconify/icons-carbon/sql';
 import linuxIcon from '@iconify/icons-devicon/linux';
 import windowsIcon from '@iconify/icons-devicon/windows8';
 import alipayIcon from '@iconify/icons-fa-brands/alipay';
@@ -19,6 +21,7 @@ import operaIcon from '@iconify/icons-logos/opera';
 import quarkIcon from '@iconify/icons-logos/quarkus-icon';
 import redisIcon from '@iconify/icons-logos/redis';
 import safariIcon from '@iconify/icons-logos/safari';
+import vueIcon from '@iconify/icons-logos/vue';
 import iphoneIcon from '@iconify/icons-majesticons/iphone-x-apps-line';
 import menuIcon from '@iconify/icons-material-symbols/menu';
 import okButtonIcon from '@iconify/icons-mdi/button-pointer';
@@ -30,6 +33,9 @@ import dingtalkIcon from '@iconify/icons-ri/dingding-line';
 import taobaoIconFill from '@iconify/icons-ri/taobao-fill';
 import giteeIcon from '@iconify/icons-simple-icons/gitee';
 import qqIcon from '@iconify/icons-simple-icons/tencentqq';
+import javaIcon from '@iconify/icons-skill-icons/java-light';
+import tsIcon from '@iconify/icons-skill-icons/typescript';
+import xmlIcon from '@iconify/icons-tabler/file-type-xml';
 import githubOAuthIcon from '@iconify/icons-uiw/github';
 import excelIcon from '@iconify/icons-vscode-icons/file-type-excel';
 import osxIcon from '@iconify/icons-wpf/macos';
@@ -158,4 +164,23 @@ export const OkButtonIcon = createIconifyOfflineIcon(
 export const MenuIcon = createIconifyOfflineIcon(
   'material-symbols:menu',
   menuIcon,
+);
+
+export const JavaIcon = createIconifyOfflineIcon(
+  'skill-icons:java-light',
+  javaIcon,
+);
+export const XmlIcon = createIconifyOfflineIcon(
+  'tabler:file-type-xml',
+  xmlIcon,
+);
+export const SqlIcon = createIconifyOfflineIcon('carbon:sql', sqlIcon);
+export const TsIcon = createIconifyOfflineIcon(
+  'skill-icons:typescript',
+  tsIcon,
+);
+export const VueIcon = createIconifyOfflineIcon('logos:vue', vueIcon);
+export const DefaultFileIcon = createIconifyOfflineIcon(
+  'flat-color-icons:folder',
+  defaultFileIcon,
 );
