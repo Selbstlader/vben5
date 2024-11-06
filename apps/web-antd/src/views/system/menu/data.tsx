@@ -1,12 +1,15 @@
 import type { VxeGridProps } from '#/adapter/vxe-table';
 
+import { h } from 'vue';
+
 import { DictEnum } from '@vben/constants';
+import { FolderIcon, MenuIcon, OkButtonIcon, VbenIcon } from '@vben/icons';
 import { $t } from '@vben/locales';
 import { getPopupContainer } from '@vben/utils';
 
 import { type FormSchemaGetter, z } from '#/adapter/form';
 import { getDictOptions } from '#/utils/dict';
-import { renderDict, renderIcon } from '#/utils/render';
+import { renderDict } from '#/utils/render';
 
 export const querySchema: FormSchemaGetter = () => [
   {
@@ -48,11 +51,10 @@ export const yesNoOptions = [
 
 // （M目录 C菜单 F按钮）
 const menuTypes = {
-  M: { value: '目录', icon: 'fxemoji:folder' },
-  C: { value: '菜单', icon: 'fluent-emoji-flat:open-book' },
-  F: { value: '按钮', icon: 'fluent-emoji:ok-button' },
+  C: { icon: MenuIcon, value: '菜单' },
+  F: { icon: OkButtonIcon, value: '按钮' },
+  M: { icon: FolderIcon, value: '目录' },
 };
-
 export const columns: VxeGridProps['columns'] = [
   {
     title: '菜单名称',
@@ -74,7 +76,9 @@ export const columns: VxeGridProps['columns'] = [
           return '';
         }
         return (
-          <span class={'flex justify-center'}>{renderIcon(row.icon)}</span>
+          <span class={'flex justify-center'}>
+            <VbenIcon icon={row.icon} />
+          </span>
         );
       },
     },
@@ -95,9 +99,9 @@ export const columns: VxeGridProps['columns'] = [
           return '未知';
         }
         return (
-          <span class={['flex', 'items-center', 'justify-center']}>
-            {renderIcon(current.icon)}
-            <span style={{ marginLeft: '2px' }}>{current.value}</span>
+          <span class="flex items-center justify-center gap-1">
+            {h(current.icon, { class: 'size-[18px]' })}
+            <span>{current.value}</span>
           </span>
         );
       },

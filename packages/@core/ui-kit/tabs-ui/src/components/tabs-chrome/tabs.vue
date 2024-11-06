@@ -144,7 +144,6 @@ const tabsView = computed(() => {
                 :icon="tab.icon"
                 class="mr-1 flex size-4 items-center overflow-hidden"
               />
-
               <span class="flex-1 overflow-hidden whitespace-nowrap text-sm">
                 {{ tab.title }}
               </span>

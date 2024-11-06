@@ -6,6 +6,7 @@ import { computed, onMounted, ref, useTemplateRef } from 'vue';
 import { AuthenticationLogin, z } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 
+import { Modal } from 'ant-design-vue';
 import { omit } from 'lodash-es';
 
 import { tenantList, type TenantResp } from '#/api';
@@ -144,6 +145,14 @@ async function handleAccountLogin(values: LoginAndRegisterParams) {
     }
   }
 }
+
+onMounted(() => {
+  Modal.info({
+    title: '提示',
+    content:
+      '离线图标分支需要导入[离线图标.sql] 目录:scripts/菜单图标替换sql/update_icon_离线图标.sql',
+  });
+});
 </script>
 
 <template>

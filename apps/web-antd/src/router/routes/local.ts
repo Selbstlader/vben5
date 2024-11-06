@@ -24,7 +24,7 @@ const profileRoute: RouteRecordStringComponent[] = [
       {
         component: '/_core/profile/index',
         meta: {
-          icon: 'mingcute:profile-line',
+          icon: 'mingcute:profile-line|offline',
           keepAlive: true,
           title: $t('ui.widgets.profile'),
         },
@@ -48,7 +48,7 @@ const profileRoute: RouteRecordStringComponent[] = [
         component: '/system/oss-config/index',
         meta: {
           activePath: '/system/oss',
-          icon: 'mingcute:profile-line',
+          icon: 'ant-design:setting-outlined|offline',
           keepAlive: true,
           title: 'oss配置',
         },
@@ -57,7 +57,6 @@ const profileRoute: RouteRecordStringComponent[] = [
       },
     ],
   },
-  // TODO: 图标要改
   {
     component: 'BasicLayout',
     meta: {
@@ -73,7 +72,7 @@ const profileRoute: RouteRecordStringComponent[] = [
         component: '/tool/gen/edit-gen',
         meta: {
           activePath: '/tool/gen',
-          icon: 'mingcute:profile-line',
+          icon: 'tabler:code|offline',
           keepAlive: true,
           title: '生成配置',
         },
@@ -97,7 +96,7 @@ const profileRoute: RouteRecordStringComponent[] = [
         component: '/system/role-assign/index',
         meta: {
           activePath: '/system/role',
-          icon: 'mingcute:profile-line',
+          icon: 'eos-icons:role-binding-outlined|offline',
           keepAlive: true,
           title: '分配角色',
         },
@@ -144,7 +143,7 @@ export const localMenuList: RouteRecordStringComponent[] = [
         path: '/vben-admin/document',
         component: 'IFrameView',
         meta: {
-          icon: 'lucide:book-open-text',
+          icon: 'lucide:book-open-text|offline',
           iframeSrc: 'https://dapdap.top',
           keepAlive: true,
           title: $t('demos.vben.document'),
@@ -156,7 +155,7 @@ export const localMenuList: RouteRecordStringComponent[] = [
     component: 'BasicLayout',
     meta: {
       hideChildrenInMenu: true,
-      icon: 'lucide:copyright',
+      icon: 'lucide:copyright|offline',
       order: 9999,
       title: $t('demos.vben.about'),
     },

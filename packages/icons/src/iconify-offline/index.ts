@@ -9,6 +9,7 @@ import windowsIcon from '@iconify/icons-devicon/windows8';
 import alipayIcon from '@iconify/icons-fa-brands/alipay';
 import androidIcon from '@iconify/icons-flat-color-icons/android-os';
 import comandLine from '@iconify/icons-flat-color-icons/command-line';
+import folderIcon from '@iconify/icons-flat-color-icons/folder';
 import defaultOsIcon from '@iconify/icons-ic/outline-computer';
 import memoryIcon from '@iconify/icons-la/memory';
 import chromeIcon from '@iconify/icons-logos/chrome';
@@ -19,6 +20,8 @@ import quarkIcon from '@iconify/icons-logos/quarkus-icon';
 import redisIcon from '@iconify/icons-logos/redis';
 import safariIcon from '@iconify/icons-logos/safari';
 import iphoneIcon from '@iconify/icons-majesticons/iphone-x-apps-line';
+import menuIcon from '@iconify/icons-material-symbols/menu';
+import okButtonIcon from '@iconify/icons-mdi/button-pointer';
 import micromessengerIcon from '@iconify/icons-mdi/wechat';
 import defaultBrowserIcon from '@iconify/icons-ph/browser-duotone';
 import baiduIcon from '@iconify/icons-ri/baidu-fill';
@@ -31,7 +34,7 @@ import githubOAuthIcon from '@iconify/icons-uiw/github';
 import excelIcon from '@iconify/icons-vscode-icons/file-type-excel';
 import osxIcon from '@iconify/icons-wpf/macos';
 
-import './other';
+import './menu-icons';
 
 // 用户 下拉菜单
 export const GitHubOutlined = createIconifyOfflineIcon(
@@ -141,4 +144,18 @@ export const BaiduIcon = createIconifyOfflineIcon('ri:baidu-fill', baiduIcon);
 export const DefaultBrowserIcon = createIconifyOfflineIcon(
   'ph:browser-duotone',
   defaultBrowserIcon,
+);
+
+// 菜单类型 目录/按钮/菜单
+export const FolderIcon = createIconifyOfflineIcon(
+  'flat-color-icons:folder',
+  folderIcon,
+);
+export const OkButtonIcon = createIconifyOfflineIcon(
+  'mdi:button-pointer',
+  okButtonIcon,
+);
+export const MenuIcon = createIconifyOfflineIcon(
+  'material-symbols:menu',
+  menuIcon,
 );
