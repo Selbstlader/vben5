@@ -18,5 +18,12 @@
   },
   "dependencies": {
     "@vben-core/icons": "workspace:*"
+  },
+  "devDependencies": {
+    "@iconify/icons-ant-design": "^1.2.7",
+    "@iconify/icons-flat-color-icons": "^1.2.5",
+    "@iconify/icons-la": "^1.2.3",
+    "@iconify/icons-logos": "^1.2.36",
+    "@iconify/icons-vscode-icons": "^1.2.29"
   }
 }
