@@ -1,4 +1,4 @@
-import { addOfflineIcon } from '@vben-core/icons';
+import { addIcon } from '@vben-core/icons';
 
 import schedule from '@iconify/icons-akar-icons/schedule';
 import settingOutline from '@iconify/icons-ant-design/setting-outlined';
@@ -49,60 +49,54 @@ import code from '@iconify/icons-tabler/code';
 /**
  * 这里添加菜单图标
  */
-addOfflineIcon('eos-icons:system-group', SystemGroup);
-addOfflineIcon('ph:user-duotone', UserDuotone);
-addOfflineIcon('eos-icons:role-binding-outlined', RoleBindingOutlined);
-addOfflineIcon('ic:sharp-menu', MenuSharp);
-addOfflineIcon('mingcute:department-line', DepartmentLine);
-addOfflineIcon('icon-park-outline:appointment', Appointment);
-addOfflineIcon('fluent-mdl2:dictionary', Dictionary);
-addOfflineIcon('icon-park-twotone:setting-two', SettingTwo);
-addOfflineIcon('fe:notice-push', NoticePush);
-addOfflineIcon('material-symbols:logo-dev-outline', LogoDevOutline);
-addOfflineIcon('arcticons:one-hand-operation', Operation);
-addOfflineIcon(
+addIcon('eos-icons:system-group', SystemGroup);
+addIcon('ph:user-duotone', UserDuotone);
+addIcon('eos-icons:role-binding-outlined', RoleBindingOutlined);
+addIcon('ic:sharp-menu', MenuSharp);
+addIcon('mingcute:department-line', DepartmentLine);
+addIcon('icon-park-outline:appointment', Appointment);
+addIcon('fluent-mdl2:dictionary', Dictionary);
+addIcon('icon-park-twotone:setting-two', SettingTwo);
+addIcon('fe:notice-push', NoticePush);
+addIcon('material-symbols:logo-dev-outline', LogoDevOutline);
+addIcon('arcticons:one-hand-operation', Operation);
+addIcon(
   'streamline:interface-login-dial-pad-finger-password-dial-pad-dot-finger',
   InterfaceLoginDialPadFingerPasswordDialPadDotFinger,
 );
-addOfflineIcon('solar:folder-with-files-outline', FolderWithFilesOutline);
-addOfflineIcon('simple-icons:authy', Authy);
-addOfflineIcon('ic:baseline-house', BaseLineHouse);
-addOfflineIcon('bi:houses-fill', BaseLineHousesFill);
-addOfflineIcon('bx:package', BxPackage);
-addOfflineIcon('solar:monitor-bold-duotone', monitorBoldDuotone);
-addOfflineIcon(
-  'material-symbols:generating-tokens-outline',
-  generatingTokensOutline,
-);
-addOfflineIcon('devicon:redis-wordmark', redisWordmark);
-addOfflineIcon('devicon:spring-wordmark', springWordmark);
-addOfflineIcon('akar-icons:schedule', schedule);
-addOfflineIcon('mdi:tools', tools);
-addOfflineIcon('tabler:code', code);
-addOfflineIcon('flat-color-icons:plus', plus);
-addOfflineIcon('devicon:vscode', vscode);
-addOfflineIcon('lucide:table', table);
-addOfflineIcon('emojione:evergreen-tree', evergreenTree);
-addOfflineIcon('fluent-mdl2:leave-user', leaveUser);
-addOfflineIcon('mdi:workflow-outline', workflowOutline);
-addOfflineIcon('tabler:category-plus', categoryPlus);
-addOfflineIcon('carbon:model-alt', modelAlt);
-addOfflineIcon('fluent-mdl2:build-definition', builDefinition);
-addOfflineIcon('fluent-mdl2:build-definition', builDefinition);
-addOfflineIcon('icon-park-outline:monitor', monitor);
-addOfflineIcon('ri:instance-line', insatnceLine);
-addOfflineIcon('ri:todo-line', todoLine);
-addOfflineIcon('fluent:form-24-regular', from24);
-addOfflineIcon('carbon:task-approved', taskApproved);
-addOfflineIcon('ic:round-launch', roundLaunch);
-addOfflineIcon(
-  'material-symbols:cloud-done-outline-rounded',
-  cloudDoneOutlineRounded,
-);
-addOfflineIcon('mdi:cc-outline', ccOutline);
-addOfflineIcon('lucide:book-open-text', boolOpenText);
-addOfflineIcon('lucide:copyright', copyright);
+addIcon('solar:folder-with-files-outline', FolderWithFilesOutline);
+addIcon('simple-icons:authy', Authy);
+addIcon('ic:baseline-house', BaseLineHouse);
+addIcon('bi:houses-fill', BaseLineHousesFill);
+addIcon('bx:package', BxPackage);
+addIcon('solar:monitor-bold-duotone', monitorBoldDuotone);
+addIcon('material-symbols:generating-tokens-outline', generatingTokensOutline);
+addIcon('devicon:redis-wordmark', redisWordmark);
+addIcon('devicon:spring-wordmark', springWordmark);
+addIcon('akar-icons:schedule', schedule);
+addIcon('mdi:tools', tools);
+addIcon('tabler:code', code);
+addIcon('flat-color-icons:plus', plus);
+addIcon('devicon:vscode', vscode);
+addIcon('lucide:table', table);
+addIcon('emojione:evergreen-tree', evergreenTree);
+addIcon('fluent-mdl2:leave-user', leaveUser);
+addIcon('mdi:workflow-outline', workflowOutline);
+addIcon('tabler:category-plus', categoryPlus);
+addIcon('carbon:model-alt', modelAlt);
+addIcon('fluent-mdl2:build-definition', builDefinition);
+addIcon('fluent-mdl2:build-definition', builDefinition);
+addIcon('icon-park-outline:monitor', monitor);
+addIcon('ri:instance-line', insatnceLine);
+addIcon('ri:todo-line', todoLine);
+addIcon('fluent:form-24-regular', from24);
+addIcon('carbon:task-approved', taskApproved);
+addIcon('ic:round-launch', roundLaunch);
+addIcon('material-symbols:cloud-done-outline-rounded', cloudDoneOutlineRounded);
+addIcon('mdi:cc-outline', ccOutline);
+addIcon('lucide:book-open-text', boolOpenText);
+addIcon('lucide:copyright', copyright);
 // 个人中心
-addOfflineIcon('mingcute:profile-line', profileLine);
+addIcon('mingcute:profile-line', profileLine);
 // oss配置
-addOfflineIcon('ant-design:setting-outlined', settingOutline);
+addIcon('ant-design:setting-outlined', settingOutline);

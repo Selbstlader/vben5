@@ -24,7 +24,7 @@ const profileRoute: RouteRecordStringComponent[] = [
       {
         component: '/_core/profile/index',
         meta: {
-          icon: 'mingcute:profile-line|offline',
+          icon: 'mingcute:profile-line',
           keepAlive: true,
           title: $t('ui.widgets.profile'),
         },
@@ -48,7 +48,7 @@ const profileRoute: RouteRecordStringComponent[] = [
         component: '/system/oss-config/index',
         meta: {
           activePath: '/system/oss',
-          icon: 'ant-design:setting-outlined|offline',
+          icon: 'ant-design:setting-outlined',
           keepAlive: true,
           title: 'oss配置',
         },
@@ -72,7 +72,7 @@ const profileRoute: RouteRecordStringComponent[] = [
         component: '/tool/gen/edit-gen',
         meta: {
           activePath: '/tool/gen',
-          icon: 'tabler:code|offline',
+          icon: 'tabler:code',
           keepAlive: true,
           title: '生成配置',
         },
@@ -96,7 +96,7 @@ const profileRoute: RouteRecordStringComponent[] = [
         component: '/system/role-assign/index',
         meta: {
           activePath: '/system/role',
-          icon: 'eos-icons:role-binding-outlined|offline',
+          icon: 'eos-icons:role-binding-outlined',
           keepAlive: true,
           title: '分配角色',
         },
@@ -143,7 +143,7 @@ export const localMenuList: RouteRecordStringComponent[] = [
         path: '/vben-admin/document',
         component: 'IFrameView',
         meta: {
-          icon: 'lucide:book-open-text|offline',
+          icon: 'lucide:book-open-text',
           iframeSrc: 'https://dapdap.top',
           keepAlive: true,
           title: $t('demos.vben.document'),
@@ -155,7 +155,7 @@ export const localMenuList: RouteRecordStringComponent[] = [
     component: 'BasicLayout',
     meta: {
       hideChildrenInMenu: true,
-      icon: 'lucide:copyright|offline',
+      icon: 'lucide:copyright',
       order: 9999,
       title: $t('demos.vben.about'),
     },
