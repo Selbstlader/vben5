@@ -193,7 +193,8 @@ export const drawerSchema: FormSchemaGetter = () => [
       show: (values) => values.menuType !== 'F',
       triggerFields: ['menuType'],
     },
-    renderComponentContent: () => ({
+    renderComponentContent: (model) => ({
+      addonBefore: () => <VbenIcon icon={model.icon} />,
       addonAfter: () => (
         <a href="https://icon-sets.iconify.design/" target="_blank">
           搜索图标
