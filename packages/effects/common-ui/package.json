@@ -42,7 +42,7 @@
     "qrcode": "catalog:",
     "vditor": "^3.10.6",
     "vue": "catalog:",
-    "vue-codemirror6": "^1.3.4",
+    "vue-codemirror6": "1.3.4",
     "vue-json-pretty": "^2.4.0",
     "vue-router": "catalog:"
   },
