@@ -1,3 +1,9 @@
+# 1.1.1
+
+**REFACTOR**
+
+- 使用VxeTable重构OAuth账号绑定列表(替代antdv的Table)
+
 # 1.1.0
 
 **FEATURES**

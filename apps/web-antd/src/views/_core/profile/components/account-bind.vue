@@ -1,9 +1,7 @@
 <script setup lang="tsx">
-import type { ColumnsType } from 'ant-design-vue/es/table';
+import { computed, ref, unref } from 'vue';
 
-import type { SocialInfo } from '#/api/system/social/model';
-
-import { computed, onMounted, ref, unref } from 'vue';
+import { useVbenVxeGrid, type VxeGridProps } from '@vben/plugins/vxe-table';
 
 import {
   Alert,
@@ -13,54 +11,12 @@ import {
   ListItem,
   message,
   Modal,
-  Table,
 } from 'ant-design-vue';
 
 import { authUnbinding } from '#/api';
 import { socialList } from '#/api/system/social';
 
 import { accountBindList, type BindItem } from '../../oauth-common';
-
-const columns: ColumnsType = [
-  {
-    align: 'center',
-    dataIndex: 'source',
-    title: '绑定平台',
-  },
-  {
-    align: 'center',
-    customRender: ({ value }) => {
-      return <Avatar src={value} />;
-    },
-    dataIndex: 'avatar',
-    title: '头像',
-  },
-  {
-    align: 'center',
-    dataIndex: 'userName',
-    title: '账号',
-  },
-  {
-    align: 'center',
-    dataIndex: 'action',
-    title: '操作',
-  },
-];
-
-/**
- * 解绑账号
- */
-function handleUnbind(record: Record<string, any>) {
-  Modal.confirm({
-    content: `确定解绑[${record.source}]平台的[${record.userName}]账号吗？`,
-    async onOk() {
-      await authUnbinding(record.id);
-      await reload();
-    },
-    title: '提示',
-    type: 'warning',
-  });
-}
 
 /**
  * 没有传递action事件则不支持绑定 弹出默认提示
@@ -85,35 +41,97 @@ const bindList = computed<BindItem[]>(() => {
   return list;
 });
 
-const tableData = ref<SocialInfo[]>([]);
+const gridOptions: VxeGridProps = {
+  checkboxConfig: {
+    // 高亮
+    highlight: true,
+    // 翻页时保留选中状态
+    reserve: true,
+  },
+  columns: [
+    {
+      field: 'source',
+      title: '绑定平台',
+    },
+    {
+      slots: {
+        default: ({ row }) => {
+          return <Avatar src={row.avatar} />;
+        },
+      },
+      field: 'avatar',
+      title: '头像',
+    },
+    {
+      align: 'center',
+      field: 'userName',
+      title: '账号',
+    },
+    {
+      align: 'center',
+      slots: {
+        default: 'action',
+      },
+      title: '操作',
+    },
+  ],
+  height: 'auto',
+  keepSource: true,
+  pagerConfig: {
+    enabled: false,
+  },
+  proxyConfig: {
+    ajax: {
+      query: async () => {
+        const resp = await socialList();
+        /**
+         * 平台转小写
+         * 已经绑定的平台
+         */
+        boundPlatformsList.value = resp.map((item) =>
+          item.source.toLowerCase(),
+        );
+        return {
+          rows: resp,
+        };
+      },
+    },
+  },
+  rowConfig: {
+    isHover: true,
+    isCurrent: false,
+    keyField: 'id',
+  },
+  id: 'profile-bind-table',
+};
 
-async function reload() {
-  const resp = await socialList();
-  /**
-   * 平台转小写
-   * 已经绑定的平台
-   */
-  boundPlatformsList.value = resp.map((item) => item.source.toLowerCase());
-  tableData.value = resp;
+const [BasicTable, tableApi] = useVbenVxeGrid({
+  gridOptions,
+});
+
+/**
+ * 解绑账号
+ */
+function handleUnbind(record: Record<string, any>) {
+  Modal.confirm({
+    content: `确定解绑[${record.source}]平台的[${record.userName}]账号吗？`,
+    async onOk() {
+      await authUnbinding(record.id);
+      await tableApi.reload();
+    },
+    title: '提示',
+    type: 'warning',
+  });
 }
-
-onMounted(reload);
 </script>
 
 <template>
   <div class="flex flex-col gap-[16px]">
-    <Table
-      :columns="columns"
-      :data-source="tableData"
-      :pagination="false"
-      size="middle"
-    >
-      <template #bodyCell="{ column, record }">
-        <template v-if="column.dataIndex === 'action'">
-          <a-button type="link" @click="handleUnbind(record)">解绑</a-button>
-        </template>
+    <BasicTable>
+      <template #action="{ row }">
+        <a-button type="link" @click="handleUnbind(row)">解绑</a-button>
       </template>
-    </Table>
+    </BasicTable>
     <div class="pb-3">
       <List
         :data-source="bindList"
