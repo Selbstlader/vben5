@@ -10,10 +10,6 @@ export default defineConfig(async () => {
     vite: {
       optimizeDeps: {
         include: [
-          'echarts/core',
-          'echarts/charts',
-          'echarts/components',
-          'echarts/renderers',
           'ant-design-vue/es/locale/zh_CN',
           'ant-design-vue/es/locale/en_US',
         ],

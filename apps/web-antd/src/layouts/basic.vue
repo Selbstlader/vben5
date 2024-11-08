@@ -5,7 +5,12 @@ import { useRouter } from 'vue-router';
 import { AuthenticationLoginExpiredModal } from '@vben/common-ui';
 import { VBEN_DOC_URL, VBEN_GITHUB_URL } from '@vben/constants';
 import { useWatermark } from '@vben/hooks';
-import { BookOpenText, CircleHelp, MdiGithub, ProfileIcon } from '@vben/icons';
+import {
+  BookOpenText,
+  CircleHelp,
+  GitHubOutlined,
+  UserOutlined,
+} from '@vben/icons';
 import {
   BasicLayout,
   LockScreen,
@@ -47,7 +52,7 @@ const menus = computed(() => {
       handler: () => {
         router.push('/profile');
       },
-      icon: ProfileIcon,
+      icon: UserOutlined,
       text: $t('ui.widgets.profile'),
     },
     {
@@ -56,7 +61,7 @@ const menus = computed(() => {
           target: '_blank',
         });
       },
-      icon: MdiGithub,
+      icon: GitHubOutlined,
       text: 'GitHub',
     },
     {

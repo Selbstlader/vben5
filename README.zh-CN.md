@@ -8,6 +8,8 @@ v5版本采用分仓(包)目录结构, 具体开发路径为: `根目录/apps/we
 
 目前对应后端版本: **5.2.3/2.2.3**
 
+V1.1.0版本已支持离线图标
+
 ## 进度
 
 **工作流相关模块等待后端重构后开发**
@@ -82,7 +84,7 @@ pnpm install
 
 - 菜单图标替换
 
-[根目录/scripts/菜单图标替换sql/update_icon.sql](https://gitee.com/dapppp/ruoyi-plus-vben5/blob/main/scripts/%E8%8F%9C%E5%8D%95%E5%9B%BE%E6%A0%87%E6%9B%BF%E6%8D%A2sql/update_icon.sql)
+参考 [菜单图标替换](https://dapdap.top/guide/quick-start.html#%E8%8F%9C%E5%8D%95%E5%9B%BE%E6%A0%87%E5%AF%BC%E5%85%A5)
 
 - 关于代码生成
 

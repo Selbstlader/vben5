@@ -48,7 +48,7 @@ const profileRoute: RouteRecordStringComponent[] = [
         component: '/system/oss-config/index',
         meta: {
           activePath: '/system/oss',
-          icon: 'mingcute:profile-line',
+          icon: 'ant-design:setting-outlined',
           keepAlive: true,
           title: 'oss配置',
         },
@@ -57,7 +57,6 @@ const profileRoute: RouteRecordStringComponent[] = [
       },
     ],
   },
-  // TODO: 图标要改
   {
     component: 'BasicLayout',
     meta: {
@@ -73,7 +72,7 @@ const profileRoute: RouteRecordStringComponent[] = [
         component: '/tool/gen/edit-gen',
         meta: {
           activePath: '/tool/gen',
-          icon: 'mingcute:profile-line',
+          icon: 'tabler:code',
           keepAlive: true,
           title: '生成配置',
         },
@@ -97,7 +96,7 @@ const profileRoute: RouteRecordStringComponent[] = [
         component: '/system/role-assign/index',
         meta: {
           activePath: '/system/role',
-          icon: 'mingcute:profile-line',
+          icon: 'eos-icons:role-binding-outlined',
           keepAlive: true,
           title: '分配角色',
         },

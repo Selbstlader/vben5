@@ -1,7 +1,29 @@
 import type { DictData } from '#/api/system/dict/dict-data-model';
 
+import { type Component as ComponentType, h } from 'vue';
+
 import { JsonPreview } from '@vben/common-ui';
-import { IconifyIcon } from '@vben/icons';
+import {
+  AndroidIcon,
+  BaiduIcon,
+  ChromeIcon,
+  DefaultBrowserIcon,
+  DefaultOsIcon,
+  DingtalkIcon,
+  EdgeIcon,
+  FirefoxIcon,
+  IconifyIcon,
+  IPhoneIcon,
+  LinuxIcon,
+  MicromessengerIcon,
+  OperaIcon,
+  OSXIcon,
+  QQIcon,
+  QuarkIcon,
+  SafariIcon,
+  UcIcon,
+  WindowsIcon,
+} from '@vben/icons';
 
 import { Tag } from 'ant-design-vue';
 
@@ -129,28 +151,28 @@ export function renderDict(value: string, dictName: string) {
   const dictInfo = getDict(dictName);
   return renderDictTag(value, dictInfo);
 }
-
 export function renderIconSpan(
-  icon: string,
+  icon: ComponentType,
   value: string,
   center = false,
   marginLeft = '2px',
 ) {
   const justifyCenter = center ? 'justify-center' : '';
+
   return (
     <span class={['flex', 'items-center', justifyCenter]}>
-      {renderIcon(icon)}
+      {h(icon)}
       <span style={{ marginLeft }}>{value}</span>
     </span>
   );
 }
 
 const osOptions = [
-  { icon: 'devicon:windows8', value: 'windows' },
-  { icon: 'devicon:linux', value: 'linux' },
-  { icon: 'wpf:macos', value: 'osx' },
-  { icon: 'flat-color-icons:android-os', value: 'android' },
-  { icon: 'majesticons:iphone-x-apps-line', value: 'iphone' },
+  { icon: WindowsIcon, value: 'windows' },
+  { icon: LinuxIcon, value: 'linux' },
+  { icon: OSXIcon, value: 'osx' },
+  { icon: AndroidIcon, value: 'android' },
+  { icon: IPhoneIcon, value: 'iphone' },
 ];
 
 /**
@@ -158,18 +180,18 @@ const osOptions = [
  * cn.hutool.http.useragent -> browers
  */
 const browserOptions = [
-  { icon: 'logos:chrome', value: 'chrome' },
-  { icon: 'logos:microsoft-edge', value: 'edge' },
-  { icon: 'logos:firefox', value: 'firefox' },
-  { icon: 'logos:opera', value: 'opera' },
-  { icon: 'logos:safari', value: 'safari' },
-  { icon: 'mdi:wechat', value: 'micromessenger' },
-  { icon: 'logos:quarkus-icon', value: 'quark' },
-  { icon: 'mdi:wechat', value: 'wxwork' },
-  { icon: 'simple-icons:tencentqq', value: 'qq' },
-  { icon: 'ri:dingding-line', value: 'dingtalk' },
-  { icon: 'arcticons:uc-browser', value: 'uc' },
-  { icon: 'ri:baidu-fill', value: 'baidu' },
+  { icon: ChromeIcon, value: 'chrome' },
+  { icon: EdgeIcon, value: 'edge' },
+  { icon: FirefoxIcon, value: 'firefox' },
+  { icon: OperaIcon, value: 'opera' },
+  { icon: SafariIcon, value: 'safari' },
+  { icon: MicromessengerIcon, value: 'micromessenger' },
+  { icon: QuarkIcon, value: 'quark' },
+  { icon: MicromessengerIcon, value: 'wxwork' },
+  { icon: QQIcon, value: 'qq' },
+  { icon: DingtalkIcon, value: 'dingtalk' },
+  { icon: UcIcon, value: 'uc' },
+  { icon: BaiduIcon, value: 'baidu' },
 ];
 
 export function renderOsIcon(os: string, center = false) {
@@ -187,7 +209,7 @@ export function renderOsIcon(os: string, center = false) {
     return renderIconSpan(current.icon, os, center, '5px');
   }
   // 返回默认
-  const defaultIcon = 'ic:outline-computer';
+  const defaultIcon = DefaultOsIcon;
   return renderIconSpan(defaultIcon, os, center, '5px');
 }
 
@@ -202,6 +224,6 @@ export function renderBrowserIcon(browser: string, center = false) {
     return renderIconSpan(current.icon, browser, center, '5px');
   }
   // 返回默认
-  const defaultIcon = 'ph:browser-duotone';
+  const defaultIcon = DefaultBrowserIcon;
   return renderIconSpan(defaultIcon, browser, center, '5px');
 }

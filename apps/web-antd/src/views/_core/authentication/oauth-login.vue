@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { createIconifyIcon } from '@vben/icons';
 import { $t } from '@vben/locales';
 
 import { Col, Row, Tooltip } from 'ant-design-vue';
@@ -31,7 +30,7 @@ const clientList = accountBindList.filter((item) => item.action);
         <Tooltip :title="`${item.title}登录`">
           <span class="flex cursor-pointer items-center justify-center">
             <component
-              :is="createIconifyIcon(item.avatar)"
+              :is="item.avatar"
               v-if="item.avatar"
               :style="{ color: item.color }"
               class="size-[24px]"

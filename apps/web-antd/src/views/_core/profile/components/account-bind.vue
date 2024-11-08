@@ -5,8 +5,6 @@ import type { SocialInfo } from '#/api/system/social/model';
 
 import { computed, onMounted, ref, unref } from 'vue';
 
-import { createIconifyIcon } from '@vben/icons';
-
 import {
   Alert,
   Avatar,
@@ -127,7 +125,7 @@ onMounted(reload);
               <div class="flex w-full items-center gap-4">
                 <div>
                   <component
-                    :is="createIconifyIcon(item.avatar)"
+                    :is="item.avatar"
                     v-if="item.avatar"
                     :style="{ color: item.color }"
                     class="size-[40px]"

@@ -1,3 +1,13 @@
+import type { Component } from 'vue';
+
+import {
+  AlipayIcon,
+  DingdingIcon,
+  GiteeIcon,
+  GithubOAuthIcon,
+  TaobaoIcon,
+} from '@vben/icons';
+
 import { authBinding } from '#/api/core/auth';
 /**
  * @description: 菜单
@@ -13,7 +23,7 @@ export interface ListItem {
   title: string;
   description: string;
   extra?: string;
-  avatar?: string;
+  avatar?: Component;
   color?: string;
 }
 
@@ -50,7 +60,7 @@ async function handleAuthBinding(source: string) {
  */
 export const accountBindList: BindItem[] = [
   {
-    avatar: 'ri:taobao-fill',
+    avatar: TaobaoIcon,
     color: '#ff4000',
     description: '绑定淘宝账号',
     key: '1',
@@ -58,7 +68,7 @@ export const accountBindList: BindItem[] = [
     title: '淘宝',
   },
   {
-    avatar: 'fa-brands:alipay',
+    avatar: AlipayIcon,
     color: '#2eabff',
     description: '绑定支付宝账号',
     key: '2',
@@ -66,7 +76,7 @@ export const accountBindList: BindItem[] = [
     title: '支付宝',
   },
   {
-    avatar: 'ri:dingding-fill',
+    avatar: DingdingIcon,
     color: '#2eabff',
     description: '绑定钉钉账号',
     key: '3',
@@ -75,7 +85,7 @@ export const accountBindList: BindItem[] = [
   },
   {
     action: () => handleAuthBinding('gitee'),
-    avatar: 'simple-icons:gitee',
+    avatar: GiteeIcon,
     color: '#c71d23',
     description: '绑定GITEE账号',
     key: '4',
@@ -84,7 +94,7 @@ export const accountBindList: BindItem[] = [
   },
   {
     action: () => handleAuthBinding('github'),
-    avatar: 'uiw:github',
+    avatar: GithubOAuthIcon,
     color: '',
     description: '绑定GITHUB账号',
     key: '5',
