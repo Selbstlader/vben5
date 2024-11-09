@@ -139,10 +139,6 @@ const options = computed(() => {
     mergedOptions.proxyConfig.autoLoad = false;
   }
 
-  if (!showToolbar.value && mergedOptions.toolbarConfig) {
-    mergedOptions.toolbarConfig.enabled = false;
-  }
-
   if (mergedOptions.pagerConfig) {
     const mobileLayouts = [
       'PrevJump',
