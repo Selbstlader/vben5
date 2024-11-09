@@ -66,11 +66,13 @@ const slots = useSlots();
 const [Form, formApi] = useTableForm({
   handleSubmit: async () => {
     const formValues = formApi.form.values;
+    formApi.setLatestSubmissionValues(toRaw(formValues));
     props.api.reload(formValues);
   },
   handleReset: async () => {
     await formApi.resetForm();
     const formValues = formApi.form.values;
+    formApi.setLatestSubmissionValues(formValues);
     props.api.reload(formValues);
   },
   commonConfig: {
@@ -227,9 +229,14 @@ async function init() {
   }
   props.api?.setState?.({ gridOptions: defaultGridOptions });
   // form 由 vben-form 代替，所以需要保证query相关事件可以拿到参数
-  extendProxyOptions(props.api, defaultGridOptions, () =>
-    // 这里默认是readonly的  需要深拷贝才能进行修改操作
-    cloneDeep(formApi.form.values),
+  extendProxyOptions(
+    props.api,
+    defaultGridOptions,
+    () =>
+      // 这里默认是readonly的  需要深拷贝才能进行修改操作
+      cloneDeep(formApi.form.values),
+    // 这里的提交记录有很大问题 表单不能被重置
+    // formApi.getLatestSubmissionValues(),
   );
 }
 
