@@ -72,14 +72,6 @@ vxe表格右上角toolbar元素之间的间距
 }
 
 /**
-覆盖vxe-table的toolbar样式 由于默认已经有了padding 需要去除上边的padding
-需要判断是否开启查询表单
-*/
-.vxe-grid:has(.vxe-grid--form-wrapper form) .vxe-toolbar {
-  padding: 0 0 0.6em !important;
-}
-
-/**
 vxe默认圆角
 */
 html {
