@@ -243,8 +243,8 @@ const { hasAccessByCodes } = useAccess();
           </Space>
         </template>
         <template #avatar="{ row }">
-          <Avatar v-if="row.avatar" :src="row.avatar" />
-          <Avatar v-else :src="preferences.app.defaultAvatar" />
+          <!-- 可能要判断空字符串情况 所以没有使用?? -->
+          <Avatar :src="row.avatar || preferences.app.defaultAvatar" />
         </template>
         <template #status="{ row }">
           <TableSwitch
