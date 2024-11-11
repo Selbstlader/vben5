@@ -33,6 +33,11 @@ const gridOptions: VxeGridProps = {
   proxyConfig: {
     enabled: true,
   },
+  toolbarConfig: {
+    refresh: false,
+    zoom: false,
+    custom: false,
+  },
   height: 'auto',
   pagerConfig: {
     enabled: false,
@@ -89,8 +94,10 @@ async function handleSubmit() {
 </script>
 
 <template>
-  <div class="flex h-[calc(100vh-165px)] flex-col gap-[16px] p-[12px]">
-    <BasicTable />
+  <div class="flex flex-col gap-[16px] p-[12px]">
+    <div class="h-[calc(100vh-235px)] overflow-y-hidden">
+      <BasicTable />
+    </div>
     <div class="flex justify-center">
       <Space>
         <a-button @click="toCurrentStep(0)">上一步</a-button>
