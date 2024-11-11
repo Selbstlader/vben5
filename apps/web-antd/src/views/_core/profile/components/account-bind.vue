@@ -75,10 +75,15 @@ const gridOptions: VxeGridProps = {
       title: '操作',
     },
   ],
-  height: 'auto',
+  height: 220,
   keepSource: true,
   pagerConfig: {
     enabled: false,
+  },
+  toolbarConfig: {
+    custom: false,
+    zoom: false,
+    refresh: false,
   },
   proxyConfig: {
     ajax: {
