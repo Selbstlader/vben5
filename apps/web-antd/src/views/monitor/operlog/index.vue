@@ -9,7 +9,6 @@ import { Page, useVbenDrawer, type VbenFormProps } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 
 import { Modal, Space } from 'ant-design-vue';
-import dayjs from 'dayjs';
 import { isEmpty } from 'lodash-es';
 
 import {
@@ -23,7 +22,7 @@ import {
   operLogExport,
   operLogList,
 } from '#/api/monitor/operlog';
-import { downloadExcel } from '#/utils/file/download';
+import { commonDownloadExcel } from '#/utils/file/download';
 import { confirmDeleteModal } from '#/utils/modal';
 
 import { columns, querySchema } from './data';
@@ -38,6 +37,14 @@ const formOptions: VbenFormProps = {
   },
   schema: querySchema(),
   wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
+  // 日期选择格式化
+  fieldMappingTime: [
+    [
+      'createTime',
+      ['params[beginTime]', 'params[endTime]'],
+      ['YYYY-MM-DD 00:00:00', 'YYYY-MM-DD 23:59:59'],
+    ],
+  ],
 };
 
 const gridOptions: VxeGridProps<OperationLog> = {
@@ -56,21 +63,6 @@ const gridOptions: VxeGridProps<OperationLog> = {
   proxyConfig: {
     ajax: {
       query: async ({ page, sort }, formValues = {}) => {
-        // 区间选择器处理
-        if (formValues?.createTime) {
-          formValues.params = {
-            beginTime: dayjs(formValues.createTime[0]).format(
-              'YYYY-MM-DD 00:00:00',
-            ),
-            endTime: dayjs(formValues.createTime[1]).format(
-              'YYYY-MM-DD 23:59:59',
-            ),
-          };
-          Reflect.deleteProperty(formValues, 'createTime');
-        } else {
-          Reflect.deleteProperty(formValues, 'params');
-        }
-
         const params: any = {
           pageNum: page.currentPage,
           pageSize: page.pageSize,
@@ -81,6 +73,7 @@ const gridOptions: VxeGridProps<OperationLog> = {
           params.orderByColumn = sort.field;
           params.isAsc = sort.order;
         }
+
         return await operLogList(params);
       },
     },
@@ -149,6 +142,12 @@ async function handleDelete() {
     },
   });
 }
+
+function handleDownloadExcel() {
+  commonDownloadExcel(operLogExport, '操作日志', tableApi.formApi.form.values, {
+    fieldMappingTime: formOptions.fieldMappingTime,
+  });
+}
 </script>
 
 <template>
@@ -164,13 +163,7 @@ async function handleDelete() {
           </a-button>
           <a-button
             v-access:code="['monitor:operlog:export']"
-            @click="
-              downloadExcel(
-                operLogExport,
-                '操作日志',
-                tableApi.formApi.form.values,
-              )
-            "
+            @click="handleDownloadExcel"
           >
             {{ $t('pages.common.export') }}
           </a-button>

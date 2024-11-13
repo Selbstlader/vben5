@@ -23,7 +23,6 @@ import {
   Popconfirm,
   Space,
 } from 'ant-design-vue';
-import dayjs from 'dayjs';
 
 import {
   tableCheckboxEvent,
@@ -37,7 +36,7 @@ import {
   userStatusChange,
 } from '#/api/system/user';
 import { TableSwitch } from '#/components/table';
-import { downloadExcel } from '#/utils/file/download';
+import { commonDownloadExcel } from '#/utils/file/download';
 
 import { columns, querySchema } from './data';
 import DeptTree from './dept-tree.vue';
@@ -76,6 +75,14 @@ const formOptions: VbenFormProps = {
     await formApi.resetForm();
     await reload();
   },
+  // 日期选择格式化
+  fieldMappingTime: [
+    [
+      'createTime',
+      ['params[beginTime]', 'params[endTime]'],
+      ['YYYY-MM-DD 00:00:00', 'YYYY-MM-DD 23:59:59'],
+    ],
+  ],
 };
 
 const gridOptions: VxeGridProps = {
@@ -95,20 +102,6 @@ const gridOptions: VxeGridProps = {
   proxyConfig: {
     ajax: {
       query: async ({ page }, formValues = {}) => {
-        // 区间选择器处理
-        if (formValues?.createTime) {
-          formValues.params = {
-            beginTime: dayjs(formValues.createTime[0]).format(
-              'YYYY-MM-DD 00:00:00',
-            ),
-            endTime: dayjs(formValues.createTime[1]).format(
-              'YYYY-MM-DD 23:59:59',
-            ),
-          };
-          Reflect.deleteProperty(formValues, 'createTime');
-        } else {
-          Reflect.deleteProperty(formValues, 'params');
-        }
         // 部门树选择处理
         if (selectDeptId.value.length === 1) {
           formValues.deptId = selectDeptId.value[0];
@@ -175,6 +168,12 @@ function handleMultiDelete() {
   });
 }
 
+function handleDownloadExcel() {
+  commonDownloadExcel(userExport, '用户管理', tableApi.formApi.form.values, {
+    fieldMappingTime: formOptions.fieldMappingTime,
+  });
+}
+
 const [UserInfoModal, userInfoModalApi] = useVbenModal({
   connectedComponent: userInfoModal,
 });
@@ -208,13 +207,7 @@ const { hasAccessByCodes } = useAccess();
           <Space>
             <a-button
               v-access:code="['system:user:export']"
-              @click="
-                downloadExcel(
-                  userExport,
-                  '用户管理',
-                  tableApi.formApi.form.values,
-                )
-              "
+              @click="handleDownloadExcel"
             >
               {{ $t('pages.common.export') }}
             </a-button>
