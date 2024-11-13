@@ -5,6 +5,7 @@ export * from './icon-picker';
 export * from './json-preview';
 export * from './markdown';
 export * from './page';
+export * from './resize';
 export * from '@vben-core/form-ui';
 export * from '@vben-core/popup-ui';
 
