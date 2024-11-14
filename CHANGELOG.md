@@ -5,6 +5,10 @@
 - 使用VxeTable重构OAuth账号绑定列表(替代antdv的Table)
 - commonDownloadExcel方法 支持处理区间选择器字段导出excel
 
+**BUG FIXES**
+
+- 修复在Modal/Drawer中使用VxeTable时, 第二次打开表单参数依旧为第一次提交的参数
+
 **OTHERS**
 
 - 废弃downloadExcel方法 统一使用commonDownloadExcel方法
