@@ -23,7 +23,7 @@ import {
   packageRemove,
 } from '#/api/system/tenant-package';
 import { TableSwitch } from '#/components/table';
-import { downloadExcel } from '#/utils/file/download';
+import { commonDownloadExcel } from '#/utils/file/download';
 
 import { columns, querySchema } from './data';
 import tenantPackageDrawer from './tenant-package-drawer.vue';
@@ -129,6 +129,14 @@ function handleMultiDelete() {
   });
 }
 
+function handleDownloadExcel() {
+  commonDownloadExcel(
+    packageExport,
+    '租户套餐数据',
+    tableApi.formApi.form.values,
+  );
+}
+
 /**
  * 与后台逻辑相同
  * 只有超级管理员能访问租户相关
@@ -147,13 +155,7 @@ const isSuperAdmin = computed(() => {
         <Space>
           <a-button
             v-access:code="['system:tenantPackage:export']"
-            @click="
-              downloadExcel(
-                packageExport,
-                '租户套餐数据',
-                tableApi.formApi.form.values,
-              )
-            "
+            @click="handleDownloadExcel"
           >
             {{ $t('pages.common.export') }}
           </a-button>
