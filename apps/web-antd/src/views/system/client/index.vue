@@ -21,7 +21,7 @@ import {
   clientRemove,
 } from '#/api/system/client';
 import { TableSwitch } from '#/components/table';
-import { downloadExcel } from '#/utils/file/download';
+import { commonDownloadExcel } from '#/utils/file/download';
 
 import clientDrawer from './client-drawer.vue';
 import { columns, querySchema } from './data';
@@ -114,6 +114,10 @@ function handleMultiDelete() {
   });
 }
 
+function handleDownloadExcel() {
+  commonDownloadExcel(clientExport, '客户端数据', tableApi.formApi.form.values);
+}
+
 const { hasAccessByCodes } = useAccess();
 </script>
 
@@ -124,13 +128,7 @@ const { hasAccessByCodes } = useAccess();
         <Space>
           <a-button
             v-access:code="['system:client:export']"
-            @click="
-              downloadExcel(
-                clientExport,
-                '客户端数据',
-                tableApi.formApi.form.values,
-              )
-            "
+            @click="handleDownloadExcel"
           >
             {{ $t('pages.common.export') }}
           </a-button>

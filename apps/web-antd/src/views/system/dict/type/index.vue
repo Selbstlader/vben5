@@ -31,7 +31,7 @@ import {
 } from '#/api/system/dict/dict-type';
 import { dictSyncTenant } from '#/api/system/tenant';
 import { useTenantStore } from '#/store/tenant';
-import { downloadExcel } from '#/utils/file/download';
+import { commonDownloadExcel } from '#/utils/file/download';
 
 import { emitter } from '../mitt';
 import { columns, querySchema } from './data';
@@ -176,6 +176,14 @@ function handleSyncTenantDict() {
   });
 }
 
+function handleDownloadExcel() {
+  commonDownloadExcel(
+    dictTypeExport,
+    '字典类型数据',
+    tableApi.formApi.form.values,
+  );
+}
+
 const { hasAccessByRoles } = useAccess();
 const tenantStore = useTenantStore();
 /**
@@ -206,13 +214,7 @@ const couldSyncTenantDict = computed(() => {
           </Dropdown>
           <a-button
             v-access:code="['system:dict:export']"
-            @click="
-              downloadExcel(
-                dictTypeExport,
-                '字典类型数据',
-                tableApi.formApi.form.values,
-              )
-            "
+            @click="handleDownloadExcel"
           >
             {{ $t('pages.common.export') }}
           </a-button>

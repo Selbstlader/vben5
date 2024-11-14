@@ -7,7 +7,6 @@ import { useVbenDrawer, type VbenFormProps } from '@vben/common-ui';
 import { getVxePopupContainer } from '@vben/utils';
 
 import { Modal, Popconfirm, Space } from 'ant-design-vue';
-import dayjs from 'dayjs';
 
 import {
   tableCheckboxEvent,
@@ -19,7 +18,7 @@ import {
   dictDataList,
   dictDataRemove,
 } from '#/api/system/dict/dict-data';
-import { downloadExcel } from '#/utils/file/download';
+import { commonDownloadExcel } from '#/utils/file/download';
 
 import { emitter } from '../mitt';
 import { columns, querySchema } from './data';
@@ -54,21 +53,6 @@ const gridOptions: VxeGridProps = {
   proxyConfig: {
     ajax: {
       query: async ({ page }, formValues = {}) => {
-        // 区间选择器处理
-        if (formValues?.createTime) {
-          formValues.params = {
-            beginTime: dayjs(formValues.createTime[0]).format(
-              'YYYY-MM-DD 00:00:00',
-            ),
-            endTime: dayjs(formValues.createTime[1]).format(
-              'YYYY-MM-DD 23:59:59',
-            ),
-          };
-          Reflect.deleteProperty(formValues, 'createTime');
-        } else {
-          Reflect.deleteProperty(formValues, 'params');
-        }
-
         const params: any = {
           pageNum: page.currentPage,
           pageSize: page.pageSize,
@@ -136,6 +120,10 @@ function handleMultiDelete() {
   });
 }
 
+function handleDownloadExcel() {
+  commonDownloadExcel(dictDataExport, '字典数据', tableApi.formApi.form.values);
+}
+
 emitter.on('rowClick', async (value) => {
   dictType.value = value;
   await tableApi.query();
@@ -149,13 +137,7 @@ emitter.on('rowClick', async (value) => {
         <Space>
           <a-button
             v-access:code="['system:dict:export']"
-            @click="
-              downloadExcel(
-                dictDataExport,
-                '字典数据',
-                tableApi.formApi.form.values,
-              )
-            "
+            @click="handleDownloadExcel"
           >
             {{ $t('pages.common.export') }}
           </a-button>
