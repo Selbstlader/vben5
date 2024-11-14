@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Recordable } from '@vben/types';
 
-import { nextTick, onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { Page, useVbenModal, type VbenFormProps } from '@vben/common-ui';
@@ -182,20 +182,8 @@ function handleMultiDelete() {
   });
 }
 
-const init = ref(true);
 const [TableImportModal, tableImportModalApi] = useVbenModal({
   connectedComponent: tableImportModal,
-  /**
-   * TODO: 等待官方修复
-   * 临时解决方案 for https://github.com/vbenjs/vue-vben-admin/issues/4752
-   * 通过在关闭时使用v-if切换来造成Modal的重新渲染
-   * 目前Modal逻辑为每次打开 内部的元素会重新mount 但是Modal本身不会重新渲染
-   */
-  async onClosed() {
-    init.value = false;
-    await nextTick();
-    init.value = true;
-  },
 });
 
 function handleImport() {
@@ -298,6 +286,6 @@ function handleImport() {
       </template>
     </BasicTable>
     <CodePreviewModal />
-    <TableImportModal v-if="init" @reload="tableApi.query()" />
+    <TableImportModal @reload="tableApi.query()" />
   </Page>
 </template>
