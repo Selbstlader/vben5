@@ -8,9 +8,7 @@ import { Button, Card, Col, Row } from 'ant-design-vue';
 
 import { redisCacheInfo, type RedisInfo } from '#/api/monitor/cache';
 
-import CommandChart from './components/CommandChart.vue';
-import MemoryChart from './components/MemoryChart.vue';
-import RedisDescription from './components/RedisDescription.vue';
+import { CommandChart, MemoryChart, RedisDescription } from './components';
 
 const baseSpan = { lg: 12, md: 24, sm: 24, xl: 12, xs: 24 };
 
