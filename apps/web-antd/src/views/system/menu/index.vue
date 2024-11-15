@@ -55,6 +55,7 @@ const gridOptions: VxeGridProps = {
   /**
    * 开启虚拟滚动
    * 数据量小可以选择关闭
+   * 如果遇到样式问题(空白、错位 滚动等)可以选择关闭虚拟滚动
    */
   scrollY: {
     enabled: true,
