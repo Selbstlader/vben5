@@ -299,7 +299,7 @@ const { hasAccessByCodes } = useAccess();
         </template>
       </BasicTable>
     </div>
-    <UserImpotModal />
+    <UserImpotModal @reload="tableApi.query()" />
     <UserDrawer @reload="tableApi.query()" />
     <UserInfoModal />
     <UserResetPwdModal />
