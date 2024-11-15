@@ -4,12 +4,7 @@ import type { Recordable } from '@vben/types';
 import { nextTick } from 'vue';
 
 import { Page, useVbenDrawer, type VbenFormProps } from '@vben/common-ui';
-import {
-  eachTree,
-  getVxePopupContainer,
-  listToTree,
-  removeEmptyChildren,
-} from '@vben/utils';
+import { eachTree, getVxePopupContainer } from '@vben/utils';
 
 import { Popconfirm, Space } from 'ant-design-vue';
 
@@ -43,13 +38,7 @@ const gridOptions: VxeGridProps = {
         const resp = await deptList({
           ...formValues,
         });
-        const treeData = listToTree(resp, {
-          id: 'deptId',
-          pid: 'parentId',
-          children: 'children',
-        });
-        removeEmptyChildren(treeData);
-        return { rows: treeData };
+        return { rows: resp };
       },
       // 默认请求接口后展开全部 不需要可以删除这段
       querySuccess: () => {
@@ -62,15 +51,21 @@ const gridOptions: VxeGridProps = {
       },
     },
   },
+  /**
+   * 虚拟滚动  默认关闭
+   */
+  scrollY: {
+    enabled: false,
+    gt: 0,
+  },
   rowConfig: {
     isHover: true,
     keyField: 'deptId',
   },
-
   treeConfig: {
     parentField: 'parentId',
     rowField: 'deptId',
-    transform: false,
+    transform: true,
   },
   id: 'system-dept-index',
 };

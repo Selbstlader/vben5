@@ -4,7 +4,7 @@ import type { Recordable } from '@vben/types';
 import { nextTick } from 'vue';
 
 import { Page, useVbenModal, type VbenFormProps } from '@vben/common-ui';
-import { getVxePopupContainer, listToTree } from '@vben/utils';
+import { getVxePopupContainer } from '@vben/utils';
 
 import { Popconfirm, Space } from 'ant-design-vue';
 
@@ -38,12 +38,7 @@ const gridOptions: VxeGridProps = {
         const resp = await categoryList({
           ...formValues,
         });
-        const treeData = listToTree(resp, {
-          id: 'id',
-          pid: 'parentId',
-          children: 'children',
-        });
-        return { rows: treeData };
+        return { rows: resp };
       },
       // 默认请求接口后展开全部 不需要可以删除这段
       querySuccess: () => {
@@ -53,13 +48,20 @@ const gridOptions: VxeGridProps = {
       },
     },
   },
+  /**
+   * 虚拟滚动  默认关闭
+   */
+  scrollY: {
+    enabled: false,
+    gt: 0,
+  },
   rowConfig: {
     keyField: 'id',
   },
   treeConfig: {
     parentField: 'parentId',
     rowField: 'id',
-    transform: false,
+    transform: true,
   },
   // 表格全局唯一表示 保存列配置需要用到
   id: 'workflow-category-index',

@@ -6,12 +6,7 @@ import { computed } from 'vue';
 import { useAccess } from '@vben/access';
 import { Page, useVbenDrawer, type VbenFormProps } from '@vben/common-ui';
 import { Fallback } from '@vben/common-ui';
-import {
-  eachTree,
-  getVxePopupContainer,
-  listToTree,
-  removeEmptyChildren,
-} from '@vben/utils';
+import { eachTree, getVxePopupContainer } from '@vben/utils';
 
 import { Popconfirm, Space } from 'ant-design-vue';
 
@@ -49,13 +44,7 @@ const gridOptions: VxeGridProps = {
         const resp = await menuList({
           ...formValues,
         });
-        const treeData = listToTree(resp, {
-          id: 'menuId',
-          pid: 'parentId',
-          children: 'children',
-        });
-        removeEmptyChildren(treeData);
-        return { rows: treeData };
+        return { rows: resp };
       },
     },
   },
@@ -63,11 +52,19 @@ const gridOptions: VxeGridProps = {
     isHover: true,
     keyField: 'menuId',
   },
-
+  /**
+   * 开启虚拟滚动
+   * 数据量小可以选择关闭
+   */
+  scrollY: {
+    enabled: true,
+    gt: 0,
+  },
   treeConfig: {
     parentField: 'parentId',
     rowField: 'menuId',
-    transform: false,
+    // 自动转换为tree 由vxe处理 无需手动转换
+    transform: true,
   },
   id: 'system-menu-index',
 };
