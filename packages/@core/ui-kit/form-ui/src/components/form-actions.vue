@@ -95,7 +95,11 @@ function handleRangeTimeValue(values: Record<string, any>) {
        * 时间字段为空 但是映射的start/end不为空 说明已经清理了组件的时间(组件右边的x)
        * 需要删除对应的start/end字段 否则会被保留
        */
-      if (!values[field] && values[startTimeKey] && values[endTimeKey]) {
+      if (
+        values[field] === null &&
+        values[startTimeKey] &&
+        values[endTimeKey]
+      ) {
         delete values[startTimeKey];
         delete values[endTimeKey];
         return;

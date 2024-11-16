@@ -54,6 +54,16 @@ function handleRangeTimeValue(
 
   fieldMappingTime.forEach(
     ([field, [startTimeKey, endTimeKey], format = 'YYYY-MM-DD']) => {
+      if (
+        values[field] === null &&
+        values[startTimeKey] &&
+        values[endTimeKey]
+      ) {
+        Reflect.deleteProperty(values, startTimeKey);
+        Reflect.deleteProperty(values, endTimeKey);
+        return;
+      }
+
       if (!values[field]) {
         Reflect.deleteProperty(values, field);
         return;
