@@ -167,8 +167,8 @@ defineExpose({
     </div>
 
     <!-- 第三方登录 -->
-    <slot name="third-party-login">
-      <ThirdPartyLogin v-if="showThirdPartyLogin" />
+    <slot v-if="showThirdPartyLogin" name="third-party-login">
+      <ThirdPartyLogin />
     </slot>
 
     <slot name="to-register">
