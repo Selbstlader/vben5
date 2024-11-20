@@ -123,7 +123,7 @@ const { hasAccessByCodes } = useAccess();
 
 <template>
   <Page :auto-content-height="true">
-    <BasicTable table-title="系统授权列表">
+    <BasicTable table-title="客户端列表">
       <template #toolbar-tools>
         <Space>
           <a-button
