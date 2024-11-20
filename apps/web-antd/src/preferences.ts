@@ -47,4 +47,18 @@ export const overridesPreferences = defineOverridesPreferences({
      */
     semiDarkSidebar: false,
   },
+  /**
+   * !!! 更改配置后请清空浏览器缓存
+   * 在这里更换logo
+   * source可选值：
+   * 1. 本地public目录下的图片 需要加上/ 比如：/logo.png
+   * 2. 网络图片链接
+   * 3. vite导入的图片 import xxx from 'xxx.png'
+   *
+   * !!! 更改配置后请清空浏览器缓存
+   */
+  // logo: {
+  //   enable: true,
+  //   source: '',
+  // },
 });
