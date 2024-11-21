@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useTemplateRef } from 'vue';
+
 import { Page } from '@vben/common-ui';
 
 import {
@@ -11,15 +13,35 @@ import {
   Tabs,
   Tag,
 } from 'ant-design-vue';
+import { debounce } from 'lodash-es';
 
 import { ApprovalCard } from '../components';
+
+const scrollContainer = useTemplateRef('scrollContainer');
+
+const handleScroll = debounce((e: Event) => {
+  if (!e.target) {
+    return;
+  }
+  // e.target.scrollTop 是元素顶部到当前可视区域顶部的距离，即已滚动的高度。
+  // e.target.clientHeight 是元素的可视高度。
+  // e.target.scrollHeight 是元素的总高度。
+  const { scrollTop, clientHeight, scrollHeight } = e.target as HTMLElement;
+  // 判断是否滚动到底部
+  const isBottom = scrollTop + clientHeight >= scrollHeight;
+  console.log(isBottom);
+  // console.log(scrollTop + clientHeight);
+  // console.log(scrollHeight);
+}, 200);
 </script>
 
 <template>
   <Page :auto-content-height="true">
     <div class="flex h-full gap-2">
       <div
+        ref="scrollContainer"
         class="bg-background h-full w-[320px] overflow-y-auto rounded-lg py-3"
+        @scroll="handleScroll"
       >
         <div class="flex flex-col gap-2">
           <ApprovalCard
