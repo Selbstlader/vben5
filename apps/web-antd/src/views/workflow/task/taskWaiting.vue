@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive } from 'vue';
+import { reactive, ref } from 'vue';
 
 import { Page } from '@vben/common-ui';
 
@@ -8,6 +8,7 @@ import {
   Avatar,
   Card,
   Divider,
+  InputSearch,
   Space,
   TabPane,
   Tabs,
@@ -44,21 +45,34 @@ const data = reactive(
   })),
 );
 
+const lastSelectId = ref('');
 function handleCardClick(id: string) {
+  // 点击的是同一个
+  if (lastSelectId.value === id) {
+    return;
+  }
+  // 反选状态 & 如果已经点击了 不变 & 保持只能有一个选中
   data.forEach((item) => {
-    item.active = item.id === id ? !item.active : false;
+    item.active = item.id === id;
   });
+  lastSelectId.value = id;
 }
 </script>
 
 <template>
   <Page :auto-content-height="true">
     <div class="flex h-full gap-2">
-      <div
-        class="bg-background h-full w-[320px] overflow-y-auto rounded-lg py-3"
-        @scroll="handleScroll"
-      >
-        <div class="flex flex-col gap-2">
+      <div class="bg-background flex h-full w-[320px] flex-col rounded-lg">
+        <!-- 搜索条件 -->
+        <div
+          class="bg-background z-100 sticky left-0 top-0 w-full rounded-t-lg border-b-[1px] border-solid p-2"
+        >
+          <InputSearch placeholder="搜索" />
+        </div>
+        <div
+          class="flex flex-1 flex-col gap-2 overflow-y-auto py-3"
+          @scroll="handleScroll"
+        >
           <ApprovalCard
             v-for="item in data"
             :key="item.id"
@@ -66,6 +80,14 @@ function handleCardClick(id: string) {
             class="mx-2"
             @click="handleCardClick"
           />
+        </div>
+        <!-- total显示 -->
+        <div
+          class="bg-background sticky bottom-0 w-full rounded-b-lg border-t-[1px] py-2"
+        >
+          <div class="flex items-center justify-center">
+            共 {{ data.length }} 条记录
+          </div>
         </div>
       </div>
       <Card class="flex-1" size="small" title="编号: 1234567890123456789012">
@@ -100,7 +122,7 @@ function handleCardClick(id: string) {
         </div>
         <!-- 固定底部 -->
         <div
-          class="border-t-solid absolute bottom-0 left-0 w-full border-t-[1px] border-t-slate-300 p-3 dark:border-t-slate-600"
+          class="border-t-solid absolute bottom-0 left-0 w-full border-t-[1px] p-3"
         >
           <div class="flex justify-end">
             <Space>

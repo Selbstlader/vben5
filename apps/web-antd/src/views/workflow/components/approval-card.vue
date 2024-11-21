@@ -22,8 +22,11 @@ function handleClick() {
 
 <template>
   <div
-    :class="{ '!border-primary': info.active, '!border-[2px]': info.active }"
-    class="cursor-pointer rounded-lg border-[1px] border-solid border-gray-200 p-3 transition-shadow duration-300 ease-in-out hover:shadow-lg dark:border-gray-600"
+    :class="{
+      'border-primary': info.active,
+      'border-[2px]': info.active,
+    }"
+    class="cursor-pointer rounded-lg border-[1px] border-solid p-3 transition-shadow duration-300 ease-in-out hover:shadow-lg"
     @click.stop="handleClick"
   >
     <Descriptions :column="1" :title="info.title" size="middle">
