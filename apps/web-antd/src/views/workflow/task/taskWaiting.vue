@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useTemplateRef } from 'vue';
+import { reactive } from 'vue';
 
 import { Page } from '@vben/common-ui';
 
@@ -13,11 +13,9 @@ import {
   Tabs,
   Tag,
 } from 'ant-design-vue';
-import { debounce } from 'lodash-es';
+import { debounce, uniqueId } from 'lodash-es';
 
 import { ApprovalCard } from '../components';
-
-const scrollContainer = useTemplateRef('scrollContainer');
 
 const handleScroll = debounce((e: Event) => {
   if (!e.target) {
@@ -33,28 +31,40 @@ const handleScroll = debounce((e: Event) => {
   // console.log(scrollTop + clientHeight);
   // console.log(scrollHeight);
 }, 200);
+
+const data = reactive(
+  Array.from({ length: 10 }).map(() => ({
+    id: uniqueId(),
+    startTime: '2022-01-01',
+    endTime: '2022-01-02',
+    title: '审批任务',
+    desc: '审批任务描述',
+    status: '审批中',
+    active: false,
+  })),
+);
+
+function handleCardClick(id: string) {
+  data.forEach((item) => {
+    item.active = item.id === id ? !item.active : false;
+  });
+}
 </script>
 
 <template>
   <Page :auto-content-height="true">
     <div class="flex h-full gap-2">
       <div
-        ref="scrollContainer"
         class="bg-background h-full w-[320px] overflow-y-auto rounded-lg py-3"
         @scroll="handleScroll"
       >
         <div class="flex flex-col gap-2">
           <ApprovalCard
-            v-for="item in 10"
-            :key="item"
-            :info="{
-              startTime: '2022-01-01',
-              endTime: '2022-01-02',
-              title: '审批任务',
-              desc: '审批任务描述',
-              status: '审批中',
-            }"
+            v-for="item in data"
+            :key="item.id"
+            :info="item"
             class="mx-2"
+            @click="handleCardClick"
           />
         </div>
       </div>
@@ -90,7 +100,7 @@ const handleScroll = debounce((e: Event) => {
         </div>
         <!-- 固定底部 -->
         <div
-          class="border-t-solid absolute bottom-0 left-0 w-full border-t-[1px] border-t-slate-300 p-3"
+          class="border-t-solid absolute bottom-0 left-0 w-full border-t-[1px] border-t-slate-300 p-3 dark:border-t-slate-600"
         >
           <div class="flex justify-end">
             <Space>

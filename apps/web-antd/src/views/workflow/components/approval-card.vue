@@ -2,19 +2,29 @@
 import { Avatar, Descriptions, DescriptionsItem, Tag } from 'ant-design-vue';
 
 interface Props {
+  id: string;
   endTime: string;
   startTime: string;
   title: string;
   desc: string;
   status: string;
+  active: boolean;
 }
 
-withDefaults(defineProps<{ info: Props }>(), {});
+const props = withDefaults(defineProps<{ info: Props }>(), {});
+
+const emit = defineEmits<{ click: [string] }>();
+
+function handleClick() {
+  emit('click', props.info.id);
+}
 </script>
 
 <template>
   <div
-    class="cursor-pointer rounded-lg border-[1px] border-solid border-gray-200 p-3 transition-shadow duration-300 ease-in-out hover:shadow-lg"
+    :class="{ '!border-primary': info.active, '!border-[2px]': info.active }"
+    class="cursor-pointer rounded-lg border-[1px] border-solid border-gray-200 p-3 transition-shadow duration-300 ease-in-out hover:shadow-lg dark:border-gray-600"
+    @click.stop="handleClick"
   >
     <Descriptions :column="1" :title="info.title" size="middle">
       <template #extra>
