@@ -4,6 +4,10 @@
 
 - 菜单管理 改为虚拟滚动
 
+**BUG FIXES**
+
+- 语言 漏加Content-Language请求头
+
 # 1.1.1
 
 **REFACTOR**
