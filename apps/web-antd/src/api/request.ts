@@ -99,6 +99,7 @@ function createRequestClient(baseURL: string) {
        */
       const language = preferences.app.locale.replace('-', '_');
       config.headers['Accept-Language'] = language;
+      config.headers['Content-Language'] = language;
       // 添加全局clientId
       config.headers.clientId = clientId;
 
