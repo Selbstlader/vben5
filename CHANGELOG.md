@@ -1,5 +1,9 @@
 # 1.1.2
 
+**Features**
+
+- Options转Enum工具函数
+
 **OTHERS**
 
 - 菜单管理 改为虚拟滚动
