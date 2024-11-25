@@ -7,6 +7,7 @@
 **OTHERS**
 
 - 菜单管理 改为虚拟滚动
+- 移除requestClient的一些冗余参数
 
 **BUG FIXES**
 
