@@ -88,7 +88,10 @@ const avatar = computed(() => {
 });
 
 async function handleLogout() {
-  await authStore.logout();
+  /**
+   * 主动登出不需要带跳转地址
+   */
+  await authStore.logout(false);
   resetRoutes();
 }
 
