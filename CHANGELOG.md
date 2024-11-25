@@ -1,8 +1,18 @@
 # 1.1.2
 
+**Features**
+
+- Options转Enum工具函数
+
 **OTHERS**
 
 - 菜单管理 改为虚拟滚动
+- 移除requestClient的一些冗余参数
+- 主动退出登录(右上角个人选项)不需要带跳转地址
+
+**BUG FIXES**
+
+- 语言 漏加Content-Language请求头
 
 # 1.1.1
 
