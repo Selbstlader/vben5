@@ -17,6 +17,7 @@ export const authScopeOptions = [
   { color: 'orange', label: '本部门数据权限', value: '3' },
   { color: 'cyan', label: '本部门及以下数据权限', value: '4' },
   { color: 'error', label: '仅本人数据权限', value: '5' },
+  { color: 'default', label: '部门及以下或本人数据权限', value: '6' },
 ];
 
 export const querySchema: FormSchemaGetter = () => [
