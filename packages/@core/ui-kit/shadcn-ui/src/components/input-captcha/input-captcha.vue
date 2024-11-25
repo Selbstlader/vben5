@@ -23,8 +23,8 @@ defineEmits<{ captchaClick: [] }>();
 const modelValue = defineModel({ default: '', type: String });
 </script>
 
+<!-- 图片验证码 -->
 <template>
-  <!-- 图片验证码 -->
   <div class="flex w-full">
     <div class="flex-1">
       <VbenInput
