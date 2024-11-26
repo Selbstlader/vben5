@@ -10,7 +10,16 @@ import { getDeptTree } from '#/api/system/user';
 
 defineOptions({ inheritAttrs: false });
 
-const emit = defineEmits<{ select: [] }>();
+const emit = defineEmits<{
+  /**
+   * 点击刷新按钮的事件
+   */
+  reload: [];
+  /**
+   * 点击节点的事件
+   */
+  select: [];
+}>();
 
 const selectDeptId = defineModel('selectDeptId', {
   required: true,
@@ -28,19 +37,23 @@ const deptTreeArray = ref<DeptTreeArray>([]);
 /** 骨架屏加载 */
 const showTreeSkeleton = ref<boolean>(true);
 
-async function reload() {
+async function loadTree() {
   showTreeSkeleton.value = true;
   searchValue.value = '';
   selectDeptId.value = [];
 
   const ret = await getDeptTree();
-  emit('select');
 
   deptTreeArray.value = ret;
   showTreeSkeleton.value = false;
 }
 
-onMounted(reload);
+async function handleReload() {
+  await loadTree();
+  emit('reload');
+}
+
+onMounted(loadTree);
 </script>
 
 <template>
@@ -62,7 +75,7 @@ onMounted(reload);
             size="small"
           >
             <template #enterButton>
-              <a-button @click="reload">
+              <a-button @click="handleReload">
                 <SyncOutlined class="text-primary" />
               </a-button>
             </template>
