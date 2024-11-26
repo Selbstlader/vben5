@@ -202,7 +202,8 @@ const { hasAccessByCodes } = useAccess();
       <DeptTree
         v-model:select-dept-id="selectDeptId"
         class="w-[260px]"
-        @select="() => tableApi.query()"
+        @reload="() => tableApi.reload()"
+        @select="() => tableApi.reload()"
       />
       <BasicTable class="flex-1 overflow-hidden" table-title="用户列表">
         <template #toolbar-tools>

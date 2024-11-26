@@ -13,6 +13,7 @@
 **BUG FIXES**
 
 - 语言 漏加Content-Language请求头
+- 用户管理/岗位管理 左边部门树错误emit导致会调用两次列表api
 
 # 1.1.1
 
