@@ -98,7 +98,8 @@ export const modalSchema: FormSchemaGetter = () => [
     rules: 'required',
   },
   {
-    component: 'Input',
+    component: 'Textarea',
+    formItemClass: 'items-baseline',
     fieldName: 'configValue',
     label: '参数键值',
     rules: 'required',
