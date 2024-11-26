@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import { computed, h, ref } from 'vue';
+import { computed, ref } from 'vue';
 
 import { useVbenDrawer } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 import { cloneDeep } from '@vben/utils';
-
-import { Tag } from 'ant-design-vue';
 
 import { useVbenForm } from '#/adapter/form';
 import { tenantAdd, tenantInfo, tenantUpdate } from '#/api/system/tenant';
@@ -34,18 +32,14 @@ const [BasicForm, formApi] = useVbenForm({
 async function setupPackageSelect() {
   const tenantPackageList = await packageSelectList();
   const options = tenantPackageList.map((item) => ({
-    label: h('div', { class: 'flex items-center gap-[6px]' }, [
-      h('span', null, item.packageName),
-      h(Tag, { color: 'processing' }, () => `${item.menuIds.length}个菜单项`),
-    ]),
-    title: item.packageName,
+    label: item.packageName,
     value: item.packageId,
   }));
   formApi.updateSchema([
     {
       componentProps: {
-        optionFilterProp: 'title',
-        optionLabelProp: 'title',
+        optionFilterProp: 'label',
+        optionLabelProp: 'label',
         options,
         showSearch: true,
       },
