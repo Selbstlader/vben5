@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { UserProfile } from '#/api/system/profile/model';
 
-import { onMounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 
 import { Page } from '@vben/common-ui';
 import { useUserStore } from '@vben/stores';
@@ -34,7 +34,8 @@ async function handleUploadFinish() {
   userStore.setUserInfo(userInfo);
 }
 
-emitter.on('updateProfile', loadProfile);
+onMounted(() => emitter.on('updateProfile', loadProfile));
+onUnmounted(() => emitter.off('updateProfile'));
 </script>
 
 <template>
