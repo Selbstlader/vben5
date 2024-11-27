@@ -173,7 +173,7 @@ catalog:
   vue-router: ^4.4.5
   vue-tsc: ^2.1.10
   vxe-pc-ui: ^4.3.4
-  vxe-table: ^4.9.5
+  vxe-table: 4.9.5
   watermark-js-plus: ^1.5.7
   zod: ^3.23.8
   zod-defaults: ^0.1.3
