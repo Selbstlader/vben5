@@ -1,21 +1,12 @@
 <script setup lang="ts">
 import type { Recordable } from '@vben/types';
 
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 
-import { useAccess } from '@vben/access';
 import { useVbenModal, type VbenFormProps } from '@vben/common-ui';
 import { getVxePopupContainer } from '@vben/utils';
 
-import {
-  Dropdown,
-  Menu,
-  MenuItem,
-  type MenuProps,
-  Modal,
-  Popconfirm,
-  Space,
-} from 'ant-design-vue';
+import { Modal, Popconfirm, Space } from 'ant-design-vue';
 
 import {
   tableCheckboxEvent,
@@ -28,8 +19,6 @@ import {
   dictTypeRemove,
   refreshDictTypeCache,
 } from '#/api/system/dict/dict-type';
-import { dictSyncTenant } from '#/api/system/tenant';
-import { useTenantStore } from '#/store/tenant';
 import { commonDownloadExcel } from '#/utils/file/download';
 
 import { emitter } from '../mitt';
@@ -131,33 +120,9 @@ function handleMultiDelete() {
   });
 }
 
-const handleMenuClick: MenuProps['onClick'] = (e) => {
-  switch (e.key) {
-    case '1': {
-      handleRefreshCache();
-      break;
-    }
-    case '2': {
-      handleSyncTenantDict();
-      break;
-    }
-  }
-};
 async function handleRefreshCache() {
   await refreshDictTypeCache();
   await tableApi.query();
-}
-
-function handleSyncTenantDict() {
-  Modal.confirm({
-    title: '提示',
-    iconType: 'warning',
-    content: '确认同步租户字典？',
-    onOk: async () => {
-      await dictSyncTenant();
-      await tableApi.query();
-    },
-  });
 }
 
 function handleDownloadExcel() {
@@ -167,15 +132,6 @@ function handleDownloadExcel() {
     tableApi.formApi.form.values,
   );
 }
-
-const { hasAccessByRoles } = useAccess();
-const tenantStore = useTenantStore();
-/**
- * 开启租户 & 超级管理员才可以同步租户字典
- */
-const couldSyncTenantDict = computed(() => {
-  return tenantStore.tenantEnable && hasAccessByRoles(['superadmin']);
-});
 </script>
 
 <template>
@@ -183,19 +139,12 @@ const couldSyncTenantDict = computed(() => {
     <BasicTable id="dict-type" table-title="字典类型列表">
       <template #toolbar-tools>
         <Space>
-          <Dropdown>
-            <template #overlay>
-              <Menu @click="handleMenuClick">
-                <span v-access:code="['system:dict:edit']">
-                  <MenuItem key="1">刷新字典缓存</MenuItem>
-                </span>
-                <span v-if="couldSyncTenantDict">
-                  <MenuItem key="2"> 同步租户字典 </MenuItem>
-                </span>
-              </Menu>
-            </template>
-            <a-button> 更多 </a-button>
-          </Dropdown>
+          <a-button
+            v-access:code="['system:dict:edit']"
+            @click="handleRefreshCache"
+          >
+            刷新缓存
+          </a-button>
           <a-button
             v-access:code="['system:dict:export']"
             @click="handleDownloadExcel"
