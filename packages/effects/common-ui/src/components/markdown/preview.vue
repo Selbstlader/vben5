@@ -51,11 +51,20 @@ const content = defineModel('value', {
   default: '',
 });
 
+/**
+ * 由于不能输入 需要使用watch监听
+ */
+watch(content, (value) => {
+  vditorInstance.value?.setValue(value);
+});
+
 onMounted(() => {
   vditorInstance.value = new Vditor(vditorRef.value!, {
     mode: 'wysiwyg',
     value: content.value,
     height: props.height,
+    // 开启打字机模式
+    // typewriterMode: true,
     lang: locale.value.replace('-', '_') as any,
     cache: {
       enable: false,
@@ -63,10 +72,6 @@ onMounted(() => {
     theme: isDark.value ? 'dark' : 'classic',
     // 预览(只读模式) 不显示工具栏
     toolbar: [],
-    // 手动响应式
-    input(value) {
-      content.value = value;
-    },
     // 加载完成的事件
     after() {
       emit('mounted');
