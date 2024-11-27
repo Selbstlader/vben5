@@ -73,7 +73,7 @@ catalog:
   commitlint-plugin-function-rules: ^4.0.1
   consola: ^3.2.3
   cross-env: ^7.0.3
-  cspell: ^8.16.0
+  cspell: 8.16.0
   cssnano: ^7.0.6
   cz-git: ^1.11.0
   czg: ^1.11.0
