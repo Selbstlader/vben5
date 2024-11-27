@@ -16,7 +16,6 @@ import {
   Popconfirm,
   Space,
 } from 'ant-design-vue';
-import dayjs from 'dayjs';
 
 import {
   tableCheckboxEvent,
@@ -64,21 +63,6 @@ const gridOptions: VxeGridProps = {
   proxyConfig: {
     ajax: {
       query: async ({ page }, formValues = {}) => {
-        // 区间选择器处理
-        if (formValues?.createTime) {
-          formValues.params = {
-            beginTime: dayjs(formValues.createTime[0]).format(
-              'YYYY-MM-DD 00:00:00',
-            ),
-            endTime: dayjs(formValues.createTime[1]).format(
-              'YYYY-MM-DD 23:59:59',
-            ),
-          };
-          Reflect.deleteProperty(formValues, 'createTime');
-        } else {
-          Reflect.deleteProperty(formValues, 'params');
-        }
-
         return await dictTypeList({
           pageNum: page.currentPage,
           pageSize: page.pageSize,
