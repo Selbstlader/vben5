@@ -8,6 +8,7 @@
 **Others**
 
 - 角色管理 优化Drawer布局
+- unplugin-vue-components插件(默认未开启) 需要排除Button组件 全局已经默认导入了
 
 # 1.1.2
 
