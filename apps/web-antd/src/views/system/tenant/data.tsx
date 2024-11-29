@@ -175,7 +175,6 @@ export const drawerSchema: FormSchemaGetter = () => [
   {
     component: 'Select',
     componentProps: {
-      class: 'w-full',
       getPopupContainer,
     },
     fieldName: 'packageId',
