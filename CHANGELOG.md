@@ -5,6 +5,10 @@
 - 节点树在编辑 & 空数组(不勾选)情况 勾选节点会造成watch延迟触发 导致会带上父节点id造成id重复
 - 节点树在节点独立情况下的控制台warning: Invalid prop: type check failed for prop "value". Expected Array, got Object
 
+**Others**
+
+- 角色管理 优化Drawer布局
+
 # 1.1.2
 
 **Features**
