@@ -30,9 +30,3 @@ function handleOpenChange(open: boolean) {
     <Description @register="registerDescription" />
   </BasicDrawer>
 </template>
-
-<style lang="scss" scoped>
-.ant-descriptions :deep(.ant-descriptions-item-content) {
-  word-break: normal;
-}
-</style>
