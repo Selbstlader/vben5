@@ -99,7 +99,7 @@ export const drawerSchema: FormSchemaGetter = () => [
       orientation: 'center',
     },
     fieldName: 'divider1',
-    labelClass: 'w-0',
+    hideLabel: true,
     renderComponentContent: () => ({
       default: () => '基本信息',
     }),
@@ -134,7 +134,7 @@ export const drawerSchema: FormSchemaGetter = () => [
       orientation: 'center',
     },
     fieldName: 'divider2',
-    labelClass: 'w-0',
+    hideLabel: true,
     renderComponentContent: () => ({
       default: () => '认证信息',
     }),
@@ -157,7 +157,7 @@ export const drawerSchema: FormSchemaGetter = () => [
       orientation: 'center',
     },
     fieldName: 'divider3',
-    labelClass: 'w-0',
+    hideLabel: true,
     renderComponentContent: () => ({
       default: () => '其他信息',
     }),

@@ -8,6 +8,7 @@ import { computed, nextTick, onMounted, type PropType, ref, watch } from 'vue';
 import { findGroupParentIds, treeToList } from '@vben/utils';
 
 import { Checkbox, Tree } from 'ant-design-vue';
+import { uniq } from 'lodash-es';
 
 /** 需要禁止透传 */
 defineOptions({ inheritAttrs: false });
@@ -73,6 +74,8 @@ const checkedRealKeys = ref<(number | string)[]>([]);
 /**
  * 取第一次的menuTree id 设置到checkedMenuKeys
  * 主要为了解决没有任何修改 直接点击保存的情况
+ *
+ * length为0情况(即新增时候没有勾选节点) 勾选这里会延迟触发 节点会拼接上父节点 导致ID重复
  */
 const stop = watch([checkedKeys, () => props.treeData], () => {
   if (
@@ -86,7 +89,10 @@ const stop = watch([checkedKeys, () => props.treeData], () => {
       checkedKeys.value as any,
       { id: props.fieldNames.key },
     );
-    checkedRealKeys.value = [...parentIds, ...checkedKeys.value];
+    /**
+     * uniq 解决上面的id重复问题
+     */
+    checkedRealKeys.value = uniq([...parentIds, ...checkedKeys.value]);
     stop();
   }
   if (!props.checkStrictly && checkedKeys.value.length > 0) {
@@ -98,19 +104,21 @@ const stop = watch([checkedKeys, () => props.treeData], () => {
 
 /**
  *
- * @param checkedKeys 已经选中的子节点的ID
+ * @param checkedStateKeys 已经选中的子节点的ID
  * @param info info.halfCheckedKeys为父节点的ID
  */
 type CheckedState<T = number | string> =
   | { checked: T[]; halfChecked: T[] }
   | T[];
-function handleChecked(checkedKeys: CheckedState, info: CheckInfo) {
+function handleChecked(checkedStateKeys: CheckedState, info: CheckInfo) {
   // 数组的话为节点关联
-  if (Array.isArray(checkedKeys)) {
+  if (Array.isArray(checkedStateKeys)) {
     const halfCheckedKeys: number[] = (info.halfCheckedKeys || []) as number[];
-    checkedRealKeys.value = [...halfCheckedKeys, ...checkedKeys];
+    checkedRealKeys.value = [...halfCheckedKeys, ...checkedStateKeys];
   } else {
-    checkedRealKeys.value = [...checkedKeys.checked];
+    checkedRealKeys.value = [...checkedStateKeys.checked];
+    // fix: Invalid prop: type check failed for prop "value". Expected Array, got Object
+    checkedKeys.value = [...checkedStateKeys.checked];
   }
 }
 
@@ -137,9 +145,10 @@ function handleCheckStrictlyChange(e: CheckboxChangeEvent) {
 
 /**
  * 暴露方法来获取用于提交的全部节点
+ * uniq去重(保险方案)
  */
 defineExpose({
-  getCheckedKeys: () => checkedRealKeys.value,
+  getCheckedKeys: () => uniq(checkedRealKeys.value),
 });
 
 onMounted(async () => {

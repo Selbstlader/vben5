@@ -20,6 +20,8 @@ export default defineConfig(async () => {
         //   dts: './types/components.d.ts', // 输出类型文件
         //   resolvers: [
         //     AntDesignVueResolver({
+        //       // 需要排除Button组件 全局已经默认导入了
+        //       exclude: ['Button'],
         //       importStyle: false, // css in js
         //     }),
         //   ],
