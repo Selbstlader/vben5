@@ -68,7 +68,7 @@ export function renderJsonPreview(json: any) {
     return <span>{json}</span>;
   }
   if (typeof json === 'object') {
-    return <JsonPreview data={json} />;
+    return <JsonPreview class="break-normal" data={json} />;
   }
   try {
     const obj = JSON.parse(json);
@@ -76,7 +76,7 @@ export function renderJsonPreview(json: any) {
     if (typeof obj !== 'object') {
       return <span>{obj}</span>;
     }
-    return <JsonPreview data={obj} />;
+    return <JsonPreview class="break-normal" data={obj} />;
   } catch {
     return <span>{json}</span>;
   }

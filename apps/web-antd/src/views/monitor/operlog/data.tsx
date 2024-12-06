@@ -165,7 +165,7 @@ export const descSchema: DescItem[] = [
     label: '请求参数',
     render(value) {
       return (
-        <div class="max-h-[300px] overflow-y-auto break-normal">
+        <div class="max-h-[300px] w-full overflow-y-auto">
           {renderJsonPreview(value)}
         </div>
       );
@@ -176,7 +176,7 @@ export const descSchema: DescItem[] = [
     label: '响应参数',
     render(value) {
       return (
-        <div class="max-h-[300px] overflow-y-auto break-normal">
+        <div class="max-h-[300px] w-full overflow-y-auto">
           {renderJsonPreview(value)}
         </div>
       );
