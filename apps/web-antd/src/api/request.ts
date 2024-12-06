@@ -10,6 +10,7 @@ import {
   authenticateResponseInterceptor,
   errorMessageResponseInterceptor,
   RequestClient,
+  stringify,
 } from '@vben/request';
 import { useAccessStore } from '@vben/stores';
 
@@ -93,6 +94,23 @@ function createRequestClient(baseURL: string) {
       config.headers['Content-Language'] = language;
       // 添加全局clientId
       config.headers.clientId = clientId;
+
+      /**
+       * 格式化get/delete参数
+       * 如果包含自定义的paramsSerializer则不走此逻辑
+       */
+      if (
+        ['DELETE', 'GET'].includes(config.method?.toUpperCase() || '') &&
+        config.params &&
+        !config.paramsSerializer
+      ) {
+        /**
+         * 1. 格式化参数 微服务在传递区间时间选择(后端的params Map类型参数)需要格式化key 否则接收不到
+         * 2. 数组参数需要格式化 后端才能正常接收 会变成arr=1&arr=2&arr=3的格式来接收
+         */
+        config.paramsSerializer = (params) =>
+          stringify(params, { arrayFormat: 'repeat' });
+      }
 
       const { encrypt } = config;
       // 全局开启请求加密功能 && 该请求开启 && 是post/put请求
