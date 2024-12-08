@@ -4,6 +4,7 @@
  */
 
 import type { BaseFormComponentType } from '@vben/common-ui';
+import type { Recordable } from '@vben/types';
 
 import type { Component, SetupContext } from 'vue';
 import { h } from 'vue';
@@ -88,15 +89,67 @@ async function initComponentAdapter() {
       return h(ElButton, { ...props, attrs, type: 'primary' }, slots);
     },
     Divider: ElDivider,
-    IconPicker,
+    IconPicker: (props, { attrs, slots }) => {
+      return h(
+        IconPicker,
+        {
+          iconSlot: 'append',
+          modelValueProp: 'model-value',
+          inputComponent: ElInput,
+          ...props,
+          ...attrs,
+        },
+        slots,
+      );
+    },
     Input: withDefaultPlaceholder(ElInput, 'input'),
     InputNumber: withDefaultPlaceholder(ElInputNumber, 'input'),
     RadioGroup: ElRadioGroup,
     Select: withDefaultPlaceholder(ElSelect, 'select'),
     Space: ElSpace,
     Switch: ElSwitch,
-    TimePicker: ElTimePicker,
-    DatePicker: ElDatePicker,
+    TimePicker: (props, { attrs, slots }) => {
+      const { name, id, isRange } = props;
+      const extraProps: Recordable<any> = {};
+      if (isRange) {
+        if (name && !Array.isArray(name)) {
+          extraProps.name = [name, `${name}_end`];
+        }
+        if (id && !Array.isArray(id)) {
+          extraProps.id = [id, `${id}_end`];
+        }
+      }
+      return h(
+        ElTimePicker,
+        {
+          ...props,
+          ...attrs,
+          ...extraProps,
+        },
+        slots,
+      );
+    },
+    DatePicker: (props, { attrs, slots }) => {
+      const { name, id, type } = props;
+      const extraProps: Recordable<any> = {};
+      if (type && type.includes('range')) {
+        if (name && !Array.isArray(name)) {
+          extraProps.name = [name, `${name}_end`];
+        }
+        if (id && !Array.isArray(id)) {
+          extraProps.id = [id, `${id}_end`];
+        }
+      }
+      return h(
+        ElDatePicker,
+        {
+          ...props,
+          ...attrs,
+          ...extraProps,
+        },
+        slots,
+      );
+    },
     TreeSelect: withDefaultPlaceholder(ElTreeSelect, 'select'),
     Upload: ElUpload,
   };
