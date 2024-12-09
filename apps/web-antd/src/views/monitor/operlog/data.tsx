@@ -157,12 +157,15 @@ export const descSchema: DescItem[] = [
     field: 'method',
     label: '方法',
   },
+  /**
+   * 默认word-break: break-word;会导致json预览样式异常
+   */
   {
     field: 'operParam',
     label: '请求参数',
     render(value) {
       return (
-        <div class="max-h-[300px] overflow-y-auto">
+        <div class="max-h-[300px] w-full overflow-y-auto">
           {renderJsonPreview(value)}
         </div>
       );
@@ -173,7 +176,7 @@ export const descSchema: DescItem[] = [
     label: '响应参数',
     render(value) {
       return (
-        <div class="max-h-[300px] overflow-y-auto">
+        <div class="max-h-[300px] w-full overflow-y-auto">
           {renderJsonPreview(value)}
         </div>
       );

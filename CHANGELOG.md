@@ -10,6 +10,11 @@
 - 角色管理 优化Drawer布局
 - unplugin-vue-components插件(默认未开启) 需要排除Button组件 全局已经默认导入了
 
+**BUG FIXES**
+
+- 操作日志详情 在description组件中json预览样式异常
+- 微服务版本 区间查询和中文搜索条件一起使用 无法正确查询
+
 # 1.1.2
 
 **Features**

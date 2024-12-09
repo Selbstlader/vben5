@@ -82,6 +82,13 @@ const content = defineModel('value', {
   type: String,
   default: '',
 });
+/**
+ * 为了保持外部直接(v-model)与编辑器内部的同步
+ * 注意: 下面的input事件也会触发watch
+ */
+watch(content, (value) => {
+  vditorInstance.value?.setValue(value);
+});
 
 // 监听禁用
 function changeDisabled(disabled: boolean) {
