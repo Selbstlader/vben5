@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, h, onMounted, watch } from 'vue';
+import { computed, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { AuthenticationLoginExpiredModal } from '@vben/common-ui';
@@ -62,7 +62,7 @@ const menus = computed(() => {
           target: '_blank',
         });
       },
-      icon: h(GiteeIcon, { class: 'text-red-500' }),
+      icon: GiteeIcon,
       text: 'Gitee项目地址',
     },
     {
