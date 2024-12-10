@@ -2,7 +2,7 @@
 import type { Recordable } from '@vben/types';
 import type { Key } from 'ant-design-vue/es/vc-tree/interface';
 
-import { type Component, ref } from 'vue';
+import { type Component, markRaw, ref } from 'vue';
 
 import {
   CodeMirror,
@@ -98,12 +98,12 @@ function convertToTree(paths: string[]): TreeNode[] {
 }
 
 const iconMap = [
-  { key: 'java', value: JavaIcon },
-  { key: 'xml', value: XmlIcon },
-  { key: 'sql', value: SqlIcon },
-  { key: 'ts', value: TsIcon },
-  { key: 'vue', value: VueIcon },
-  { key: 'folder', value: FolderIcon },
+  { key: 'java', value: markRaw(JavaIcon) },
+  { key: 'xml', value: markRaw(XmlIcon) },
+  { key: 'sql', value: markRaw(SqlIcon) },
+  { key: 'ts', value: markRaw(TsIcon) },
+  { key: 'vue', value: markRaw(VueIcon) },
+  { key: 'folder', value: markRaw(FolderIcon) },
 ];
 function findIcon(path: string) {
   const defaultFileIcon = DefaultFileIcon;
