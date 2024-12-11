@@ -105,6 +105,30 @@ const profileRoute: RouteRecordStringComponent[] = [
       },
     ],
   },
+  {
+    component: 'BasicLayout',
+    meta: {
+      hideChildrenInMenu: true,
+      hideInMenu: true,
+      title: '流程设计',
+    },
+    name: 'WorkflowDesigner',
+    path: '/',
+    redirect: '/workflow/designer',
+    children: [
+      {
+        component: '/workflow/components/flow-designer',
+        meta: {
+          activePath: '/workflow/processDefinition',
+          icon: 'eos-icons:role-binding-outlined',
+          keepAlive: true,
+          title: '流程设计',
+        },
+        name: 'RoleAssignIndex',
+        path: '/workflow/designer',
+      },
+    ],
+  },
 ];
 
 /**

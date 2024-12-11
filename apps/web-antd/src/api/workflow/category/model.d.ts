@@ -30,6 +30,7 @@ export interface CategoryVO {
    * 子对象
    */
   children: CategoryVO[];
+  key: string;
 }
 
 export interface CategoryForm extends BaseEntity {
