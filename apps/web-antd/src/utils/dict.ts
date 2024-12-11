@@ -20,7 +20,14 @@ export function getDict(dictName: string): DictData[] {
         })
         .finally(() => {
           // 移除请求状态缓存
-          dictRequestCache.delete(dictName);
+          /**
+           * 这里主要判断字典item为空的情况(无奈兼容 不给字典item本来就是错误用法)
+           * 会导致if一直进入逻辑导致接口无限刷新
+           * 在这里dictList为空时 不删除缓存
+           */
+          if (dictList.length > 0) {
+            dictRequestCache.delete(dictName);
+          }
         }),
     );
   }
@@ -42,7 +49,14 @@ export function getDictOptions(dictName: string): Option[] {
         })
         .finally(() => {
           // 移除请求状态缓存
-          dictRequestCache.delete(dictName);
+          /**
+           * 这里主要判断字典item为空的情况(无奈兼容 不给字典item本来就是错误用法)
+           * 会导致if一直进入逻辑导致接口五线刷新
+           * 在这里dictList为空时 不删除缓存
+           */
+          if (dictOptionList.length > 0) {
+            dictRequestCache.delete(dictName);
+          }
         }),
     );
   }
