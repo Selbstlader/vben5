@@ -17,12 +17,12 @@ import {
   Switch,
   Tooltip,
 } from 'ant-design-vue';
-import { isEmpty } from 'lodash-es';
 
 import {
   useVbenVxeGrid,
   vxeCheckboxChecked,
   type VxeGridProps,
+  vxeSortEvent,
 } from '#/adapter/vxe-table';
 import { configInfoByKey } from '#/api/system/config';
 import { ossDownload, ossList, ossRemove } from '#/api/system/oss';
@@ -66,16 +66,12 @@ const gridOptions: VxeGridProps = {
   pagerConfig: {},
   proxyConfig: {
     ajax: {
-      query: async ({ page, sort }, formValues = {}) => {
+      query: async ({ page }, formValues = {}) => {
         const params: any = {
           pageNum: page.currentPage,
           pageSize: page.pageSize,
           ...formValues,
         };
-        if (!isEmpty(sort)) {
-          params.orderByColumn = sort.field;
-          params.isAsc = sort.order;
-        }
         return await ossList(params);
       },
     },
@@ -86,7 +82,10 @@ const gridOptions: VxeGridProps = {
     height: 65,
   },
   sortConfig: {
+    // 远程排序
     remote: true,
+    // 支持多字段排序 默认关闭
+    multiple: false,
   },
   id: 'system-oss-index',
 };
@@ -95,9 +94,7 @@ const [BasicTable, tableApi] = useVbenVxeGrid({
   formOptions,
   gridOptions,
   gridEvents: {
-    sortChange: () => {
-      tableApi.query();
-    },
+    sortChange: (sortParams) => vxeSortEvent(tableApi, sortParams),
   },
 });
 
