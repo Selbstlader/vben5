@@ -24,11 +24,8 @@ import {
   Space,
 } from 'ant-design-vue';
 
-import {
-  tableCheckboxEvent,
-  useVbenVxeGrid,
-  type VxeGridProps,
-} from '#/adapter/vxe-table';
+import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
+import { vxeCheckboxChecked } from '#/adapter/vxe-table';
 import {
   userExport,
   userList,
@@ -126,14 +123,9 @@ const gridOptions: VxeGridProps = {
   },
   id: 'system-user-index',
 };
-const checked = ref(false);
 const [BasicTable, tableApi] = useVbenVxeGrid({
   formOptions,
   gridOptions,
-  gridEvents: {
-    checkboxChange: tableCheckboxEvent(checked),
-    checkboxAll: tableCheckboxEvent(checked),
-  },
 });
 
 const [UserDrawer, userDrawerApi] = useVbenDrawer({
@@ -165,7 +157,6 @@ function handleMultiDelete() {
     onOk: async () => {
       await userRemove(ids);
       await tableApi.query();
-      checked.value = false;
     },
   });
 }
@@ -201,7 +192,7 @@ const { hasAccessByCodes } = useAccess();
     <div class="flex h-full gap-[8px]">
       <DeptTree
         v-model:select-dept-id="selectDeptId"
-        class="w-[260px]"
+        :width="260"
         @reload="() => tableApi.reload()"
         @select="() => tableApi.reload()"
       />
@@ -221,7 +212,7 @@ const { hasAccessByCodes } = useAccess();
               {{ $t('pages.common.import') }}
             </a-button>
             <a-button
-              :disabled="!checked"
+              :disabled="!vxeCheckboxChecked(tableApi)"
               danger
               type="primary"
               v-access:code="['system:user:remove']"

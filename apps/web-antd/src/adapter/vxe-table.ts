@@ -107,6 +107,7 @@ export type * from '@vben/plugins/vxe-table';
 
 /**
  * 通用的表格复选框是否选中事件
+ * @deprecated 使用vxeCheckboxChecked代替
  * @param checked 是否选中
  * @returns function
  */
@@ -117,4 +118,15 @@ export function tableCheckboxEvent(checked: Ref<boolean>) {
     checked.value = params.$table.getCheckboxRecords().length > 0;
   };
   return event;
+}
+
+/**
+ * 判断vxe-table的复选框是否选中
+ * @param tableApi api
+ * @returns boolean
+ */
+export function vxeCheckboxChecked(
+  tableApi: ReturnType<typeof useVbenVxeGrid>[1],
+) {
+  return tableApi?.grid?.getCheckboxRecords?.()?.length > 0;
 }

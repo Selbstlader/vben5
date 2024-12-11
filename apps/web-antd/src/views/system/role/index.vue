@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Recordable } from '@vben/types';
 
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { useAccess } from '@vben/access';
@@ -23,8 +23,8 @@ import {
 } from 'ant-design-vue';
 
 import {
-  tableCheckboxEvent,
   useVbenVxeGrid,
+  vxeCheckboxChecked,
   type VxeGridProps,
 } from '#/adapter/vxe-table';
 import {
@@ -91,14 +91,9 @@ const gridOptions: VxeGridProps = {
   id: 'system-role-index',
 };
 
-const checked = ref(false);
 const [BasicTable, tableApi] = useVbenVxeGrid({
   formOptions,
   gridOptions,
-  gridEvents: {
-    checkboxChange: tableCheckboxEvent(checked),
-    checkboxAll: tableCheckboxEvent(checked),
-  },
 });
 const [RoleDrawer, drawerApi] = useVbenDrawer({
   connectedComponent: roleDrawer,
@@ -129,7 +124,6 @@ function handleMultiDelete() {
     onOk: async () => {
       await roleRemove(ids);
       await tableApi.query();
-      checked.value = false;
     },
   });
 }
@@ -171,7 +165,7 @@ function handleAssignRole(record: Recordable<any>) {
             {{ $t('pages.common.export') }}
           </a-button>
           <a-button
-            :disabled="!checked"
+            :disabled="!vxeCheckboxChecked(tableApi)"
             danger
             type="primary"
             v-access:code="['system:role:remove']"

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { Recordable } from '@vben/types';
 
-import { ref } from 'vue';
 import { useRoute } from 'vue-router';
 
 import { Page, useVbenDrawer, type VbenFormProps } from '@vben/common-ui';
@@ -10,8 +9,8 @@ import { getVxePopupContainer } from '@vben/utils';
 import { Modal, Popconfirm, Space } from 'ant-design-vue';
 
 import {
-  tableCheckboxEvent,
   useVbenVxeGrid,
+  vxeCheckboxChecked,
   type VxeGridProps,
 } from '#/adapter/vxe-table';
 import {
@@ -69,14 +68,9 @@ const gridOptions: VxeGridProps = {
   id: 'system-role-assign-index',
 };
 
-const checked = ref(false);
 const [BasicTable, tableApi] = useVbenVxeGrid({
   formOptions,
   gridOptions,
-  gridEvents: {
-    checkboxChange: tableCheckboxEvent(checked),
-    checkboxAll: tableCheckboxEvent(checked),
-  },
 });
 
 const [RoleAssignDrawer, drawerApi] = useVbenDrawer({
@@ -109,7 +103,6 @@ function handleMultipleAuthCancel() {
     onOk: async () => {
       await roleAuthCancelAll(roleId, ids);
       await tableApi.query();
-      checked.value = false;
       tableApi.grid.clearCheckboxRow();
     },
   });
@@ -122,7 +115,7 @@ function handleMultipleAuthCancel() {
       <template #toolbar-tools>
         <Space>
           <a-button
-            :disabled="!checked"
+            :disabled="!vxeCheckboxChecked(tableApi)"
             danger
             type="primary"
             v-access:code="['system:role:remove']"

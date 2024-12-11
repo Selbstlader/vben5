@@ -3,19 +3,13 @@ import type { Recordable } from '@vben/types';
 
 import type { OperationLog } from '#/api/monitor/operlog/model';
 
-import { ref } from 'vue';
-
 import { Page, useVbenDrawer, type VbenFormProps } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 
 import { Modal, Space } from 'ant-design-vue';
 import { isEmpty } from 'lodash-es';
 
-import {
-  tableCheckboxEvent,
-  useVbenVxeGrid,
-  type VxeGridProps,
-} from '#/adapter/vxe-table';
+import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
 import {
   operLogClean,
   operLogDelete,
@@ -88,7 +82,6 @@ const gridOptions: VxeGridProps<OperationLog> = {
   id: 'monitor-operlog-index',
 };
 
-const checked = ref(false);
 const [BasicTable, tableApi] = useVbenVxeGrid({
   formOptions,
   gridOptions,
@@ -96,8 +89,6 @@ const [BasicTable, tableApi] = useVbenVxeGrid({
     sortChange: () => {
       tableApi.query();
     },
-    checkboxChange: tableCheckboxEvent(checked),
-    checkboxAll: tableCheckboxEvent(checked),
   },
 });
 
@@ -138,7 +129,6 @@ async function handleDelete() {
     onOk: async () => {
       await operLogDelete(ids);
       await tableApi.query();
-      checked.value = false;
     },
   });
 }
@@ -147,6 +137,11 @@ function handleDownloadExcel() {
   commonDownloadExcel(operLogExport, '操作日志', tableApi.formApi.form.values, {
     fieldMappingTime: formOptions.fieldMappingTime,
   });
+}
+
+function isChecked() {
+  console.log('触发');
+  return tableApi?.grid?.getCheckboxRecords?.()?.length > 0;
 }
 </script>
 
@@ -168,7 +163,7 @@ function handleDownloadExcel() {
             {{ $t('pages.common.export') }}
           </a-button>
           <a-button
-            :disabled="!checked"
+            :disabled="!isChecked()"
             danger
             type="primary"
             v-access:code="['monitor:operlog:remove']"
