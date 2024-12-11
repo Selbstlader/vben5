@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Recordable } from '@vben/types';
 
-import { onMounted, ref } from 'vue';
+import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { Page, useVbenModal, type VbenFormProps } from '@vben/common-ui';
@@ -11,8 +11,8 @@ import { message, Modal, Popconfirm, Space } from 'ant-design-vue';
 import dayjs from 'dayjs';
 
 import {
-  tableCheckboxEvent,
   useVbenVxeGrid,
+  vxeCheckboxChecked,
   type VxeGridProps,
 } from '#/adapter/vxe-table';
 import {
@@ -78,14 +78,9 @@ const gridOptions: VxeGridProps = {
   id: 'tool-gen-index',
 };
 
-const checked = ref(false);
 const [BasicTable, tableApi] = useVbenVxeGrid({
   formOptions,
   gridOptions,
-  gridEvents: {
-    checkboxChange: tableCheckboxEvent(checked),
-    checkboxAll: tableCheckboxEvent(checked),
-  },
 });
 
 onMounted(async () => {
@@ -177,7 +172,6 @@ function handleMultiDelete() {
     onOk: async () => {
       await genRemove(ids);
       await tableApi.query();
-      checked.value = false;
     },
   });
 }
@@ -203,7 +197,7 @@ function handleImport() {
         </a>
         <Space>
           <a-button
-            :disabled="!checked"
+            :disabled="!vxeCheckboxChecked(tableApi)"
             danger
             type="primary"
             v-access:code="['tool:gen:remove']"
@@ -212,7 +206,7 @@ function handleImport() {
             {{ $t('pages.common.delete') }}
           </a-button>
           <a-button
-            :disabled="!checked"
+            :disabled="!vxeCheckboxChecked(tableApi)"
             v-access:code="['tool:gen:code']"
             @click="handleBatchGen"
           >

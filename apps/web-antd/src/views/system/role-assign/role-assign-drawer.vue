@@ -1,14 +1,9 @@
 <script setup lang="ts">
-import { ref } from 'vue';
 import { useRoute } from 'vue-router';
 
 import { useVbenDrawer, type VbenFormProps } from '@vben/common-ui';
 
-import {
-  tableCheckboxEvent,
-  useVbenVxeGrid,
-  type VxeGridProps,
-} from '#/adapter/vxe-table';
+import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
 import { roleSelectAll, roleUnallocatedList } from '#/api/system/role';
 
 import { columns, querySchema } from './data';
@@ -62,14 +57,9 @@ const gridOptions: VxeGridProps = {
   },
 };
 
-const checked = ref(false);
 const [BasicTable, tableApi] = useVbenVxeGrid({
   formOptions,
   gridOptions,
-  gridEvents: {
-    checkboxChange: tableCheckboxEvent(checked),
-    checkboxAll: tableCheckboxEvent(checked),
-  },
 });
 
 async function handleSubmit() {

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, onMounted, watch } from 'vue';
+import { computed, h, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { AuthenticationLoginExpiredModal } from '@vben/common-ui';
@@ -8,6 +8,7 @@ import { useWatermark } from '@vben/hooks';
 import {
   BookOpenText,
   CircleHelp,
+  GiteeIcon,
   GitHubOutlined,
   UserOutlined,
 } from '@vben/icons';
@@ -57,12 +58,21 @@ const menus = computed(() => {
     },
     {
       handler: () => {
+        openWindow('https://gitee.com/dapppp/ruoyi-plus-vben5', {
+          target: '_blank',
+        });
+      },
+      icon: () => h(GiteeIcon, { class: 'text-red-800' }),
+      text: 'Gitee项目地址',
+    },
+    {
+      handler: () => {
         openWindow(VBEN_GITHUB_URL, {
           target: '_blank',
         });
       },
       icon: GitHubOutlined,
-      text: 'GitHub',
+      text: 'Vben官方地址',
     },
     {
       handler: () => {

@@ -9,8 +9,8 @@ import { getVxePopupContainer } from '@vben/utils';
 import { Modal, Popconfirm, Space } from 'ant-design-vue';
 
 import {
-  tableCheckboxEvent,
   useVbenVxeGrid,
+  vxeCheckboxChecked,
   type VxeGridProps,
 } from '#/adapter/vxe-table';
 import {
@@ -73,14 +73,9 @@ const gridOptions: VxeGridProps = {
   id: 'system-dict-data-index',
 };
 
-const checked = ref(false);
 const [BasicTable, tableApi] = useVbenVxeGrid({
   formOptions,
   gridOptions,
-  gridEvents: {
-    checkboxChange: tableCheckboxEvent(checked),
-    checkboxAll: tableCheckboxEvent(checked),
-  },
 });
 
 const [DictDataDrawer, drawerApi] = useVbenDrawer({
@@ -115,7 +110,6 @@ function handleMultiDelete() {
     onOk: async () => {
       await dictDataRemove(ids);
       await tableApi.query();
-      checked.value = false;
     },
   });
 }
@@ -142,7 +136,7 @@ emitter.on('rowClick', async (value) => {
             {{ $t('pages.common.export') }}
           </a-button>
           <a-button
-            :disabled="!checked"
+            :disabled="!vxeCheckboxChecked(tableApi)"
             danger
             type="primary"
             v-access:code="['system:dict:remove']"

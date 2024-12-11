@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import type { Recordable } from '@vben/types';
 
-import { ref } from 'vue';
-
 import { useAccess } from '@vben/access';
 import { Page, useVbenDrawer, type VbenFormProps } from '@vben/common-ui';
 import { getVxePopupContainer } from '@vben/utils';
@@ -10,8 +8,8 @@ import { getVxePopupContainer } from '@vben/utils';
 import { Modal, Popconfirm, Space } from 'ant-design-vue';
 
 import {
-  tableCheckboxEvent,
   useVbenVxeGrid,
+  vxeCheckboxChecked,
   type VxeGridProps,
 } from '#/adapter/vxe-table';
 import {
@@ -66,14 +64,9 @@ const gridOptions: VxeGridProps = {
   id: 'system-oss-config-index',
 };
 
-const checked = ref(false);
 const [BasicTable, tableApi] = useVbenVxeGrid({
   formOptions,
   gridOptions,
-  gridEvents: {
-    checkboxChange: tableCheckboxEvent(checked),
-    checkboxAll: tableCheckboxEvent(checked),
-  },
 });
 
 const [OssConfigDrawer, drawerApi] = useVbenDrawer({
@@ -105,7 +98,6 @@ function handleMultiDelete() {
     onOk: async () => {
       await ossConfigRemove(ids);
       await tableApi.query();
-      checked.value = false;
     },
   });
 }
@@ -119,7 +111,7 @@ const { hasAccessByCodes } = useAccess();
       <template #toolbar-tools>
         <Space>
           <a-button
-            :disabled="!checked"
+            :disabled="!vxeCheckboxChecked(tableApi)"
             danger
             type="primary"
             v-access:code="['system:ossConfig:remove']"

@@ -20,8 +20,8 @@ import {
 import { isEmpty } from 'lodash-es';
 
 import {
-  tableCheckboxEvent,
   useVbenVxeGrid,
+  vxeCheckboxChecked,
   type VxeGridProps,
 } from '#/adapter/vxe-table';
 import { configInfoByKey } from '#/api/system/config';
@@ -91,7 +91,6 @@ const gridOptions: VxeGridProps = {
   id: 'system-oss-index',
 };
 
-const checked = ref(false);
 const [BasicTable, tableApi] = useVbenVxeGrid({
   formOptions,
   gridOptions,
@@ -99,8 +98,6 @@ const [BasicTable, tableApi] = useVbenVxeGrid({
     sortChange: () => {
       tableApi.query();
     },
-    checkboxChange: tableCheckboxEvent(checked),
-    checkboxAll: tableCheckboxEvent(checked),
   },
 });
 
@@ -172,7 +169,7 @@ const [FileUploadModal, fileUploadApi] = useVbenModal({
             配置管理
           </a-button>
           <a-button
-            :disabled="!checked"
+            :disabled="!vxeCheckboxChecked(tableApi)"
             danger
             type="primary"
             v-access:code="['system:oss:remove']"
