@@ -9,7 +9,11 @@ import { $t } from '@vben/locales';
 import { Modal, Space } from 'ant-design-vue';
 import { isEmpty } from 'lodash-es';
 
-import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
+import {
+  useVbenVxeGrid,
+  vxeCheckboxChecked,
+  type VxeGridProps,
+} from '#/adapter/vxe-table';
 import {
   operLogClean,
   operLogDelete,
@@ -138,11 +142,6 @@ function handleDownloadExcel() {
     fieldMappingTime: formOptions.fieldMappingTime,
   });
 }
-
-function isChecked() {
-  console.log('触发');
-  return tableApi?.grid?.getCheckboxRecords?.()?.length > 0;
-}
 </script>
 
 <template>
@@ -163,7 +162,7 @@ function isChecked() {
             {{ $t('pages.common.export') }}
           </a-button>
           <a-button
-            :disabled="!isChecked()"
+            :disabled="!vxeCheckboxChecked(tableApi)"
             danger
             type="primary"
             v-access:code="['monitor:operlog:remove']"
