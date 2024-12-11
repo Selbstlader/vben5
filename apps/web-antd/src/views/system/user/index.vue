@@ -192,7 +192,7 @@ const { hasAccessByCodes } = useAccess();
     <div class="flex h-full gap-[8px]">
       <DeptTree
         v-model:select-dept-id="selectDeptId"
-        :width="260"
+        class="w-[260px]"
         @reload="() => tableApi.reload()"
         @select="() => tableApi.reload()"
       />
