@@ -129,6 +129,39 @@ const profileRoute: RouteRecordStringComponent[] = [
       },
     ],
   },
+  {
+    component: 'BasicLayout',
+    meta: {
+      hideChildrenInMenu: true,
+      hideInMenu: true,
+      title: '请假申请',
+    },
+    name: 'WorkflowLeave',
+    path: '/',
+    redirect: '/workflow/leave',
+    children: [
+      {
+        component: 'workflow/leave/leave-form',
+        meta: {
+          icon: 'eos-icons:role-binding-outlined',
+          keepAlive: true,
+          title: '请假申请',
+        },
+        name: 'WorkflowLeaveIndex',
+        path: '/workflow/leave',
+      },
+    ],
+  },
+  {
+    component: 'workflow/leave/leave-form',
+    meta: {
+      icon: 'eos-icons:role-binding-outlined',
+      keepAlive: true,
+      title: '请假申请',
+    },
+    name: 'WorkflowLeaveInner',
+    path: '/workflow/leave-inner',
+  },
 ];
 
 /**

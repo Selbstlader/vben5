@@ -1,25 +1,52 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue';
+import type { FlowInfoResponse } from '#/api/workflow/instance/model';
+import type { TaskInfo } from '#/api/workflow/task/model';
 
-import { Page } from '@vben/common-ui';
+import { computed, onMounted, ref } from 'vue';
+
+import { Fallback, Page, VbenAvatar } from '@vben/common-ui';
 
 import {
-  Alert,
-  Avatar,
   Card,
   Divider,
+  Empty,
   InputSearch,
   Space,
   TabPane,
   Tabs,
   Tag,
 } from 'ant-design-vue';
-import { debounce, uniqueId } from 'lodash-es';
+import { debounce } from 'lodash-es';
+
+import { flowInfo } from '#/api/workflow/instance';
+import { pageByTaskWait } from '#/api/workflow/task';
 
 import { ApprovalCard, ApprovalTimeline } from '../components';
-import RejectionPng from '../components/rejection.png';
 
-const handleScroll = debounce((e: Event) => {
+const emptyImage = Empty.PRESENTED_IMAGE_SIMPLE;
+
+const taskList = ref<({ active: boolean } & TaskInfo)[]>([]);
+const taskTotal = ref(0);
+const page = ref(1);
+
+/**
+ * 是否已经加载全部数据 即 taskList.length === taskTotal
+ */
+const isLoadComplete = computed(
+  () => taskList.value.length === taskTotal.value,
+);
+
+onMounted(async () => {
+  /**
+   * 获取待办任务列表
+   */
+  const resp = await pageByTaskWait({ pageSize: 10, pageNum: page.value });
+  console.log(resp);
+  taskList.value = resp.rows.map((item) => ({ ...item, active: false }));
+  taskTotal.value = resp.total;
+});
+
+const handleScroll = debounce(async (e: Event) => {
   if (!e.target) {
     return;
   }
@@ -29,117 +56,139 @@ const handleScroll = debounce((e: Event) => {
   const { scrollTop, clientHeight, scrollHeight } = e.target as HTMLElement;
   // 判断是否滚动到底部
   const isBottom = scrollTop + clientHeight >= scrollHeight;
-  console.log(isBottom);
-  // console.log(scrollTop + clientHeight);
-  // console.log(scrollHeight);
+
+  // 滚动到底部且没有加载完成
+  if (isBottom && !isLoadComplete.value) {
+    page.value += 1;
+    const resp = await pageByTaskWait({ pageSize: 10, pageNum: page.value });
+    taskList.value.push(
+      ...resp.rows.map((item) => ({ ...item, active: false })),
+    );
+  }
 }, 200);
 
-const data = reactive(
-  Array.from({ length: 10 }).map(() => ({
-    id: uniqueId(),
-    startTime: '2022-01-01',
-    endTime: '2022-01-02',
-    title: '审批任务',
-    desc: '审批任务描述',
-    status: '审批中',
-    active: false,
-  })),
-);
-
-const timeLine = Array.from({ length: 5 }).map(() => ({
-  id: uniqueId(),
-  name: '张三',
-  status: '审批中',
-  remark: '审批任务描述',
-  time: '2022-01-01',
-}));
+const currentInstance = ref<FlowInfoResponse>();
 
 const lastSelectId = ref('');
-function handleCardClick(id: string) {
+async function handleCardClick(item: TaskInfo) {
+  const { id, businessId } = item;
   // 点击的是同一个
   if (lastSelectId.value === id) {
     return;
   }
   // 反选状态 & 如果已经点击了 不变 & 保持只能有一个选中
-  data.forEach((item) => {
+  taskList.value.forEach((item) => {
     item.active = item.id === id;
   });
   lastSelectId.value = id;
+
+  const resp = await flowInfo(businessId);
+  currentInstance.value = resp;
 }
+
+const instanceInfo = computed(() => {
+  if (!currentInstance.value) {
+    return;
+  }
+  const length = currentInstance.value.list.length;
+  if (length === 2) {
+    return;
+  }
+  // 最末尾为申请人
+  const info = currentInstance.value.list[length - 1]!;
+  return {
+    id: info.instanceId,
+    createTime: info.createTime,
+    approveName: info.approveName,
+    flowName: info.flowName ?? '未知流程',
+    businessId: '1867081791031750658',
+  };
+});
 </script>
 
 <template>
   <Page :auto-content-height="true">
     <div class="flex h-full gap-2">
-      <div class="bg-background flex h-full w-[320px] flex-col rounded-lg">
+      <div
+        class="bg-background flex h-full min-w-[320px] max-w-[320px] flex-col rounded-lg"
+      >
         <!-- 搜索条件 -->
         <div
           class="bg-background z-100 sticky left-0 top-0 w-full rounded-t-lg border-b-[1px] border-solid p-2"
         >
-          <InputSearch placeholder="搜索" />
+          <InputSearch placeholder="搜索任务名称" />
         </div>
         <div
           class="thin-scrollbar flex flex-1 flex-col gap-2 overflow-y-auto py-3"
           @scroll="handleScroll"
         >
-          <ApprovalCard
-            v-for="item in data"
-            :key="item.id"
-            :info="item"
-            class="mx-2"
-            @click="handleCardClick"
-          />
+          <template v-if="taskList.length > 0">
+            <ApprovalCard
+              v-for="item in taskList"
+              :key="item.id"
+              :info="item"
+              class="mx-2"
+              @click="handleCardClick(item)"
+            />
+          </template>
+          <Empty v-else :image="emptyImage" />
         </div>
         <!-- total显示 -->
         <div
           class="bg-background sticky bottom-0 w-full rounded-b-lg border-t-[1px] py-2"
         >
           <div class="flex items-center justify-center">
-            共 {{ data.length }} 条记录
+            共 {{ taskList.length }} 条记录
           </div>
         </div>
       </div>
       <Card
+        v-if="currentInstance && instanceInfo"
         :body-style="{ overflowY: 'auto', height: '100%' }"
+        :title="`编号: ${instanceInfo.id}`"
         class="thin-scrollbar flex-1 overflow-y-hidden"
         size="small"
-        title="编号: 1234567890123456789012"
       >
         <div class="flex flex-col gap-5 p-4">
           <div class="flex flex-col gap-3">
             <div class="flex items-center gap-2">
-              <div class="text-2xl font-bold">报销申请</div>
+              <div class="text-2xl font-bold">{{ instanceInfo.flowName }}</div>
               <div>
                 <Tag color="warning">申请中</Tag>
               </div>
             </div>
             <div class="flex items-center gap-2">
-              <Avatar
-                size="small"
-                src="https://plus.dapdap.top/minio-server/plus/2024/11/21/925ed278e2d441beb7f695b41e13c4dd.jpg"
+              <VbenAvatar
+                :alt="instanceInfo.approveName"
+                class="size-[24px]"
+                src=""
               />
-              <span>疯狂的牛子Li</span>
+              <span>{{ instanceInfo.approveName }}</span>
               <div class="flex items-center opacity-50">
                 <span>XXXX有限公司</span>
                 <Divider type="vertical" />
-                <span>提交于: 2022-01-01 12:00:00</span>
+                <span>提交于: {{ instanceInfo.createTime }}</span>
               </div>
-            </div>
-            <!-- 右侧图标 -->
-            <div class="z-100 absolute right-3 top-3">
-              <img :src="RejectionPng" class="size-[96px]" />
             </div>
           </div>
           <Tabs class="flex-1">
             <TabPane key="1" tab="审批详情">
               <div class="h-fulloverflow-y-auto">
-                <Alert message="该页面仅为静态页 后期可能会用到!" type="info" />
+                <!-- <Alert message="该页面仅为静态页 后期可能会用到!" type="info" /> -->
+                <iframe
+                  :src="`/workflow/leave-inner?readonly=true&id=${instanceInfo.businessId}`"
+                  class="h-[300px] w-full"
+                ></iframe>
                 <Divider />
-                <ApprovalTimeline :list="timeLine" />
+                <ApprovalTimeline :list="currentInstance.list" />
               </div>
             </TabPane>
-            <TabPane key="2" tab="审批记录">审批记录</TabPane>
-            <TabPane key="3" tab="全文评论(999+)">全文评论</TabPane>
+            <TabPane key="2" tab="审批流程图">
+              <img
+                :src="`data:image/png;base64,${currentInstance.image}`"
+                class="rounded-lg border"
+              />
+            </TabPane>
           </Tabs>
         </div>
         <!-- 固定底部 -->
@@ -155,6 +204,7 @@ function handleCardClick(id: string) {
           </div>
         </div>
       </Card>
+      <Fallback v-else title="点击左侧选择" />
     </div>
   </Page>
 </template>

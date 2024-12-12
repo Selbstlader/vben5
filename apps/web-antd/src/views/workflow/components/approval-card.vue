@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import { Avatar, Descriptions, DescriptionsItem, Tag } from 'ant-design-vue';
+import type { TaskInfo } from '#/api/workflow/task/model';
 
-interface Props {
-  id: string;
-  endTime: string;
-  startTime: string;
-  title: string;
-  desc: string;
-  status: string;
+import { VbenAvatar } from '@vben/common-ui';
+import { DictEnum } from '@vben/constants';
+
+import { Descriptions, DescriptionsItem } from 'ant-design-vue';
+
+import { renderDict } from '#/utils/render';
+
+interface Props extends TaskInfo {
   active: boolean;
 }
 
@@ -29,23 +30,28 @@ function handleClick() {
     class="cursor-pointer rounded-lg border-[1px] border-solid p-3 transition-shadow duration-300 ease-in-out hover:shadow-lg"
     @click.stop="handleClick"
   >
-    <Descriptions :column="1" :title="info.title" size="middle">
+    <Descriptions :column="1" :title="info.flowName" size="middle">
       <template #extra>
-        <Tag color="warning">审批中</Tag>
+        <component
+          :is="renderDict(info.flowStatus, DictEnum.WF_BUSINESS_STATUS)"
+        />
       </template>
-      <DescriptionsItem label="描述">{{ info.desc }}</DescriptionsItem>
-      <DescriptionsItem label="开始时间">{{ info.startTime }}</DescriptionsItem>
-      <DescriptionsItem label="结束时间">{{ info.endTime }}</DescriptionsItem>
+      <DescriptionsItem label="当前节点名称">
+        <div class="font-bold">{{ info.nodeName }}</div>
+      </DescriptionsItem>
+      <DescriptionsItem label="开始时间">
+        {{ info.createTime }}
+      </DescriptionsItem>
+      <!-- <DescriptionsItem label="更新时间">
+        {{ info.updateTime }}
+      </DescriptionsItem> -->
     </Descriptions>
     <div class="flex items-center justify-between text-[14px]">
       <div class="flex items-center gap-1">
-        <Avatar
-          size="small"
-          src="https://plus.dapdap.top/minio-server/plus/2024/11/21/925ed278e2d441beb7f695b41e13c4dd.jpg"
-        />
-        <span class="opacity-50">疯狂的牛子Li</span>
+        <VbenAvatar :alt="info.nickName" class="size-[24px]" src="" />
+        <span class="opacity-50">{{ info.nickName }}</span>
       </div>
-      <div class="opacity-50">处理时间: 2022-01-01</div>
+      <div class="opacity-50">更新时间: 2222-22-22</div>
     </div>
   </div>
 </template>
