@@ -4,21 +4,22 @@ import type { Recordable } from '@vben/types';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { useAccess } from '@vben/access';
 import { Page, type VbenFormProps } from '@vben/common-ui';
 import { $t } from '@vben/locales';
-import { preferences } from '@vben/preferences';
 import { getVxePopupContainer } from '@vben/utils';
 
-import { Avatar, Modal, Popconfirm, Space } from 'ant-design-vue';
+import { Modal, Popconfirm, Space } from 'ant-design-vue';
 
 import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
 import { vxeCheckboxChecked } from '#/adapter/vxe-table';
-import { userRemove, userStatusChange } from '#/api/system/user';
-import { workflowDefinitionList } from '#/api/workflow/definition';
-import { TableSwitch } from '#/components/table';
+import {
+  workflowDefinitionActive,
+  workflowDefinitionDelete,
+  workflowDefinitionList,
+} from '#/api/workflow/definition';
 
 import CategoryTree from './category-tree.vue';
+import { ActivityStatusEnum } from './constant';
 import { columns, querySchema } from './data';
 
 // 左边部门用
@@ -42,14 +43,6 @@ const formOptions: VbenFormProps = {
     formApi.setLatestSubmissionValues(formValues);
     await reload(formValues);
   },
-  // 日期选择格式化
-  fieldMappingTime: [
-    [
-      'createTime',
-      ['params[beginTime]', 'params[endTime]'],
-      ['YYYY-MM-DD 00:00:00', 'YYYY-MM-DD 23:59:59'],
-    ],
-  ],
 };
 
 const gridOptions: VxeGridProps = {
@@ -86,7 +79,7 @@ const gridOptions: VxeGridProps = {
   rowConfig: {
     isHover: true,
     keyField: 'id',
-    height: 48,
+    height: 66,
   },
   id: 'workflow-definition-index',
 };
@@ -97,7 +90,7 @@ const [BasicTable, tableApi] = useVbenVxeGrid({
 });
 
 async function handleDelete(row: Recordable<any>) {
-  await userRemove(row.id);
+  await workflowDefinitionDelete(row.id);
   await tableApi.query();
 }
 
@@ -109,21 +102,28 @@ function handleMultiDelete() {
     okType: 'danger',
     content: `确认删除选中的${ids.length}条记录吗？`,
     onOk: async () => {
-      await userRemove(ids);
+      await workflowDefinitionDelete(ids);
       await tableApi.query();
     },
   });
 }
 
-const { hasAccessByCodes } = useAccess();
-
 const router = useRouter();
-function handlePreview(row: any) {
+function handleDesign(row: any) {
   console.log(row);
   router.push({
     path: '/workflow/designer',
     query: { definitionId: row.id, disabled: 'true' },
   });
+}
+
+/**
+ * 激活/挂起流程
+ * @param row row
+ */
+async function handleActive(row: any) {
+  await workflowDefinitionActive(row.id, row.activityStatus);
+  await tableApi.query();
 }
 </script>
 
@@ -153,43 +153,46 @@ function handlePreview(row: any) {
             </a-button>
           </Space>
         </template>
-        <template #avatar="{ row }">
-          <!-- 可能要判断空字符串情况 所以没有使用?? -->
-          <Avatar :src="row.avatar || preferences.app.defaultAvatar" />
-        </template>
-        <template #status="{ row }">
-          <TableSwitch
-            v-model="row.status"
-            :api="() => userStatusChange(row)"
-            :disabled="
-              row.userId === 1 || !hasAccessByCodes(['system:user:edit'])
-            "
-            :reload="() => tableApi.query()"
-          />
-        </template>
         <template #action="{ row }">
-          <Space>
-            <ghost-button v-access:code="['system:user:edit']">
-              {{ $t('pages.common.edit') }}
-            </ghost-button>
-            <a-button size="small" type="link" @click="handlePreview(row)">
-              查看流程
-            </a-button>
-            <Popconfirm
-              :get-popup-container="getVxePopupContainer"
-              placement="left"
-              title="确认删除？"
-              @confirm="handleDelete(row)"
-            >
-              <ghost-button
-                danger
-                v-access:code="['system:user:remove']"
-                @click.stop=""
+          <div class="flex flex-col items-baseline gap-1">
+            <div>
+              <a-button
+                v-if="row.activityStatus === ActivityStatusEnum.Active"
+                size="small"
+                type="link"
+                @click="() => handleActive(row)"
               >
-                {{ $t('pages.common.delete') }}
-              </ghost-button>
-            </Popconfirm>
-          </Space>
+                挂起流程
+              </a-button>
+              <a-button
+                v-if="row.activityStatus === ActivityStatusEnum.Suspended"
+                size="small"
+                type="link"
+                @click="() => handleActive(row)"
+              >
+                激活流程
+              </a-button>
+              <a-button size="small" type="link"> 历史版本 </a-button>
+              <Popconfirm
+                :get-popup-container="getVxePopupContainer"
+                placement="left"
+                title="确认删除？"
+                @confirm="handleDelete(row)"
+              >
+                <a-button danger size="small" type="link" @click.stop="">
+                  删除流程
+                </a-button>
+              </Popconfirm>
+            </div>
+            <div>
+              <a-button size="small" type="link"> 绑定业务 </a-button>
+              <a-button size="small" type="link" @click="handleDesign(row)">
+                查看流程
+              </a-button>
+              <a-button size="small" type="link"> 发布流程 </a-button>
+              <a-button size="small" type="link"> 复制流程 </a-button>
+            </div>
+          </div>
         </template>
       </BasicTable>
     </div>
