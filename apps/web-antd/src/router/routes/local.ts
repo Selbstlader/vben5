@@ -158,6 +158,7 @@ const profileRoute: RouteRecordStringComponent[] = [
       icon: 'eos-icons:role-binding-outlined',
       keepAlive: true,
       title: '请假申请',
+      hideInMenu: true,
     },
     name: 'WorkflowLeaveInner',
     path: '/workflow/leave-inner',
