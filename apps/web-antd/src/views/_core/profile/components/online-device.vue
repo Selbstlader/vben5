@@ -10,7 +10,9 @@ import { columns } from '#/views/monitor/online/data';
 const gridOptions: VxeGridProps = {
   columns,
   keepSource: true,
-  pagerConfig: {},
+  pagerConfig: {
+    enabled: false,
+  },
   proxyConfig: {
     ajax: {
       query: async () => {
