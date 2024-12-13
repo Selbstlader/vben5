@@ -26,13 +26,13 @@ const gridOptions: VxeGridProps = {
   columns,
   height: 'auto',
   keepSource: true,
-  pagerConfig: {},
+  pagerConfig: {
+    enabled: false,
+  },
   proxyConfig: {
     ajax: {
-      query: async ({ page }, formValues) => {
+      query: async (_, formValues) => {
         return await onlineList({
-          pageNum: page.currentPage,
-          pageSize: page.pageSize,
           ...formValues,
         });
       },
