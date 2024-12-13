@@ -38,6 +38,10 @@ const gridOptions: VxeGridProps = {
       },
     },
   },
+  scrollY: {
+    enabled: true,
+    gt: 0,
+  },
   rowConfig: {
     isHover: true,
     keyField: 'tokenId',
@@ -51,11 +55,24 @@ async function handleForceOffline(row: Recordable<any>) {
   await forceLogout(row.tokenId);
   await tableApi.query();
 }
+
+function onlineCount() {
+  return tableApi?.grid?.getData?.()?.length ?? 0;
+}
 </script>
 
 <template>
   <Page :auto-content-height="true">
-    <BasicTable table-title="在线用户列表">
+    <BasicTable>
+      <template #toolbar-actions>
+        <div class="mr-1 pl-1 text-[1rem]">
+          <div>
+            在线用户列表 (共
+            <span class="text-primary font-bold">{{ onlineCount() }}</span>
+            人在线)
+          </div>
+        </div>
+      </template>
       <template #action="{ row }">
         <Popconfirm
           :get-popup-container="getVxePopupContainer"
