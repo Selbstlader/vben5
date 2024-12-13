@@ -42,7 +42,7 @@ export interface VxeGridProps {
   /**
    * vxe-grid 事件
    */
-  gridEvents?: DeepPartial<VxeGridListeners>;
+  gridEvents?: Partial<VxeGridListeners>;
   /**
    * 表单配置
    */
