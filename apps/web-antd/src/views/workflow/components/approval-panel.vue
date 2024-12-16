@@ -2,12 +2,19 @@
 import type { FlowInfoResponse } from '#/api/workflow/instance/model';
 import type { TaskInfo } from '#/api/workflow/task/model';
 
-import { onUnmounted, ref, watch } from 'vue';
+import { computed, onUnmounted, ref, watch } from 'vue';
 
 import { Fallback, VbenAvatar } from '@vben/common-ui';
 import { DictEnum } from '@vben/constants';
 
-import { Card, Divider, Space, TabPane, Tabs } from 'ant-design-vue';
+import {
+  Card,
+  Divider,
+  Popconfirm,
+  Space,
+  TabPane,
+  Tabs,
+} from 'ant-design-vue';
 
 import { flowInfo } from '#/api/workflow/instance';
 import { renderDict } from '#/utils/render';
@@ -19,7 +26,27 @@ defineOptions({
   inheritAttrs: false,
 });
 
-const props = defineProps<{ task?: TaskInfo }>();
+// eslint-disable-next-line no-use-before-define
+const props = defineProps<{ task?: TaskInfo; type: ApprovalType }>();
+
+/**
+ * myself 我发起的
+ * readonly 只读 只用于查看
+ */
+type ApprovalType = 'myself' | 'readonly';
+const showFooter = computed(() => {
+  if (props.type === 'readonly') {
+    return false;
+  }
+  // 我发起的 && [已完成, 已作废] 不显示
+  if (
+    props.type === 'myself' &&
+    ['finish', 'invalid'].includes(props.task?.flowStatus ?? '')
+  ) {
+    return false;
+  }
+  return true;
+});
 
 const currentFlowInfo = ref<FlowInfoResponse>();
 /**
@@ -43,6 +70,10 @@ async function handleLoadInfo(task: TaskInfo | undefined) {
 watch(() => props.task, handleLoadInfo);
 
 onUnmounted(() => (currentFlowInfo.value = undefined));
+
+async function handleCancel() {
+  // await cancelProcessApply()
+}
 </script>
 
 <template>
@@ -102,11 +133,22 @@ onUnmounted(() => (currentFlowInfo.value = undefined));
       </Tabs>
     </div>
     <!-- 固定底部 -->
+    <div class="h-[57px]"></div>
     <div
+      v-if="showFooter"
       class="border-t-solid bg-background absolute bottom-0 left-0 w-full border-t-[1px] p-3"
     >
       <div class="flex justify-end">
-        <Space>
+        <Space v-if="type === 'myself'">
+          <Popconfirm
+            placement="topRight"
+            title="确定要撤销该申请吗？"
+            @confirm="handleCancel"
+          >
+            <a-button danger type="primary">撤销申请</a-button>
+          </Popconfirm>
+        </Space>
+        <Space v-if="false">
           <a-button type="primary">通过</a-button>
           <a-button danger type="primary">驳回</a-button>
           <a-button>其他</a-button>

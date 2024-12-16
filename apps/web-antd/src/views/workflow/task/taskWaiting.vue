@@ -90,7 +90,7 @@ async function handleCardClick(item: TaskInfo) {
         <div
           class="bg-background z-100 sticky left-0 top-0 w-full rounded-t-lg border-b-[1px] border-solid p-2"
         >
-          <InputSearch placeholder="搜索任务名称" />
+          <InputSearch placeholder="搜索还没做" />
         </div>
         <div
           class="thin-scrollbar flex flex-1 flex-col gap-2 overflow-y-auto py-3"
@@ -116,7 +116,7 @@ async function handleCardClick(item: TaskInfo) {
           </div>
         </div>
       </div>
-      <ApprovalPanel :task="currentTask" />
+      <ApprovalPanel :task="currentTask" type="readonly" />
     </div>
   </Page>
 </template>

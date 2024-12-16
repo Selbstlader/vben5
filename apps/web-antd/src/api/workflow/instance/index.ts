@@ -1,6 +1,7 @@
+import type { TaskInfo } from '../task/model';
 import type { FlowInfoResponse } from './model';
 
-import type { ID, IDS, PageQuery } from '#/api/common';
+import type { ID, IDS, PageQuery, PageResult } from '#/api/common';
 
 import { requestClient } from '#/api/request';
 
@@ -67,10 +68,13 @@ export function workflowInstanceActive(instanceId: ID, active: boolean) {
 /**
  * 获取当前登录人发起的流程实例
  * @param params
- * @returns
+ * @returns PageResult<Flow>
  */
 export function pageByCurrent(params?: PageQuery) {
-  return requestClient.get('/workflow/instance/current', { params });
+  return requestClient.get<PageResult<TaskInfo>>(
+    '/workflow/instance/pageByCurrent',
+    { params },
+  );
 }
 
 /**
