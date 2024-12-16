@@ -7,7 +7,7 @@ import { onUnmounted, ref, watch } from 'vue';
 import { Fallback, VbenAvatar } from '@vben/common-ui';
 import { DictEnum } from '@vben/constants';
 
-import { Card, Divider, TabPane, Tabs } from 'ant-design-vue';
+import { Card, Divider, Space, TabPane, Tabs } from 'ant-design-vue';
 
 import { flowInfo } from '#/api/workflow/instance';
 import { renderDict } from '#/utils/render';
