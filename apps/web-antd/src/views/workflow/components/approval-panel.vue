@@ -119,9 +119,9 @@ async function handleCancel() {
       <Tabs v-if="currentFlowInfo" class="flex-1">
         <TabPane key="1" tab="审批详情">
           <div class="h-fulloverflow-y-auto">
-            <!-- <Alert message="该页面仅为静态页 后期可能会用到!" type="info" /> -->
+            <!-- 约定${task.formPath}/frame 为内嵌表单 用于展示 需要在本地路由添加 -->
             <iframe
-              :src="`/workflow/leaveEdit/index/iframe?readonly=true&id=${task.businessId}`"
+              :src="`${task.formPath}/iframe?readonly=true&id=${task.businessId}`"
               class="h-[300px] w-full"
             ></iframe>
             <Divider />
