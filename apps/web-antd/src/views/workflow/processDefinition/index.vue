@@ -4,7 +4,7 @@ import type { Recordable } from '@vben/types';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { Page, type VbenFormProps } from '@vben/common-ui';
+import { Page, useVbenModal, type VbenFormProps } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 import { getVxePopupContainer } from '@vben/utils';
 
@@ -16,13 +16,16 @@ import {
   workflowDefinitionActive,
   workflowDefinitionCopy,
   workflowDefinitionDelete,
+  workflowDefinitionExport,
   workflowDefinitionList,
   workflowDefinitionPublish,
 } from '#/api/workflow/definition';
+import { downloadByData } from '#/utils/file/download';
 
 import CategoryTree from './category-tree.vue';
 import { ActivityStatusEnum } from './constant';
 import { columns, querySchema } from './data';
+import processDefinitionModal from './process-definition-modal.vue';
 
 // 左边部门用
 const selectedCode = ref<string[]>([]);
@@ -81,7 +84,7 @@ const gridOptions: VxeGridProps = {
   rowConfig: {
     isHover: true,
     keyField: 'id',
-    height: 66,
+    height: 100,
   },
   id: 'workflow-definition-index',
 };
@@ -158,6 +161,42 @@ async function handleCopy(row: any) {
   await workflowDefinitionCopy(row.id);
   await tableApi.query();
 }
+
+const [ProcessDefinitionModal, modalApi] = useVbenModal({
+  connectedComponent: processDefinitionModal,
+});
+
+/**
+ * 新增流程
+ */
+function handleAdd() {
+  modalApi.setData({});
+  modalApi.open();
+}
+
+/**
+ * 编辑流程
+ */
+function handleEdit(row: any) {
+  modalApi.setData({ id: row.id });
+  modalApi.open();
+}
+
+/**
+ * 导出xml
+ * @param row row
+ */
+async function handleExportXml(row: any) {
+  const hideLoading = message.loading($t('pages.common.downloadLoading'), 0);
+  try {
+    const blob = await workflowDefinitionExport(row.id);
+    downloadByData(blob, `${row.flowName}-${Date.now()}.xml`);
+  } catch (error) {
+    console.error(error);
+  } finally {
+    hideLoading();
+  }
+}
 </script>
 
 <template>
@@ -181,7 +220,11 @@ async function handleCopy(row: any) {
             >
               {{ $t('pages.common.delete') }}
             </a-button>
-            <a-button type="primary" v-access:code="['system:user:add']">
+            <a-button
+              type="primary"
+              v-access:code="['system:user:add']"
+              @click="handleAdd"
+            >
               {{ $t('pages.common.add') }}
             </a-button>
           </Space>
@@ -246,9 +289,18 @@ async function handleCopy(row: any) {
                 <a-button size="small" type="link"> 复制流程 </a-button>
               </Popconfirm>
             </div>
+            <div>
+              <a-button size="small" type="link" @click="handleEdit(row)">
+                编辑信息
+              </a-button>
+              <a-button size="small" type="link" @click="handleExportXml(row)">
+                导出流程
+              </a-button>
+            </div>
           </div>
         </template>
       </BasicTable>
     </div>
+    <ProcessDefinitionModal @reload="() => tableApi.reload()" />
   </Page>
 </template>

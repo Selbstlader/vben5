@@ -1,0 +1,141 @@
+<script setup lang="ts">
+import { computed, ref } from 'vue';
+
+import { useVbenModal } from '@vben/common-ui';
+import { $t } from '@vben/locales';
+import {
+  addFullName,
+  cloneDeep,
+  getPopupContainer,
+  listToTree,
+} from '@vben/utils';
+
+import { useVbenForm } from '#/adapter/form';
+import { categoryList } from '#/api/workflow/category';
+import {
+  workflowDefinitionAdd,
+  workflowDefinitionInfo,
+  workflowDefinitionUpdate,
+} from '#/api/workflow/definition';
+
+import { modalSchema } from './data';
+
+const emit = defineEmits<{ reload: [] }>();
+
+const isUpdate = ref(false);
+const title = computed(() => {
+  return isUpdate.value ? $t('pages.common.edit') : $t('pages.common.add');
+});
+
+const [BasicForm, formApi] = useVbenForm({
+  commonConfig: {
+    componentProps: {
+      class: 'w-full',
+    },
+    formItemClass: 'col-span-2',
+    labelWidth: 90,
+  },
+  schema: modalSchema(),
+  showDefaultActions: false,
+  wrapperClass: 'grid-cols-2',
+});
+
+async function setupCategorySelect() {
+  // menu
+  const resp = await categoryList();
+  const tree = listToTree(resp);
+  const fullMenuTree = [
+    {
+      id: 0,
+      categoryName: $t('menu.root'),
+      children: tree,
+    },
+  ];
+  addFullName(fullMenuTree, 'categoryName', ' / ');
+
+  formApi.updateSchema([
+    {
+      componentProps: {
+        fieldNames: {
+          label: 'categoryName',
+          value: 'id',
+        },
+        getPopupContainer,
+        // 设置弹窗滚动高度 默认256
+        listHeight: 300,
+        showSearch: true,
+        treeData: fullMenuTree,
+        treeDefaultExpandAll: false,
+        // 默认展开的树节点
+        treeDefaultExpandedKeys: [0],
+        treeLine: { showLeafIcon: false },
+        // 筛选的字段
+        treeNodeFilterProp: 'categoryName',
+        treeNodeLabelProp: 'fullName',
+      },
+      fieldName: 'category',
+    },
+  ]);
+}
+
+const [BasicDrawer, modalApi] = useVbenModal({
+  onCancel: handleCancel,
+  onConfirm: handleConfirm,
+  async onOpenChange(isOpen) {
+    if (!isOpen) {
+      return null;
+    }
+    modalApi.modalLoading(true);
+
+    const { id } = modalApi.getData() as { id?: number | string };
+    isUpdate.value = !!id;
+
+    // 加载分类树选择
+    await setupCategorySelect();
+    if (isUpdate.value && id) {
+      const record = await workflowDefinitionInfo(id);
+      await formApi.setValues(record);
+    }
+
+    modalApi.modalLoading(false);
+  },
+});
+
+async function handleConfirm() {
+  try {
+    modalApi.modalLoading(true);
+    const { valid } = await formApi.validate();
+    if (!valid) {
+      return;
+    }
+    const data = cloneDeep(await formApi.getValues());
+    await (isUpdate.value
+      ? workflowDefinitionUpdate(data)
+      : workflowDefinitionAdd(data));
+    emit('reload');
+    await handleCancel();
+  } catch (error) {
+    console.error(error);
+  } finally {
+    modalApi.modalLoading(false);
+  }
+}
+
+async function handleCancel() {
+  modalApi.close();
+  await formApi.resetForm();
+}
+</script>
+
+<template>
+  <BasicDrawer
+    :close-on-click-modal="false"
+    :fullscreen-button="false"
+    :title="title"
+    class="w-[550px]"
+  >
+    <div class="min-h-[300px]">
+      <BasicForm />
+    </div>
+  </BasicDrawer>
+</template>

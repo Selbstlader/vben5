@@ -101,6 +101,7 @@ export function workflowDefinitionImport(file: File) {
 export function workflowDefinitionExport(id: ID) {
   return requestClient.postWithMsg<Blob>(
     `/workflow/definition/exportDef/${id}`,
+    {},
     {
       responseType: 'blob',
       isTransformResponse: false,
