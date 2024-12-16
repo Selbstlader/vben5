@@ -110,10 +110,20 @@ export const modalSchema: FormSchemaGetter = () => [
     label: '开始时间',
     fieldName: 'dateRange',
     component: 'RangePicker',
-    componentProps: {
-      showTime: true,
-      format: 'YYYY-MM-DD',
-      valueFormat: 'YYYY-MM-DD HH:mm:ss',
+    componentProps(model) {
+      return {
+        format: 'YYYY-MM-DD',
+        valueFormat: 'YYYY-MM-DD HH:mm:ss',
+        onChange: (dates: [string, string]) => {
+          if (!dates) {
+            model.leaveDays = null;
+            return;
+          }
+          const [start, end] = dates;
+          const leaveDays = dayjs(end).diff(dayjs(start), 'day') + 1;
+          model.leaveDays = leaveDays;
+        },
+      };
     },
     rules: 'required',
   },

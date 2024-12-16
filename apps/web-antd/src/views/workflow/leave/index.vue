@@ -3,7 +3,7 @@ import type { LeaveForm } from './api/model';
 
 import { useRouter } from 'vue-router';
 
-import { Page, useVbenModal, type VbenFormProps } from '@vben/common-ui';
+import { Page, type VbenFormProps } from '@vben/common-ui';
 import { getVxePopupContainer } from '@vben/utils';
 
 import { Modal, Popconfirm, Space } from 'ant-design-vue';
@@ -17,7 +17,6 @@ import { commonDownloadExcel } from '#/utils/file/download';
 
 import { leaveExport, leaveList, leaveRemove } from './api';
 import { columns, querySchema } from './data';
-import leaveModal from './leave-modal.vue';
 
 const formOptions: VbenFormProps = {
   commonConfig: {
@@ -66,18 +65,13 @@ const [BasicTable, tableApi] = useVbenVxeGrid({
   gridOptions,
 });
 
-const [LeaveModal, modalApi] = useVbenModal({
-  connectedComponent: leaveModal,
-});
-
 const router = useRouter();
 function handleAdd() {
   router.push('/workflow/leaveEdit/index');
 }
 
 async function handleEdit(row: Required<LeaveForm>) {
-  modalApi.setData({ id: row.id });
-  modalApi.open();
+  router.push({ path: '/workflow/leaveEdit/index', query: { id: row.id } });
 }
 
 async function handleDelete(row: Required<LeaveForm>) {
@@ -165,6 +159,5 @@ function handleDownloadExcel() {
         </Space>
       </template>
     </BasicTable>
-    <LeaveModal @reload="tableApi.query()" />
   </Page>
 </template>
