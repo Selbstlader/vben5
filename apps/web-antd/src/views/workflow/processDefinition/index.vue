@@ -8,14 +8,16 @@ import { Page, type VbenFormProps } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 import { getVxePopupContainer } from '@vben/utils';
 
-import { Modal, Popconfirm, Space } from 'ant-design-vue';
+import { message, Modal, Popconfirm, Space } from 'ant-design-vue';
 
 import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
 import { vxeCheckboxChecked } from '#/adapter/vxe-table';
 import {
   workflowDefinitionActive,
+  workflowDefinitionCopy,
   workflowDefinitionDelete,
   workflowDefinitionList,
+  workflowDefinitionPublish,
 } from '#/api/workflow/definition';
 
 import CategoryTree from './category-tree.vue';
@@ -109,11 +111,16 @@ function handleMultiDelete() {
 }
 
 const router = useRouter();
-function handleDesign(row: any) {
+/**
+ * 流程设计/预览
+ * @param row row
+ * @param disabled true为预览，false为设计
+ */
+function handleDesign(row: any, disabled: boolean) {
   console.log(row);
   router.push({
     path: '/workflow/designer',
-    query: { definitionId: row.id, disabled: 'true' },
+    query: { definitionId: row.id, disabled: String(disabled) },
   });
 }
 
@@ -122,7 +129,33 @@ function handleDesign(row: any) {
  * @param row row
  */
 async function handleActive(row: any) {
-  await workflowDefinitionActive(row.id, row.activityStatus);
+  await workflowDefinitionActive(row.id, !row.activityStatus);
+  await tableApi.query();
+}
+
+/**
+ * 历史版本
+ * @param _row row
+ */
+function handleHistory(_row: any) {
+  message.info('暂未开放');
+}
+
+/**
+ * 发布流程
+ * @param row row
+ */
+async function handlePublish(row: any) {
+  await workflowDefinitionPublish(row.id);
+  await tableApi.query();
+}
+
+/**
+ * 复制流程
+ * @param row row
+ */
+async function handleCopy(row: any) {
+  await workflowDefinitionCopy(row.id);
   await tableApi.query();
 }
 </script>
@@ -154,7 +187,7 @@ async function handleActive(row: any) {
           </Space>
         </template>
         <template #action="{ row }">
-          <div class="flex flex-col items-baseline gap-1">
+          <div class="flex flex-col gap-1">
             <div>
               <a-button
                 v-if="row.activityStatus === ActivityStatusEnum.Active"
@@ -172,7 +205,9 @@ async function handleActive(row: any) {
               >
                 激活流程
               </a-button>
-              <a-button size="small" type="link"> 历史版本 </a-button>
+              <a-button size="small" type="link" @click="handleHistory(row)">
+                历史版本
+              </a-button>
               <Popconfirm
                 :get-popup-container="getVxePopupContainer"
                 placement="left"
@@ -185,12 +220,31 @@ async function handleActive(row: any) {
               </Popconfirm>
             </div>
             <div>
-              <a-button size="small" type="link"> 绑定业务 </a-button>
-              <a-button size="small" type="link" @click="handleDesign(row)">
-                查看流程
+              <a-button
+                size="small"
+                type="link"
+                @click="handleDesign(row, !!row.isPublish)"
+              >
+                {{ row.isPublish ? '查看流程' : '设计流程' }}
               </a-button>
-              <a-button size="small" type="link"> 发布流程 </a-button>
-              <a-button size="small" type="link"> 复制流程 </a-button>
+              <Popconfirm
+                :get-popup-container="getVxePopupContainer"
+                :title="`确认发布流程[${row.flowName}]?`"
+                placement="left"
+                @confirm="handlePublish(row)"
+              >
+                <a-button v-if="!row.isPublish" size="small" type="link">
+                  发布流程
+                </a-button>
+              </Popconfirm>
+              <Popconfirm
+                :get-popup-container="getVxePopupContainer"
+                :title="`确认复制流程[${row.flowName}]?`"
+                placement="left"
+                @confirm="handleCopy(row)"
+              >
+                <a-button size="small" type="link"> 复制流程 </a-button>
+              </Popconfirm>
             </div>
           </div>
         </template>
