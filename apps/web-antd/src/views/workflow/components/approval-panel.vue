@@ -22,11 +22,22 @@ defineOptions({
 const props = defineProps<{ task?: TaskInfo }>();
 
 const currentFlowInfo = ref<FlowInfoResponse>();
+/**
+ * card的loading状态
+ */
+const loading = ref(false);
 
 async function handleLoadInfo(task: TaskInfo | undefined) {
-  if (!task) return null;
-  const resp = await flowInfo(task.businessId);
-  currentFlowInfo.value = resp;
+  try {
+    if (!task) return null;
+    loading.value = true;
+    const resp = await flowInfo(task.businessId);
+    currentFlowInfo.value = resp;
+  } catch (error) {
+    console.error(error);
+  } finally {
+    loading.value = false;
+  }
 }
 
 watch(() => props.task, handleLoadInfo);
@@ -38,6 +49,7 @@ onUnmounted(() => (currentFlowInfo.value = undefined));
   <Card
     v-if="task"
     :body-style="{ overflowY: 'auto', height: '100%' }"
+    :loading="loading"
     :title="`编号: ${task.id}`"
     class="thin-scrollbar flex-1 overflow-y-hidden"
     size="small"
