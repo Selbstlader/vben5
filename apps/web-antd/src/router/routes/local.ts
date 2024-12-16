@@ -146,6 +146,7 @@ const profileRoute: RouteRecordStringComponent[] = [
           icon: 'eos-icons:role-binding-outlined',
           keepAlive: true,
           title: '请假申请',
+          activePath: '/demo/leave',
         },
         name: 'WorkflowLeaveIndex',
         path: '/workflow/leaveEdit/index',
