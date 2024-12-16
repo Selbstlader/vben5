@@ -45,7 +45,11 @@ onMounted(async () => {
   <TimelineItem :key="item.id">
     <template #dot>
       <div class="relative rounded-full border">
-        <VbenAvatar :alt="item.approveName" class="size-[36px]" src="" />
+        <VbenAvatar
+          :alt="item.approveName"
+          class="bg-primary size-[36px] rounded-full text-white"
+          src=""
+        />
       </div>
     </template>
     <div class="ml-2 flex flex-col gap-0.5">

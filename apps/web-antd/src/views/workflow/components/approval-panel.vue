@@ -103,7 +103,11 @@ async function handleCancel() {
           </div>
         </div>
         <div class="flex items-center gap-2">
-          <VbenAvatar :alt="task.createByName" class="size-[24px]" src="" />
+          <VbenAvatar
+            :alt="task.createByName"
+            class="bg-primary size-[24px] rounded-full text-white"
+            src=""
+          />
           <span>{{ task.createByName }}</span>
           <div class="flex items-center opacity-50">
             <span>XXXX有限公司</span>

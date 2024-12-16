@@ -48,7 +48,11 @@ function handleClick() {
     </Descriptions>
     <div class="flex items-center justify-between text-[14px]">
       <div class="flex items-center gap-1">
-        <VbenAvatar :alt="info.createByName" class="size-[24px]" src="" />
+        <VbenAvatar
+          :alt="info.createByName"
+          class="bg-primary size-[24px] rounded-full text-white"
+          src=""
+        />
         <span class="opacity-50">{{ info.createByName }}</span>
       </div>
       <div class="opacity-50">更新时间: 2222-22-22</div>
