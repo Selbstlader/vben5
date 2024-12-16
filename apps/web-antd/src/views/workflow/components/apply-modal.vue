@@ -1,0 +1,100 @@
+<!-- 流程发起(启动)的弹窗 -->
+
+<script setup lang="ts">
+import { useVbenModal } from '@vben/common-ui';
+
+import { cloneDeep } from 'lodash-es';
+
+import { useVbenForm } from '#/adapter/form';
+import { completeTask } from '#/api/workflow/task';
+
+interface Emits {
+  /**
+   * 完成
+   */
+  complete: [];
+}
+
+const emit = defineEmits<Emits>();
+
+interface ModalProps {
+  taskId: string;
+  taskVariables: Record<string, any>;
+  variables?: any; // 这个干啥的
+}
+
+const [BasicModal, modalApi] = useVbenModal({
+  title: '流程发起',
+  fullscreenButton: false,
+  onConfirm: handleSubmit,
+});
+
+const [BasicForm, formApi] = useVbenForm({
+  commonConfig: {
+    // 默认占满两列
+    formItemClass: 'col-span-2',
+    // 默认label宽度 px
+    labelWidth: 100,
+    // 通用配置项 会影响到所有表单项
+    componentProps: {
+      class: 'w-full',
+    },
+  },
+  schema: [
+    {
+      fieldName: 'messageType',
+      component: 'CheckboxGroup',
+      componentProps: {
+        options: [
+          { label: '站内信', value: '1', disabled: true },
+          { label: '邮件', value: '2' },
+          { label: '短信', value: '3' },
+        ],
+      },
+      label: '通知方式',
+      defaultValue: ['1'],
+    },
+    {
+      fieldName: 'flowCopyList',
+      component: 'Input',
+      defaultValue: [],
+      label: '抄送人',
+    },
+  ],
+  showDefaultActions: false,
+  wrapperClass: 'grid-cols-2',
+});
+
+async function handleSubmit() {
+  try {
+    modalApi.modalLoading(true);
+    const { messageType, flowCopyList } = cloneDeep(await formApi.getValues());
+    const { taskId, taskVariables, variables } =
+      modalApi.getData() as ModalProps;
+    const data = {
+      messageType,
+      flowCopyList,
+      taskId,
+      taskVariables,
+      variables,
+    };
+    await completeTask(data);
+    modalApi.close();
+    emit('complete');
+  } catch (error) {
+    console.error(error);
+  } finally {
+    modalApi.modalLoading(false);
+  }
+}
+</script>
+
+<template>
+  <BasicModal>
+    <BasicForm>
+      <template #flowCopyList>
+        <div>TODO: 等待组件开发</div>
+      </template>
+    </BasicForm>
+  </BasicModal>
+</template>

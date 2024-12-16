@@ -1,4 +1,8 @@
-import type { TaskInfo } from './model';
+import type {
+  CompleteTaskReqData,
+  StartWorkFlowReqData,
+  TaskInfo,
+} from './model';
 
 import type { ID, IDS, PageQuery, PageResult } from '#/api/common';
 
@@ -8,15 +12,18 @@ import { requestClient } from '#/api/request';
  * 启动任务
  * @param data
  */
-export function startWorkFlow(data: any) {
-  return requestClient.postWithMsg<void>('/workflow/task/startWorkFlow', data);
+export function startWorkFlow(data: StartWorkFlowReqData) {
+  return requestClient.post<{
+    processInstanceId: string;
+    taskId: string;
+  }>('/workflow/task/startWorkFlow', data);
 }
 
 /**
  * 办理任务
  * @param data
  */
-export function completeTask(data: any) {
+export function completeTask(data: CompleteTaskReqData) {
   return requestClient.postWithMsg<void>('/workflow/task/completeTask', data);
 }
 

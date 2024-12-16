@@ -40,7 +40,7 @@ export function leaveInfo(id: ID) {
  * @returns void
  */
 export function leaveAdd(data: LeaveForm) {
-  return requestClient.postWithMsg<void>('/workflow/leave', data);
+  return requestClient.postWithMsg<LeaveVO>('/workflow/leave', data);
 }
 
 /**
@@ -49,7 +49,7 @@ export function leaveAdd(data: LeaveForm) {
  * @returns void
  */
 export function leaveUpdate(data: LeaveForm) {
-  return requestClient.putWithMsg<void>('/workflow/leave', data);
+  return requestClient.putWithMsg<LeaveVO>('/workflow/leave', data);
 }
 
 /**

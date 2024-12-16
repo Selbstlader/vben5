@@ -27,3 +27,26 @@ export interface TaskInfo {
   createBy: string;
   createByName: string;
 }
+
+export interface CompleteTaskReqData {
+  messageType: string[];
+  flowCopyList: { userId: string; userName: string }[];
+  taskId: ID;
+  taskVariables: Record<string, any>;
+  variables: any;
+}
+
+export interface StartWorkFlowReqData {
+  /**
+   * 业务ID
+   */
+  businessKey: ID;
+  /**
+   * flowCode
+   */
+  flowCode: string;
+  /**
+   * 流程变量
+   */
+  variables: Record<string, any>;
+}

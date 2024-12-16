@@ -1,4 +1,4 @@
-import type { FormSchemaGetter } from '#/adapter/form';
+import type { FormSchemaGetter, VbenFormSchema } from '#/adapter/form';
 import type { VxeGridProps } from '#/adapter/vxe-table';
 
 import { DictEnum } from '@vben/constants';
@@ -16,6 +16,13 @@ const leaveTypeOptions = [
   { label: '婚假', value: '4' },
   { label: '产假', value: '5' },
   { label: '其他', value: '7' },
+];
+
+export const leaveFlowOptions = [
+  { label: '请假流程-普通', value: 'leave1' },
+  { label: '请假流程-排他网关', value: 'leave2' },
+  { label: '请假流程-并行网关', value: 'leave3' },
+  { label: '请假流程-会签', value: 'leave4' },
 ];
 
 export const querySchema: FormSchemaGetter = () => [
@@ -86,13 +93,31 @@ export const columns: VxeGridProps['columns'] = [
   },
 ];
 
-export const modalSchema: FormSchemaGetter = () => [
+export const modalSchema: (isEdit: boolean) => VbenFormSchema[] = (
+  isEdit: boolean,
+) => [
   {
     label: '主键',
     fieldName: 'id',
     component: 'Input',
     dependencies: {
       show: () => false,
+      triggerFields: [''],
+    },
+  },
+  {
+    label: '流程类型',
+    fieldName: 'flowType',
+    component: 'Select',
+    help: '这里仅仅为了发起流程方便, 实际不应该包含此字段',
+    componentProps: {
+      options: leaveFlowOptions,
+      getPopupContainer,
+    },
+    defaultValue: 'leave1',
+    rules: 'selectRequired',
+    dependencies: {
+      show: () => isEdit,
       triggerFields: [''],
     },
   },

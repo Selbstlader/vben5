@@ -3,7 +3,7 @@ import type { LeaveForm } from './api/model';
 
 import { useRouter } from 'vue-router';
 
-import { Page, type VbenFormProps } from '@vben/common-ui';
+import { Page, useVbenModal, type VbenFormProps } from '@vben/common-ui';
 import { getVxePopupContainer } from '@vben/utils';
 
 import { Modal, Popconfirm, Space } from 'ant-design-vue';
@@ -15,6 +15,7 @@ import {
 } from '#/adapter/vxe-table';
 import { commonDownloadExcel } from '#/utils/file/download';
 
+import userSelectModal from '../components/user-select-modal.vue';
 import { leaveExport, leaveList, leaveRemove } from './api';
 import { columns, querySchema } from './data';
 
@@ -103,6 +104,13 @@ function handleDownloadExcel() {
     },
   );
 }
+const [UserSelectModal, testApi] = useVbenModal({
+  connectedComponent: userSelectModal,
+});
+
+function handleTest() {
+  testApi.open();
+}
 </script>
 
 <template>
@@ -110,6 +118,7 @@ function handleDownloadExcel() {
     <BasicTable table-title="请假申请列表">
       <template #toolbar-tools>
         <Space>
+          <a-button @click="handleTest">test选人</a-button>
           <a-button
             v-access:code="['workflow:leave:export']"
             @click="handleDownloadExcel"
@@ -159,5 +168,6 @@ function handleDownloadExcel() {
         </Space>
       </template>
     </BasicTable>
+    <UserSelectModal />
   </Page>
 </template>
