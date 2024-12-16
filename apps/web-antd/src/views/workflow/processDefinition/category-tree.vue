@@ -44,13 +44,13 @@ async function loadTree() {
 
   const ret = await categoryList();
   let treeData = listToTree(ret, {
-    id: 'id',
+    id: 'categoryId',
     pid: 'parentId',
   });
   treeData = [
     {
       categoryName: '根目录',
-      id: 0,
+      categoryId: 0,
       children: treeData,
     },
   ];
@@ -98,7 +98,7 @@ onMounted(loadTree);
             v-if="categoryTreeArray.length > 0"
             v-model:selected-keys="selectCode"
             :class="$attrs.class"
-            :field-names="{ title: 'categoryName', key: 'id' }"
+            :field-names="{ title: 'categoryName', key: 'categoryId' }"
             :show-line="{ showLeafIcon: false }"
             :tree-data="categoryTreeArray"
             :virtual="false"

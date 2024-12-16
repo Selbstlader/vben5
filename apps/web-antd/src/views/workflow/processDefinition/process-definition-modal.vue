@@ -43,10 +43,13 @@ const [BasicForm, formApi] = useVbenForm({
 async function setupCategorySelect() {
   // menu
   const resp = await categoryList();
-  const tree = listToTree(resp);
+  const tree = listToTree(resp, {
+    id: 'categoryId',
+    pid: 'parentId',
+  });
   const fullMenuTree = [
     {
-      id: 0,
+      categoryId: 0,
       categoryName: $t('menu.root'),
       children: tree,
     },
@@ -58,7 +61,7 @@ async function setupCategorySelect() {
       componentProps: {
         fieldNames: {
           label: 'categoryName',
-          value: 'id',
+          value: 'categoryId',
         },
         getPopupContainer,
         // 设置弹窗滚动高度 默认256

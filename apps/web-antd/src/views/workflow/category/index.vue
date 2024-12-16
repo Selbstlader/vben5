@@ -56,11 +56,11 @@ const gridOptions: VxeGridProps = {
     gt: 0,
   },
   rowConfig: {
-    keyField: 'id',
+    keyField: 'categoryId',
   },
   treeConfig: {
     parentField: 'parentId',
-    rowField: 'id',
+    rowField: 'categoryId',
     transform: true,
   },
   // 表格全局唯一表示 保存列配置需要用到
@@ -73,17 +73,17 @@ const [CategoryModal, modalApi] = useVbenModal({
 });
 
 function handleAdd(row?: Recordable<any>) {
-  modalApi.setData({ parentId: row?.id });
+  modalApi.setData({ parentId: row?.categoryId });
   modalApi.open();
 }
 
 async function handleEdit(row: Recordable<any>) {
-  modalApi.setData({ id: row.id });
+  modalApi.setData({ id: row.categoryId });
   modalApi.open();
 }
 
 async function handleDelete(row: Recordable<any>) {
-  await categoryRemove(row.id);
+  await categoryRemove(row.categoryId);
   await tableApi.query();
 }
 

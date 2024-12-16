@@ -41,13 +41,13 @@ const [BasicForm, formApi] = useVbenForm({
 async function setupCategorySelect() {
   const listData = await categoryList();
   let treeData = listToTree(listData, {
-    id: 'id',
+    id: 'categoryId',
     pid: 'parentId',
   });
   treeData = [
     {
       categoryName: '根目录',
-      id: 0,
+      categoryId: 0,
       children: treeData,
     },
   ];
@@ -57,7 +57,7 @@ async function setupCategorySelect() {
       componentProps: {
         treeData,
         treeLine: { showLeafIcon: false },
-        fieldNames: { label: 'categoryName', value: 'id' },
+        fieldNames: { label: 'categoryName', value: 'categoryId' },
         treeDefaultExpandAll: true,
         getPopupContainer,
       },
