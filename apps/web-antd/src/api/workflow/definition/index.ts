@@ -80,15 +80,15 @@ export function workflowDefinitionCopy(id: ID) {
 
 /**
  * 导入流程定义
- * @param file 模型文件
  * @returns boolean
  */
-export function workflowDefinitionImport(file: File) {
+export function workflowDefinitionImport(data: {
+  category: ID;
+  file: Blob | File;
+}) {
   return requestClient.postWithMsg<boolean>(
     '/workflow/definition/importDef',
-    {
-      file,
-    },
+    data,
     { headers: { 'Content-Type': 'multipart/form-data' } },
   );
 }

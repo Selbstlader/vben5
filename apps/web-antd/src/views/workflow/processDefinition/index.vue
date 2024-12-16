@@ -25,10 +25,11 @@ import { downloadByData } from '#/utils/file/download';
 import CategoryTree from './category-tree.vue';
 import { ActivityStatusEnum } from './constant';
 import { columns, querySchema } from './data';
+import processDefinitionDeployModal from './process-definition-deploy-modal.vue';
 import processDefinitionModal from './process-definition-modal.vue';
 
 // 左边部门用
-const selectedCode = ref<string[]>([]);
+const selectedCode = ref<number[] | string[]>([]);
 
 const formOptions: VbenFormProps = {
   schema: querySchema(),
@@ -197,6 +198,27 @@ async function handleExportXml(row: any) {
     hideLoading();
   }
 }
+
+const [ProcessDefinitionDeployModal, deployModalApi] = useVbenModal({
+  connectedComponent: processDefinitionDeployModal,
+});
+
+/**
+ * 部署流程xml
+ */
+function handleDeploy() {
+  if (selectedCode.value.length === 0) {
+    message.warning('请先选择流程分类');
+    return;
+  }
+  const selectedCategory = selectedCode.value[0];
+  if (selectedCategory === 0) {
+    message.warning('不可选择根目录进行部署, 请选择子分类');
+    return;
+  }
+  deployModalApi.setData({ category: selectedCategory });
+  deployModalApi.open();
+}
 </script>
 
 <template>
@@ -219,6 +241,9 @@ async function handleExportXml(row: any) {
               @click="handleMultiDelete"
             >
               {{ $t('pages.common.delete') }}
+            </a-button>
+            <a-button v-access:code="['system:user:add']" @click="handleDeploy">
+              部署
             </a-button>
             <a-button
               type="primary"
@@ -302,5 +327,6 @@ async function handleExportXml(row: any) {
       </BasicTable>
     </div>
     <ProcessDefinitionModal @reload="() => tableApi.reload()" />
+    <ProcessDefinitionDeployModal @reload="() => tableApi.reload()" />
   </Page>
 </template>

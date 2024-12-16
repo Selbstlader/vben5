@@ -25,7 +25,7 @@ const emit = defineEmits<{
 
 const selectCode = defineModel('selectCode', {
   required: true,
-  type: Array as PropType<string[]>,
+  type: Array as PropType<number[] | string[]>,
 });
 
 const searchValue = defineModel('searchValue', {
@@ -98,7 +98,7 @@ onMounted(loadTree);
             v-if="categoryTreeArray.length > 0"
             v-model:selected-keys="selectCode"
             :class="$attrs.class"
-            :field-names="{ title: 'categoryName', key: 'categoryCode' }"
+            :field-names="{ title: 'categoryName', key: 'id' }"
             :show-line="{ showLeafIcon: false }"
             :tree-data="categoryTreeArray"
             :virtual="false"
