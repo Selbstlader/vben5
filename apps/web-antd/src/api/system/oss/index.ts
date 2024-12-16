@@ -18,7 +18,7 @@ export function ossList(params?: PageQuery) {
 }
 
 export function ossInfo(ossIds: IDS) {
-  return requestClient.get<OssFile>(`${Api.ossInfo}/${ossIds}`);
+  return requestClient.get<OssFile[]>(`${Api.ossInfo}/${ossIds}`);
 }
 
 /**

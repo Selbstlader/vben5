@@ -25,7 +25,7 @@ export interface Flow {
   flowTaskStatus?: any;
   flowStatusName?: any;
   message: string;
-  ext?: any;
+  ext: null | string;
   createBy?: any;
   formCustom: string;
   formPath: string;

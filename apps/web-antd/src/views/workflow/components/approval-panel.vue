@@ -22,14 +22,14 @@ defineOptions({
 const props = defineProps<{ task?: TaskInfo }>();
 
 const currentFlowInfo = ref<FlowInfoResponse>();
-watch(
-  () => props.task,
-  async (task) => {
-    if (!task) return null;
-    const resp = await flowInfo(task.businessId);
-    currentFlowInfo.value = resp;
-  },
-);
+
+async function handleLoadInfo(task: TaskInfo | undefined) {
+  if (!task) return null;
+  const resp = await flowInfo(task.businessId);
+  currentFlowInfo.value = resp;
+}
+
+watch(() => props.task, handleLoadInfo);
 
 onUnmounted(() => (currentFlowInfo.value = undefined));
 </script>
@@ -42,6 +42,13 @@ onUnmounted(() => (currentFlowInfo.value = undefined));
     class="thin-scrollbar flex-1 overflow-y-hidden"
     size="small"
   >
+    <template #extra>
+      <a-button size="small" @click="() => handleLoadInfo(task)">
+        <div class="flex items-center justify-center">
+          <span class="icon-[material-symbols--refresh] size-24px"></span>
+        </div>
+      </a-button>
+    </template>
     <div class="flex flex-col gap-5 p-4">
       <div class="flex flex-col gap-3">
         <div class="flex items-center gap-2">
