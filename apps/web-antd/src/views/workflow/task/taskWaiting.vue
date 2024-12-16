@@ -4,24 +4,15 @@ import type { TaskInfo } from '#/api/workflow/task/model';
 
 import { computed, onMounted, ref } from 'vue';
 
-import { Fallback, Page, VbenAvatar } from '@vben/common-ui';
+import { Page } from '@vben/common-ui';
 
-import {
-  Card,
-  Divider,
-  Empty,
-  InputSearch,
-  Space,
-  TabPane,
-  Tabs,
-  Tag,
-} from 'ant-design-vue';
+import { Empty, InputSearch } from 'ant-design-vue';
 import { debounce } from 'lodash-es';
 
 import { flowInfo } from '#/api/workflow/instance';
 import { pageByTaskWait } from '#/api/workflow/task';
 
-import { ApprovalCard, ApprovalTimeline } from '../components';
+import { ApprovalCard, ApprovalPanel } from '../components';
 
 const emptyImage = Empty.PRESENTED_IMAGE_SIMPLE;
 
@@ -70,12 +61,14 @@ const handleScroll = debounce(async (e: Event) => {
 const currentInstance = ref<FlowInfoResponse>();
 
 const lastSelectId = ref('');
+const currentTask = ref<TaskInfo>();
 async function handleCardClick(item: TaskInfo) {
   const { id, businessId } = item;
   // 点击的是同一个
   if (lastSelectId.value === id) {
     return;
   }
+  currentTask.value = item;
   // 反选状态 & 如果已经点击了 不变 & 保持只能有一个选中
   taskList.value.forEach((item) => {
     item.active = item.id === id;
@@ -85,25 +78,6 @@ async function handleCardClick(item: TaskInfo) {
   const resp = await flowInfo(businessId);
   currentInstance.value = resp;
 }
-
-const instanceInfo = computed(() => {
-  if (!currentInstance.value) {
-    return;
-  }
-  const length = currentInstance.value.list.length;
-  if (length === 2) {
-    return;
-  }
-  // 最末尾为申请人
-  const info = currentInstance.value.list[length - 1]!;
-  return {
-    id: info.instanceId,
-    createTime: info.createTime,
-    approveName: info.approveName,
-    flowName: info.flowName ?? '未知流程',
-    businessId: '1867081791031750658',
-  };
-});
 </script>
 
 <template>
@@ -142,69 +116,7 @@ const instanceInfo = computed(() => {
           </div>
         </div>
       </div>
-      <Card
-        v-if="currentInstance && instanceInfo"
-        :body-style="{ overflowY: 'auto', height: '100%' }"
-        :title="`编号: ${instanceInfo.id}`"
-        class="thin-scrollbar flex-1 overflow-y-hidden"
-        size="small"
-      >
-        <div class="flex flex-col gap-5 p-4">
-          <div class="flex flex-col gap-3">
-            <div class="flex items-center gap-2">
-              <div class="text-2xl font-bold">{{ instanceInfo.flowName }}</div>
-              <div>
-                <Tag color="warning">申请中</Tag>
-              </div>
-            </div>
-            <div class="flex items-center gap-2">
-              <VbenAvatar
-                :alt="instanceInfo.approveName"
-                class="size-[24px]"
-                src=""
-              />
-              <span>{{ instanceInfo.approveName }}</span>
-              <div class="flex items-center opacity-50">
-                <span>XXXX有限公司</span>
-                <Divider type="vertical" />
-                <span>提交于: {{ instanceInfo.createTime }}</span>
-              </div>
-            </div>
-          </div>
-          <Tabs class="flex-1">
-            <TabPane key="1" tab="审批详情">
-              <div class="h-fulloverflow-y-auto">
-                <!-- <Alert message="该页面仅为静态页 后期可能会用到!" type="info" /> -->
-                <iframe
-                  :src="`/workflow/leave-inner?readonly=true&id=${instanceInfo.businessId}`"
-                  class="h-[300px] w-full"
-                ></iframe>
-                <Divider />
-                <ApprovalTimeline :list="currentInstance.list" />
-              </div>
-            </TabPane>
-            <TabPane key="2" tab="审批流程图">
-              <img
-                :src="`data:image/png;base64,${currentInstance.image}`"
-                class="rounded-lg border"
-              />
-            </TabPane>
-          </Tabs>
-        </div>
-        <!-- 固定底部 -->
-        <div
-          class="border-t-solid bg-background absolute bottom-0 left-0 w-full border-t-[1px] p-3"
-        >
-          <div class="flex justify-end">
-            <Space>
-              <a-button type="primary">通过</a-button>
-              <a-button danger type="primary">驳回</a-button>
-              <a-button>其他</a-button>
-            </Space>
-          </div>
-        </div>
-      </Card>
-      <Fallback v-else title="点击左侧选择" />
+      <ApprovalPanel :task="currentTask" />
     </div>
   </Page>
 </template>

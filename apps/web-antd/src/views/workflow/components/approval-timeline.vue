@@ -7,6 +7,9 @@ import { Timeline, TimelineItem } from 'ant-design-vue';
  * TODO: 仅为demo 后期会替换
  */
 import { VbenAvatar } from '@vben/common-ui';
+import { DictEnum } from '@vben/constants';
+
+import { renderDict } from '#/utils/render';
 
 const props = defineProps<{
   list: Flow[];
@@ -19,17 +22,15 @@ const props = defineProps<{
       <template #dot>
         <div class="relative rounded-full border">
           <VbenAvatar :alt="item.approveName" class="size-[36px]" src="" />
-          <div
-            class="border-background absolute bottom-0 right-0 size-[16px] rounded-full border-2 bg-green-500 content-['']"
-          >
-            <div class="flex items-center justify-center">
-              <span class="icon-[mdi--success-bold] text-white"></span>
-            </div>
-          </div>
         </div>
       </template>
       <div class="ml-2 flex flex-col gap-0.5">
-        <div class="font-bold">{{ item.nodeName }}</div>
+        <div class="flex items-center gap-1">
+          <div class="font-bold">{{ item.nodeName }}</div>
+          <component
+            :is="renderDict(item.flowStatus, DictEnum.WF_TASK_STATUS)"
+          />
+        </div>
         <div>{{ item.approveName }}</div>
         <div>{{ item.updateTime }}</div>
         <div v-if="item.message" class="rounded-lg border p-1">

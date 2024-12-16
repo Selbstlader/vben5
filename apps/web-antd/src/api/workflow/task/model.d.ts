@@ -14,14 +14,16 @@ export interface TaskInfo {
   permissionList?: any;
   userList?: any;
   formCustom: string;
-  formPath: string;
+  formPath?: any;
   flowCode: string;
   version: string;
   flowStatus: string;
   flowStatusName: string;
-  transactorNames: string;
+  assigneeIds: string;
+  assigneeNames: string;
   processedBy: string;
   type: string;
   nodeRatio?: any;
-  nickName: string;
+  createBy: string;
+  createByName: string;
 }
