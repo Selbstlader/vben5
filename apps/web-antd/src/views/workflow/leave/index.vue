@@ -72,7 +72,7 @@ const [LeaveModal, modalApi] = useVbenModal({
 
 const router = useRouter();
 function handleAdd() {
-  router.push('/workflow/leave');
+  router.push('/workflow/leaveEdit/index');
 }
 
 async function handleEdit(row: Required<LeaveForm>) {

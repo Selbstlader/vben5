@@ -138,7 +138,7 @@ const profileRoute: RouteRecordStringComponent[] = [
     },
     name: 'WorkflowLeave',
     path: '/',
-    redirect: '/workflow/leave',
+    redirect: '/workflow/leaveEdit/index',
     children: [
       {
         component: 'workflow/leave/leave-form',
@@ -148,7 +148,7 @@ const profileRoute: RouteRecordStringComponent[] = [
           title: '请假申请',
         },
         name: 'WorkflowLeaveIndex',
-        path: '/workflow/leave',
+        path: '/workflow/leaveEdit/index',
       },
     ],
   },
@@ -161,7 +161,7 @@ const profileRoute: RouteRecordStringComponent[] = [
       hideInMenu: true,
     },
     name: 'WorkflowLeaveInner',
-    path: '/workflow/leave-inner',
+    path: '/workflow/leaveEdit/index/iframe',
   },
 ];
 

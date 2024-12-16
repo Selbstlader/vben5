@@ -117,7 +117,7 @@ async function handleCancel() {
           <div class="h-fulloverflow-y-auto">
             <!-- <Alert message="该页面仅为静态页 后期可能会用到!" type="info" /> -->
             <iframe
-              :src="`/workflow/leave-inner?readonly=true&id=${task.businessId}`"
+              :src="`/workflow/leaveEdit/index/iframe?readonly=true&id=${task.businessId}`"
               class="h-[300px] w-full"
             ></iframe>
             <Divider />
