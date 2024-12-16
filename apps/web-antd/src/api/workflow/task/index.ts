@@ -1,6 +1,6 @@
 import type { TaskInfo } from './model';
 
-import type { PageQuery, PageResult } from '#/api/common';
+import type { ID, IDS, PageQuery, PageResult } from '#/api/common';
 
 import { requestClient } from '#/api/request';
 
@@ -82,4 +82,66 @@ export function pageByTaskCopy(params?: PageQuery) {
  */
 export function getTaskByTaskId(taskId: string) {
   return requestClient.get<TaskInfo>(`/workflow/task/${taskId}`);
+}
+
+/**
+ * 终止任务
+ * @param data
+ */
+export function terminationTask(data: any) {
+  return requestClient.postWithMsg<void>(
+    '/workflow/task/terminationTask',
+    data,
+  );
+}
+
+/**
+ * 任务操作
+ * @param taskOperationData 参数
+ * @param taskOperation 操作类型，委派 delegateTask、转办 transferTask、加签 addSignature、减签 reductionSignature
+ */
+export function taskOperation(taskOperationData: any, taskOperation: string) {
+  return requestClient.postWithMsg<void>('/workflow/task/taskOperation', {
+    ...taskOperationData,
+    taskOperation,
+  });
+}
+
+/**
+ * 修改任务办理人
+ * @param taskIdList 任务id
+ * @param userId 办理人id
+ */
+export function updateAssignee(taskIdList: IDS, userId: ID) {
+  return requestClient.postWithMsg<void>(
+    `/workflow/task/updateAssignee/${userId}`,
+    {
+      taskIdList,
+      userId,
+    },
+  );
+}
+
+/**
+ * 驳回审批
+ * @param data 参数
+ */
+export function backProcess(data: any) {
+  return requestClient.postWithMsg<void>('/workflow/task/backProcess', data);
+}
+
+/**
+ * 获取可驳回节点
+ * @param instanceId 实例id
+ */
+export function getBackTaskNode(instanceId: string) {
+  return requestClient.get(`/workflow/task/getBackTaskNode/${instanceId}`);
+}
+
+/**
+ * 获取当前任务的所有办理人
+ * @param taskId 任务id
+ */
+export function currentTaskAllUser(taskId: ID) {
+  return requestClient.get<any>(`/workflow/task/currentTaskAllUser/${taskId}`);
 }
