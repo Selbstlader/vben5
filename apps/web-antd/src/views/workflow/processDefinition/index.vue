@@ -26,6 +26,7 @@ import CategoryTree from './category-tree.vue';
 import { ActivityStatusEnum } from './constant';
 import { columns, querySchema } from './data';
 import processDefinitionDeployModal from './process-definition-deploy-modal.vue';
+import processDefinitionHistoryModal from './process-definition-history-modal.vue';
 import processDefinitionModal from './process-definition-modal.vue';
 
 // 左边部门用
@@ -137,12 +138,16 @@ async function handleActive(row: any) {
   await tableApi.query();
 }
 
+const [ProcessDefinitionHistoryModal, historyModalApi] = useVbenModal({
+  connectedComponent: processDefinitionHistoryModal,
+});
 /**
  * 历史版本
- * @param _row row
+ * @param row row
  */
-function handleHistory(_row: any) {
-  message.info('暂未开放');
+function handleHistory(row: any) {
+  historyModalApi.setData({ flowCode: row.flowCode });
+  historyModalApi.open();
 }
 
 /**
@@ -328,5 +333,6 @@ function handleDeploy() {
     </div>
     <ProcessDefinitionModal @reload="() => tableApi.reload()" />
     <ProcessDefinitionDeployModal @reload="() => tableApi.reload()" />
+    <ProcessDefinitionHistoryModal />
   </Page>
 </template>
