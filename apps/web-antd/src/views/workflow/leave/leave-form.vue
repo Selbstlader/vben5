@@ -51,6 +51,19 @@ onMounted(async () => {
 
 <template>
   <Card>
-    <BasicForm />
+    <div id="leave-form">
+      <BasicForm />
+    </div>
   </Card>
 </template>
+
+<style lang="scss">
+/**
+去除 '菜单加载中' 主要是iframe内嵌使用
+*/
+html:has(#leave-form) {
+  .ant-message-notice-content:has(.ant-message-loading) {
+    display: none;
+  }
+}
+</style>
