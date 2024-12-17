@@ -16,6 +16,7 @@ import {
 import { cancelProcessApply } from '#/api/workflow/instance';
 import { commonDownloadExcel } from '#/utils/file/download';
 
+import { flowInfoModal } from '../components';
 import userSelectModal from '../components/user-select-modal.vue';
 import { leaveExport, leaveList, leaveRemove } from './api';
 import { columns, querySchema } from './data';
@@ -113,6 +114,14 @@ function handleDownloadExcel() {
     },
   );
 }
+const [FlowInfoModal, flowInfoModalApi] = useVbenModal({
+  connectedComponent: flowInfoModal,
+});
+function handleInfo(row: Required<LeaveForm>) {
+  flowInfoModalApi.setData({ businessId: row.id });
+  flowInfoModalApi.open();
+}
+
 const [UserSelectModal, testApi] = useVbenModal({
   connectedComponent: userSelectModal,
 });
@@ -190,9 +199,11 @@ function handleTest() {
               撤销
             </ghost-button>
           </Popconfirm>
+          <ghost-button @click="handleInfo(row)"> 详情 </ghost-button>
         </Space>
       </template>
     </BasicTable>
     <UserSelectModal mode="single" />
+    <FlowInfoModal />
   </Page>
 </template>

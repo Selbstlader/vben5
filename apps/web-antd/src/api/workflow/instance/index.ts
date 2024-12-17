@@ -6,6 +6,17 @@ import type { ID, IDS, PageQuery, PageResult } from '#/api/common';
 import { requestClient } from '#/api/request';
 
 /**
+ * TODO: 这接口后端还没有
+ * @param businessId
+ * @returns
+ */
+export function getTaskByBusinessId(businessId: string) {
+  return requestClient.get<TaskInfo>(
+    `/workflow/instance/infoByBusinessId/${businessId}`,
+  );
+}
+
+/**
  * 分页查询正在运行的流程实例
  * @param params
  * @returns
