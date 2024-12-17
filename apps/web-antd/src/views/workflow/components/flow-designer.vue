@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { useAppConfig, useTabs } from '@vben/hooks';
 import { stringify } from '@vben/request';
 import { useAccessStore } from '@vben/stores';
+
+import { useEventListener } from '@vueuse/core';
 
 defineOptions({ name: 'FlowDesigner' });
 
@@ -43,8 +44,7 @@ function messageHandler(event: MessageEvent) {
 }
 
 // iframe监听组件内设计器保存事件
-onMounted(() => window.addEventListener('message', messageHandler));
-onUnmounted(() => window.removeEventListener('message', messageHandler));
+useEventListener('message', messageHandler);
 </script>
 
 <template>
