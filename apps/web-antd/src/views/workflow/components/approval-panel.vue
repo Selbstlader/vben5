@@ -4,12 +4,13 @@ import type { TaskInfo } from '#/api/workflow/task/model';
 
 import { computed, onUnmounted, ref, watch } from 'vue';
 
-import { Fallback, VbenAvatar } from '@vben/common-ui';
+import { Fallback, useVbenModal, VbenAvatar } from '@vben/common-ui';
 import { DictEnum } from '@vben/constants';
 
 import {
   Card,
   Divider,
+  Modal,
   Popconfirm,
   Space,
   TabPane,
@@ -17,9 +18,10 @@ import {
 } from 'ant-design-vue';
 
 import { flowInfo } from '#/api/workflow/instance';
+import { terminationTask } from '#/api/workflow/task';
 import { renderDict } from '#/utils/render';
 
-import { ApprovalTimeline } from '.';
+import { approvalRejectionModal, ApprovalTimeline } from '.';
 
 defineOptions({
   name: 'ApprovalPanel',
@@ -32,8 +34,9 @@ const props = defineProps<{ task?: TaskInfo; type: ApprovalType }>();
 /**
  * myself 我发起的
  * readonly 只读 只用于查看
+ * approve 审批
  */
-type ApprovalType = 'myself' | 'readonly';
+type ApprovalType = 'approve' | 'myself' | 'readonly';
 const showFooter = computed(() => {
   if (props.type === 'readonly') {
     return false;
@@ -73,6 +76,35 @@ onUnmounted(() => (currentFlowInfo.value = undefined));
 
 async function handleCancel() {
   // await cancelProcessApply()
+}
+
+/**
+ * 审批驳回
+ */
+const [RejectionModal, rejectionModalApi] = useVbenModal({
+  connectedComponent: approvalRejectionModal,
+});
+function handleRejection() {
+  rejectionModalApi.setData({
+    taskId: props.task?.id,
+    instanceId: props.task?.instanceId,
+  });
+  rejectionModalApi.open();
+}
+
+/**
+ * 审批终止
+ */
+function handleTermination() {
+  Modal.confirm({
+    title: '审批终止',
+    content: '确定终止当前审批流程吗？',
+    centered: true,
+    okButtonProps: { danger: true },
+    onOk: async () => {
+      await terminationTask({ taskId: props.task!.id });
+    },
+  });
 }
 </script>
 
@@ -152,10 +184,16 @@ async function handleCancel() {
             <a-button danger type="primary">撤销申请</a-button>
           </Popconfirm>
         </Space>
-        <Space v-if="false">
+        <Space v-if="type === 'approve'">
           <a-button type="primary">通过</a-button>
-          <a-button danger type="primary">驳回</a-button>
+          <a-button danger type="primary" @click="handleTermination">
+            终止
+          </a-button>
+          <a-button danger type="primary" @click="handleRejection">
+            驳回
+          </a-button>
           <a-button>其他</a-button>
+          <RejectionModal />
         </Space>
       </div>
     </div>

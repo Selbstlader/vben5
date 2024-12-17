@@ -95,7 +95,7 @@ export function getTaskByTaskId(taskId: string) {
  * 终止任务
  * @param data
  */
-export function terminationTask(data: any) {
+export function terminationTask(data: { taskId: string }) {
   return requestClient.postWithMsg<void>(
     '/workflow/task/terminationTask',
     data,
@@ -142,7 +142,9 @@ export function backProcess(data: any) {
  * @param instanceId 实例id
  */
 export function getBackTaskNode(instanceId: string) {
-  return requestClient.get(`/workflow/task/getBackTaskNode/${instanceId}`);
+  return requestClient.get<{ nodeCode: string; nodeName: string }[]>(
+    `/workflow/task/getBackTaskNode/${instanceId}`,
+  );
 }
 
 /**

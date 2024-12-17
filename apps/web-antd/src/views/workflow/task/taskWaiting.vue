@@ -116,7 +116,7 @@ async function handleCardClick(item: TaskInfo) {
           </div>
         </div>
       </div>
-      <ApprovalPanel :task="currentTask" type="readonly" />
+      <ApprovalPanel :task="currentTask" type="approve" />
     </div>
   </Page>
 </template>
