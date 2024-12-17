@@ -131,6 +131,7 @@ export const modalSchema: (isEdit: boolean) => VbenFormSchema[] = (
       getPopupContainer,
     },
     rules: 'selectRequired',
+    formItemClass: 'col-span-1',
   },
   {
     label: '开始时间',
@@ -152,6 +153,7 @@ export const modalSchema: (isEdit: boolean) => VbenFormSchema[] = (
       };
     },
     rules: 'required',
+    formItemClass: 'col-span-1',
   },
   {
     label: '请假天数',

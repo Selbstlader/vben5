@@ -134,6 +134,7 @@ async function handleStartWorkFlow() {
 }
 
 function handleComplete() {
+  formApi.resetForm();
   router.push('/demo/leave');
 }
 </script>
