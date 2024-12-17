@@ -168,6 +168,6 @@ function handleTest() {
         </Space>
       </template>
     </BasicTable>
-    <UserSelectModal />
+    <UserSelectModal mode="single" />
   </Page>
 </template>

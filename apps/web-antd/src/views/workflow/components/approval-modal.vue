@@ -118,7 +118,6 @@ async function handleSubmit() {
       return;
     }
     const data = cloneDeep(await formApi.getValues());
-    console.log(data);
     const requestData = {
       ...omit(data, ['attachment']),
       fileId: data.attachment.join(','),

@@ -10,6 +10,8 @@ import { getDeptTree } from '#/api/system/user';
 
 defineOptions({ inheritAttrs: false });
 
+withDefaults(defineProps<{ showSearch?: boolean }>(), { showSearch: true });
+
 const emit = defineEmits<{
   /**
    * 点击刷新按钮的事件
@@ -68,7 +70,10 @@ onMounted(loadTree);
         class="bg-background flex h-full flex-col overflow-y-auto rounded-lg"
       >
         <!-- 固定在顶部 必须加上bg-background背景色 否则会产生'穿透'效果 -->
-        <div class="bg-background z-100 sticky left-0 top-0 p-[8px]">
+        <div
+          v-if="showSearch"
+          class="bg-background z-100 sticky left-0 top-0 p-[8px]"
+        >
           <InputSearch
             v-model:value="searchValue"
             :placeholder="$t('pages.common.search')"

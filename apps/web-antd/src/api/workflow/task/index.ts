@@ -2,6 +2,8 @@ import type {
   CompleteTaskReqData,
   StartWorkFlowReqData,
   TaskInfo,
+  TaskOperationData,
+  TaskOperationType,
 } from './model';
 
 import type { ID, IDS, PageQuery, PageResult } from '#/api/common';
@@ -88,7 +90,7 @@ export function pageByTaskCopy(params?: PageQuery) {
  * @returns info
  */
 export function getTaskByTaskId(taskId: string) {
-  return requestClient.get<TaskInfo>(`/workflow/task/${taskId}`);
+  return requestClient.get<TaskInfo>(`/workflow/task/getTask/${taskId}`);
 }
 
 /**
@@ -107,11 +109,14 @@ export function terminationTask(data: { taskId: string }) {
  * @param taskOperationData 参数
  * @param taskOperation 操作类型，委派 delegateTask、转办 transferTask、加签 addSignature、减签 reductionSignature
  */
-export function taskOperation(taskOperationData: any, taskOperation: string) {
-  return requestClient.postWithMsg<void>('/workflow/task/taskOperation', {
-    ...taskOperationData,
-    taskOperation,
-  });
+export function taskOperation(
+  taskOperationData: TaskOperationData,
+  taskOperation: TaskOperationType,
+) {
+  return requestClient.postWithMsg<void>(
+    `/workflow/task/taskOperation/${taskOperation}`,
+    taskOperationData,
+  );
 }
 
 /**

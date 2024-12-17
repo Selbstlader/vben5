@@ -23,7 +23,7 @@ export interface TaskInfo {
   assigneeNames: string;
   processedBy: string;
   type: string;
-  nodeRatio?: any;
+  nodeRatio?: string;
   createBy: string;
   createByName: string;
 }
@@ -52,3 +52,21 @@ export interface StartWorkFlowReqData {
    */
   variables: Record<string, any>;
 }
+
+export interface TaskOperationData {
+  message?: string;
+  taskId: ID;
+  // 单个操作人
+  userId?: ID;
+  // 多个操作人
+  userIds?: IDS;
+}
+
+/**
+ * 操作类型，委派 delegateTask、转办 transferTask、加签 addSignature、减签 reductionSignature
+ */
+export type TaskOperationType =
+  | 'addSignature'
+  | 'delegateTask'
+  | 'reductionSignature'
+  | 'transferTask';

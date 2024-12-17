@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { User } from '#/api/core/user';
 import type { FlowInfoResponse } from '#/api/workflow/instance/model';
 import type { TaskInfo } from '#/api/workflow/task/model';
 
@@ -6,11 +7,15 @@ import { computed, onUnmounted, ref, watch } from 'vue';
 
 import { Fallback, useVbenModal, VbenAvatar } from '@vben/common-ui';
 import { DictEnum } from '@vben/constants';
+import { getPopupContainer } from '@vben/utils';
 
 import { useEventListener } from '@vueuse/core';
 import {
   Card,
   Divider,
+  Dropdown,
+  Menu,
+  MenuItem,
   Modal,
   Popconfirm,
   Skeleton,
@@ -20,10 +25,15 @@ import {
 } from 'ant-design-vue';
 
 import { flowInfo } from '#/api/workflow/instance';
-import { terminationTask } from '#/api/workflow/task';
+import {
+  getTaskByTaskId,
+  taskOperation,
+  terminationTask,
+} from '#/api/workflow/task';
 import { renderDict } from '#/utils/render';
 
 import { approvalModal, approvalRejectionModal, ApprovalTimeline } from '.';
+import userSelectModal from './user-select-modal.vue';
 
 defineOptions({
   name: 'ApprovalPanel',
@@ -32,6 +42,20 @@ defineOptions({
 
 // eslint-disable-next-line no-use-before-define
 const props = defineProps<{ task?: TaskInfo; type: ApprovalType }>();
+
+const currentTask = ref<TaskInfo>();
+/**
+ * 是否显示 加签/减签操作
+ */
+const showMultiActions = computed(() => {
+  if (!currentTask.value) {
+    return false;
+  }
+  if (Number(currentTask.value.nodeRatio) > 0) {
+    return true;
+  }
+  return false;
+});
 
 /**
  * myself 我发起的
@@ -75,6 +99,9 @@ async function handleLoadInfo(task: TaskInfo | undefined) {
     iframeLoaded.value = false;
     const resp = await flowInfo(task.businessId);
     currentFlowInfo.value = resp;
+
+    const taskResp = await getTaskByTaskId(props.task!.id);
+    currentTask.value = taskResp;
   } catch (error) {
     console.error(error);
   } finally {
@@ -128,6 +155,89 @@ const [ApprovalModal, approvalModalApi] = useVbenModal({
 function handleApproval() {
   approvalModalApi.setData({ taskId: props.task?.id });
   approvalModalApi.open();
+}
+
+/**
+ * TODO: 1提取公共函数 2原版是可以填写意见的(message参数)
+ */
+
+/**
+ * 委托
+ */
+const [DelegationModal, delegationModalApi] = useVbenModal({
+  connectedComponent: userSelectModal,
+});
+function handleDelegation(userList: User[]) {
+  if (userList.length === 0) return;
+  const current = userList[0];
+  Modal.confirm({
+    title: '委托',
+    content: `确定委托给${current?.nickName}吗?`,
+    centered: true,
+    onOk: async () => {
+      await taskOperation(
+        { taskId: props.task!.id, userId: current!.userId },
+        'delegateTask',
+      );
+    },
+  });
+}
+
+/**
+ * 转办
+ */
+const [TransferModal, transferModalApi] = useVbenModal({
+  connectedComponent: userSelectModal,
+});
+function handleTransfer(userList: User[]) {
+  if (userList.length === 0) return;
+  const current = userList[0];
+  Modal.confirm({
+    title: '转办',
+    content: `确定转办给${current?.nickName}吗?`,
+    centered: true,
+    onOk: async () => {
+      await taskOperation(
+        { taskId: props.task!.id, userId: current!.userId },
+        'transferTask',
+      );
+    },
+  });
+}
+
+const [AddSignatureModal, addSignatureModalApi] = useVbenModal({
+  connectedComponent: userSelectModal,
+});
+function handleAddSignature(userList: User[]) {
+  if (userList.length === 0) return;
+  const userIds = userList.map((user) => user.userId);
+  Modal.confirm({
+    title: '提示',
+    content: '确认加签吗?',
+    centered: true,
+    onOk: async () => {
+      await taskOperation({ taskId: props.task!.id, userIds }, 'addSignature');
+    },
+  });
+}
+
+const [ReductionSignatureModal, reductionSignatureModalApi] = useVbenModal({
+  connectedComponent: userSelectModal,
+});
+function handleReductionSignature(userList: User[]) {
+  if (userList.length === 0) return;
+  const userIds = userList.map((user) => user.userId);
+  Modal.confirm({
+    title: '提示',
+    content: '确认加签吗?',
+    centered: true,
+    onOk: async () => {
+      await taskOperation(
+        { taskId: props.task!.id, userIds },
+        'reductionSignature',
+      );
+    },
+  });
 }
 </script>
 
@@ -217,9 +327,45 @@ function handleApproval() {
           <a-button danger type="primary" @click="handleRejection">
             驳回
           </a-button>
-          <a-button>其他</a-button>
+          <Dropdown
+            :get-popup-container="getPopupContainer"
+            placement="bottomRight"
+          >
+            <template #overlay>
+              <Menu>
+                <MenuItem key="1" @click="() => delegationModalApi.open()">
+                  委托
+                </MenuItem>
+                <MenuItem key="2" @click="() => transferModalApi.open()">
+                  转办
+                </MenuItem>
+                <MenuItem
+                  v-if="showMultiActions"
+                  key="3"
+                  @click="() => addSignatureModalApi.open()"
+                >
+                  加签
+                </MenuItem>
+                <MenuItem
+                  v-if="showMultiActions"
+                  key="4"
+                  @click="() => reductionSignatureModalApi.open()"
+                >
+                  减签
+                </MenuItem>
+              </Menu>
+            </template>
+            <a-button> 其他 </a-button>
+          </Dropdown>
           <ApprovalModal />
           <RejectionModal />
+          <DelegationModal mode="single" @finish="handleDelegation" />
+          <TransferModal mode="single" @finish="handleTransfer" />
+          <AddSignatureModal mode="multiple" @finish="handleAddSignature" />
+          <ReductionSignatureModal
+            mode="multiple"
+            @finish="handleReductionSignature"
+          />
         </Space>
       </div>
     </div>
