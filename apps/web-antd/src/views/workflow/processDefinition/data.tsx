@@ -93,7 +93,7 @@ export const modalSchema: FormSchemaGetter = () => [
   {
     component: 'Input',
     fieldName: 'flowCode',
-    label: '流程分类',
+    label: '流程code',
     rules: 'required',
   },
   {
