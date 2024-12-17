@@ -70,7 +70,10 @@ onMounted(async () => {
           :href="attachment.url"
           class="text-primary"
         >
-          {{ attachment.name }}
+          <div class="flex items-center gap-1">
+            <span class="icon-[mingcute--attachment-line] size-[18px]"></span>
+            <span>{{ attachment.name }}</span>
+          </div>
         </a>
       </div>
     </div>
