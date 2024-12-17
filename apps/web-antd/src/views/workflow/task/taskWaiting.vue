@@ -112,7 +112,7 @@ async function handleCardClick(item: TaskInfo) {
           class="bg-background sticky bottom-0 w-full rounded-b-lg border-t-[1px] py-2"
         >
           <div class="flex items-center justify-center">
-            共 {{ taskList.length }} 条记录
+            共 {{ taskTotal }} 条记录
           </div>
         </div>
       </div>
