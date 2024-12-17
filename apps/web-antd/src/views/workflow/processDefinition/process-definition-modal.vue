@@ -47,14 +47,7 @@ async function setupCategorySelect() {
     id: 'categoryId',
     pid: 'parentId',
   });
-  const fullMenuTree = [
-    {
-      categoryId: 0,
-      categoryName: $t('menu.root'),
-      children: tree,
-    },
-  ];
-  addFullName(fullMenuTree, 'categoryName', ' / ');
+  addFullName(tree, 'categoryName', ' / ');
 
   formApi.updateSchema([
     {
@@ -67,8 +60,8 @@ async function setupCategorySelect() {
         // 设置弹窗滚动高度 默认256
         listHeight: 300,
         showSearch: true,
-        treeData: fullMenuTree,
-        treeDefaultExpandAll: false,
+        treeData: tree,
+        treeDefaultExpandAll: true,
         // 默认展开的树节点
         treeDefaultExpandedKeys: [0],
         treeLine: { showLeafIcon: false },
@@ -137,7 +130,7 @@ async function handleCancel() {
     :title="title"
     class="w-[550px]"
   >
-    <div class="min-h-[300px]">
+    <div class="min-h-[400px]">
       <BasicForm />
     </div>
   </BasicDrawer>
