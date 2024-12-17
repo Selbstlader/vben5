@@ -34,6 +34,8 @@ export interface CompleteTaskReqData {
   taskId: ID;
   taskVariables: Record<string, any>;
   variables: any;
+  // 附件ID 1,2,3,4形式
+  fileId?: string;
 }
 
 export interface StartWorkFlowReqData {

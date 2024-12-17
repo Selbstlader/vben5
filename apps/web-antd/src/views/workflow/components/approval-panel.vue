@@ -23,7 +23,7 @@ import { flowInfo } from '#/api/workflow/instance';
 import { terminationTask } from '#/api/workflow/task';
 import { renderDict } from '#/utils/render';
 
-import { approvalRejectionModal, ApprovalTimeline } from '.';
+import { approvalModal, approvalRejectionModal, ApprovalTimeline } from '.';
 
 defineOptions({
   name: 'ApprovalPanel',
@@ -118,6 +118,17 @@ function handleTermination() {
     },
   });
 }
+
+/**
+ * 审批通过
+ */
+const [ApprovalModal, approvalModalApi] = useVbenModal({
+  connectedComponent: approvalModal,
+});
+function handleApproval() {
+  approvalModalApi.setData({ taskId: props.task?.id });
+  approvalModalApi.open();
+}
 </script>
 
 <template>
@@ -199,7 +210,7 @@ function handleTermination() {
           </Popconfirm>
         </Space>
         <Space v-if="type === 'approve'">
-          <a-button type="primary">通过</a-button>
+          <a-button type="primary" @click="handleApproval">通过</a-button>
           <a-button danger type="primary" @click="handleTermination">
             终止
           </a-button>
@@ -207,6 +218,7 @@ function handleTermination() {
             驳回
           </a-button>
           <a-button>其他</a-button>
+          <ApprovalModal />
           <RejectionModal />
         </Space>
       </div>
