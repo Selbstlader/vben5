@@ -70,8 +70,9 @@ const showMultiActions = computed(() => {
  * myself 我发起的
  * readonly 只读 只用于查看
  * approve 审批
+ * admin 流程监控 - 待办任务使用
  */
-type ApprovalType = 'approve' | 'myself' | 'readonly';
+type ApprovalType = 'admin' | 'approve' | 'myself' | 'readonly';
 const showFooter = computed(() => {
   if (props.type === 'readonly') {
     return false;
@@ -437,6 +438,10 @@ function handleReductionSignature(userList: User[]) {
             mode="multiple"
             @finish="handleReductionSignature"
           />
+        </Space>
+        <Space v-if="type === 'admin'">
+          <a-button>流程干预</a-button>
+          <a-button>修改办理人</a-button>
         </Space>
       </div>
     </div>
