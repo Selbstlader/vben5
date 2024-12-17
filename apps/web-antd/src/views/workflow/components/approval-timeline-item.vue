@@ -67,8 +67,10 @@ onMounted(async () => {
         <a
           v-for="attachment in attachmentInfo"
           :key="attachment.ossId"
+          :download="attachment.name"
           :href="attachment.url"
           class="text-primary"
+          target="_blank"
         >
           <div class="flex items-center gap-1">
             <span class="icon-[mingcute--attachment-line] size-[18px]"></span>
