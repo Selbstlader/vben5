@@ -43,17 +43,10 @@ async function loadTree() {
   selectCode.value = [];
 
   const ret = await categoryList();
-  let treeData = listToTree(ret, {
+  const treeData = listToTree(ret, {
     id: 'categoryId',
     pid: 'parentId',
   });
-  treeData = [
-    {
-      categoryName: '根目录',
-      categoryId: 0,
-      children: treeData,
-    },
-  ];
 
   categoryTreeArray.value = treeData;
   showTreeSkeleton.value = false;

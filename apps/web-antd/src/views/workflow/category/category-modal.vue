@@ -3,7 +3,12 @@ import { computed, ref } from 'vue';
 
 import { useVbenModal } from '@vben/common-ui';
 import { $t } from '@vben/locales';
-import { cloneDeep, getPopupContainer, listToTree } from '@vben/utils';
+import {
+  addFullName,
+  cloneDeep,
+  getPopupContainer,
+  listToTree,
+} from '@vben/utils';
 
 import { useVbenForm } from '#/adapter/form';
 import {
@@ -40,17 +45,11 @@ const [BasicForm, formApi] = useVbenForm({
 
 async function setupCategorySelect() {
   const listData = await categoryList();
-  let treeData = listToTree(listData, {
+  const treeData = listToTree(listData, {
     id: 'categoryId',
     pid: 'parentId',
   });
-  treeData = [
-    {
-      categoryName: '根目录',
-      categoryId: 0,
-      children: treeData,
-    },
-  ];
+  addFullName(treeData, 'categoryName', ' / ');
   formApi.updateSchema([
     {
       fieldName: 'parentId',
@@ -59,6 +58,7 @@ async function setupCategorySelect() {
         treeLine: { showLeafIcon: false },
         fieldNames: { label: 'categoryName', value: 'categoryId' },
         treeDefaultExpandAll: true,
+        treeNodeLabelProp: 'fullName',
         getPopupContainer,
       },
     },
@@ -120,7 +120,11 @@ async function handleCancel() {
 </script>
 
 <template>
-  <BasicModal :close-on-click-modal="false" :title="title">
+  <BasicModal
+    :close-on-click-modal="false"
+    :title="title"
+    class="min-h-[500px]"
+  >
     <BasicForm />
   </BasicModal>
 </template>

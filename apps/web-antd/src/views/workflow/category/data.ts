@@ -51,7 +51,7 @@ export const modalSchema: FormSchemaGetter = () => [
     fieldName: 'parentId',
     label: '父级分类',
     rules: 'required',
-    defaultValue: 0,
+    defaultValue: 100,
     component: 'TreeSelect',
   },
   {
