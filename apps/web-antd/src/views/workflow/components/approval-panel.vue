@@ -43,6 +43,11 @@ defineOptions({
 // eslint-disable-next-line no-use-before-define
 const props = defineProps<{ task?: TaskInfo; type: ApprovalType }>();
 
+/**
+ * 下面按钮点击后会触发的事件
+ */
+const emit = defineEmits<{ reload: [] }>();
+
 const currentTask = ref<TaskInfo>();
 /**
  * 是否显示 加签/减签操作
@@ -142,6 +147,7 @@ function handleTermination() {
     okButtonProps: { danger: true },
     onOk: async () => {
       await terminationTask({ taskId: props.task!.id });
+      emit('reload');
     },
   });
 }
@@ -179,6 +185,7 @@ function handleDelegation(userList: User[]) {
         { taskId: props.task!.id, userId: current!.userId },
         'delegateTask',
       );
+      emit('reload');
     },
   });
 }
@@ -201,6 +208,7 @@ function handleTransfer(userList: User[]) {
         { taskId: props.task!.id, userId: current!.userId },
         'transferTask',
       );
+      emit('reload');
     },
   });
 }
@@ -217,6 +225,7 @@ function handleAddSignature(userList: User[]) {
     centered: true,
     onOk: async () => {
       await taskOperation({ taskId: props.task!.id, userIds }, 'addSignature');
+      emit('reload');
     },
   });
 }
@@ -236,6 +245,7 @@ function handleReductionSignature(userList: User[]) {
         { taskId: props.task!.id, userIds },
         'reductionSignature',
       );
+      emit('reload');
     },
   });
 }
@@ -357,8 +367,8 @@ function handleReductionSignature(userList: User[]) {
             </template>
             <a-button> 其他 </a-button>
           </Dropdown>
-          <ApprovalModal />
-          <RejectionModal />
+          <ApprovalModal @complete="$emit('reload')" />
+          <RejectionModal @complete="$emit('reload')" />
           <DelegationModal mode="single" @finish="handleDelegation" />
           <TransferModal mode="single" @finish="handleTransfer" />
           <AddSignatureModal mode="multiple" @finish="handleAddSignature" />

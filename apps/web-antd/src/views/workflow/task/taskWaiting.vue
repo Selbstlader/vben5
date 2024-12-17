@@ -5,6 +5,7 @@ import type { TaskInfo } from '#/api/workflow/task/model';
 import { computed, onMounted, ref } from 'vue';
 
 import { Page } from '@vben/common-ui';
+import { useTabs } from '@vben/hooks';
 
 import { Empty, InputSearch } from 'ant-design-vue';
 import { debounce } from 'lodash-es';
@@ -78,6 +79,8 @@ async function handleCardClick(item: TaskInfo) {
   const resp = await flowInfo(businessId);
   currentInstance.value = resp;
 }
+
+const { refreshTab } = useTabs();
 </script>
 
 <template>
@@ -116,7 +119,7 @@ async function handleCardClick(item: TaskInfo) {
           </div>
         </div>
       </div>
-      <ApprovalPanel :task="currentTask" type="approve" />
+      <ApprovalPanel :task="currentTask" type="approve" @reload="refreshTab" />
     </div>
   </Page>
 </template>

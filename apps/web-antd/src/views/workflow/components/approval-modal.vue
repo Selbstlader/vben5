@@ -125,8 +125,8 @@ async function handleSubmit() {
       variables: {},
     } as CompleteTaskReqData;
     await completeTask(requestData);
-    emit('complete');
     modalApi.close();
+    emit('complete');
   } catch (error) {
     console.error(error);
   } finally {

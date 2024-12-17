@@ -113,8 +113,8 @@ async function handleSubmit() {
     const data = cloneDeep(await formApi.getValues());
     console.log(data);
     await backProcess(data);
-    emit('complete');
     modalApi.close();
+    emit('complete');
   } catch (error) {
     console.error(error);
   } finally {
