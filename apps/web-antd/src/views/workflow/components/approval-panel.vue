@@ -4,6 +4,7 @@ import type { FlowInfoResponse } from '#/api/workflow/instance/model';
 import type { TaskInfo } from '#/api/workflow/task/model';
 
 import { computed, onUnmounted, ref, watch } from 'vue';
+import { useRouter } from 'vue-router';
 
 import { Fallback, useVbenModal, VbenAvatar } from '@vben/common-ui';
 import { DictEnum } from '@vben/constants';
@@ -139,12 +140,23 @@ async function handleCancel() {
   });
 }
 
+/**
+ * 是否可编辑/删除
+ */
 const editableAndRemoveable = computed(() => {
   if (!props.task) {
     return false;
   }
   return ['back', 'cancel', 'draft'].includes(props.task.flowStatus);
 });
+
+const router = useRouter();
+function handleEdit() {
+  const path = props.task?.formPath;
+  if (path) {
+    router.push({ path, query: { id: props.task!.businessId } });
+  }
+}
 
 function handleRemove() {
   Modal.confirm({
@@ -366,7 +378,9 @@ function handleReductionSignature(userList: User[]) {
           >
             撤销申请
           </a-button>
-
+          <a-button v-if="editableAndRemoveable" @click="handleEdit">
+            重新编辑
+          </a-button>
           <a-button
             v-if="editableAndRemoveable"
             danger
