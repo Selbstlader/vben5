@@ -52,6 +52,14 @@ onMounted(async () => {
     await formApi.setValues(resp);
     const dateRange = [dayjs(resp.startDate), dayjs(resp.endDate)];
     await formApi.setFieldValue('dateRange', dateRange);
+
+    /**
+     * window.parent（最近的上一级父页面）
+     * 主要解决内嵌iframe卡顿的问题
+     */
+    if (readonly) {
+      window.parent.postMessage('mounted', '*');
+    }
   }
 });
 

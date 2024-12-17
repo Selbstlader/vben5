@@ -7,11 +7,13 @@ import { computed, onUnmounted, ref, watch } from 'vue';
 import { Fallback, useVbenModal, VbenAvatar } from '@vben/common-ui';
 import { DictEnum } from '@vben/constants';
 
+import { useEventListener } from '@vueuse/core';
 import {
   Card,
   Divider,
   Modal,
   Popconfirm,
+  Skeleton,
   Space,
   TabPane,
   Tabs,
@@ -56,11 +58,21 @@ const currentFlowInfo = ref<FlowInfoResponse>();
  * card的loading状态
  */
 const loading = ref(false);
+const iframeLoaded = ref(false);
+useEventListener('message', (event) => {
+  /**
+   * iframe通信 加载完毕后才显示表单 解决卡顿问题
+   */
+  if (event.data === 'mounted') {
+    iframeLoaded.value = true;
+  }
+});
 
 async function handleLoadInfo(task: TaskInfo | undefined) {
   try {
     if (!task) return null;
     loading.value = true;
+    iframeLoaded.value = false;
     const resp = await flowInfo(task.businessId);
     currentFlowInfo.value = resp;
   } catch (error) {
@@ -153,9 +165,11 @@ function handleTermination() {
           <div class="h-fulloverflow-y-auto">
             <!-- 约定${task.formPath}/frame 为内嵌表单 用于展示 需要在本地路由添加 -->
             <iframe
+              v-show="iframeLoaded"
               :src="`${task.formPath}/iframe?readonly=true&id=${task.businessId}`"
               class="h-[300px] w-full"
             ></iframe>
+            <Skeleton v-show="!iframeLoaded" :paragraph="{ rows: 6 }" active />
             <Divider />
             <ApprovalTimeline :list="currentFlowInfo.list" />
           </div>
