@@ -17,14 +17,17 @@ import {
   Menu,
   MenuItem,
   Modal,
-  Popconfirm,
   Skeleton,
   Space,
   TabPane,
   Tabs,
 } from 'ant-design-vue';
 
-import { flowInfo } from '#/api/workflow/instance';
+import {
+  cancelProcessApply,
+  deleteByInstanceIds,
+  flowInfo,
+} from '#/api/workflow/instance';
 import {
   getTaskByTaskId,
   taskOperation,
@@ -118,8 +121,42 @@ watch(() => props.task, handleLoadInfo);
 
 onUnmounted(() => (currentFlowInfo.value = undefined));
 
+// 进行中 可以撤销
+const revocable = computed(() => props.task?.flowStatus === 'waiting');
 async function handleCancel() {
-  // await cancelProcessApply()
+  Modal.confirm({
+    title: '提示',
+    content: '确定要撤销该申请吗？',
+    centered: true,
+    okButtonProps: { danger: true },
+    onOk: async () => {
+      await cancelProcessApply({
+        businessId: props.task!.businessId,
+        message: '申请人撤销流程！',
+      });
+      emit('reload');
+    },
+  });
+}
+
+const editableAndRemoveable = computed(() => {
+  if (!props.task) {
+    return false;
+  }
+  return ['back', 'cancel', 'draft'].includes(props.task.flowStatus);
+});
+
+function handleRemove() {
+  Modal.confirm({
+    title: '提示',
+    content: '确定删除该申请吗？',
+    centered: true,
+    okButtonProps: { danger: true },
+    onOk: async () => {
+      await deleteByInstanceIds([props.task!.id]);
+      emit('reload');
+    },
+  });
 }
 
 /**
@@ -321,13 +358,23 @@ function handleReductionSignature(userList: User[]) {
     >
       <div class="flex justify-end">
         <Space v-if="type === 'myself'">
-          <Popconfirm
-            placement="topRight"
-            title="确定要撤销该申请吗？"
-            @confirm="handleCancel"
+          <a-button
+            v-if="revocable"
+            danger
+            type="primary"
+            @click="handleCancel"
           >
-            <a-button danger type="primary">撤销申请</a-button>
-          </Popconfirm>
+            撤销申请
+          </a-button>
+
+          <a-button
+            v-if="editableAndRemoveable"
+            danger
+            type="primary"
+            @click="handleRemove"
+          >
+            删除
+          </a-button>
         </Space>
         <Space v-if="type === 'approve'">
           <a-button type="primary" @click="handleApproval">通过</a-button>

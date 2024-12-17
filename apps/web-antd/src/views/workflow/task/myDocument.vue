@@ -32,7 +32,6 @@ onMounted(async () => {
    * 获取待办任务列表
    */
   const resp = await pageByCurrent({ pageSize: 10, pageNum: page.value });
-  console.log(resp);
   taskList.value = resp.rows.map((item) => ({ ...item, active: false }));
   taskTotal.value = resp.total;
 });

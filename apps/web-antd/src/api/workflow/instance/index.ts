@@ -39,7 +39,7 @@ export function deleteByBusinessIds(businessIds: IDS) {
  */
 export function deleteByInstanceIds(instanceIds: IDS) {
   return requestClient.deleteWithMsg<void>(
-    `/workflow/instance/deleteByInstanceIds${instanceIds}`,
+    `/workflow/instance/deleteByInstanceIds/${instanceIds}`,
   );
 }
 
@@ -47,7 +47,10 @@ export function deleteByInstanceIds(instanceIds: IDS) {
  * 撤销流程
  * @param data
  */
-export function cancelProcessApply(data: any) {
+export function cancelProcessApply(data: {
+  businessId: string;
+  message?: string;
+}) {
   return requestClient.putWithMsg<void>(
     '/workflow/instance/cancelProcessApply',
     data,
