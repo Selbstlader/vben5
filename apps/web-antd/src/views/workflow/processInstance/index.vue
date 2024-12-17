@@ -184,7 +184,7 @@ function handleVariable(row: Recordable<any>) {
         </template>
         <template #action="{ row }">
           <div class="flex flex-col">
-            <div>
+            <div v-if="currentType === 'process_running'">
               <a-button
                 danger
                 size="small"
