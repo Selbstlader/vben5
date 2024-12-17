@@ -13,6 +13,7 @@ import {
   vxeCheckboxChecked,
   type VxeGridProps,
 } from '#/adapter/vxe-table';
+import { cancelProcessApply } from '#/api/workflow/instance';
 import { commonDownloadExcel } from '#/utils/file/download';
 
 import userSelectModal from '../components/user-select-modal.vue';
@@ -77,6 +78,14 @@ async function handleEdit(row: Required<LeaveForm>) {
 
 async function handleDelete(row: Required<LeaveForm>) {
   await leaveRemove(row.id);
+  await tableApi.query();
+}
+
+async function handleRevoke(row: Required<LeaveForm>) {
+  await cancelProcessApply({
+    businessId: row.id,
+    message: '申请人撤销流程！',
+  });
   await tableApi.query();
 }
 
@@ -146,6 +155,7 @@ function handleTest() {
       <template #action="{ row }">
         <Space>
           <ghost-button
+            v-if="['draft', 'cancel', 'back'].includes(row.status)"
             v-access:code="['workflow:leave:edit']"
             @click.stop="handleEdit(row)"
           >
@@ -158,11 +168,26 @@ function handleTest() {
             @confirm="handleDelete(row)"
           >
             <ghost-button
+              v-if="['draft', 'cancel', 'back'].includes(row.status)"
               danger
               v-access:code="['workflow:leave:remove']"
               @click.stop=""
             >
               {{ $t('pages.common.delete') }}
+            </ghost-button>
+          </Popconfirm>
+          <Popconfirm
+            :get-popup-container="getVxePopupContainer"
+            placement="left"
+            title="确认撤销？"
+            @confirm="handleRevoke(row)"
+          >
+            <ghost-button
+              v-if="['waiting'].includes(row.status)"
+              v-access:code="['workflow:leave:edit']"
+              @click.stop=""
+            >
+              撤销
             </ghost-button>
           </Popconfirm>
         </Space>

@@ -47,10 +47,7 @@ export function deleteByInstanceIds(instanceIds: IDS) {
  * 撤销流程
  * @param data
  */
-export function cancelProcessApply(data: {
-  businessId: string;
-  message?: string;
-}) {
+export function cancelProcessApply(data: { businessId: ID; message?: string }) {
   return requestClient.putWithMsg<void>(
     '/workflow/instance/cancelProcessApply',
     data,
