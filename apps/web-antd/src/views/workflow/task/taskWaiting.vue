@@ -133,7 +133,7 @@ const { refreshTab } = useTabs();
   <Page :auto-content-height="true">
     <div class="flex h-full gap-2">
       <div
-        class="bg-background flex h-full min-w-[320px] max-w-[320px] flex-col rounded-lg"
+        class="bg-background relative flex h-full min-w-[320px] max-w-[320px] flex-col rounded-lg"
       >
         <!-- 搜索条件 -->
         <div
@@ -179,7 +179,7 @@ const { refreshTab } = useTabs();
         </div>
         <div
           ref="cardContainerRef"
-          class="thin-scrollbar relative flex flex-1 flex-col gap-2 overflow-y-auto py-3"
+          class="thin-scrollbar flex flex-1 flex-col gap-2 overflow-y-auto py-3"
           @scroll="handleScroll"
         >
           <template v-if="taskList.length > 0">
