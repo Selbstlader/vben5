@@ -73,7 +73,14 @@ async function reload(resetFields: boolean = false) {
   });
   taskList.value = resp.rows.map((item) => ({ ...item, active: false }));
   taskTotal.value = resp.total;
+
   loading.value = false;
+  // 默认选中第一个
+  if (taskList.value.length > 0) {
+    const firstTask = taskList.value[0]!;
+    currentTask.value = firstTask;
+    handleCardClick(firstTask);
+  }
 }
 
 onMounted(reload);
