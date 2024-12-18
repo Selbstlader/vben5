@@ -12,12 +12,19 @@ interface Props extends TaskInfo {
   active: boolean;
 }
 
-const props = withDefaults(defineProps<{ info: Props }>(), {});
+const props = withDefaults(defineProps<{ info: Props; rowKey?: string }>(), {
+  rowKey: 'id',
+});
 
 const emit = defineEmits<{ click: [string] }>();
 
+/**
+ * TODO: 这里要优化 事件没有用到
+ */
 function handleClick() {
-  emit('click', props.info.id);
+  console.log('click');
+  const idKey = props.rowKey as keyof TaskInfo;
+  emit('click', props.info[idKey]);
 }
 </script>
 

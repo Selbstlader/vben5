@@ -8,7 +8,7 @@ import { Page } from '@vben/common-ui';
 import { useTabs } from '@vben/hooks';
 
 import { Empty, InputSearch, Segmented } from 'ant-design-vue';
-import { debounce } from 'lodash-es';
+import { debounce, uniqueId } from 'lodash-es';
 
 import { flowInfo } from '#/api/workflow/instance';
 import { pageByAllTaskFinish, pageByAllTaskWait } from '#/api/workflow/task';
@@ -17,7 +17,15 @@ import { ApprovalCard, ApprovalPanel } from '../components';
 
 const emptyImage = Empty.PRESENTED_IMAGE_SIMPLE;
 
-const taskList = ref<({ active: boolean } & TaskInfo)[]>([]);
+/**
+ * 流程监控 - 待办任务页面的id不唯一 改为前端处理
+ */
+interface TaskItem extends TaskInfo {
+  active: boolean;
+  randomId: string;
+}
+
+const taskList = ref<TaskItem[]>([]);
 const taskTotal = ref(0);
 const page = ref(1);
 
@@ -41,7 +49,11 @@ const approvalType = computed(() => {
 async function handleTypeChange() {
   page.value = 1;
   const resp = await currentApi.value({ pageSize: 10, pageNum: page.value });
-  taskList.value = resp.rows.map((item) => ({ ...item, active: false }));
+  taskList.value = resp.rows.map((item) => ({
+    ...item,
+    active: false,
+    randomId: uniqueId(),
+  }));
   taskTotal.value = resp.total;
   // eslint-disable-next-line no-use-before-define
   currentTask.value = undefined;
@@ -60,7 +72,11 @@ onMounted(async () => {
    */
   const resp = await currentApi.value({ pageSize: 10, pageNum: page.value });
   console.log(resp);
-  taskList.value = resp.rows.map((item) => ({ ...item, active: false }));
+  taskList.value = resp.rows.map((item) => ({
+    ...item,
+    active: false,
+    randomId: uniqueId(),
+  }));
   taskTotal.value = resp.total;
 });
 
@@ -80,7 +96,11 @@ const handleScroll = debounce(async (e: Event) => {
     page.value += 1;
     const resp = await currentApi.value({ pageSize: 10, pageNum: page.value });
     taskList.value.push(
-      ...resp.rows.map((item) => ({ ...item, active: false })),
+      ...resp.rows.map((item) => ({
+        ...item,
+        active: false,
+        randomId: uniqueId(),
+      })),
     );
   }
 }, 200);
@@ -89,18 +109,18 @@ const currentInstance = ref<FlowInfoResponse>();
 
 const lastSelectId = ref('');
 const currentTask = ref<TaskInfo>();
-async function handleCardClick(item: TaskInfo) {
-  const { id, businessId } = item;
+async function handleCardClick(item: TaskItem) {
+  const { randomId, businessId } = item;
   // 点击的是同一个
-  if (lastSelectId.value === id) {
+  if (lastSelectId.value === randomId) {
     return;
   }
   currentTask.value = item;
   // 反选状态 & 如果已经点击了 不变 & 保持只能有一个选中
   taskList.value.forEach((item) => {
-    item.active = item.id === id;
+    item.active = item.randomId === randomId;
   });
-  lastSelectId.value = id;
+  lastSelectId.value = randomId;
 
   const resp = await flowInfo(businessId);
   currentInstance.value = resp;
@@ -135,9 +155,10 @@ const { refreshTab } = useTabs();
           <template v-if="taskList.length > 0">
             <ApprovalCard
               v-for="item in taskList"
-              :key="item.id"
+              :key="item.randomId"
               :info="item"
               class="mx-2"
+              row-key="randomId"
               @click="handleCardClick(item)"
             />
           </template>
