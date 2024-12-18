@@ -206,14 +206,17 @@ const [RightBasicTable, rightTableApi] = useVbenVxeGrid({
   gridOptions: rightGridOptions,
 });
 
-function handleRemoveItem(row: any) {
+async function handleRemoveItem(row: any) {
   if (props.mode === 'multiple') {
-    tableApi.grid.setCheckboxRow(row, false);
+    await tableApi.grid.setCheckboxRow(row, false);
   }
   if (props.mode === 'single') {
-    tableApi.grid.clearRadioRow();
+    await tableApi.grid.clearRadioRow();
   }
-  rightTableApi.grid.remove(row);
+  const data = rightTableApi.grid.getData();
+  await rightTableApi.grid.loadData(data.filter((item) => item !== row));
+  // 这个方法有问题
+  // await rightTableApi.grid.remove(row);
 }
 
 function handleRemoveAll() {
@@ -240,6 +243,7 @@ async function handleDeptQuery() {
 
 function handleSubmit() {
   const records = rightTableApi.grid.getData();
+  console.log(records);
   emit('finish', records);
   modalApi.close();
 }
