@@ -10,13 +10,15 @@ import { Fallback, useVbenModal, VbenAvatar } from '@vben/common-ui';
 import { DictEnum } from '@vben/constants';
 import { getPopupContainer } from '@vben/utils';
 
-import { useEventListener } from '@vueuse/core';
+import { CopyOutlined } from '@ant-design/icons-vue';
+import { useClipboard, useEventListener } from '@vueuse/core';
 import {
   Card,
   Divider,
   Dropdown,
   Menu,
   MenuItem,
+  message,
   Modal,
   Skeleton,
   Space,
@@ -344,6 +346,12 @@ function handleUpdateAssignee(userList: User[]) {
     },
   });
 }
+
+const { copy } = useClipboard();
+async function handleCopy(text: string) {
+  await copy(text);
+  message.success('复制成功');
+}
 </script>
 
 <template>
@@ -351,10 +359,15 @@ function handleUpdateAssignee(userList: User[]) {
     v-if="task"
     :body-style="{ overflowY: 'auto', height: '100%' }"
     :loading="loading"
-    :title="`编号: ${task.id}`"
     class="thin-scrollbar flex-1 overflow-y-hidden"
     size="small"
   >
+    <template #title>
+      <div class="flex items-center gap-2">
+        <div>编号: {{ task.id }}</div>
+        <CopyOutlined class="cursor-pointer" @click="handleCopy(task.id)" />
+      </div>
+    </template>
     <template #extra>
       <a-button size="small" @click="() => handleLoadInfo(task)">
         <div class="flex items-center justify-center">
