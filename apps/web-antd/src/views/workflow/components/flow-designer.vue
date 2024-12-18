@@ -19,7 +19,7 @@ const accessStore = useAccessStore();
 const params = {
   Authorization: `Bearer ${accessStore.accessToken}`,
   id: definitionId,
-  clientId,
+  clientid: clientId,
   disabled,
 };
 
