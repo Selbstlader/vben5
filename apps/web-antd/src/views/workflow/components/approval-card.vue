@@ -53,16 +53,18 @@ function handleClick() {
         {{ info.updateTime }}
       </DescriptionsItem> -->
     </Descriptions>
-    <div class="flex items-center justify-between text-[14px]">
-      <div class="flex items-center gap-1">
+    <div class="flex w-full items-center justify-between text-[14px]">
+      <div class="flex items-center gap-1 overflow-hidden whitespace-nowrap">
         <VbenAvatar
           :alt="info.createByName"
           class="bg-primary size-[24px] rounded-full text-[10px] text-white"
           src=""
         />
-        <span class="opacity-50">{{ info.createByName }}</span>
+        <span class="overflow-hidden text-ellipsis opacity-50">
+          {{ info.createByName }}
+        </span>
       </div>
-      <div class="opacity-50">{{ info.updateTime }}更新</div>
+      <div class="text-nowrap opacity-50">{{ info.updateTime }}更新</div>
     </div>
   </div>
 </template>
