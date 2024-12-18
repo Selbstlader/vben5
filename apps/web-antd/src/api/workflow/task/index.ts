@@ -125,12 +125,9 @@ export function taskOperation(
  * @param userId 办理人id
  */
 export function updateAssignee(taskIdList: IDS, userId: ID) {
-  return requestClient.postWithMsg<void>(
+  return requestClient.putWithMsg<void>(
     `/workflow/task/updateAssignee/${userId}`,
-    {
-      taskIdList,
-      userId,
-    },
+    taskIdList,
   );
 }
 

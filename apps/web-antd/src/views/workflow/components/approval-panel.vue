@@ -34,6 +34,7 @@ import {
   getTaskByTaskId,
   taskOperation,
   terminationTask,
+  updateAssignee,
 } from '#/api/workflow/task';
 import { renderDict } from '#/utils/render';
 
@@ -316,12 +317,32 @@ function handleReductionSignature(userList: User[]) {
   });
 }
 
+// 流程干预
 const [FlowInterfereModal, flowInterfereModalApi] = useVbenModal({
   connectedComponent: flowInterfereModal,
 });
 function handleFlowInterfere() {
   flowInterfereModalApi.setData({ taskId: props.task?.id });
   flowInterfereModalApi.open();
+}
+
+// 修改办理人
+const [UpdateAssigneeModal, updateAssigneeModalApi] = useVbenModal({
+  connectedComponent: userSelectModal,
+});
+function handleUpdateAssignee(userList: User[]) {
+  if (userList.length === 0) return;
+  const current = userList[0];
+  if (!current) return;
+  Modal.confirm({
+    title: '修改办理人',
+    content: `确定修改办理人为${current?.nickName}吗?`,
+    centered: true,
+    onOk: async () => {
+      await updateAssignee([props.task!.id], current.userId);
+      emit('reload');
+    },
+  });
 }
 </script>
 
@@ -466,8 +487,11 @@ function handleFlowInterfere() {
         </Space>
         <Space v-if="type === 'admin'">
           <a-button @click="handleFlowInterfere"> 流程干预 </a-button>
-          <a-button>修改办理人(没做)</a-button>
+          <a-button @click="() => updateAssigneeModalApi.open()">
+            修改办理人
+          </a-button>
           <FlowInterfereModal @complete="$emit('reload')" />
+          <UpdateAssigneeModal mode="single" @finish="handleUpdateAssignee" />
         </Space>
       </div>
     </div>
