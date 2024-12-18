@@ -24,6 +24,7 @@ import {
 } from '#/api/workflow/instance';
 import CategoryTree from '#/views/workflow/processDefinition/category-tree.vue';
 
+import { flowInfoModal } from '../components';
 import { columns, querySchema } from './data';
 import instanceInvalidModal from './instance-invalid-modal.vue';
 import instanceVariableModal from './instance-variable-modal.vue';
@@ -150,6 +151,14 @@ function handleVariable(row: Recordable<any>) {
   instanceVariableModalApi.setData({ record: row.variable });
   instanceVariableModalApi.open();
 }
+const [FlowInfoModal, flowInfoModalApi] = useVbenModal({
+  connectedComponent: flowInfoModal,
+});
+function handleInfo(row: any) {
+  console.log(row);
+  flowInfoModalApi.setData({ businessId: row.businessId });
+  flowInfoModalApi.open();
+}
 </script>
 
 <template>
@@ -205,7 +214,7 @@ function handleVariable(row: Recordable<any>) {
               </Popconfirm>
             </div>
             <div>
-              <a-button size="small" type="link" @click.stop="">
+              <a-button size="small" type="link" @click.stop="handleInfo(row)">
                 流程预览
               </a-button>
               <a-button
@@ -222,5 +231,6 @@ function handleVariable(row: Recordable<any>) {
     </div>
     <InstanceInvalidModal @reload="() => tableApi.reload()" />
     <InstanceVariableModal />
+    <FlowInfoModal />
   </Page>
 </template>
