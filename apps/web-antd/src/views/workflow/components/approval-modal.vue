@@ -11,6 +11,8 @@ import { omit } from 'lodash-es';
 import { useVbenForm } from '#/adapter/form';
 import { completeTask } from '#/api/workflow/task';
 
+import { CopyComponent } from '.';
+
 const emit = defineEmits<{ complete: [] }>();
 
 const [BasicForm, formApi] = useVbenForm({
@@ -118,11 +120,17 @@ async function handleSubmit() {
       return;
     }
     const data = cloneDeep(await formApi.getValues());
+    // 需要转换数据 抄送人员
+    const flowCopyList = (data.flowCopyList as Array<any>).map((item) => ({
+      userId: item.userId,
+      userName: item.nickName,
+    }));
     const requestData = {
       ...omit(data, ['attachment']),
       fileId: data.attachment.join(','),
       taskVariables: {},
       variables: {},
+      flowCopyList,
     } as CompleteTaskReqData;
     await completeTask(requestData);
     modalApi.close();
@@ -138,8 +146,8 @@ async function handleSubmit() {
 <template>
   <BasicModal>
     <BasicForm>
-      <template #flowCopyList>
-        <span>抄送待开发</span>
+      <template #flowCopyList="slotProps">
+        <CopyComponent v-model:user-list="slotProps.modelValue" />
       </template>
     </BasicForm>
   </BasicModal>
