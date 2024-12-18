@@ -62,7 +62,7 @@ function handleClick() {
         />
         <span class="opacity-50">{{ info.createByName }}</span>
       </div>
-      <div class="opacity-50">更新时间: 2222-22-22</div>
+      <div class="opacity-50">{{ info.updateTime }}更新</div>
     </div>
   </div>
 </template>

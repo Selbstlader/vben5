@@ -1,3 +1,4 @@
+<!-- eslint-disable no-use-before-define -->
 <script setup lang="ts">
 import type { FlowInfoResponse } from '#/api/workflow/instance/model';
 import type { TaskInfo } from '#/api/workflow/task/model';
@@ -7,8 +8,17 @@ import { computed, onMounted, ref } from 'vue';
 import { Page } from '@vben/common-ui';
 import { useTabs } from '@vben/hooks';
 
-import { Empty, InputSearch } from 'ant-design-vue';
-import { debounce } from 'lodash-es';
+import { FilterOutlined, RedoOutlined } from '@ant-design/icons-vue';
+import {
+  Empty,
+  Form,
+  FormItem,
+  Input,
+  InputSearch,
+  Popover,
+  Spin,
+} from 'ant-design-vue';
+import { cloneDeep, debounce } from 'lodash-es';
 
 import { flowInfo } from '#/api/workflow/instance';
 import { pageByTaskWait } from '#/api/workflow/task';
@@ -20,6 +30,14 @@ const emptyImage = Empty.PRESENTED_IMAGE_SIMPLE;
 const taskList = ref<({ active: boolean } & TaskInfo)[]>([]);
 const taskTotal = ref(0);
 const page = ref(1);
+const loading = ref(false);
+
+const defaultFormData = {
+  flowName: '', // 流程定义名称
+  nodeName: '', // 任务名称
+  flowCode: '', // 流程定义编码
+};
+const formData = ref(cloneDeep(defaultFormData));
 
 /**
  * 是否已经加载全部数据 即 taskList.length === taskTotal
@@ -28,15 +46,29 @@ const isLoadComplete = computed(
   () => taskList.value.length === taskTotal.value,
 );
 
-onMounted(async () => {
-  /**
-   * 获取待办任务列表
-   */
-  const resp = await pageByTaskWait({ pageSize: 10, pageNum: page.value });
-  console.log(resp);
+/**
+ * @param resetFields 是否清空查询参数
+ */
+async function reload(resetFields: boolean = false) {
+  page.value = 1;
+  currentTask.value = undefined;
+  taskTotal.value = 0;
+  lastSelectId.value = '';
+  if (resetFields) {
+    formData.value = cloneDeep(defaultFormData);
+  }
+  loading.value = true;
+  const resp = await pageByTaskWait({
+    pageSize: 10,
+    pageNum: page.value,
+    ...formData.value,
+  });
   taskList.value = resp.rows.map((item) => ({ ...item, active: false }));
   taskTotal.value = resp.total;
-});
+  loading.value = false;
+}
+
+onMounted(reload);
 
 const handleScroll = debounce(async (e: Event) => {
   if (!e.target) {
@@ -51,11 +83,17 @@ const handleScroll = debounce(async (e: Event) => {
 
   // 滚动到底部且没有加载完成
   if (isBottom && !isLoadComplete.value) {
+    loading.value = true;
     page.value += 1;
-    const resp = await pageByTaskWait({ pageSize: 10, pageNum: page.value });
+    const resp = await pageByTaskWait({
+      pageSize: 10,
+      pageNum: page.value,
+      ...formData.value,
+    });
     taskList.value.push(
       ...resp.rows.map((item) => ({ ...item, active: false })),
     );
+    loading.value = false;
   }
 }, 200);
 
@@ -93,10 +131,46 @@ const { refreshTab } = useTabs();
         <div
           class="bg-background z-100 sticky left-0 top-0 w-full rounded-t-lg border-b-[1px] border-solid p-2"
         >
-          <InputSearch placeholder="搜索还没做" />
+          <div class="flex items-center gap-1">
+            <InputSearch
+              v-model:value="formData.flowName"
+              placeholder="流程名称搜索"
+              @search="reload(false)"
+            />
+            <a-button @click="reload(true)">
+              <RedoOutlined />
+            </a-button>
+            <Popover placement="rightTop" title="搜索" trigger="click">
+              <template #content>
+                <Form>
+                  <FormItem label="任务名称">
+                    <Input
+                      v-model:value="formData.nodeName"
+                      placeholder="请输入"
+                    />
+                  </FormItem>
+                  <FormItem label="流程编码">
+                    <Input
+                      v-model:value="formData.flowCode"
+                      placeholder="请输入"
+                    />
+                  </FormItem>
+                  <FormItem>
+                    <a-button type="primary" @click="reload(false)">
+                      搜索
+                    </a-button>
+                    <a-button class="ml-2" @click="reload(true)">重置</a-button>
+                  </FormItem>
+                </Form>
+              </template>
+              <a-button>
+                <FilterOutlined />
+              </a-button>
+            </Popover>
+          </div>
         </div>
         <div
-          class="thin-scrollbar flex flex-1 flex-col gap-2 overflow-y-auto py-3"
+          class="thin-scrollbar relative flex flex-1 flex-col gap-2 overflow-y-auto py-3"
           @scroll="handleScroll"
         >
           <template v-if="taskList.length > 0">
@@ -109,6 +183,12 @@ const { refreshTab } = useTabs();
             />
           </template>
           <Empty v-else :image="emptyImage" />
+          <div
+            v-if="loading"
+            class="absolute left-0 top-0 flex h-full w-full items-center justify-center bg-[rgba(0,0,0,0.1)]"
+          >
+            <Spin tip="加载中..." />
+          </div>
         </div>
         <!-- total显示 -->
         <div
