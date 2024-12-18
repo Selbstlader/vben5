@@ -2,7 +2,7 @@
 import type { User } from '#/api/system/user/model';
 import type { TaskInfo } from '#/api/workflow/task/model';
 
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 import { useVbenModal } from '@vben/common-ui';
 
@@ -19,6 +19,20 @@ import { userSelectModal } from '.';
 const emit = defineEmits<{ complete: [] }>();
 
 const taskInfo = ref<TaskInfo>();
+
+/**
+ * 是否显示 加签/减签操作
+ */
+const showMultiActions = computed(() => {
+  if (!taskInfo.value) {
+    return false;
+  }
+  if (Number(taskInfo.value.nodeRatio) > 0) {
+    return true;
+  }
+  return false;
+});
+
 const [BasicModal, modalApi] = useVbenModal({
   title: '流程干预',
   class: 'w-[800px]',
@@ -73,6 +87,46 @@ function handleTermination() {
     },
   });
 }
+
+const [AddSignatureModal, addSignatureModalApi] = useVbenModal({
+  connectedComponent: userSelectModal,
+});
+function handleAddSignature(userList: User[]) {
+  if (userList.length === 0 || !taskInfo.value) return;
+  const userIds = userList.map((user) => user.userId);
+  Modal.confirm({
+    title: '提示',
+    content: '确认加签吗?',
+    centered: true,
+    onOk: async () => {
+      await taskOperation(
+        { taskId: taskInfo.value!.id, userIds },
+        'addSignature',
+      );
+      emit('complete');
+    },
+  });
+}
+
+const [ReductionSignatureModal, reductionSignatureModalApi] = useVbenModal({
+  connectedComponent: userSelectModal,
+});
+function handleReductionSignature(userList: User[]) {
+  if (userList.length === 0 || !taskInfo.value) return;
+  const userIds = userList.map((user) => user.userId);
+  Modal.confirm({
+    title: '提示',
+    content: '确认加签吗?',
+    centered: true,
+    onOk: async () => {
+      await taskOperation(
+        { taskId: taskInfo.value!.id, userIds },
+        'reductionSignature',
+      );
+      emit('complete');
+    },
+  });
+}
 </script>
 
 <template>
@@ -98,7 +152,18 @@ function handleTermination() {
       </DescriptionsItem>
     </Descriptions>
     <TransferModal mode="single" @finish="handleTransfer" />
+    <AddSignatureModal mode="multiple" @finish="handleAddSignature" />
+    <ReductionSignatureModal
+      mode="multiple"
+      @finish="handleReductionSignature"
+    />
     <template #footer>
+      <template v-if="showMultiActions">
+        <a-button @click="() => addSignatureModalApi.open()">加签</a-button>
+        <a-button @click="() => reductionSignatureModalApi.open()">
+          减签
+        </a-button>
+      </template>
       <a-button @click="() => transferModalApi.open()">转办</a-button>
       <a-button danger type="primary" @click="handleTermination">终止</a-button>
     </template>

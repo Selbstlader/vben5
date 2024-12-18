@@ -29,7 +29,7 @@ const [BasicModal, modalApi] = useVbenModal({
   fullscreenButton: false,
   onConfirm: handleSubmit,
   async onOpened() {
-    const { userList } = modalApi.getData() as { userList: User[] };
+    const { userList = [] } = modalApi.getData() as { userList: User[] };
     // 暂时只处理多选 目前并没有单选的情况
     if (props.mode === 'multiple') {
       // 左边选中
