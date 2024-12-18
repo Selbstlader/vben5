@@ -93,12 +93,20 @@ const currentFlowInfo = ref<FlowInfoResponse>();
  */
 const loading = ref(false);
 const iframeLoaded = ref(false);
+const iframeHeight = ref(300);
 useEventListener('message', (event) => {
   /**
    * iframe通信 加载完毕后才显示表单 解决卡顿问题
    */
   if (event.data === 'mounted') {
     iframeLoaded.value = true;
+  }
+  /**
+   * 高度与表单高度保持一致
+   */
+  if (event.data.includes('height')) {
+    const height = event.data.split('height:')[1];
+    iframeHeight.value = height;
   }
 });
 
@@ -348,7 +356,8 @@ function handleReductionSignature(userList: User[]) {
             <iframe
               v-show="iframeLoaded"
               :src="`${task.formPath}/iframe?readonly=true&id=${task.businessId}`"
-              class="h-[300px] w-full"
+              :style="{ height: `${iframeHeight}px` }"
+              class="w-full"
             ></iframe>
             <Skeleton v-show="!iframeLoaded" :paragraph="{ rows: 6 }" active />
             <Divider />

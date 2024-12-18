@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { StartWorkFlowReqData } from '#/api/workflow/task/model';
 
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, useTemplateRef } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { useVbenModal } from '@vben/common-ui';
@@ -45,6 +45,7 @@ const [BasicForm, formApi] = useVbenForm({
   wrapperClass: 'grid-cols-2',
 });
 
+const cardRef = useTemplateRef('cardRef');
 onMounted(async () => {
   // 只读 获取信息赋值
   if (id) {
@@ -58,7 +59,17 @@ onMounted(async () => {
      * 主要解决内嵌iframe卡顿的问题
      */
     if (readonly) {
+      // 渲染完毕才显示表单
       window.parent.postMessage('mounted', '*');
+      // 获取表单高度 内嵌时保持一致
+      setTimeout(() => {
+        const el = cardRef.value?.$el as HTMLDivElement;
+        // 获取高度
+        const height = el?.offsetHeight ?? 0;
+        if (height) {
+          window.parent.postMessage(`height:${height}`, '*');
+        }
+      });
     }
   }
 });
@@ -140,7 +151,7 @@ function handleComplete() {
 </script>
 
 <template>
-  <Card>
+  <Card ref="cardRef">
     <div id="leave-form">
       <BasicForm />
       <div v-if="showActionBtn" class="flex justify-end gap-2">
