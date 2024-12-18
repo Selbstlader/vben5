@@ -37,7 +37,12 @@ import {
 } from '#/api/workflow/task';
 import { renderDict } from '#/utils/render';
 
-import { approvalModal, approvalRejectionModal, ApprovalTimeline } from '.';
+import {
+  approvalModal,
+  approvalRejectionModal,
+  ApprovalTimeline,
+  flowInterfereModal,
+} from '.';
 import userSelectModal from './user-select-modal.vue';
 
 defineOptions({
@@ -310,6 +315,14 @@ function handleReductionSignature(userList: User[]) {
     },
   });
 }
+
+const [FlowInterfereModal, flowInterfereModalApi] = useVbenModal({
+  connectedComponent: flowInterfereModal,
+});
+function handleFlowInterfere() {
+  flowInterfereModalApi.setData({ taskId: props.task?.id });
+  flowInterfereModalApi.open();
+}
 </script>
 
 <template>
@@ -452,8 +465,9 @@ function handleReductionSignature(userList: User[]) {
           />
         </Space>
         <Space v-if="type === 'admin'">
-          <a-button>流程干预</a-button>
-          <a-button>修改办理人</a-button>
+          <a-button @click="handleFlowInterfere"> 流程干预 </a-button>
+          <a-button>修改办理人(没做)</a-button>
+          <FlowInterfereModal @complete="$emit('reload')" />
         </Space>
       </div>
     </div>

@@ -20,6 +20,11 @@ export { default as CopyComponent } from './copy-component.vue';
  */
 export { default as flowInfoModal } from './flow-info-modal.vue';
 /**
+ * 流程干预 modal
+ */
+export { default as flowInterfereModal } from './flow-interfere-modal.vue';
+
+/**
  * 选人 支持单选/多选
  */
 export { default as userSelectModal } from './user-select-modal.vue';
