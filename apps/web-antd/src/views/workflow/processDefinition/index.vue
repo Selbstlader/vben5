@@ -70,9 +70,9 @@ const gridOptions: VxeGridProps = {
       query: async ({ page }, formValues = {}) => {
         // 部门树选择处理
         if (selectedCode.value.length === 1) {
-          formValues.categoryCode = selectedCode.value[0];
+          formValues.category = selectedCode.value[0];
         } else {
-          Reflect.deleteProperty(formValues, 'categoryCode');
+          Reflect.deleteProperty(formValues, 'category');
         }
 
         return await workflowDefinitionList({

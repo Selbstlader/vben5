@@ -86,3 +86,12 @@ export interface CategoryQuery {
    */
   params?: any;
 }
+
+export interface CategoryTree {
+  id: number;
+  parentId: number;
+  label: string;
+  weight: number;
+  children: CategoryTree[];
+  key: string;
+}

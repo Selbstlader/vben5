@@ -1,14 +1,12 @@
 <script setup lang="ts">
-import type { CategoryVO } from '#/api/workflow/category/model';
+import type { CategoryTree } from '#/api/workflow/category/model';
 
 import { onMounted, type PropType, ref } from 'vue';
-
-import { listToTree } from '@vben/utils';
 
 import { SyncOutlined } from '@ant-design/icons-vue';
 import { InputSearch, Skeleton, Tree } from 'ant-design-vue';
 
-import { categoryList } from '#/api/workflow/category';
+import { categoryTree } from '#/api/workflow/category';
 
 defineOptions({ inheritAttrs: false });
 
@@ -33,7 +31,7 @@ const searchValue = defineModel('searchValue', {
   default: '',
 });
 
-const categoryTreeArray = ref<CategoryVO[]>([]);
+const categoryTreeArray = ref<CategoryTree[]>([]);
 /** 骨架屏加载 */
 const showTreeSkeleton = ref<boolean>(true);
 
@@ -42,11 +40,7 @@ async function loadTree() {
   searchValue.value = '';
   selectCode.value = [];
 
-  const ret = await categoryList();
-  const treeData = listToTree(ret, {
-    id: 'categoryId',
-    pid: 'parentId',
-  });
+  const treeData = await categoryTree();
 
   categoryTreeArray.value = treeData;
   showTreeSkeleton.value = false;
@@ -91,14 +85,14 @@ onMounted(loadTree);
             v-if="categoryTreeArray.length > 0"
             v-model:selected-keys="selectCode"
             :class="$attrs.class"
-            :field-names="{ title: 'categoryName', key: 'categoryId' }"
+            :field-names="{ title: 'label', key: 'id' }"
             :show-line="{ showLeafIcon: false }"
             :tree-data="categoryTreeArray"
             :virtual="false"
             default-expand-all
             @select="$emit('select')"
           >
-            <template #title="{ categoryName: label }">
+            <template #title="{ label }">
               <span v-if="label.indexOf(searchValue) > -1">
                 {{ label.substring(0, label.indexOf(searchValue)) }}
                 <span style="color: #f50">{{ searchValue }}</span>

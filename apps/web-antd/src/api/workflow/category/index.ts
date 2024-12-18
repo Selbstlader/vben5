@@ -1,8 +1,21 @@
-import type { CategoryForm, CategoryQuery, CategoryVO } from './model';
+import type {
+  CategoryForm,
+  CategoryQuery,
+  CategoryTree,
+  CategoryVO,
+} from './model';
 
 import type { ID, IDS } from '#/api/common';
 
 import { requestClient } from '#/api/request';
+
+/**
+ * 获取流程分类树列表
+ * @returns tree
+ */
+export function categoryTree() {
+  return requestClient.get<CategoryTree[]>('/workflow/category/categoryTree');
+}
 
 /**
  * 查询流程分类列表

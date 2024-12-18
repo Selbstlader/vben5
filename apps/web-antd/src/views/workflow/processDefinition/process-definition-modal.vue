@@ -3,15 +3,10 @@ import { computed, ref } from 'vue';
 
 import { useVbenModal } from '@vben/common-ui';
 import { $t } from '@vben/locales';
-import {
-  addFullName,
-  cloneDeep,
-  getPopupContainer,
-  listToTree,
-} from '@vben/utils';
+import { addFullName, cloneDeep, getPopupContainer } from '@vben/utils';
 
 import { useVbenForm } from '#/adapter/form';
-import { categoryList } from '#/api/workflow/category';
+import { categoryTree } from '#/api/workflow/category';
 import {
   workflowDefinitionAdd,
   workflowDefinitionInfo,
@@ -42,19 +37,15 @@ const [BasicForm, formApi] = useVbenForm({
 
 async function setupCategorySelect() {
   // menu
-  const resp = await categoryList();
-  const tree = listToTree(resp, {
-    id: 'categoryId',
-    pid: 'parentId',
-  });
-  addFullName(tree, 'categoryName', ' / ');
+  const tree = await categoryTree();
+  addFullName(tree, 'label', ' / ');
 
   formApi.updateSchema([
     {
       componentProps: {
         fieldNames: {
-          label: 'categoryName',
-          value: 'categoryId',
+          label: 'label',
+          value: 'id',
         },
         getPopupContainer,
         // 设置弹窗滚动高度 默认256
@@ -66,7 +57,7 @@ async function setupCategorySelect() {
         treeDefaultExpandedKeys: [0],
         treeLine: { showLeafIcon: false },
         // 筛选的字段
-        treeNodeFilterProp: 'categoryName',
+        treeNodeFilterProp: 'label',
         treeNodeLabelProp: 'fullName',
       },
       fieldName: 'category',
