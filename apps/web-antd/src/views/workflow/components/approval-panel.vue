@@ -23,6 +23,7 @@ import {
   TabPane,
   Tabs,
 } from 'ant-design-vue';
+import { isObject } from 'lodash-es';
 
 import {
   cancelProcessApply,
@@ -95,17 +96,19 @@ const loading = ref(false);
 const iframeLoaded = ref(false);
 const iframeHeight = ref(300);
 useEventListener('message', (event) => {
+  const data = event.data as { [key: string]: any; type: string };
+  if (!isObject(data)) return;
   /**
    * iframe通信 加载完毕后才显示表单 解决卡顿问题
    */
-  if (event.data === 'mounted') {
+  if (data.type === 'mounted') {
     iframeLoaded.value = true;
   }
   /**
    * 高度与表单高度保持一致
    */
-  if (event.data.includes('height')) {
-    const height = event.data.split('height:')[1];
+  if (data.type === 'height') {
+    const height = data.height;
     iframeHeight.value = height;
   }
 });

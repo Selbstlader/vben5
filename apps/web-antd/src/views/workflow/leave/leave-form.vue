@@ -60,14 +60,14 @@ onMounted(async () => {
      */
     if (readonly) {
       // 渲染完毕才显示表单
-      window.parent.postMessage('mounted', '*');
+      window.parent.postMessage({ type: 'mounted' }, '*');
       // 获取表单高度 内嵌时保持一致
       setTimeout(() => {
         const el = cardRef.value?.$el as HTMLDivElement;
         // 获取高度
         const height = el?.offsetHeight ?? 0;
         if (height) {
-          window.parent.postMessage(`height:${height}`, '*');
+          window.parent.postMessage({ type: 'height', height }, '*');
         }
       });
     }
