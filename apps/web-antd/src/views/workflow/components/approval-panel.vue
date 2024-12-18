@@ -354,7 +354,7 @@ function handleFlowInterfere() {
         <div class="flex items-center gap-2">
           <VbenAvatar
             :alt="task.createByName"
-            class="bg-primary size-[24px] rounded-full text-white"
+            class="bg-primary size-[28px] rounded-full text-white"
             src=""
           />
           <span>{{ task.createByName }}</span>

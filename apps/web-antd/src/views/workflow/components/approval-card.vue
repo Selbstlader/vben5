@@ -50,7 +50,7 @@ function handleClick() {
       <div class="flex items-center gap-1">
         <VbenAvatar
           :alt="info.createByName"
-          class="bg-primary size-[24px] rounded-full text-white"
+          class="bg-primary size-[24px] rounded-full text-[10px] text-white"
           src=""
         />
         <span class="opacity-50">{{ info.createByName }}</span>
