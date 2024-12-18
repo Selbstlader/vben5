@@ -8,6 +8,8 @@ import { cloneDeep } from 'lodash-es';
 import { useVbenForm } from '#/adapter/form';
 import { completeTask } from '#/api/workflow/task';
 
+import { CopyComponent } from '.';
+
 interface Emits {
   /**
    * 完成
@@ -71,9 +73,14 @@ async function handleSubmit() {
     const { messageType, flowCopyList } = cloneDeep(await formApi.getValues());
     const { taskId, taskVariables, variables } =
       modalApi.getData() as ModalProps;
+    // 需要转换数据 抄送人员
+    const flowCCList = (flowCopyList as Array<any>).map((item) => ({
+      userId: item.userId,
+      userName: item.nickName,
+    }));
     const data = {
       messageType,
-      flowCopyList,
+      flowCopyList: flowCCList,
       taskId,
       taskVariables,
       variables,
@@ -92,8 +99,8 @@ async function handleSubmit() {
 <template>
   <BasicModal>
     <BasicForm>
-      <template #flowCopyList>
-        <div>TODO: 等待组件开发</div>
+      <template #flowCopyList="slotProps">
+        <CopyComponent v-model:user-list="slotProps.modelValue" />
       </template>
     </BasicForm>
   </BasicModal>

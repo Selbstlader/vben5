@@ -42,7 +42,7 @@ export interface StartWorkFlowReqData {
   /**
    * 业务ID
    */
-  businessKey: ID;
+  businessId: ID;
   /**
    * flowCode
    */

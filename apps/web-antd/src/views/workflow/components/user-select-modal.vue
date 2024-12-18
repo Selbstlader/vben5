@@ -1,3 +1,4 @@
+<!-- eslint-disable no-use-before-define -->
 <script setup lang="ts">
 import type { User } from '#/api';
 
@@ -27,6 +28,16 @@ const [BasicModal, modalApi] = useVbenModal({
   class: 'w-[1000px]',
   fullscreenButton: false,
   onConfirm: handleSubmit,
+  async onOpened() {
+    const { userList } = modalApi.getData() as { userList: User[] };
+    // 暂时只处理多选 目前并没有单选的情况
+    if (props.mode === 'multiple') {
+      // 左边选中
+      await tableApi.grid.setCheckboxRow(userList, true);
+      // 右边赋值
+      await rightTableApi.grid.loadData(userList);
+    }
+  },
 });
 
 // 左边部门用
@@ -52,12 +63,10 @@ const formOptions: VbenFormProps = {
   wrapperClass: 'grid-cols-2',
   handleReset: async () => {
     selectDeptId.value = [];
-    // eslint-disable-next-line no-use-before-define
     const { formApi, reload } = tableApi;
     await formApi.resetForm();
     const formValues = formApi.form.values;
     formApi.setLatestSubmissionValues(formValues);
-    // eslint-disable-next-line no-use-before-define
     await rightTableApi.grid.loadData([]);
     await reload(formValues);
   },
@@ -144,8 +153,6 @@ function checkBoxEvent() {
   }
   // 给右边表格赋值
   const records = tableApi.grid.getCheckboxRecords();
-  console.log(records);
-  // eslint-disable-next-line no-use-before-define
   rightTableApi.grid.loadData(records);
 }
 
@@ -155,7 +162,6 @@ function radioEvent() {
   }
   // 给右边表格赋值
   const records = tableApi.grid.getRadioRecord();
-  // eslint-disable-next-line no-use-before-define
   rightTableApi.grid.loadData([records]);
 }
 
@@ -234,7 +240,6 @@ async function handleDeptQuery() {
 
 function handleSubmit() {
   const records = rightTableApi.grid.getData();
-  console.log(records);
   emit('finish', records);
   modalApi.close();
 }

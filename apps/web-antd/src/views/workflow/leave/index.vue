@@ -16,7 +16,7 @@ import {
 import { cancelProcessApply } from '#/api/workflow/instance';
 import { commonDownloadExcel } from '#/utils/file/download';
 
-import { flowInfoModal } from '../components';
+import { applyModal, flowInfoModal } from '../components';
 import userSelectModal from '../components/user-select-modal.vue';
 import { leaveExport, leaveList, leaveRemove } from './api';
 import { columns, querySchema } from './data';
@@ -129,6 +129,9 @@ const [UserSelectModal, testApi] = useVbenModal({
 function handleTest() {
   testApi.open();
 }
+const [ApplyModal, applyModalApi] = useVbenModal({
+  connectedComponent: applyModal,
+});
 </script>
 
 <template>
@@ -137,6 +140,7 @@ function handleTest() {
       <template #toolbar-tools>
         <Space>
           <a-button @click="handleTest">test选人</a-button>
+          <a-button @click="() => applyModalApi.open()">test抄送</a-button>
           <a-button
             v-access:code="['workflow:leave:export']"
             @click="handleDownloadExcel"
@@ -205,5 +209,6 @@ function handleTest() {
     </BasicTable>
     <UserSelectModal mode="single" />
     <FlowInfoModal />
+    <ApplyModal />
   </Page>
 </template>

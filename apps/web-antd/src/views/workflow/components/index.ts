@@ -11,11 +11,15 @@ export { default as ApprovalPanel } from './approval-panel.vue';
 export { default as approvalRejectionModal } from './approval-rejection-modal.vue';
 export { default as ApprovalTimeline } from './approval-timeline.vue';
 /**
+ * 选择抄送人
+ */
+export { default as CopyComponent } from './copy-component.vue';
+
+/**
  * 详情信息 modal
  */
 export { default as flowInfoModal } from './flow-info-modal.vue';
-
 /**
  * 选人 支持单选/多选
  */
-export { default as UserSelectModal } from './user-select-modal.vue';
+export { default as userSelectModal } from './user-select-modal.vue';
