@@ -3,7 +3,7 @@
 import type { FlowInfoResponse } from '#/api/workflow/instance/model';
 import type { TaskInfo } from '#/api/workflow/task/model';
 
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, useTemplateRef } from 'vue';
 
 import { Page } from '@vben/common-ui';
 import { useTabs } from '@vben/hooks';
@@ -46,17 +46,25 @@ const isLoadComplete = computed(
   () => taskList.value.length === taskTotal.value,
 );
 
+// 卡片父容器的ref
+const cardContainerRef = useTemplateRef('cardContainerRef');
+
 /**
  * @param resetFields 是否清空查询参数
  */
 async function reload(resetFields: boolean = false) {
+  // 需要先滚动到顶部
+  cardContainerRef.value?.scroll({ top: 0, behavior: 'auto' });
+
   page.value = 1;
   currentTask.value = undefined;
   taskTotal.value = 0;
   lastSelectId.value = '';
+
   if (resetFields) {
     formData.value = cloneDeep(defaultFormData);
   }
+
   loading.value = true;
   const resp = await pageByTaskWait({
     pageSize: 10,
@@ -170,6 +178,7 @@ const { refreshTab } = useTabs();
           </div>
         </div>
         <div
+          ref="cardContainerRef"
           class="thin-scrollbar relative flex flex-1 flex-col gap-2 overflow-y-auto py-3"
           @scroll="handleScroll"
         >
@@ -183,6 +192,7 @@ const { refreshTab } = useTabs();
             />
           </template>
           <Empty v-else :image="emptyImage" />
+          <!-- 遮罩loading层 -->
           <div
             v-if="loading"
             class="absolute left-0 top-0 flex h-full w-full items-center justify-center bg-[rgba(0,0,0,0.1)]"
