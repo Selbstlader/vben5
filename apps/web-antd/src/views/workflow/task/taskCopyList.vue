@@ -33,7 +33,11 @@ onMounted(async () => {
    */
   const resp = await pageByTaskCopy({ pageSize: 10, pageNum: page.value });
   console.log(resp);
-  taskList.value = resp.rows.map((item) => ({ ...item, active: false }));
+  taskList.value = resp.rows.map((item) => ({
+    ...item,
+    createByName: '抄送',
+    active: false,
+  }));
   taskTotal.value = resp.total;
 });
 
@@ -53,7 +57,11 @@ const handleScroll = debounce(async (e: Event) => {
     page.value += 1;
     const resp = await pageByTaskCopy({ pageSize: 10, pageNum: page.value });
     taskList.value.push(
-      ...resp.rows.map((item) => ({ ...item, active: false })),
+      ...resp.rows.map((item) => ({
+        ...item,
+        createByName: '抄送',
+        active: false,
+      })),
     );
   }
 }, 200);
