@@ -19,6 +19,7 @@ const taskInfo = ref<TaskInfo>();
 const [BasicModal, modalApi] = useVbenModal({
   title: '流程信息',
   class: 'w-[1000px]',
+  footer: false,
   onOpenChange: async (isOpen) => {
     if (!isOpen) {
       return null;

@@ -6,13 +6,12 @@ import type { ID, IDS, PageQuery, PageResult } from '#/api/common';
 import { requestClient } from '#/api/request';
 
 /**
- * TODO: 这接口后端还没有
- * @param businessId
- * @returns
+ * @param businessId 业务ID
+ * @returns TaskInfo
  */
 export function getTaskByBusinessId(businessId: string) {
   return requestClient.get<TaskInfo>(
-    `/workflow/instance/infoByBusinessId/${businessId}`,
+    `/workflow/instance/getInfo/${businessId}`,
   );
 }
 

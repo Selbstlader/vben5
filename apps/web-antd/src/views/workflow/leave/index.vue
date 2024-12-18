@@ -177,6 +177,21 @@ const [ApplyModal, applyModalApi] = useVbenModal({
           <Popconfirm
             :get-popup-container="getVxePopupContainer"
             placement="left"
+            title="确认撤销？"
+            @confirm="handleRevoke(row)"
+          >
+            <ghost-button
+              v-if="['waiting'].includes(row.status)"
+              v-access:code="['workflow:leave:edit']"
+              @click.stop=""
+            >
+              撤销
+            </ghost-button>
+          </Popconfirm>
+          <ghost-button @click="handleInfo(row)">详情</ghost-button>
+          <Popconfirm
+            :get-popup-container="getVxePopupContainer"
+            placement="left"
             title="确认删除？"
             @confirm="handleDelete(row)"
           >
@@ -189,21 +204,6 @@ const [ApplyModal, applyModalApi] = useVbenModal({
               {{ $t('pages.common.delete') }}
             </ghost-button>
           </Popconfirm>
-          <Popconfirm
-            :get-popup-container="getVxePopupContainer"
-            placement="left"
-            title="确认撤销？"
-            @confirm="handleRevoke(row)"
-          >
-            <ghost-button
-              v-if="['waiting'].includes(row.status)"
-              v-access:code="['workflow:leave:edit']"
-              @click.stop=""
-            >
-              撤销
-            </ghost-button>
-          </Popconfirm>
-          <ghost-button @click="handleInfo(row)"> 详情 </ghost-button>
         </Space>
       </template>
     </BasicTable>
