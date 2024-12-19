@@ -43,7 +43,7 @@ function handleClick() {
           :is="renderDict(info.flowStatus, DictEnum.WF_BUSINESS_STATUS)"
         />
       </template>
-      <DescriptionsItem label="当前节点名称">
+      <DescriptionsItem label="当前任务名称">
         <div class="font-bold">{{ info.nodeName }}</div>
       </DescriptionsItem>
       <DescriptionsItem label="开始时间">
