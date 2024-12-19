@@ -54,7 +54,7 @@ async function setupCategorySelect() {
         treeData: tree,
         treeDefaultExpandAll: true,
         // 默认展开的树节点
-        treeDefaultExpandedKeys: [0],
+        // treeDefaultExpandedKeys: [0],
         treeLine: { showLeafIcon: false },
         // 筛选的字段
         treeNodeFilterProp: 'label',

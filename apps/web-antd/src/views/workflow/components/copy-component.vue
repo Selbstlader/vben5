@@ -1,6 +1,6 @@
 <!--抄送组件-->
 <script setup lang="ts">
-import type { User } from '#/api/core/user';
+import type { User } from '#/api/system/user/model';
 
 import type { PropType } from 'vue';
 
@@ -14,6 +14,8 @@ defineOptions({
   name: 'CopyComponent',
   inheritAttrs: false,
 });
+
+const emit = defineEmits<{ finish: [User[]] }>();
 
 const [UserSelectModal, modalApi] = useVbenModal({
   connectedComponent: userSelectModal,
@@ -33,12 +35,13 @@ function handleFinish(userList: User[]) {
   // 清空 直接赋值[]会丢失响应性
   userListModel.value.splice(0, userListModel.value.length);
   userListModel.value.push(...userList);
+  emit('finish', userList);
 }
 </script>
 
 <template>
   <div class="flex items-center gap-2">
-    <AvatarGroup v-if="userListModel.length > 0">
+    <AvatarGroup v-if="userListModel.length > 0" class="flex-wrap">
       <Tooltip
         v-for="user in userListModel"
         :key="user.userId"

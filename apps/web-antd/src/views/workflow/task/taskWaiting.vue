@@ -1,5 +1,6 @@
 <!-- eslint-disable no-use-before-define -->
 <script setup lang="ts">
+import type { User } from '#/api/system/user/model';
 import type { FlowInfoResponse } from '#/api/workflow/instance/model';
 import type { TaskInfo } from '#/api/workflow/task/model';
 
@@ -7,6 +8,7 @@ import { computed, onMounted, ref, useTemplateRef } from 'vue';
 
 import { Page } from '@vben/common-ui';
 import { useTabs } from '@vben/hooks';
+import { getPopupContainer } from '@vben/utils';
 
 import { FilterOutlined, RedoOutlined } from '@ant-design/icons-vue';
 import {
@@ -23,7 +25,7 @@ import { cloneDeep, debounce } from 'lodash-es';
 import { flowInfo } from '#/api/workflow/instance';
 import { pageByTaskWait } from '#/api/workflow/task';
 
-import { ApprovalCard, ApprovalPanel } from '../components';
+import { ApprovalCard, ApprovalPanel, CopyComponent } from '../components';
 
 const emptyImage = Empty.PRESENTED_IMAGE_SIMPLE;
 
@@ -36,6 +38,7 @@ const defaultFormData = {
   flowName: '', // 流程定义名称
   nodeName: '', // 任务名称
   flowCode: '', // 流程定义编码
+  createByIds: [] as string[], // 创建人
 };
 const formData = ref(cloneDeep(defaultFormData));
 
@@ -63,6 +66,7 @@ async function reload(resetFields: boolean = false) {
 
   if (resetFields) {
     formData.value = cloneDeep(defaultFormData);
+    selectedUserList.value = [];
   }
 
   loading.value = true;
@@ -134,6 +138,15 @@ async function handleCardClick(item: TaskInfo) {
 }
 
 const { refreshTab } = useTabs();
+
+// 由于失去焦点浮层会消失 使用v-model选择人员完毕后强制显示
+const popoverOpen = ref(false);
+const selectedUserList = ref<User[]>([]);
+function handleFinish(userList: User[]) {
+  popoverOpen.value = true;
+  selectedUserList.value = userList;
+  formData.value.createByIds = userList.map((item) => item.userId);
+}
 </script>
 
 <template>
@@ -155,9 +168,29 @@ const { refreshTab } = useTabs();
             <a-button @click="reload(true)">
               <RedoOutlined />
             </a-button>
-            <Popover placement="rightTop" title="搜索" trigger="click">
+            <Popover
+              v-model:open="popoverOpen"
+              :get-popup-container="getPopupContainer"
+              placement="rightTop"
+              title="搜索"
+              trigger="click"
+            >
               <template #content>
-                <Form>
+                <Form
+                  :colon="false"
+                  :label-col="{ span: 6 }"
+                  :model="formData"
+                  autocomplete="off"
+                  class="w-[270px]"
+                  layout="vertical"
+                  @finish="() => reload(false)"
+                >
+                  <FormItem label="申请人">
+                    <CopyComponent
+                      v-model:user-list="selectedUserList"
+                      @finish="handleFinish"
+                    />
+                  </FormItem>
                   <FormItem label="任务名称">
                     <Input
                       v-model:value="formData.nodeName"
@@ -171,10 +204,14 @@ const { refreshTab } = useTabs();
                     />
                   </FormItem>
                   <FormItem>
-                    <a-button type="primary" @click="reload(false)">
-                      搜索
-                    </a-button>
-                    <a-button class="ml-2" @click="reload(true)">重置</a-button>
+                    <div class="flex">
+                      <a-button block html-type="submit" type="primary">
+                        搜索
+                      </a-button>
+                      <a-button block class="ml-2" @click="reload(true)">
+                        重置
+                      </a-button>
+                    </div>
                   </FormItem>
                 </Form>
               </template>
@@ -199,6 +236,12 @@ const { refreshTab } = useTabs();
             />
           </template>
           <Empty v-else :image="emptyImage" />
+          <div
+            v-if="isLoadComplete"
+            class="flex items-center justify-center text-[14px] opacity-50"
+          >
+            没有更多数据了
+          </div>
           <!-- 遮罩loading层 -->
           <div
             v-if="loading"
