@@ -6,7 +6,7 @@ import { computed, type PropType } from 'vue';
 
 import { useVbenModal, VbenAvatar } from '@vben/common-ui';
 
-import { AvatarGroup, Tooltip } from 'ant-design-vue';
+import { Avatar, AvatarGroup, Tooltip } from 'ant-design-vue';
 
 import { userSelectModal } from '.';
 
@@ -73,7 +73,7 @@ const displayedList = computed(() => {
       >
         <Avatar
           v-if="userListModel.length > ellipseNumber"
-          class="bg-primary flex size-[36px] cursor-pointer items-center justify-center rounded-full border text-white"
+          class="bg-primary size-[36px] cursor-pointer rounded-full border text-white"
         >
           ...
         </Avatar>
