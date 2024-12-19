@@ -25,7 +25,7 @@ const emit = defineEmits<{
 
 const [BasicModal, modalApi] = useVbenModal({
   title: '选择人员',
-  class: 'w-[1000px]',
+  class: 'w-[1050px]',
   fullscreenButton: false,
   onConfirm: handleSubmit,
   async onOpened() {
@@ -67,7 +67,6 @@ const formOptions: VbenFormProps = {
     await formApi.resetForm();
     const formValues = formApi.form.values;
     formApi.setLatestSubmissionValues(formValues);
-    await rightTableApi.grid.loadData([]);
     await reload(formValues);
   },
 };
@@ -103,7 +102,9 @@ const gridOptions: VxeGridProps = {
   ],
   height: 'auto',
   keepSource: true,
-  pagerConfig: {},
+  pagerConfig: {
+    layouts: ['PrevPage', 'Number', 'NextPage', 'Sizes', 'Total'],
+  },
   proxyConfig: {
     ajax: {
       query: async ({ page }, formValues = {}) => {
@@ -112,6 +113,18 @@ const gridOptions: VxeGridProps = {
           formValues.deptId = selectDeptId.value[0];
         } else {
           Reflect.deleteProperty(formValues, 'deptId');
+        }
+
+        // 加载完毕需要设置选中的行
+        if (props.mode === 'multiple') {
+          const records = rightTableApi.grid.getData();
+          await tableApi.grid.setCheckboxRow(records, true);
+        }
+        if (props.mode === 'single') {
+          const records = rightTableApi.grid.getData();
+          if (records.length === 1) {
+            await tableApi.grid.setRadioRow(records[0]);
+          }
         }
 
         return await userList({
@@ -151,9 +164,15 @@ function checkBoxEvent() {
   if (props.mode !== 'multiple') {
     return;
   }
-  // 给右边表格赋值
+  /**
+   * 给右边表格赋值
+   * records拿到的是当前页的选中数据
+   * reserveRecords拿到的是其他页选中的数据
+   */
   const records = tableApi.grid.getCheckboxRecords();
-  rightTableApi.grid.loadData(records);
+  const reserveRecords = tableApi.grid.getCheckboxReserveRecords();
+  const realRecords = [...records, ...reserveRecords];
+  rightTableApi.grid.loadData(realRecords);
 }
 
 function radioEvent() {
@@ -222,6 +241,7 @@ async function handleRemoveItem(row: any) {
 function handleRemoveAll() {
   if (props.mode === 'multiple') {
     tableApi.grid.clearCheckboxRow();
+    tableApi.grid.clearCheckboxReserve();
   }
   if (props.mode === 'single') {
     tableApi.grid.clearRadioRow();
@@ -259,10 +279,10 @@ function handleSubmit() {
         @reload="() => tableApi.reload()"
         @select="handleDeptQuery"
       />
-      <div class="h-[600px] w-[420px]">
+      <div class="h-[600px] w-[450px]">
         <BasicTable />
       </div>
-      <div class="flex h-[600px] w-[360px] flex-col">
+      <div class="flex h-[600px] flex-col">
         <div class="flex w-full px-4">
           <div class="flex w-full items-center justify-between">
             <div>已选中人员</div>
