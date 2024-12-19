@@ -2,7 +2,7 @@
 <script setup lang="ts">
 import type { User } from '#/api/system/user/model';
 
-import type { PropType } from 'vue';
+import { computed, type PropType } from 'vue';
 
 import { useVbenModal, VbenAvatar } from '@vben/common-ui';
 
@@ -13,6 +13,13 @@ import { userSelectModal } from '.';
 defineOptions({
   name: 'CopyComponent',
   inheritAttrs: false,
+});
+
+const props = withDefaults(defineProps<{ ellipseNumber?: number }>(), {
+  /**
+   * 最大显示的头像数量 超过显示为省略号头像
+   */
+  ellipseNumber: 3,
 });
 
 const emit = defineEmits<{ finish: [User[]] }>();
@@ -37,13 +44,17 @@ function handleFinish(userList: User[]) {
   userListModel.value.push(...userList);
   emit('finish', userList);
 }
+
+const displayedList = computed(() => {
+  return userListModel.value.slice(0, props.ellipseNumber);
+});
 </script>
 
 <template>
   <div class="flex items-center gap-2">
-    <AvatarGroup v-if="userListModel.length > 0" class="flex-wrap">
+    <AvatarGroup v-if="userListModel.length > 0">
       <Tooltip
-        v-for="user in userListModel"
+        v-for="user in displayedList"
         :key="user.userId"
         :title="user.nickName"
         placement="top"
@@ -51,10 +62,21 @@ function handleFinish(userList: User[]) {
         <div>
           <VbenAvatar
             :alt="user.nickName"
-            class="bg-primary size-[36px] rounded-full border text-white"
+            class="bg-primary size-[36px] cursor-pointer rounded-full border text-white"
             src=""
           />
         </div>
+      </Tooltip>
+      <Tooltip
+        :title="`等${userListModel.length - props.ellipseNumber}人`"
+        placement="top"
+      >
+        <Avatar
+          v-if="userListModel.length > ellipseNumber"
+          class="bg-primary flex size-[36px] cursor-pointer items-center justify-center rounded-full border text-white"
+        >
+          ...
+        </Avatar>
       </Tooltip>
     </AvatarGroup>
     <a-button size="small" @click="handleOpen">选择人员</a-button>
