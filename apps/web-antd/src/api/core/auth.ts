@@ -4,7 +4,10 @@ import { useAppConfig } from '@vben/hooks';
 
 import { requestClient } from '#/api/request';
 
-const { clientId } = useAppConfig(import.meta.env, import.meta.env.PROD);
+const { clientId, sseEnable } = useAppConfig(
+  import.meta.env,
+  import.meta.env.PROD,
+);
 
 export namespace AuthApi {
   /**
@@ -96,6 +99,12 @@ export function doLogout() {
  * @returns void
  */
 export function seeConnectionClose() {
+  /**
+   * 未开启sse 不需要处理
+   */
+  if (!sseEnable) {
+    return;
+  }
   return requestClient.get<void>('/resource/sse/close');
 }
 
