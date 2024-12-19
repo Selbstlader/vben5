@@ -73,9 +73,9 @@ const displayedList = computed(() => {
       >
         <Avatar
           v-if="userListModel.length > ellipseNumber"
-          class="bg-primary size-[36px] cursor-pointer rounded-full border text-white"
+          class="flex size-[36px] cursor-pointer items-center justify-center rounded-full border bg-[gray] text-white"
         >
-          ...
+          +{{ userListModel.length - props.ellipseNumber }}
         </Avatar>
       </Tooltip>
     </AvatarGroup>
