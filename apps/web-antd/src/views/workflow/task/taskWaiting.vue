@@ -172,9 +172,11 @@ function handleFinish(userList: User[]) {
               v-model:open="popoverOpen"
               :get-popup-container="getPopupContainer"
               placement="rightTop"
-              title="搜索"
               trigger="click"
             >
+              <template #title>
+                <div class="w-full border-b pb-[12px] text-[16px]">搜索</div>
+              </template>
               <template #content>
                 <Form
                   :colon="false"
@@ -182,7 +184,6 @@ function handleFinish(userList: User[]) {
                   :model="formData"
                   autocomplete="off"
                   class="w-[270px]"
-                  layout="vertical"
                   @finish="() => reload(false)"
                 >
                   <FormItem label="申请人">
