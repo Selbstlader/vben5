@@ -1,6 +1,7 @@
 export * from './api-component';
 export * from './captcha';
 export * from './code-mirror';
+export * from './col-page';
 export * from './ellipsis-text';
 export * from './icon-picker';
 export * from './json-preview';
