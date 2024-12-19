@@ -60,7 +60,7 @@ onMounted(async () => {
       <div>{{ item.approveName }}</div>
       <div>{{ item.updateTime }}</div>
       <div v-if="item.message" class="rounded-lg border p-1">
-        <span class="opacity-70">{{ item.message }}</span>
+        <div class="break-all opacity-70">{{ item.message }}</div>
       </div>
       <div v-if="attachmentInfo.length > 0" class="flex flex-wrap gap-2">
         <!-- 这里下载的文件名不是原始文件名 -->
