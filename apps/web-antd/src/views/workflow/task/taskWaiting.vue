@@ -236,6 +236,12 @@ function handleFinish(userList: User[]) {
             />
           </template>
           <Empty v-else :image="emptyImage" />
+          <div
+            v-if="isLoadComplete"
+            class="flex items-center justify-center text-[14px] opacity-50"
+          >
+            没有更多数据了
+          </div>
           <!-- 遮罩loading层 -->
           <div
             v-if="loading"
