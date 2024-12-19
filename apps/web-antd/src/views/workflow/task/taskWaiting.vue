@@ -265,7 +265,7 @@ onMounted(async () => {
           </template>
           <Empty v-else :image="emptyImage" />
           <div
-            v-if="isLoadComplete"
+            v-if="isLoadComplete && taskList.length > 0"
             class="flex items-center justify-center text-[14px] opacity-50"
           >
             没有更多数据了
