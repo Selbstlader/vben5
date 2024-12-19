@@ -8,7 +8,7 @@ import { computed, onMounted, ref, useTemplateRef } from 'vue';
 
 import { Page } from '@vben/common-ui';
 import { useTabs } from '@vben/hooks';
-import { getPopupContainer } from '@vben/utils';
+import { addFullName, getPopupContainer } from '@vben/utils';
 
 import { FilterOutlined, RedoOutlined } from '@ant-design/icons-vue';
 import {
@@ -19,9 +19,11 @@ import {
   InputSearch,
   Popover,
   Spin,
+  TreeSelect,
 } from 'ant-design-vue';
 import { cloneDeep, debounce } from 'lodash-es';
 
+import { categoryTree } from '#/api/workflow/category';
 import { flowInfo } from '#/api/workflow/instance';
 import { pageByTaskWait } from '#/api/workflow/task';
 
@@ -39,6 +41,7 @@ const defaultFormData = {
   nodeName: '', // 任务名称
   flowCode: '', // 流程定义编码
   createByIds: [] as string[], // 创建人
+  category: null as null | number, // 流程分类
 };
 const formData = ref(cloneDeep(defaultFormData));
 
@@ -147,6 +150,14 @@ function handleFinish(userList: User[]) {
   selectedUserList.value = userList;
   formData.value.createByIds = userList.map((item) => item.userId);
 }
+
+const treeData = ref<any[]>([]);
+onMounted(async () => {
+  // menu
+  const tree = await categoryTree();
+  addFullName(tree, 'label', ' / ');
+  treeData.value = tree;
+});
 </script>
 
 <template>
@@ -183,7 +194,7 @@ function handleFinish(userList: User[]) {
                   :label-col="{ span: 6 }"
                   :model="formData"
                   autocomplete="off"
-                  class="w-[270px]"
+                  class="w-[300px]"
                   @finish="() => reload(false)"
                 >
                   <FormItem label="申请人">
@@ -192,6 +203,20 @@ function handleFinish(userList: User[]) {
                       v-model:user-list="selectedUserList"
                       @cancel="() => (popoverOpen = true)"
                       @finish="handleFinish"
+                    />
+                  </FormItem>
+                  <FormItem label="流程分类">
+                    <TreeSelect
+                      v-model:value="formData.category"
+                      :allow-clear="true"
+                      :field-names="{ label: 'label', value: 'id' }"
+                      :get-popup-container="getPopupContainer"
+                      :tree-data="treeData"
+                      :tree-default-expand-all="true"
+                      :tree-line="{ showLeafIcon: false }"
+                      placeholder="请选择"
+                      tree-node-filter-prop="label"
+                      tree-node-label-prop="fullName"
                     />
                   </FormItem>
                   <FormItem label="任务名称">
