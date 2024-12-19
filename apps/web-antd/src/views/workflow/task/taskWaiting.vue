@@ -157,21 +157,25 @@ const { refreshTab } = useTabs();
             </a-button>
             <Popover placement="rightTop" title="搜索" trigger="click">
               <template #content>
-                <Form>
-                  <FormItem label="任务名称">
+                <Form
+                  :model="formData"
+                  autocomplete="off"
+                  @finish="() => reload(false)"
+                >
+                  <FormItem :colon="false" label="任务名称">
                     <Input
                       v-model:value="formData.nodeName"
                       placeholder="请输入"
                     />
                   </FormItem>
-                  <FormItem label="流程编码">
+                  <FormItem :colon="false" label="流程编码">
                     <Input
                       v-model:value="formData.flowCode"
                       placeholder="请输入"
                     />
                   </FormItem>
                   <FormItem>
-                    <a-button type="primary" @click="reload(false)">
+                    <a-button html-type="submit" type="primary">
                       搜索
                     </a-button>
                     <a-button class="ml-2" @click="reload(true)">重置</a-button>
