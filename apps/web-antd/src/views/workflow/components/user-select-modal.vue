@@ -20,6 +20,13 @@ const props = withDefaults(defineProps<{ mode?: 'multiple' | 'single' }>(), {
 });
 
 const emit = defineEmits<{
+  /**
+   * 取消的事件
+   */
+  cancel: [];
+  /**
+   * 选择完成的事件
+   */
   finish: [User[]];
 }>();
 
@@ -27,6 +34,7 @@ const [BasicModal, modalApi] = useVbenModal({
   title: '选择人员',
   class: 'w-[1050px]',
   fullscreenButton: false,
+  onClosed: () => emit('cancel'),
   onConfirm: handleSubmit,
   async onOpened() {
     const { userList = [] } = modalApi.getData() as { userList: User[] };

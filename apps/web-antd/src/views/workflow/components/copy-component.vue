@@ -22,7 +22,7 @@ const props = withDefaults(defineProps<{ ellipseNumber?: number }>(), {
   ellipseNumber: 3,
 });
 
-const emit = defineEmits<{ finish: [User[]] }>();
+const emit = defineEmits<{ cancel: []; finish: [User[]] }>();
 
 const [UserSelectModal, modalApi] = useVbenModal({
   connectedComponent: userSelectModal,
@@ -80,6 +80,6 @@ const displayedList = computed(() => {
       </Tooltip>
     </AvatarGroup>
     <a-button size="small" @click="handleOpen">选择人员</a-button>
-    <UserSelectModal @finish="handleFinish" />
+    <UserSelectModal @cancel="$emit('cancel')" @finish="handleFinish" />
   </div>
 </template>

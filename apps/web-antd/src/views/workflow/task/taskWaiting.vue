@@ -187,8 +187,10 @@ function handleFinish(userList: User[]) {
                   @finish="() => reload(false)"
                 >
                   <FormItem label="申请人">
+                    <!-- 弹窗关闭后仍然显示表单浮层 -->
                     <CopyComponent
                       v-model:user-list="selectedUserList"
+                      @cancel="() => (popoverOpen = true)"
                       @finish="handleFinish"
                     />
                   </FormItem>
