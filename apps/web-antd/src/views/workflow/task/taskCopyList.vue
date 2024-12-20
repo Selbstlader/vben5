@@ -18,6 +18,7 @@ import {
   InputSearch,
   Popover,
   Spin,
+  Tooltip,
   TreeSelect,
 } from 'ant-design-vue';
 import { cloneDeep, debounce } from 'lodash-es';
@@ -169,9 +170,11 @@ onMounted(async () => {
               placeholder="流程名称搜索"
               @search="reload(false)"
             />
-            <a-button @click="reload(true)">
-              <RedoOutlined />
-            </a-button>
+            <Tooltip placement="top" title="重置">
+              <a-button @click="reload(true)">
+                <RedoOutlined />
+              </a-button>
+            </Tooltip>
             <Popover
               v-model:open="popoverOpen"
               :get-popup-container="getPopupContainer"
