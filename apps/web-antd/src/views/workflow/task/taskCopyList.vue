@@ -6,7 +6,6 @@ import type { TaskInfo } from '#/api/workflow/task/model';
 import { computed, onMounted, ref, useTemplateRef } from 'vue';
 
 import { Page } from '@vben/common-ui';
-import { useTabs } from '@vben/hooks';
 import { addFullName, getPopupContainer } from '@vben/utils';
 
 import { FilterOutlined, RedoOutlined } from '@ant-design/icons-vue';
@@ -133,8 +132,6 @@ async function handleCardClick(item: TaskInfo) {
   });
   lastSelectId.value = id;
 }
-
-const { refreshTab } = useTabs();
 
 // 由于失去焦点浮层会消失 使用v-model选择人员完毕后强制显示
 const popoverOpen = ref(false);
@@ -283,7 +280,7 @@ onMounted(async () => {
           </div>
         </div>
       </div>
-      <ApprovalPanel :task="currentTask" type="readonly" @reload="refreshTab" />
+      <ApprovalPanel :task="currentTask" type="readonly" />
     </div>
   </Page>
 </template>
