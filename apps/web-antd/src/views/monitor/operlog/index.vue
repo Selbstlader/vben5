@@ -9,10 +9,10 @@ import { $t } from '@vben/locales';
 import { Modal, Space } from 'ant-design-vue';
 
 import {
+  addSortParams,
   useVbenVxeGrid,
   vxeCheckboxChecked,
   type VxeGridProps,
-  vxeSortEvent,
 } from '#/adapter/vxe-table';
 import {
   operLogClean,
@@ -60,12 +60,14 @@ const gridOptions: VxeGridProps<OperationLog> = {
   pagerConfig: {},
   proxyConfig: {
     ajax: {
-      query: async ({ page }, formValues = {}) => {
+      query: async ({ page, sorts }, formValues = {}) => {
         const params: any = {
           pageNum: page.currentPage,
           pageSize: page.pageSize,
           ...formValues,
         };
+        // 添加排序参数
+        addSortParams(params, sorts);
         return await operLogList(params);
       },
     },
@@ -87,7 +89,8 @@ const [BasicTable, tableApi] = useVbenVxeGrid({
   formOptions,
   gridOptions,
   gridEvents: {
-    sortChange: (sortParams) => vxeSortEvent(tableApi, sortParams),
+    // 排序 重新请求接口
+    sortChange: () => tableApi.query(),
   },
 });
 

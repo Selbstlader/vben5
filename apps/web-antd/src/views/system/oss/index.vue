@@ -19,10 +19,10 @@ import {
 } from 'ant-design-vue';
 
 import {
+  addSortParams,
   useVbenVxeGrid,
   vxeCheckboxChecked,
   type VxeGridProps,
-  vxeSortEvent,
 } from '#/adapter/vxe-table';
 import { configInfoByKey } from '#/api/system/config';
 import { ossDownload, ossList, ossRemove } from '#/api/system/oss';
@@ -66,12 +66,14 @@ const gridOptions: VxeGridProps = {
   pagerConfig: {},
   proxyConfig: {
     ajax: {
-      query: async ({ page }, formValues = {}) => {
+      query: async ({ page, sorts }, formValues = {}) => {
         const params: any = {
           pageNum: page.currentPage,
           pageSize: page.pageSize,
           ...formValues,
         };
+        // 添加排序参数
+        addSortParams(params, sorts);
         return await ossList(params);
       },
     },
@@ -94,7 +96,8 @@ const [BasicTable, tableApi] = useVbenVxeGrid({
   formOptions,
   gridOptions,
   gridEvents: {
-    sortChange: (sortParams) => vxeSortEvent(tableApi, sortParams),
+    // 排序 重新请求接口
+    sortChange: () => tableApi.query(),
   },
 });
 
