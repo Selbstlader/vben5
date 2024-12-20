@@ -1,7 +1,6 @@
 <!-- eslint-disable no-use-before-define -->
 <script setup lang="ts">
 import type { User } from '#/api/system/user/model';
-import type { FlowInfoResponse } from '#/api/workflow/instance/model';
 import type { TaskInfo } from '#/api/workflow/task/model';
 
 import { computed, onMounted, ref, useTemplateRef } from 'vue';
@@ -19,12 +18,12 @@ import {
   InputSearch,
   Popover,
   Spin,
+  Tooltip,
   TreeSelect,
 } from 'ant-design-vue';
 import { cloneDeep, debounce } from 'lodash-es';
 
 import { categoryTree } from '#/api/workflow/category';
-import { flowInfo } from '#/api/workflow/instance';
 import { pageByTaskWait } from '#/api/workflow/task';
 
 import { ApprovalCard, ApprovalPanel, CopyComponent } from '../components';
@@ -119,12 +118,10 @@ const handleScroll = debounce(async (e: Event) => {
   }
 }, 200);
 
-const currentInstance = ref<FlowInfoResponse>();
-
 const lastSelectId = ref('');
 const currentTask = ref<TaskInfo>();
 async function handleCardClick(item: TaskInfo) {
-  const { id, businessId } = item;
+  const { id } = item;
   // 点击的是同一个
   if (lastSelectId.value === id) {
     return;
@@ -135,9 +132,6 @@ async function handleCardClick(item: TaskInfo) {
     item.active = item.id === id;
   });
   lastSelectId.value = id;
-
-  const resp = await flowInfo(businessId);
-  currentInstance.value = resp;
 }
 
 const { refreshTab } = useTabs();
@@ -176,9 +170,11 @@ onMounted(async () => {
               placeholder="流程名称搜索"
               @search="reload(false)"
             />
-            <a-button @click="reload(true)">
-              <RedoOutlined />
-            </a-button>
+            <Tooltip placement="top" title="重置">
+              <a-button @click="reload(true)">
+                <RedoOutlined />
+              </a-button>
+            </Tooltip>
             <Popover
               v-model:open="popoverOpen"
               :get-popup-container="getPopupContainer"
