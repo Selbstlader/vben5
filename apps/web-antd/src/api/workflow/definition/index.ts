@@ -1,27 +1,34 @@
-import type { ID, IDS, PageQuery } from '#/api/common';
+import type { ProcessDefinition } from './model';
+
+import type { ID, IDS, PageQuery, PageResult } from '#/api/common';
 
 import { requestClient } from '#/api/request';
 
 export function workflowDefinitionList(params?: PageQuery) {
-  return requestClient.get('/workflow/definition/list', { params });
+  return requestClient.get<PageResult<ProcessDefinition>>(
+    '/workflow/definition/list',
+    { params },
+  );
 }
 
 /**
  * 获取历史流程定义列表
  * @param flowCode
- * @returns
+ * @returns ProcessDefinition[]
  */
 export function getHisListByKey(flowCode: string) {
-  return requestClient.get(`/workflow/definition/getHisListByKey/${flowCode}`);
+  return requestClient.get<ProcessDefinition[]>(
+    `/workflow/definition/getHisListByKey/${flowCode}`,
+  );
 }
 
 /**
  * 获取流程定义详细信息
  * @param id id
- * @returns
+ * @returns ProcessDefinition
  */
 export function workflowDefinitionInfo(id: ID) {
-  return requestClient.get(`/workflow/definition/${id}`);
+  return requestClient.get<ProcessDefinition>(`/workflow/definition/${id}`);
 }
 
 /**

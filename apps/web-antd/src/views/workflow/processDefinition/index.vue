@@ -122,7 +122,6 @@ const router = useRouter();
  * @param disabled true为预览，false为设计
  */
 function handleDesign(row: any, disabled: boolean) {
-  console.log(row);
   router.push({
     path: '/workflow/designer',
     query: { definitionId: row.id, disabled: String(disabled) },
@@ -146,7 +145,7 @@ const [ProcessDefinitionHistoryModal, historyModalApi] = useVbenModal({
  * @param row row
  */
 function handleHistory(row: any) {
-  historyModalApi.setData({ flowCode: row.flowCode });
+  historyModalApi.setData({ flowCode: row.flowCode, currentId: row.id });
   historyModalApi.open();
 }
 
