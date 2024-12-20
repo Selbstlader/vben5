@@ -130,7 +130,6 @@ async function handleLoadInfo(task: TaskInfo | undefined) {
     currentFlowInfo.value = resp;
 
     const taskResp = await getTaskByTaskId(props.task!.id);
-    console.log('taskResp', taskResp);
     currentTask.value = taskResp;
   } catch (error) {
     console.error(error);

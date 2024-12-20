@@ -22,7 +22,6 @@ const emit = defineEmits<{ click: [string] }>();
  * TODO: 这里要优化 事件没有用到
  */
 function handleClick() {
-  console.log('click');
   const idKey = props.rowKey as keyof TaskInfo;
   emit('click', props.info[idKey]);
 }
