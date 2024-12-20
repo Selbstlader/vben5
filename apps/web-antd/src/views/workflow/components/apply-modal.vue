@@ -1,6 +1,8 @@
 <!-- 流程发起(启动)的弹窗 -->
 
 <script setup lang="ts">
+import type { CompleteTaskReqData } from '#/api/workflow/task/model';
+
 import { useVbenModal } from '@vben/common-ui';
 
 import { cloneDeep } from 'lodash-es';
@@ -57,6 +59,29 @@ const [BasicForm, formApi] = useVbenForm({
       defaultValue: ['1'],
     },
     {
+      fieldName: 'attachment',
+      component: 'FileUpload',
+      componentProps: {
+        resultField: 'ossId',
+        maxNumber: 10,
+        maxSize: 20,
+        accept: [
+          'png',
+          'jpg',
+          'jpeg',
+          'doc',
+          'docx',
+          'xlsx',
+          'xls',
+          'ppt',
+          'pdf',
+        ],
+      },
+      defaultValue: [],
+      label: '附件上传',
+      formItemClass: 'items-baseline',
+    },
+    {
       fieldName: 'flowCopyList',
       component: 'Input',
       defaultValue: [],
@@ -70,7 +95,9 @@ const [BasicForm, formApi] = useVbenForm({
 async function handleSubmit() {
   try {
     modalApi.modalLoading(true);
-    const { messageType, flowCopyList } = cloneDeep(await formApi.getValues());
+    const { messageType, flowCopyList, attachment } = cloneDeep(
+      await formApi.getValues(),
+    );
     const { taskId, taskVariables, variables } =
       modalApi.getData() as ModalProps;
     // 需要转换数据 抄送人员
@@ -78,14 +105,15 @@ async function handleSubmit() {
       userId: item.userId,
       userName: item.nickName,
     }));
-    const data = {
+    const requestData = {
+      fileId: attachment.join(','),
       messageType,
       flowCopyList: flowCCList,
       taskId,
       taskVariables,
       variables,
-    };
-    await completeTask(data);
+    } as CompleteTaskReqData;
+    await completeTask(requestData);
     modalApi.close();
     emit('complete');
   } catch (error) {
