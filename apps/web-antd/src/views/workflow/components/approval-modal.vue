@@ -94,7 +94,7 @@ interface ModalProps {
 }
 
 const [BasicModal, modalApi] = useVbenModal({
-  title: '审批驳回',
+  title: '审批通过',
   fullscreenButton: false,
   class: 'min-h-[365px]',
   onConfirm: handleSubmit,
