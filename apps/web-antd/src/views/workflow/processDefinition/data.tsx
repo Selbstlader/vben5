@@ -3,7 +3,7 @@ import type { VxeGridProps } from '#/adapter/vxe-table';
 import { type FormSchemaGetter } from '#/adapter/form';
 import { OptionsTag } from '#/components/table';
 
-import { activityStatusOptions, publishStatusOptions } from './constant';
+import { publishStatusOptions } from './constant';
 
 export const querySchema: FormSchemaGetter = () => [
   {
@@ -38,18 +38,10 @@ export const columns: VxeGridProps['columns'] = [
   },
   {
     field: 'activityStatus',
-    title: '状态',
+    title: '激活状态',
     minWidth: 100,
     slots: {
-      default: ({ row }) => {
-        const cellValue = row.activityStatus;
-        return (
-          <OptionsTag
-            options={activityStatusOptions as any}
-            value={cellValue}
-          />
-        );
-      },
+      default: 'activityStatus',
     },
   },
   {

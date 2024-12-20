@@ -8,7 +8,7 @@ import { Page, useVbenModal, type VbenFormProps } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 import { getVxePopupContainer } from '@vben/utils';
 
-import { message, Modal, Popconfirm, Space } from 'ant-design-vue';
+import { message, Modal, Popconfirm, Space, Switch } from 'ant-design-vue';
 
 import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
 import { vxeCheckboxChecked } from '#/adapter/vxe-table';
@@ -23,7 +23,6 @@ import {
 import { downloadByData } from '#/utils/file/download';
 
 import CategoryTree from './category-tree.vue';
-import { ActivityStatusEnum } from './constant';
 import { columns, querySchema } from './data';
 import processDefinitionDeployModal from './process-definition-deploy-modal.vue';
 import processDefinitionHistoryModal from './process-definition-history-modal.vue';
@@ -132,9 +131,15 @@ function handleDesign(row: any, disabled: boolean) {
  * 激活/挂起流程
  * @param row row
  */
-async function handleActive(row: any) {
-  await workflowDefinitionActive(row.id, !row.activityStatus);
-  await tableApi.query();
+async function handleActive(row: any, status: boolean | number | string) {
+  const lastStatus = status === 1 ? 0 : 1;
+  try {
+    await workflowDefinitionActive(row.id, !!status);
+    await tableApi.query();
+  } catch (error) {
+    row.activityStatus = lastStatus;
+    console.error(error);
+  }
 }
 
 const [ProcessDefinitionHistoryModal, historyModalApi] = useVbenModal({
@@ -258,25 +263,19 @@ function handleDeploy() {
             </a-button>
           </Space>
         </template>
+        <template #activityStatus="{ row }">
+          <Switch
+            v-model:checked="row.activityStatus"
+            :checked-value="1"
+            :unchecked-value="0"
+            checked-children="激活"
+            un-checked-children="挂起"
+            @change="(status) => handleActive(row, status)"
+          />
+        </template>
         <template #action="{ row }">
           <div class="flex flex-col gap-1">
             <div>
-              <a-button
-                v-if="row.activityStatus === ActivityStatusEnum.Active"
-                size="small"
-                type="link"
-                @click="() => handleActive(row)"
-              >
-                挂起流程
-              </a-button>
-              <a-button
-                v-if="row.activityStatus === ActivityStatusEnum.Suspended"
-                size="small"
-                type="link"
-                @click="() => handleActive(row)"
-              >
-                激活流程
-              </a-button>
               <a-button size="small" type="link" @click="handleHistory(row)">
                 历史版本
               </a-button>

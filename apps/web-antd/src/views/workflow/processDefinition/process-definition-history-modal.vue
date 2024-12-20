@@ -7,7 +7,7 @@ import { useVbenModal } from '@vben/common-ui';
 import { useVbenVxeGrid, type VxeGridProps } from '@vben/plugins/vxe-table';
 import { getVxePopupContainer } from '@vben/utils';
 
-import { Popconfirm } from 'ant-design-vue';
+import { Popconfirm, Switch } from 'ant-design-vue';
 
 import {
   getHisListByKey,
@@ -17,7 +17,6 @@ import {
   workflowDefinitionPublish,
 } from '#/api/workflow/definition';
 
-import { ActivityStatusEnum } from './constant';
 import { columns } from './data';
 
 const [BasicModal, modalApi] = useVbenModal({
@@ -111,9 +110,15 @@ async function handleCopy(row: any) {
  * 激活/挂起流程
  * @param row row
  */
-async function handleActive(row: any) {
-  await workflowDefinitionActive(row.id, !row.activityStatus);
-  await tableApi.query();
+async function handleActive(row: any, status: boolean | number | string) {
+  const lastStatus = status === 1 ? 0 : 1;
+  try {
+    await workflowDefinitionActive(row.id, !!status);
+    await tableApi.query();
+  } catch (error) {
+    row.activityStatus = lastStatus;
+    console.error(error);
+  }
 }
 </script>
 
@@ -121,25 +126,19 @@ async function handleActive(row: any) {
   <BasicModal>
     <!-- TODO: 添加操作列 -->
     <BasicTable>
+      <template #activityStatus="{ row }">
+        <Switch
+          v-model:checked="row.activityStatus"
+          :checked-value="1"
+          :unchecked-value="0"
+          checked-children="激活"
+          un-checked-children="挂起"
+          @change="(status) => handleActive(row, status)"
+        />
+      </template>
       <template #action="{ row }">
         <div class="flex flex-col gap-1">
           <div>
-            <a-button
-              v-if="row.activityStatus === ActivityStatusEnum.Active"
-              size="small"
-              type="link"
-              @click="() => handleActive(row)"
-            >
-              挂起流程
-            </a-button>
-            <a-button
-              v-if="row.activityStatus === ActivityStatusEnum.Suspended"
-              size="small"
-              type="link"
-              @click="() => handleActive(row)"
-            >
-              激活流程
-            </a-button>
             <Popconfirm
               :get-popup-container="getVxePopupContainer"
               placement="left"
