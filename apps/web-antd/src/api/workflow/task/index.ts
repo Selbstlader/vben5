@@ -97,7 +97,7 @@ export function getTaskByTaskId(taskId: string) {
  * 终止任务
  * @param data
  */
-export function terminationTask(data: { taskId: string }) {
+export function terminationTask(data: { comment?: string; taskId: string }) {
   return requestClient.postWithMsg<void>(
     '/workflow/task/terminationTask',
     data,

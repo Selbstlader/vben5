@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="tsx">
 import type { User } from '#/api/core/user';
 import type { FlowInfoResponse } from '#/api/workflow/instance/model';
 import type { TaskInfo } from '#/api/workflow/task/model';
@@ -46,6 +46,7 @@ import {
   ApprovalTimeline,
   flowInterfereModal,
 } from '.';
+import { approveWithReasonModal } from './helper';
 import userSelectModal from './user-select-modal.vue';
 
 defineOptions({
@@ -205,18 +206,15 @@ function handleRejection() {
   });
   rejectionModalApi.open();
 }
-
 /**
  * 审批终止
  */
 function handleTermination() {
-  Modal.confirm({
+  approveWithReasonModal({
     title: '审批终止',
-    content: '确定终止当前审批流程吗？',
-    centered: true,
-    okButtonProps: { danger: true },
-    onOk: async () => {
-      await terminationTask({ taskId: props.task!.id });
+    description: '确定终止当前审批流程吗？',
+    onOk: async (reason) => {
+      await terminationTask({ taskId: props.task!.id, comment: reason });
       emit('reload');
     },
   });
@@ -246,13 +244,12 @@ const [DelegationModal, delegationModalApi] = useVbenModal({
 function handleDelegation(userList: User[]) {
   if (userList.length === 0) return;
   const current = userList[0];
-  Modal.confirm({
+  approveWithReasonModal({
     title: '委托',
-    content: `确定委托给${current?.nickName}吗?`,
-    centered: true,
-    onOk: async () => {
+    description: `确定委托给[${current?.nickName}]吗?`,
+    onOk: async (reason) => {
       await taskOperation(
-        { taskId: props.task!.id, userId: current!.userId },
+        { taskId: props.task!.id, userId: current!.userId, message: reason },
         'delegateTask',
       );
       emit('reload');
@@ -269,13 +266,12 @@ const [TransferModal, transferModalApi] = useVbenModal({
 function handleTransfer(userList: User[]) {
   if (userList.length === 0) return;
   const current = userList[0];
-  Modal.confirm({
+  approveWithReasonModal({
     title: '转办',
-    content: `确定转办给${current?.nickName}吗?`,
-    centered: true,
-    onOk: async () => {
+    description: `确定转办给[${current?.nickName}]吗?`,
+    onOk: async (reason) => {
       await taskOperation(
-        { taskId: props.task!.id, userId: current!.userId },
+        { taskId: props.task!.id, userId: current!.userId, message: reason },
         'transferTask',
       );
       emit('reload');
