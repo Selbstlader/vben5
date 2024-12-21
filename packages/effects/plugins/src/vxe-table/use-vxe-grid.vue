@@ -246,7 +246,11 @@ async function init() {
   const autoLoad = defaultGridOptions.proxyConfig?.autoLoad;
   const enableProxyConfig = options.value.proxyConfig?.enabled;
   if (enableProxyConfig && autoLoad) {
-    props.api.grid.commitProxy?.('_init', formApi.form?.values ?? {});
+    // 第一次拿到的是readonly的数据 如果需要修改 需要cloneDeep
+    props.api.grid.commitProxy?.(
+      '_init',
+      cloneDeep(formApi.form?.values) ?? {},
+    );
     // props.api.reload(formApi.form?.values ?? {});
   }
 
