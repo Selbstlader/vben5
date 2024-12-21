@@ -141,11 +141,12 @@ export function backProcess(data: any) {
 
 /**
  * 获取可驳回节点
- * @param instanceId 实例id
+ * @param definitionId 流程定义ID
+ * @param nodeCode 当前节点编码
  */
-export function getBackTaskNode(instanceId: string) {
+export function getBackTaskNode(definitionId: string, nodeCode: string) {
   return requestClient.get<{ nodeCode: string; nodeName: string }[]>(
-    `/workflow/task/getBackTaskNode/${instanceId}`,
+    `/workflow/task/getBackTaskNode/${definitionId}/${nodeCode}`,
   );
 }
 

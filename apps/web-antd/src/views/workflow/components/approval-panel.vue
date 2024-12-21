@@ -200,7 +200,8 @@ const [RejectionModal, rejectionModalApi] = useVbenModal({
 function handleRejection() {
   rejectionModalApi.setData({
     taskId: props.task?.id,
-    instanceId: props.task?.instanceId,
+    definitionId: props.task?.definitionId,
+    nodeCode: props.task?.nodeCode,
   });
   rejectionModalApi.open();
 }
