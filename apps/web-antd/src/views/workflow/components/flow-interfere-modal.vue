@@ -116,7 +116,7 @@ function handleReductionSignature(userList: User[]) {
   const userIds = userList.map((user) => user.userId);
   Modal.confirm({
     title: '提示',
-    content: '确认加签吗?',
+    content: '确认减签吗?',
     centered: true,
     onOk: async () => {
       await taskOperation(
