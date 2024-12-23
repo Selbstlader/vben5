@@ -1,4 +1,4 @@
-<script setup lang="tsx">
+<script setup lang="ts">
 import type { User } from '#/api/core/user';
 import type { FlowInfoResponse } from '#/api/workflow/instance/model';
 import type { TaskInfo } from '#/api/workflow/task/model';
