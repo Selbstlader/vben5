@@ -9,7 +9,7 @@ import dayjs from 'dayjs';
 import { OptionsTag } from '#/components/table';
 import { renderDict } from '#/utils/render';
 
-const leaveTypeOptions = [
+export const leaveTypeOptions = [
   { label: '病假', value: '1' },
   { label: '事假', value: '2' },
   { label: '年假', value: '3' },

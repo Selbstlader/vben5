@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import type { LeaveVO } from './api/model';
+
 import type { StartWorkFlowReqData } from '#/api/workflow/task/model';
 
-import { computed, onMounted, useTemplateRef } from 'vue';
+import { computed, onMounted, ref, useTemplateRef } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { useVbenModal } from '@vben/common-ui';
@@ -16,6 +18,7 @@ import { startWorkFlow } from '#/api/workflow/task';
 import { applyModal } from '../components';
 import { leaveAdd, leaveInfo, leaveUpdate } from './api';
 import { modalSchema } from './data';
+import LeaveDescription from './leave-description.vue';
 
 const route = useRoute();
 const readonly = route.query?.readonly === 'true';
@@ -45,11 +48,16 @@ const [BasicForm, formApi] = useVbenForm({
   wrapperClass: 'grid-cols-2',
 });
 
+const leaveDescription = ref<LeaveVO>();
+const showDescription = computed(() => {
+  return readonly && leaveDescription.value;
+});
 const cardRef = useTemplateRef('cardRef');
 onMounted(async () => {
   // 只读 获取信息赋值
   if (id) {
     const resp = await leaveInfo(id);
+    leaveDescription.value = resp;
     await formApi.setValues(resp);
     const dateRange = [dayjs(resp.startDate), dayjs(resp.endDate)];
     await formApi.setFieldValue('dateRange', dateRange);
@@ -153,7 +161,9 @@ function handleComplete() {
 <template>
   <Card ref="cardRef">
     <div id="leave-form">
-      <BasicForm />
+      <!-- 使用v-if会影响生命周期 -->
+      <BasicForm v-show="!showDescription" />
+      <LeaveDescription v-if="showDescription" :data="leaveDescription!" />
       <div v-if="showActionBtn" class="flex justify-end gap-2">
         <a-button @click="handleTempSave">暂存</a-button>
         <a-button type="primary" @click="handleStartWorkFlow">提交</a-button>
