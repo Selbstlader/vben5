@@ -137,8 +137,8 @@ function handleToSettings() {
 
 const preview = ref(false);
 onMounted(async () => {
-  const resp = await configInfoByKey('sys.oss.previewListResource');
-  preview.value = Boolean(resp);
+  const previewStr = await configInfoByKey('sys.oss.previewListResource');
+  preview.value = previewStr === 'true';
 });
 
 function isImageFile(ext: string) {
