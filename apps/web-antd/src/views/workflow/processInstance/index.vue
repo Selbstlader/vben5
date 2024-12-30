@@ -170,7 +170,16 @@ function handleInfo(row: any) {
         @reload="() => tableApi.reload()"
         @select="() => tableApi.reload()"
       />
-      <BasicTable class="flex-1 overflow-hidden" table-title="流程定义列表">
+      <BasicTable class="flex-1 overflow-hidden">
+        <template #toolbar-actions>
+          <RadioGroup
+            v-model:value="currentType"
+            :options="typeOptions"
+            button-style="solid"
+            option-type="button"
+            @change="handleTypeChange"
+          />
+        </template>
         <template #toolbar-tools>
           <Space>
             <a-button
@@ -182,13 +191,6 @@ function handleInfo(row: any) {
             >
               {{ $t('pages.common.delete') }}
             </a-button>
-            <RadioGroup
-              v-model:value="currentType"
-              :options="typeOptions"
-              button-style="solid"
-              option-type="button"
-              @change="handleTypeChange"
-            />
           </Space>
         </template>
         <template #action="{ row }">
