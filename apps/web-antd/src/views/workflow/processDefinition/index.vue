@@ -1,18 +1,28 @@
+<!-- eslint-disable no-use-before-define -->
 <script setup lang="ts">
 import type { Recordable } from '@vben/types';
 
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { Page, useVbenModal, type VbenFormProps } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 import { getVxePopupContainer } from '@vben/utils';
 
-import { message, Modal, Popconfirm, Space, Switch } from 'ant-design-vue';
+import {
+  message,
+  Modal,
+  Popconfirm,
+  type RadioChangeEvent,
+  RadioGroup,
+  Space,
+  Switch,
+} from 'ant-design-vue';
 
 import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
 import { vxeCheckboxChecked } from '#/adapter/vxe-table';
 import {
+  unPublishList,
   workflowDefinitionActive,
   workflowDefinitionCopy,
   workflowDefinitionDelete,
@@ -25,7 +35,6 @@ import { downloadByData } from '#/utils/file/download';
 import CategoryTree from './category-tree.vue';
 import { columns, querySchema } from './data';
 import processDefinitionDeployModal from './process-definition-deploy-modal.vue';
-import processDefinitionHistoryModal from './process-definition-history-modal.vue';
 import processDefinitionModal from './process-definition-modal.vue';
 
 // 左边部门用
@@ -42,7 +51,6 @@ const formOptions: VbenFormProps = {
   wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
   handleReset: async () => {
     selectedCode.value = [];
-    // eslint-disable-next-line no-use-before-define
     const { formApi, reload } = tableApi;
     await formApi.resetForm();
     const formValues = formApi.form.values;
@@ -74,7 +82,7 @@ const gridOptions: VxeGridProps = {
           Reflect.deleteProperty(formValues, 'category');
         }
 
-        return await workflowDefinitionList({
+        return await currentTableApi.value({
           pageNum: page.currentPage,
           pageSize: page.pageSize,
           ...formValues,
@@ -94,6 +102,23 @@ const [BasicTable, tableApi] = useVbenVxeGrid({
   formOptions,
   gridOptions,
 });
+
+// 左边的切换
+const statusOptions = [
+  { label: '全部流程', value: 1 },
+  { label: '未发布流程', value: 0 },
+];
+const currentStatus = ref(1);
+const currentTableApi = computed(() => {
+  if (currentStatus.value === 1) {
+    return workflowDefinitionList;
+  }
+  return unPublishList;
+});
+async function handleStatusChange(e: RadioChangeEvent) {
+  currentStatus.value = e.target.value as number;
+  await tableApi.reload();
+}
 
 async function handleDelete(row: Recordable<any>) {
   await workflowDefinitionDelete(row.id);
@@ -140,18 +165,6 @@ async function handleActive(row: any, status: boolean | number | string) {
     row.activityStatus = lastStatus;
     console.error(error);
   }
-}
-
-const [ProcessDefinitionHistoryModal, historyModalApi] = useVbenModal({
-  connectedComponent: processDefinitionHistoryModal,
-});
-/**
- * 历史版本
- * @param row row
- */
-function handleHistory(row: any) {
-  historyModalApi.setData({ flowCode: row.flowCode, currentId: row.id });
-  historyModalApi.open();
 }
 
 /**
@@ -239,7 +252,16 @@ function handleDeploy() {
         @reload="() => tableApi.reload()"
         @select="() => tableApi.reload()"
       />
-      <BasicTable class="flex-1 overflow-hidden" table-title="流程定义列表">
+      <BasicTable class="flex-1 overflow-hidden">
+        <template #toolbar-actions>
+          <RadioGroup
+            v-model:value="currentStatus"
+            :options="statusOptions"
+            button-style="solid"
+            option-type="button"
+            @change="handleStatusChange"
+          />
+        </template>
         <template #toolbar-tools>
           <Space>
             <a-button
@@ -276,8 +298,8 @@ function handleDeploy() {
         <template #action="{ row }">
           <div class="flex flex-col gap-1">
             <div>
-              <a-button size="small" type="link" @click="handleHistory(row)">
-                历史版本
+              <a-button size="small" type="link" @click="handleEdit(row)">
+                编辑信息
               </a-button>
               <Popconfirm
                 :get-popup-container="getVxePopupContainer"
@@ -308,6 +330,8 @@ function handleDeploy() {
                   发布流程
                 </a-button>
               </Popconfirm>
+            </div>
+            <div>
               <Popconfirm
                 :get-popup-container="getVxePopupContainer"
                 :title="`确认复制流程[${row.flowName}]?`"
@@ -316,11 +340,6 @@ function handleDeploy() {
               >
                 <a-button size="small" type="link"> 复制流程 </a-button>
               </Popconfirm>
-            </div>
-            <div>
-              <a-button size="small" type="link" @click="handleEdit(row)">
-                编辑信息
-              </a-button>
               <a-button size="small" type="link" @click="handleExportXml(row)">
                 导出流程
               </a-button>
@@ -331,6 +350,5 @@ function handleDeploy() {
     </div>
     <ProcessDefinitionModal @reload="() => tableApi.reload()" />
     <ProcessDefinitionDeployModal @reload="() => tableApi.reload()" />
-    <ProcessDefinitionHistoryModal />
   </Page>
 </template>

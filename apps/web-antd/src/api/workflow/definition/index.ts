@@ -4,9 +4,26 @@ import type { ID, IDS, PageQuery, PageResult } from '#/api/common';
 
 import { requestClient } from '#/api/request';
 
+/**
+ * 全部的流程定义
+ * @param params 查询参数
+ * @returns 分页
+ */
 export function workflowDefinitionList(params?: PageQuery) {
   return requestClient.get<PageResult<ProcessDefinition>>(
     '/workflow/definition/list',
+    { params },
+  );
+}
+
+/**
+ * 未发布的流程定义
+ * @param params 查询参数
+ * @returns 分页
+ */
+export function unPublishList(params?: PageQuery) {
+  return requestClient.get<PageResult<ProcessDefinition>>(
+    '/workflow/definition/unPublishList',
     { params },
   );
 }
