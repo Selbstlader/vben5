@@ -1,6 +1,5 @@
-import { computed } from 'vue';
-
 import { diff } from '@vben-core/shared/utils';
+import { computed } from 'vue';
 
 import { preferencesManager } from './preferences';
 import { isDarkTheme } from './update-css-variables';
@@ -111,7 +110,8 @@ function usePreferences() {
       isMixedNav.value ||
       isSideMixedNav.value ||
       isSideNav.value ||
-      isHeaderMixedNav.value
+      isHeaderMixedNav.value ||
+      isHeaderSidebarNav.value
     );
   });
 
