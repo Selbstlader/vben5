@@ -1,14 +1,6 @@
 <script setup lang="ts">
 import type { Role } from '#/api/system/user/model';
 
-import { computed, h, ref } from 'vue';
-
-import { useVbenDrawer } from '@vben/common-ui';
-import { $t } from '@vben/locales';
-import { addFullName, cloneDeep, getPopupContainer } from '@vben/utils';
-
-import { Tag } from 'ant-design-vue';
-
 import { useVbenForm } from '#/adapter/form';
 import { configInfoByKey } from '#/api/system/config';
 import { postOptionSelect } from '#/api/system/post';
@@ -19,6 +11,11 @@ import {
   userUpdate,
 } from '#/api/system/user';
 import { authScopeOptions } from '#/views/system/role/data';
+import { useVbenDrawer } from '@vben/common-ui';
+import { $t } from '@vben/locales';
+import { addFullName, cloneDeep, getPopupContainer } from '@vben/utils';
+import { Tag } from 'ant-design-vue';
+import { computed, h, onMounted, ref } from 'vue';
 
 import { drawerSchema } from './data';
 
@@ -117,13 +114,20 @@ async function setupDeptSelect() {
   ]);
 }
 
+const defaultPassword = ref('');
+onMounted(async () => {
+  const password = await configInfoByKey('sys.user.initPassword');
+  if (password) {
+    defaultPassword.value = password;
+  }
+});
+
 /**
  * 新增时候 从参数设置获取默认密码
  */
 async function loadDefaultPassword(update: boolean) {
-  if (!update) {
-    const defaultPassword = await configInfoByKey('sys.user.initPassword');
-    defaultPassword && formApi.setFieldValue('password', defaultPassword);
+  if (!update && defaultPassword.value) {
+    formApi.setFieldValue('password', defaultPassword.value);
   }
 }
 
