@@ -48,7 +48,7 @@ const gridOptions: VxeGridProps = {
           return (
             <div>
               <Checkbox onChange={onChange} v-model:checked={row.checked}>
-                {row.menuName}
+                {$t(row.menuName)}
               </Checkbox>
             </div>
           );
