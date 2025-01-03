@@ -1,13 +1,9 @@
-import { h, type Ref } from 'vue';
+import type { VxeGridDefines, VxeGridPropTypes } from '@vben/plugins/vxe-table';
+import type { Ref } from 'vue';
 
-import {
-  setupVbenVxeTable,
-  useVbenVxeGrid,
-  type VxeGridDefines,
-  type VxeGridPropTypes,
-} from '@vben/plugins/vxe-table';
-
+import { setupVbenVxeTable, useVbenVxeGrid } from '@vben/plugins/vxe-table';
 import { Button, Image } from 'ant-design-vue';
+import { h } from 'vue';
 
 import { useVbenForm } from './form';
 
