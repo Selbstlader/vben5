@@ -90,8 +90,25 @@ watch(
       value = v;
       const withUrlList: UploadProps['fileList'] = [];
       for (const item of _fileList) {
-        // 非ossId情况
-        if (props.resultField !== 'ossId') {
+        // ossId情况
+        if (props.resultField === 'ossId') {
+          const resp = await ossInfo([item]);
+          if (item && isString(item)) {
+            withUrlList.push({
+              uid: item, // ossId作为uid 方便getValue获取
+              name: item.slice(Math.max(0, item.lastIndexOf('/') + 1)),
+              status: 'done',
+              url: resp?.[0]?.url,
+            });
+          } else if (item && isObject(item)) {
+            withUrlList.push({
+              ...(item as any),
+              uid: item,
+              url: resp?.[0]?.url,
+            });
+          }
+        } else {
+          // 非ossId情况
           if (item && isString(item)) {
             withUrlList.push({
               uid: uniqueId(),
@@ -102,23 +119,6 @@ watch(
           } else if (item && isObject(item)) {
             withUrlList.push(item);
           }
-          return;
-        }
-        // ossId情况
-        const resp = await ossInfo([item]);
-        if (item && isString(item)) {
-          withUrlList.push({
-            uid: item, // ossId作为uid 方便getValue获取
-            name: item.slice(Math.max(0, item.lastIndexOf('/') + 1)),
-            status: 'done',
-            url: resp?.[0]?.url,
-          });
-        } else if (item && isObject(item)) {
-          withUrlList.push({
-            ...(item as any),
-            uid: item,
-            url: resp?.[0]?.url,
-          });
         }
       }
       fileList.value = withUrlList;
