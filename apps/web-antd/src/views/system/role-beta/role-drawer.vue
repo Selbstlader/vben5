@@ -6,7 +6,7 @@ import { MenuSelectTable } from '#/components/tree';
 import { useVbenDrawer } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 import { cloneDeep, eachTree } from '@vben/utils';
-import { computed, ref } from 'vue';
+import { computed, nextTick, ref } from 'vue';
 
 import { drawerSchema } from './data';
 
@@ -34,7 +34,6 @@ const menuTree = ref<any[]>([]);
 async function setupMenuTree(id?: number | string) {
   if (id) {
     const resp = await roleMenuTreeSelect(id);
-    formApi.setFieldValue('menuIds', resp.checkedKeys);
     const menus = resp.menus;
     // i18n处理
     eachTree(menus, (node) => {
@@ -42,15 +41,20 @@ async function setupMenuTree(id?: number | string) {
     });
     // 设置菜单信息
     menuTree.value = resp.menus;
+    // keys依赖于menu 需要先加载menu
+    await nextTick();
+    await formApi.setFieldValue('menuIds', resp.checkedKeys);
   } else {
     const resp = await menuTreeSelect();
-    formApi.setFieldValue('menuIds', []);
     // i18n处理
     eachTree(resp, (node) => {
       node.label = $t(node.label);
     });
     // 设置菜单信息
     menuTree.value = resp;
+    // keys依赖于menu 需要先加载menu
+    await nextTick();
+    await formApi.setFieldValue('menuIds', []);
   }
 }
 
@@ -125,7 +129,6 @@ function handleMenuCheckStrictlyChange(value: boolean) {
         <div class="h-[400px] w-full">
           <!-- check-strictly为readonly 不能通过v-model绑定 -->
           <MenuSelectTable
-            v-if="menuTree.length > 0"
             ref="menuSelectRef"
             v-model:checked-keys="slotProps.value"
             :association="formApi.form.values.menuCheckStrictly"
