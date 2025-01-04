@@ -126,7 +126,7 @@ const gridOptions: VxeGridProps = {
     // 自定义列
     custom: false,
     // 最大化
-    zoom: false,
+    zoom: true,
     // 刷新
     refresh: false,
   },
@@ -286,10 +286,11 @@ onMounted(() => {
     });
   });
 
+  /**
+   * checkedKeys依赖menus 要在外部确保menus先加载
+   */
   watch(checkedKeys, (value) => {
-    console.log(props.menus);
     const allCheckedKeys = uniq([...value]);
-    console.log(allCheckedKeys);
     // 赋值
     const records = tableApi.grid.getData();
     setCheckedByKeys(records, allCheckedKeys, association.value);
@@ -302,13 +303,13 @@ const options = [
 ];
 
 async function handleAssociationChange() {
-  // 需要清空全部勾选
-  await tableApi.grid.clearCheckboxRow();
   // 清空全部permissions选中
   const records = tableApi.grid.getData();
   records.forEach((item) => {
     allChecked(item, false);
   });
+  // 需要清空全部勾选
+  await tableApi.grid.clearCheckboxRow();
 }
 
 /**
@@ -371,7 +372,7 @@ function getKeys(records: MenuPermissionOption[], handleChildren: boolean) {
 function getCheckedKeys() {
   // 节点关联
   if (association.value) {
-    const records = tableApi.grid.getCheckboxRecords();
+    const records = tableApi?.grid?.getCheckboxRecords?.() ?? [];
     console.log(records);
     // 子节点
     const nodeKeys = getKeys(records, true);
@@ -384,9 +385,9 @@ function getCheckedKeys() {
   // 节点独立
 
   // 勾选的行
-  const records = tableApi.grid.getCheckboxRecords();
+  const records = tableApi?.grid?.getCheckboxRecords?.() ?? [];
   // 全部数据 用于获取permissions
-  const allRecords = tableApi.grid.getData();
+  const allRecords = tableApi?.grid?.getData?.() ?? [];
   const ids = records.map((item) => item.id);
   const permissions = getKeys(allRecords, false);
   const allIds = uniq([...ids, ...permissions]);
@@ -401,7 +402,19 @@ defineExpose({
 
 <template>
   <div class="flex h-full flex-col">
-    <Alert message="beta功能" type="warning" show-icon />
+    <Alert class="mx-2 mb-2" message="beta功能" type="warning" show-icon />
+    <Alert class="mx-2" type="info" show-icon>
+      <template #message>
+        <div v-if="tableApi?.grid">
+          已选中
+          <span class="text-primary mx-1 font-semibold">
+            {{ getCheckedKeys().length }}
+          </span>
+          个节点
+        </div>
+      </template>
+    </Alert>
+
     <BasicTable>
       <template #toolbar-actions>
         <RadioGroup
@@ -414,7 +427,7 @@ defineExpose({
       </template>
       <template #toolbar-tools>
         <Space>
-          <a-button @click="getCheckedKeys">测试expose</a-button>
+          <a-button @click="getCheckedKeys">打印选中的节点</a-button>
           <a-button @click="setExpandOrCollapse(false)">
             {{ $t('pages.common.collapse') }}
           </a-button>
@@ -438,3 +451,9 @@ defineExpose({
     </BasicTable>
   </div>
 </template>
+
+<style scoped>
+:deep(.ant-alert) {
+  padding: 4px 8px;
+}
+</style>
