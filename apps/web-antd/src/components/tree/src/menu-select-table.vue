@@ -95,12 +95,12 @@ const gridOptions: VxeGridProps = {
 /**
  * 用于界面显示选中的数量
  */
-const checkedLength = ref(0);
+const checkedNum = ref(0);
 /**
  * 更新选中的数量
  */
-function updateCheckedLength() {
-  checkedLength.value = getCheckedKeys().length;
+function updateCheckedNumber() {
+  checkedNum.value = getCheckedKeys().length;
 }
 
 const [BasicTable, tableApi] = useVbenVxeGrid({
@@ -110,7 +110,7 @@ const [BasicTable, tableApi] = useVbenVxeGrid({
     checkboxChange: (params) => {
       // 节点独立 不做处理
       if (!association.value) {
-        updateCheckedLength();
+        updateCheckedNumber();
         return;
       }
       // 选中还是取消选中
@@ -119,7 +119,7 @@ const [BasicTable, tableApi] = useVbenVxeGrid({
       const record = params.row;
       // 设置所有子节点选中状态
       rowAndChildrenChecked(record, checked);
-      updateCheckedLength();
+      updateCheckedNumber();
     },
     // 全选事件
     checkboxAll: (params) => {
@@ -127,7 +127,7 @@ const [BasicTable, tableApi] = useVbenVxeGrid({
       records.forEach((item) => {
         rowAndChildrenChecked(item, params.checked);
       });
-      updateCheckedLength();
+      updateCheckedNumber();
     },
   },
 });
@@ -208,6 +208,7 @@ onMounted(() => {
       // 获取表格data 如果checkedKeys在menus的watch之前触发 这里会拿到空 导致勾选异常
       const records = tableApi.grid.getData();
       setCheckedByKeys(records, allCheckedKeys, association.value);
+      updateCheckedNumber();
     },
   );
 });
@@ -223,7 +224,7 @@ async function handleAssociationChange() {
   });
   // 需要清空全部勾选
   await tableApi.grid.clearCheckboxRow();
-  updateCheckedLength();
+  updateCheckedNumber();
   // 滚动到顶部
   await tableApi.grid.scrollTo(0, 0);
 }
@@ -256,7 +257,7 @@ function handlePermissionChange(row: any) {
     }
   }
   // 节点独立 不处理
-  updateCheckedLength();
+  updateCheckedNumber();
 }
 
 /**
@@ -341,7 +342,7 @@ defineExpose({
             <div v-if="tableApi?.grid">
               已选中
               <span class="text-primary mx-1 font-semibold">
-                {{ checkedLength }}
+                {{ checkedNum }}
               </span>
               个节点
             </div>
