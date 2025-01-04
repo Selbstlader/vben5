@@ -125,6 +125,7 @@ function handleMenuCheckStrictlyChange(value: boolean) {
         <div class="h-[400px] w-full">
           <!-- check-strictly为readonly 不能通过v-model绑定 -->
           <MenuSelectTable
+            v-if="menuTree.length > 0"
             ref="menuSelectRef"
             v-model:checked-keys="slotProps.value"
             :association="formApi.form.values.menuCheckStrictly"
