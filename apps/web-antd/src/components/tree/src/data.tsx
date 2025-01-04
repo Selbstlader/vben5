@@ -21,6 +21,11 @@ const menuTypes = {
   M: { icon: markRaw(FolderIcon), value: '目录' },
 };
 
+export const nodeOptions = [
+  { label: '节点关联', value: true },
+  { label: '节点独立', value: false },
+];
+
 export const columns: VxeGridProps['columns'] = [
   {
     type: 'checkbox',

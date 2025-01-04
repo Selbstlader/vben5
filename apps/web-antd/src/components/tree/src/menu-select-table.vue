@@ -2,15 +2,16 @@
 import type { VxeGridProps } from '#/adapter/vxe-table';
 import type { MenuOption } from '#/api/system/menu/model';
 
-import type { MenuPermissionOption, Permission } from './data';
+import type { MenuPermissionOption } from './data';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
-import { cloneDeep, eachTree, findGroupParentIds } from '@vben/utils';
+import { cloneDeep, findGroupParentIds } from '@vben/utils';
 import { Alert, Checkbox, RadioGroup, Space } from 'ant-design-vue';
-import { difference, uniq } from 'lodash-es';
+import { uniq } from 'lodash-es';
 import { nextTick, onMounted, ref, watch } from 'vue';
 
-import { columns } from './data';
+import { columns, nodeOptions } from './data';
+import { menusWithPermissions, rowAndChildrenChecked } from './helper';
 
 defineOptions({
   name: 'MenuSelectTable',
@@ -87,30 +88,9 @@ const gridOptions: VxeGridProps = {
     rowField: 'id',
     transform: false,
   },
+  // 溢出换行显示
   showOverflow: false,
 };
-
-/**
- * 设置是否全选
- * @param record 行记录
- * @param checked 是否选中
- */
-function setPermissionsChecked(record: MenuPermissionOption, checked: boolean) {
-  if (record?.permissions?.length > 0) {
-    // 全部设置为选中
-    record.permissions.forEach((permission: Permission) => {
-      permission.checked = checked;
-    });
-  }
-}
-
-// 所有子节点
-function allChecked(record: MenuPermissionOption, checked: boolean) {
-  setPermissionsChecked(record, checked);
-  record.children?.forEach((permission) => {
-    allChecked(permission as MenuPermissionOption, checked);
-  });
-}
 
 /**
  * 用于界面显示选中的数量
@@ -126,6 +106,7 @@ function updateCheckedLength() {
 const [BasicTable, tableApi] = useVbenVxeGrid({
   gridOptions,
   gridEvents: {
+    // 勾选事件
     checkboxChange: (params) => {
       // 节点独立 不做处理
       if (!association.value) {
@@ -137,13 +118,14 @@ const [BasicTable, tableApi] = useVbenVxeGrid({
       // 行
       const record = params.row;
       // 设置所有子节点选中状态
-      allChecked(record, checked);
+      rowAndChildrenChecked(record, checked);
       updateCheckedLength();
     },
+    // 全选事件
     checkboxAll: (params) => {
       const records = params.$grid.getData();
       records.forEach((item) => {
-        allChecked(item, params.checked);
+        rowAndChildrenChecked(item, params.checked);
       });
       updateCheckedLength();
     },
@@ -151,49 +133,15 @@ const [BasicTable, tableApi] = useVbenVxeGrid({
 });
 
 /**
- * void方法 会直接修改原始数据
- * 将树结构转为 tree+permissions结构
- * @param menus 后台返回的menu
- */
-function menusWithPermissions(menus: MenuOption[]) {
-  eachTree(menus, (item: MenuPermissionOption) => {
-    if (item.children && item.children.length > 0) {
-      /**
-       * 所有为按钮的节点提取出来
-       * 需要注意 这里需要过滤目录下直接是按钮的情况item.menuType !== 'M'
-       * 将按钮往children添加而非加到permissions
-       */
-      const permissions = item.children.filter(
-        (child: MenuOption) => child.menuType === 'F' && item.menuType !== 'M',
-      );
-      // 取差集
-      const diffCollection = difference(item.children, permissions);
-      // 更新后的children  即去除按钮
-      item.children = diffCollection;
-
-      // permissions作为字段添加到item
-      const permissionsArr = permissions.map((permission) => {
-        return {
-          id: permission.id,
-          label: permission.label,
-          checked: false,
-        };
-      });
-      item.permissions = permissionsArr;
-    }
-  });
-}
-
-/**
  * 设置表格选中
  * @param menus menu
  * @param keys 选中的key
- * @param handleChildren 节点独立情况 不需要处理children
+ * @param triggerOnchange 节点独立情况 不需要触发onChange(false)
  */
 function setCheckedByKeys(
   menus: MenuPermissionOption[],
   keys: (number | string)[],
-  handleChildren: boolean,
+  triggerOnchange: boolean,
 ) {
   menus.forEach((item) => {
     // 设置行选中
@@ -202,24 +150,25 @@ function setCheckedByKeys(
     }
     // 设置权限columns选中
     if (item.permissions && item.permissions.length > 0) {
+      // 遍历 设置勾选
       item.permissions.forEach((permission) => {
         if (keys.includes(permission.id)) {
           permission.checked = true;
           // 手动触发onChange来选中 节点独立情况不需要处理
-          handleChildren && handlePermissionChange(item);
+          triggerOnchange && handlePermissionChange(item);
         }
       });
     }
     // 设置children选中
     if (item.children && item.children.length > 0) {
-      setCheckedByKeys(item.children as any, keys, handleChildren);
+      setCheckedByKeys(item.children as any, keys, triggerOnchange);
     }
   });
 }
 
 onMounted(() => {
   /**
-   * 加载表格数据
+   * 加载表格数据 转为指定结构
    */
   watch(
     () => props.menus,
@@ -228,15 +177,16 @@ onMounted(() => {
       menusWithPermissions(clonedMenus);
       console.log(clonedMenus);
       await tableApi.grid.loadData(clonedMenus);
-      await nextTick();
+      // 展开全部 默认true
       if (props.defaultExpandAll) {
+        await nextTick();
         setExpandOrCollapse(true);
       }
     },
   );
 
   /**
-   * 节点关联设置表格勾选效果
+   * 节点关联变动 更新表格勾选效果
    */
   watch(association, (value) => {
     tableApi.setGridOptions({
@@ -247,33 +197,35 @@ onMounted(() => {
   });
 
   /**
-   * checkedKeys依赖menus 要在外部确保menus先加载
+   * checkedKeys依赖menus
+   * 要注意加载顺序
+   * !!!要在外部确保menus先加载!!!
    */
   watch(
     () => props.checkedKeys,
     (value) => {
       const allCheckedKeys = uniq([...value]);
-      // 赋值
+      // 获取表格data 如果checkedKeys在menus的watch之前触发 这里会拿到空 导致勾选异常
       const records = tableApi.grid.getData();
       setCheckedByKeys(records, allCheckedKeys, association.value);
     },
   );
 });
 
-const options = [
-  { label: '节点关联', value: true },
-  { label: '节点独立', value: false },
-];
-
+/**
+ * 节点关联变动 事件
+ */
 async function handleAssociationChange() {
   // 清空全部permissions选中
   const records = tableApi.grid.getData();
   records.forEach((item) => {
-    allChecked(item, false);
+    rowAndChildrenChecked(item, false);
   });
   // 需要清空全部勾选
   await tableApi.grid.clearCheckboxRow();
   updateCheckedLength();
+  // 滚动到顶部
+  await tableApi.grid.scrollTo(0, 0);
 }
 
 /**
@@ -284,6 +236,10 @@ function setExpandOrCollapse(expand: boolean) {
   tableApi.grid?.setAllTreeExpand(expand);
 }
 
+/**
+ * 权限列表 checkbox勾选的事件
+ * @param row 行
+ */
 function handlePermissionChange(row: any) {
   // 节点关联
   if (association.value) {
@@ -305,21 +261,20 @@ function handlePermissionChange(row: any) {
 
 /**
  * 获取勾选的key
- * @param records 行记录
+ * @param records 行记录列表
+ * @param addCurrent 是否添加当前行的id
  */
-function getKeys(records: MenuPermissionOption[], handleChildren: boolean) {
+function getKeys(records: MenuPermissionOption[], addCurrent: boolean) {
   const allKeys: (number | string)[] = [];
   records.forEach((item) => {
+    // 处理children
     if (item.children && item.children.length > 0) {
-      const keys = getKeys(
-        item.children as MenuPermissionOption[],
-        handleChildren,
-      );
+      const keys = getKeys(item.children as MenuPermissionOption[], addCurrent);
       allKeys.push(...keys);
     } else {
-      // 当前id
-      handleChildren && allKeys.push(item.id);
-      // 权限id
+      // 当前行的id
+      addCurrent && allKeys.push(item.id);
+      // 当前行权限id 获取已经选中的
       if (item.permissions && item.permissions.length > 0) {
         const ids = item.permissions
           .filter((m) => m.checked === true)
@@ -340,8 +295,9 @@ function getCheckedKeys() {
     const records = tableApi?.grid?.getCheckboxRecords?.() ?? [];
     // 子节点
     const nodeKeys = getKeys(records, true);
-    // 父节点
+    // 所有父节点
     const parentIds = findGroupParentIds(props.menus, nodeKeys as number[]);
+    // 拼接 去重
     const realKeys = uniq([...parentIds, ...nodeKeys]);
     return realKeys;
   }
@@ -351,12 +307,18 @@ function getCheckedKeys() {
   const records = tableApi?.grid?.getCheckboxRecords?.() ?? [];
   // 全部数据 用于获取permissions
   const allRecords = tableApi?.grid?.getData?.() ?? [];
-  const ids = records.map((item) => item.id);
-  const permissions = getKeys(allRecords, false);
-  const allIds = uniq([...ids, ...permissions]);
+  // 表格已经选中的行ids
+  const checkedIds = records.map((item) => item.id);
+  // 所有已经勾选权限的ids
+  const permissionIds = getKeys(allRecords, false);
+  // 合并 去重
+  const allIds = uniq([...checkedIds, ...permissionIds]);
   return allIds;
 }
 
+/**
+ * 暴露给外部使用 获取已选中的key
+ */
 defineExpose({
   getCheckedKeys,
 });
@@ -369,12 +331,12 @@ defineExpose({
       <template #toolbar-actions>
         <RadioGroup
           v-model:value="association"
-          :options="options"
+          :options="nodeOptions"
           button-style="solid"
           option-type="button"
           @change="handleAssociationChange"
         />
-        <Alert class="mx-2" type="info" show-icon>
+        <Alert class="mx-2" type="info">
           <template #message>
             <div v-if="tableApi?.grid">
               已选中
