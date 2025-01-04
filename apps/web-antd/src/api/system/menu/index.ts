@@ -1,6 +1,6 @@
-import type { Menu, MenuOption, MenuResp } from './model';
-
 import type { ID, IDS } from '#/api/common';
+
+import type { Menu, MenuOption, MenuResp } from './model';
 
 import { requestClient } from '#/api/request';
 
