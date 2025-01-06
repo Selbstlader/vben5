@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { MenuOption } from '#/api/system/menu/model';
+
 import { computed, nextTick, ref } from 'vue';
 
 import { useVbenDrawer } from '@vben/common-ui';
@@ -32,7 +34,7 @@ const [BasicForm, formApi] = useVbenForm({
   wrapperClass: 'grid-cols-2 gap-x-4',
 });
 
-const menuTree = ref<any[]>([]);
+const menuTree = ref<MenuOption[]>([]);
 async function setupMenuTree(id?: number | string) {
   if (id) {
     const resp = await roleMenuTreeSelect(id);
@@ -82,11 +84,7 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
   },
 });
 
-/**
- * 这里拿到的是一个数组ref
- */
 const menuSelectRef = ref<InstanceType<typeof MenuSelectTable>>();
-
 async function handleConfirm() {
   try {
     drawerApi.drawerLoading(true);
@@ -95,7 +93,7 @@ async function handleConfirm() {
       return;
     }
     // 这个用于提交
-    const menuIds = menuSelectRef.value?.getCheckedKeys() ?? [];
+    const menuIds = menuSelectRef.value?.getCheckedKeys?.() ?? [];
     // formApi.getValues拿到的是一个readonly对象，不能直接修改，需要cloneDeep
     const data = cloneDeep(await formApi.getValues());
     data.menuIds = menuIds;
@@ -128,7 +126,7 @@ function handleMenuCheckStrictlyChange(value: boolean) {
     <BasicForm>
       <template #menuIds="slotProps">
         <div class="h-[600px] w-full">
-          <!-- check-strictly为readonly 不能通过v-model绑定 -->
+          <!-- association为readonly 不能通过v-model绑定 -->
           <MenuSelectTable
             ref="menuSelectRef"
             :checked-keys="slotProps.value"

@@ -131,7 +131,7 @@ function handleMenuCheckStrictlyChange(value: boolean) {
     <BasicForm>
       <template #menuIds="slotProps">
         <div class="h-[600px] w-full">
-          <!-- check-strictly为readonly 不能通过v-model绑定 -->
+          <!-- association为readonly 不能通过v-model绑定 -->
           <MenuSelectTable
             ref="menuSelectRef"
             :checked-keys="slotProps.value"
