@@ -222,7 +222,7 @@ onMounted(() => {
       updateCheckedNumber();
 
       // 全屏引导
-      setTimeout(() => openGuide, 1000);
+      setTimeout(openGuide, 1000);
     },
   );
 });
