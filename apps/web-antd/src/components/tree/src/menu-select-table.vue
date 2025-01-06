@@ -14,7 +14,11 @@ import { uniq } from 'lodash-es';
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
 
 import { columns, nodeOptions } from './data';
-import { menusWithPermissions, rowAndChildrenChecked } from './helper';
+import {
+  menusWithPermissions,
+  rowAndChildrenChecked,
+  setPermissionsChecked,
+} from './helper';
 import { useFullScreenGuide } from './hook';
 
 defineOptions({
@@ -112,17 +116,19 @@ const [BasicTable, tableApi] = useVbenVxeGrid({
   gridEvents: {
     // 勾选事件
     checkboxChange: (params) => {
-      // 节点独立 不做处理
-      if (!association.value) {
-        updateCheckedNumber();
-        return;
-      }
       // 选中还是取消选中
       const checked = params.checked;
       // 行
       const record = params.row;
-      // 设置所有子节点选中状态
-      rowAndChildrenChecked(record, checked);
+      if (association.value) {
+        // 节点关联
+        // 设置所有子节点选中状态
+        rowAndChildrenChecked(record, checked);
+      } else {
+        // 节点独立
+        // 点行会勾选/取消全部权限  点权限不会勾选行
+        setPermissionsChecked(record, checked);
+      }
       updateCheckedNumber();
     },
     // 全选事件
