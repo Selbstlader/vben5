@@ -1,12 +1,14 @@
 <script setup lang="ts">
+import { computed, nextTick, ref } from 'vue';
+
+import { useVbenDrawer } from '@vben/common-ui';
+import { $t } from '@vben/locales';
+import { cloneDeep, eachTree } from '@vben/utils';
+
 import { useVbenForm } from '#/adapter/form';
 import { menuTreeSelect, roleMenuTreeSelect } from '#/api/system/menu';
 import { roleAdd, roleInfo, roleUpdate } from '#/api/system/role';
 import { MenuSelectTable } from '#/components/tree';
-import { useVbenDrawer } from '@vben/common-ui';
-import { $t } from '@vben/locales';
-import { cloneDeep, eachTree } from '@vben/utils';
-import { computed, nextTick, ref } from 'vue';
 
 import { drawerSchema } from './data';
 
@@ -126,7 +128,7 @@ function handleMenuCheckStrictlyChange(value: boolean) {
   <BasicDrawer :close-on-click-modal="false" :title="title" class="w-[800px]">
     <BasicForm>
       <template #menuIds="slotProps">
-        <div class="h-[400px] w-full">
+        <div class="h-[600px] w-full">
           <!-- check-strictly为readonly 不能通过v-model绑定 -->
           <MenuSelectTable
             ref="menuSelectRef"

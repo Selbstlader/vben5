@@ -15,6 +15,7 @@ import { useVbenVxeGrid } from '#/adapter/vxe-table';
 
 import { columns, nodeOptions } from './data';
 import { menusWithPermissions, rowAndChildrenChecked } from './helper';
+import { useFullScreenGuide } from './hook';
 
 defineOptions({
   name: 'MenuSelectTable',
@@ -169,6 +170,7 @@ function setCheckedByKeys(
   });
 }
 
+const { FullScreenGuide, openGuide } = useFullScreenGuide();
 onMounted(() => {
   /**
    * 加载表格数据 转为指定结构
@@ -212,6 +214,9 @@ onMounted(() => {
       const records = tableApi.grid.getData();
       setCheckedByKeys(records, allCheckedKeys, association.value);
       updateCheckedNumber();
+
+      // 全屏引导
+      setTimeout(() => openGuide, 1000);
     },
   );
 });
@@ -329,8 +334,7 @@ defineExpose({
 </script>
 
 <template>
-  <div class="flex h-full flex-col">
-    <Alert class="mx-2 mb-2" message="beta功能" type="warning" show-icon />
+  <div class="flex h-full flex-col" id="menu-select-table">
     <BasicTable>
       <template #toolbar-actions>
         <RadioGroup
@@ -354,7 +358,6 @@ defineExpose({
       </template>
       <template #toolbar-tools>
         <Space>
-          <a-button @click="getCheckedKeys">打印选中的节点</a-button>
           <a-button @click="setExpandOrCollapse(false)">
             {{ $t('pages.common.collapse') }}
           </a-button>
@@ -376,6 +379,8 @@ defineExpose({
         </div>
       </template>
     </BasicTable>
+    <!-- 全屏引导 -->
+    <FullScreenGuide />
   </div>
 </template>
 
