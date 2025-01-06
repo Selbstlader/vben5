@@ -1,14 +1,17 @@
 <script setup lang="tsx">
+import type { MenuPermissionOption } from './data';
+
 import type { VxeGridProps } from '#/adapter/vxe-table';
 import type { MenuOption } from '#/api/system/menu/model';
 
-import type { MenuPermissionOption } from './data';
+import { nextTick, onMounted, ref, watch } from 'vue';
 
-import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { cloneDeep, findGroupParentIds } from '@vben/utils';
+
 import { Alert, Checkbox, RadioGroup, Space } from 'ant-design-vue';
 import { uniq } from 'lodash-es';
-import { nextTick, onMounted, ref, watch } from 'vue';
+
+import { useVbenVxeGrid } from '#/adapter/vxe-table';
 
 import { columns, nodeOptions } from './data';
 import { menusWithPermissions, rowAndChildrenChecked } from './helper';
@@ -339,7 +342,7 @@ defineExpose({
         />
         <Alert class="mx-2" type="info">
           <template #message>
-            <div v-if="tableApi?.grid">
+            <div>
               已选中
               <span class="text-primary mx-1 font-semibold">
                 {{ checkedNum }}
@@ -361,7 +364,7 @@ defineExpose({
         </Space>
       </template>
       <template #permissions="{ row }">
-        <div class="flex flex-wrap gap-3">
+        <div class="flex flex-wrap gap-x-3 gap-y-1">
           <Checkbox
             v-for="permission in row.permissions"
             :key="permission.id"

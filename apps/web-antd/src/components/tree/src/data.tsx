@@ -2,8 +2,9 @@ import type { VxeGridProps } from '#/adapter/vxe-table';
 import type { ID } from '#/api/common';
 import type { MenuOption } from '#/api/system/menu/model';
 
-import { FolderIcon, MenuIcon, OkButtonIcon, VbenIcon } from '@vben/icons';
 import { h, markRaw } from 'vue';
+
+import { FolderIcon, MenuIcon, OkButtonIcon, VbenIcon } from '@vben/icons';
 
 export interface Permission {
   checked: boolean;

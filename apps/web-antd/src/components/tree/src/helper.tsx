@@ -1,8 +1,9 @@
-import type { MenuOption } from '#/api/system/menu/model';
-
 import type { MenuPermissionOption } from './data';
 
+import type { MenuOption } from '#/api/system/menu/model';
+
 import { eachTree } from '@vben/utils';
+
 import { difference } from 'lodash-es';
 
 /**
