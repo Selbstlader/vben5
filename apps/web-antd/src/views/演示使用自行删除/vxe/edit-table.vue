@@ -123,9 +123,9 @@ const gridOptions: VxeGridProps = {
       title: '操作',
       width: 100,
       slots: {
-        default: ({ $table }) => {
+        default: ({ $table, row }) => {
           function handleDelete() {
-            $table.removeCurrentRow();
+            $table.remove(row);
           }
           return (
             <Button danger={true} onClick={handleDelete} size={'small'}>
