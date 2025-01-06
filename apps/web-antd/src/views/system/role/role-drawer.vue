@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, nextTick, ref } from 'vue';
 
 import { useVbenDrawer } from '@vben/common-ui';
 import { $t } from '@vben/locales';
@@ -8,7 +8,7 @@ import { cloneDeep, eachTree } from '@vben/utils';
 import { useVbenForm } from '#/adapter/form';
 import { menuTreeSelect, roleMenuTreeSelect } from '#/api/system/menu';
 import { roleAdd, roleInfo, roleUpdate } from '#/api/system/role';
-import { TreeSelectPanel } from '#/components/tree';
+import { MenuSelectTable } from '#/components/tree';
 
 import { drawerSchema } from './data';
 
@@ -36,7 +36,6 @@ const menuTree = ref<any[]>([]);
 async function setupMenuTree(id?: number | string) {
   if (id) {
     const resp = await roleMenuTreeSelect(id);
-    formApi.setFieldValue('menuIds', resp.checkedKeys);
     const menus = resp.menus;
     // i18n处理
     eachTree(menus, (node) => {
@@ -44,15 +43,20 @@ async function setupMenuTree(id?: number | string) {
     });
     // 设置菜单信息
     menuTree.value = resp.menus;
+    // keys依赖于menu 需要先加载menu
+    await nextTick();
+    await formApi.setFieldValue('menuIds', resp.checkedKeys);
   } else {
     const resp = await menuTreeSelect();
-    formApi.setFieldValue('menuIds', []);
     // i18n处理
     eachTree(resp, (node) => {
       node.label = $t(node.label);
     });
     // 设置菜单信息
     menuTree.value = resp;
+    // keys依赖于menu 需要先加载menu
+    await nextTick();
+    await formApi.setFieldValue('menuIds', []);
   }
 }
 
@@ -81,7 +85,7 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
 /**
  * 这里拿到的是一个数组ref
  */
-const menuSelectRef = ref();
+const menuSelectRef = ref<InstanceType<typeof MenuSelectTable>>();
 
 async function handleConfirm() {
   try {
@@ -91,7 +95,7 @@ async function handleConfirm() {
       return;
     }
     // 这个用于提交
-    const menuIds = menuSelectRef.value?.[0]?.getCheckedKeys() ?? [];
+    const menuIds = menuSelectRef.value?.getCheckedKeys() ?? [];
     // formApi.getValues拿到的是一个readonly对象，不能直接修改，需要cloneDeep
     const data = cloneDeep(await formApi.getValues());
     data.menuIds = menuIds;
@@ -120,17 +124,19 @@ function handleMenuCheckStrictlyChange(value: boolean) {
 </script>
 
 <template>
-  <BasicDrawer :close-on-click-modal="false" :title="title" class="w-[600px]">
+  <BasicDrawer :close-on-click-modal="false" :title="title" class="w-[800px]">
     <BasicForm>
       <template #menuIds="slotProps">
-        <!-- check-strictly为readonly 不能通过v-model绑定 -->
-        <TreeSelectPanel
-          ref="menuSelectRef"
-          v-bind="slotProps"
-          :check-strictly="formApi.form.values.menuCheckStrictly"
-          :tree-data="menuTree"
-          @check-strictly-change="handleMenuCheckStrictlyChange"
-        />
+        <div class="h-[600px] w-full">
+          <!-- check-strictly为readonly 不能通过v-model绑定 -->
+          <MenuSelectTable
+            ref="menuSelectRef"
+            :checked-keys="slotProps.value"
+            :association="formApi.form.values.menuCheckStrictly"
+            :menus="menuTree"
+            @update:association="handleMenuCheckStrictlyChange"
+          />
+        </div>
       </template>
     </BasicForm>
   </BasicDrawer>
