@@ -1,5 +1,9 @@
 # 1.1.4
 
+**REFACTOR**
+
+- 菜单选择组件重构为Table形式
+
 **Features**
 
 - 通用的vxe-table排序事件(排序逻辑改为在排序事件中处理而非在api处理)
