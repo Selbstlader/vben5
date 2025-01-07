@@ -67,7 +67,6 @@ onMounted(async () => {
         <a
           v-for="attachment in attachmentInfo"
           :key="attachment.ossId"
-          :download="attachment.name"
           :href="attachment.url"
           class="text-primary"
           target="_blank"
