@@ -1,5 +1,6 @@
 export interface TaskInfo {
   id: string;
+  categoryName: string;
   createTime: string;
   updateTime: string;
   tenantId: string;

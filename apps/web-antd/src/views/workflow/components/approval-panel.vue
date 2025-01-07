@@ -394,9 +394,15 @@ async function handleCopy(text: string) {
           />
           <span>{{ task.createByName }}</span>
           <div class="flex items-center opacity-50">
-            <span>XXXX有限公司</span>
+            <div class="flex items-center gap-1">
+              <span class="icon-[bxs--category-alt] size-[16px]"></span>
+              流程分类: {{ task.categoryName }}
+            </div>
             <Divider type="vertical" />
-            <span>提交时间: {{ task.createTime }}</span>
+            <div class="flex items-center gap-1">
+              <span class="icon-[mdi--clock-outline] size-[16px]"></span>
+              提交时间: {{ task.createTime }}
+            </div>
           </div>
         </div>
       </div>
