@@ -344,7 +344,11 @@ function handleUpdateAssignee(userList: User[]) {
   });
 }
 
-const { copy } = useClipboard();
+/**
+ * 不加legacy在本地开发没有问题
+ * 打包后在一些设备会无法复制 使用legacy来保证兼容性
+ */
+const { copy } = useClipboard({ legacy: true });
 async function handleCopy(text: string) {
   await copy(text);
   message.success('复制成功');
