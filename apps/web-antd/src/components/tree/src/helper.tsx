@@ -1,10 +1,11 @@
 import type { MenuPermissionOption } from './data';
 
+import type { useVbenVxeGrid } from '#/adapter/vxe-table';
 import type { MenuOption } from '#/api/system/menu/model';
 
-import { eachTree } from '@vben/utils';
+import { eachTree, treeToList } from '@vben/utils';
 
-import { difference } from 'lodash-es';
+import { difference, isEmpty, isUndefined } from 'lodash-es';
 
 /**
  * 权限列设置是否全选
@@ -72,4 +73,61 @@ export function menusWithPermissions(menus: MenuOption[]) {
       item.permissions = permissionsArr;
     }
   });
+}
+
+/**
+ * 设置表格选中
+ * @param checkedKeys 选中的keys
+ * @param menus 菜单 转换后的菜单
+ * @param tableApi api
+ * @param association 是否节点关联
+ */
+export function setTableChecked(
+  checkedKeys: (number | string)[],
+  menus: MenuPermissionOption[],
+  tableApi: ReturnType<typeof useVbenVxeGrid>['1'],
+  association: boolean,
+) {
+  // tree转list
+  const menuList: MenuPermissionOption[] = treeToList(menus);
+  // 拿到勾选的行数据
+  let checkedRows = menuList.filter((item) => checkedKeys.includes(item.id));
+
+  /**
+   * 节点独立切换到节点关联 只需要最末尾的数据 即children为空
+   */
+  if (!association) {
+    checkedRows = checkedRows.filter(
+      (item) => isUndefined(item.children) || isEmpty(item.children),
+    );
+  }
+
+  // 设置行选中 & permissions选中
+  checkedRows.forEach((item) => {
+    tableApi.grid.setCheckboxRow(item, true);
+    if (item?.permissions?.length > 0) {
+      item.permissions.forEach((permission) => {
+        if (checkedKeys.includes(permission.id)) {
+          permission.checked = true;
+        }
+      });
+    }
+  });
+
+  /**
+   * 节点独立切换到节点关联
+   * 勾选后还需要过滤权限没有任何勾选的情况 这时候取消行的勾选
+   */
+  if (!association) {
+    const emptyRows = checkedRows.filter((item) => {
+      if (isUndefined(item.permissions) || isEmpty(item.permissions)) {
+        return false;
+      }
+      return item.permissions.every(
+        (permission) => permission.checked === false,
+      );
+    });
+    // 设置为不选中
+    tableApi.grid.setCheckboxRow(emptyRows, false);
+  }
 }
