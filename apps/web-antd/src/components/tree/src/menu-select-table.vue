@@ -10,7 +10,7 @@ import { nextTick, onMounted, ref, shallowRef, watch } from 'vue';
 
 import { cloneDeep, findGroupParentIds } from '@vben/utils';
 
-import { Alert, Checkbox, message, RadioGroup, Space } from 'ant-design-vue';
+import { Alert, Checkbox, RadioGroup, Space } from 'ant-design-vue';
 import { uniq } from 'lodash-es';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
@@ -247,13 +247,7 @@ async function handleAssociationChange(e: RadioChangeEvent) {
   // 滚动到顶部
   await tableApi.grid.scrollTo(0, 0);
 
-  // 从节点关联切换到节点独立
-  // 由于节点独立兼容节点关联 设置选中
-  // if (e.target.value) {
-  //   setTableChecked(lastCheckedKeys.value, records, tableApi, false);
-  // } else {
-  //   setTableChecked(lastCheckedKeys.value, records, tableApi, true);
-  // }
+  // 节点切换 不同的选中
   setTableChecked(lastCheckedKeys.value, records, tableApi, !e.target.value);
 
   updateCheckedNumber();
@@ -353,11 +347,6 @@ function getCheckedKeys() {
 defineExpose({
   getCheckedKeys,
 });
-
-function test() {
-  const keys = getCheckedKeys();
-  message.success(`keys:${keys.length}`);
-}
 </script>
 
 <template>
@@ -385,7 +374,6 @@ function test() {
       </template>
       <template #toolbar-tools>
         <Space>
-          <a-button @click="test"> 测试 </a-button>
           <a-button @click="setExpandOrCollapse(false)">
             {{ $t('pages.common.collapse') }}
           </a-button>
