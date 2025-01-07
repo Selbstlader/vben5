@@ -1,11 +1,8 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-
-import { JsonPreview, Page } from '@vben/common-ui';
-
-import { Alert, RadioGroup } from 'ant-design-vue';
-
 import { FileUpload, ImageUpload } from '#/components/upload';
+import { JsonPreview, Page } from '@vben/common-ui';
+import { Alert, RadioGroup } from 'ant-design-vue';
+import { ref } from 'vue';
 
 const resultField = ref<'ossId' | 'url'>('ossId');
 
@@ -17,7 +14,7 @@ const fieldOptions = [
 ];
 const fileAccept = ['xlsx', 'word', 'pdf'];
 
-const signleImage = ref<string>('');
+const signleImage = ref<string>('1745443704356782081');
 </script>
 
 <template>
@@ -27,7 +24,11 @@ const signleImage = ref<string>('');
         :show-icon="true"
         message="新特性: 设置max-number为1时, 会被绑定为string而非string[]类型 省去手动转换"
       />
-      <ImageUpload v-model:value="signleImage" :max-number="1" />
+      <ImageUpload
+        v-model:value="signleImage"
+        :max-number="1"
+        result-field="ossId"
+      />
       <JsonPreview :data="signleImage" />
     </div>
     <div class="bg-background flex flex-col gap-[12px] rounded-lg p-6">

@@ -4,13 +4,12 @@
  */
 
 import type { BaseFormComponentType } from '@vben/common-ui';
-
 import type { Component, SetupContext } from 'vue';
-import { h } from 'vue';
 
+import { Tinymce as RichTextarea } from '#/components/tinymce';
+import { FileUpload, ImageUpload } from '#/components/upload';
 import { ApiComponent, globalShareState, IconPicker } from '@vben/common-ui';
 import { $t } from '@vben/locales';
-
 import {
   AutoComplete,
   Button,
@@ -35,9 +34,7 @@ import {
   TreeSelect,
   Upload,
 } from 'ant-design-vue';
-
-import { Tinymce as RichTextarea } from '#/components/tinymce';
-import { FileUpload, ImageUpload } from '#/components/upload';
+import { h } from 'vue';
 
 const withDefaultPlaceholder = <T extends Component>(
   component: T,

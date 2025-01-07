@@ -8,8 +8,6 @@ import type {
 
 import type { FormActions, FormSchema, VbenFormProps } from './types';
 
-import { toRaw } from 'vue';
-
 import { Store } from '@vben-core/shared/store';
 import {
   bindMethods,
@@ -21,6 +19,7 @@ import {
   mergeWithArrayOverride,
   StateHandler,
 } from '@vben-core/shared/utils';
+import { toRaw } from 'vue';
 
 function getDefaultState(): VbenFormProps {
   return {
@@ -112,11 +111,6 @@ export class FormApi {
     }
   }
 
-  // 如果需要多次更新状态，可以使用 batch 方法
-  batchStore(cb: () => void) {
-    this.store.batch(cb);
-  }
-
   getLatestSubmissionValues() {
     return this.latestSubmissionValues || {};
   }
@@ -128,6 +122,11 @@ export class FormApi {
   async getValues() {
     const form = await this.getForm();
     return form.values;
+  }
+
+  async isFieldValid(fieldName: string) {
+    const form = await this.getForm();
+    return form.isFieldValid(fieldName);
   }
 
   merge(formApi: FormApi) {
@@ -347,5 +346,15 @@ export class FormApi {
       return;
     }
     return await this.submitForm();
+  }
+
+  async validateField(fieldName: string, opts?: Partial<ValidationOptions>) {
+    const form = await this.getForm();
+    const validateResult = await form.validateField(fieldName, opts);
+
+    if (Object.keys(validateResult?.errors ?? {}).length > 0) {
+      console.error('validate error', validateResult?.errors);
+    }
+    return validateResult;
   }
 }

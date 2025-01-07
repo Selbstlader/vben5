@@ -36,5 +36,5 @@ export function forceLogout(tokenId: string) {
  * @returns void
  */
 export function forceLogout2(tokenId: string) {
-  return requestClient.postWithMsg<void>(`${Api.root}/${tokenId}`);
+  return requestClient.deleteWithMsg<void>(`${Api.root}/myself/${tokenId}`);
 }

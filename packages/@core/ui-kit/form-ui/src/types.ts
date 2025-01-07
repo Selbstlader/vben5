@@ -1,11 +1,10 @@
 import type { VbenButtonProps } from '@vben-core/shadcn-ui';
 import type { ClassType } from '@vben-core/typings';
 import type { FieldOptions, FormContext, GenericObject } from 'vee-validate';
+import type { Component, HtmlHTMLAttributes, Ref } from 'vue';
 import type { ZodTypeAny } from 'zod';
 
 import type { FormApi } from './form-api';
-
-import type { Component, HtmlHTMLAttributes, Ref } from 'vue';
 
 export type FormLayout = 'horizontal' | 'vertical';
 
@@ -137,6 +136,10 @@ type ComponentProps =
 
 export interface FormCommonConfig {
   /**
+   * 在Label后显示一个冒号
+   */
+  colon?: boolean;
+  /**
    * 所有表单项的props
    */
   componentProps?: ComponentProps;
@@ -151,9 +154,14 @@ export interface FormCommonConfig {
   disabled?: boolean;
   /**
    * 是否禁用所有表单项的change事件监听
-   * @default false
+   * @default true
    */
   disabledOnChangeListener?: boolean;
+  /**
+   * 是否禁用所有表单项的input事件监听
+   * @default true
+   */
+  disabledOnInputListener?: boolean;
   /**
    * 所有表单项的空状态值,默认都是undefined，naive-ui的空状态值是null
    */
@@ -265,6 +273,10 @@ export interface FormRenderProps<
    */
   commonConfig?: FormCommonConfig;
   /**
+   * 紧凑模式（移除表单每一项底部为校验信息预留的空间）
+   */
+  compact?: boolean;
+  /**
    * 组件v-model事件绑定
    */
   componentBindEventMap?: Partial<Record<BaseFormComponentType, string>>;
@@ -371,6 +383,7 @@ export interface VbenFormAdapterOptions<
   config?: {
     baseModelPropName?: string;
     disabledOnChangeListener?: boolean;
+    disabledOnInputListener?: boolean;
     emptyStateValue?: null | undefined;
     modelPropNameMap?: Partial<Record<T, string>>;
   };

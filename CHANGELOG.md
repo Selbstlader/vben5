@@ -1,8 +1,22 @@
 # 1.1.4
 
+**REFACTOR**
+
+- 菜单选择组件重构为Table形式
+
 **Features**
 
 - 通用的vxe-table排序事件(排序逻辑改为在排序事件中处理而非在api处理)
+- getDict/getDictOptions 提取公共逻辑 减少冗余代码
+
+**BUG FIXES**
+
+- 字典项为空时getDict方法无限调用接口((无奈兼容 不给字典item本来就是错误用法))
+- 表格排序翻页会丢失排序参数
+
+**OTHERS**
+
+- 用户管理 新增只获取一次(mounted)默认密码而非每次打开modal都获取
 
 # 1.1.3
 

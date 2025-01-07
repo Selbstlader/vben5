@@ -33,6 +33,8 @@ export interface MenuOption {
   weight: number;
   children: MenuOption[];
   key: string; // 实际上不存在 ide报错
+  menuType: string;
+  icon: string;
 }
 
 /**

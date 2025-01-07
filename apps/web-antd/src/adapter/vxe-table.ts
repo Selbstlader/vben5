@@ -1,12 +1,9 @@
-import { h, type Ref } from 'vue';
+import type { VxeGridDefines, VxeGridPropTypes } from '@vben/plugins/vxe-table';
+import type { Ref } from 'vue';
 
-import {
-  setupVbenVxeTable,
-  useVbenVxeGrid,
-  type VxeGridDefines,
-} from '@vben/plugins/vxe-table';
-
+import { setupVbenVxeTable, useVbenVxeGrid } from '@vben/plugins/vxe-table';
 import { Button, Image } from 'ant-design-vue';
+import { h } from 'vue';
 
 import { useVbenForm } from './form';
 
@@ -133,6 +130,7 @@ export function vxeCheckboxChecked(
 
 /**
  * 通用的vxe-table排序事件 支持单/多字段排序
+ * @deprecated 翻页后排序会丢失，使用addSortParams代替
  * @param tableApi api
  * @param sortParams 排序参数
  */
@@ -150,4 +148,24 @@ export function vxeSortEvent(
   const orderByColumn = sortList.map((item) => item.field).join(',');
   const isAsc = sortList.map((item) => item.order).join(',');
   tableApi.query({ orderByColumn, isAsc });
+}
+
+/**
+ * 通用的 排序参数添加到请求参数中
+ * @param params 请求参数
+ * @param sortList vxe-table的排序参数
+ */
+export function addSortParams(
+  params: Record<string, any>,
+  sortList: VxeGridPropTypes.ProxyAjaxQuerySortCheckedParams[],
+) {
+  // 这里是排序取消 length为0 就不添加参数了
+  if (sortList.length === 0) {
+    return;
+  }
+  // 支持单/多字段排序
+  const orderByColumn = sortList.map((item) => item.field).join(',');
+  const isAsc = sortList.map((item) => item.order).join(',');
+  params.orderByColumn = orderByColumn;
+  params.isAsc = isAsc;
 }

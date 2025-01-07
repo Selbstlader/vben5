@@ -129,6 +129,12 @@ export const drawerSchema: FormSchemaGetter = () => [
     label: '自定义域名',
   },
   {
+    component: 'Input',
+    fieldName: 'tip',
+    label: '占位作为提示使用',
+    hideLabel: true,
+  },
+  {
     component: 'Divider',
     componentProps: {
       orientation: 'center',

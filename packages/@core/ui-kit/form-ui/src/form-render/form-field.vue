@@ -3,8 +3,6 @@ import type { ZodType } from 'zod';
 
 import type { FormSchema, MaybeComponentProps } from '../types';
 
-import { computed, nextTick, useTemplateRef, watch } from 'vue';
-
 import {
   FormControl,
   FormDescription,
@@ -14,9 +12,9 @@ import {
   VbenRenderContent,
 } from '@vben-core/shadcn-ui';
 import { cn, isFunction, isObject, isString } from '@vben-core/shared/utils';
-
 import { toTypedSchema } from '@vee-validate/zod';
 import { useFieldError, useFormValues } from 'vee-validate';
+import { computed, nextTick, useTemplateRef, watch } from 'vue';
 
 import { injectRenderFormProps, useFormContext } from './context';
 import useDependencies from './dependencies';
@@ -26,6 +24,7 @@ import { isEventObjectLike } from './helper';
 interface Props extends FormSchema {}
 
 const {
+  colon,
   commonComponentProps,
   component,
   componentProps,
@@ -33,6 +32,7 @@ const {
   description,
   disabled,
   disabledOnChangeListener,
+  disabledOnInputListener,
   emptyStateValue,
   fieldName,
   formFieldProps,
@@ -53,7 +53,7 @@ const values = useFormValues();
 const errors = useFieldError(fieldName);
 const fieldComponentRef = useTemplateRef<HTMLInputElement>('fieldComponentRef');
 const formApi = formRenderProps.form;
-
+const compact = formRenderProps.compact;
 const isInValid = computed(() => errors.value?.length > 0);
 
 const FieldComponent = computed(() => {
@@ -227,10 +227,13 @@ function fieldBindEvent(slotProps: Record<string, any>) {
 
             return onChange?.(e?.target?.[bindEventField] ?? e);
           },
-      onInput: () => {},
+      ...(disabledOnInputListener ? { onInput: undefined } : {}),
     };
   }
-  return {};
+  return {
+    ...(disabledOnInputListener ? { onInput: undefined } : {}),
+    ...(disabledOnChangeListener ? { onChange: undefined } : {}),
+  };
 }
 
 function createComponentProps(slotProps: Record<string, any>) {
@@ -276,8 +279,10 @@ function autofocus() {
         'form-valid-error': isInValid,
         'flex-col': isVertical,
         'flex-row items-center': !isVertical,
+        'pb-6': !compact,
+        'pb-2': compact,
       }"
-      class="flex pb-6"
+      class="flex"
       v-bind="$attrs"
     >
       <FormLabel
@@ -296,7 +301,10 @@ function autofocus() {
         :required="shouldRequired && !hideRequiredMark"
         :style="labelStyle"
       >
-        {{ label }}
+        <template v-if="label">
+          <span>{{ label }}</span>
+          <span v-if="colon" class="ml-[2px]">:</span>
+        </template>
       </FormLabel>
       <div :class="cn('relative flex w-full items-center', wrapperClass)">
         <FormControl :class="cn(controlClass)">

@@ -2,15 +2,13 @@
 import type { UploadFile, UploadProps } from 'ant-design-vue';
 import type { UploadRequestOption } from 'ant-design-vue/lib/vc-upload/interface';
 
-import { ref, toRefs, watch } from 'vue';
-
-import { $t } from '@vben/locales';
-
-import { PlusOutlined } from '@ant-design/icons-vue';
-import { message, Modal, Upload } from 'ant-design-vue';
-import { isArray, isFunction, isObject, isString } from 'lodash-es';
-
 import { uploadApi } from '#/api';
+import { ossInfo } from '#/api/system/oss';
+import { PlusOutlined } from '@ant-design/icons-vue';
+import { $t } from '@vben/locales';
+import { message, Modal, Upload } from 'ant-design-vue';
+import { isArray, isFunction, isObject, isString, uniqueId } from 'lodash-es';
+import { ref, toRefs, watch } from 'vue';
 
 import { checkImageFileType, defaultImageAccept } from './helper';
 import { UploadResultStatus } from './typing';
@@ -37,7 +35,7 @@ const props = withDefaults(
     multiple?: boolean;
     // support xxx.xxx.xx
     // 返回的字段 默认url
-    resultField?: 'fileName' | 'ossId' | 'url' | string;
+    resultField?: 'fileName' | 'ossId' | 'url';
     value?: string | string[];
   }>(),
   {
@@ -50,7 +48,7 @@ const props = withDefaults(
     accept: () => defaultImageAccept,
     multiple: false,
     api: uploadApi,
-    resultField: '',
+    resultField: 'url',
   },
 );
 const emit = defineEmits(['change', 'update:value', 'delete']);
@@ -74,7 +72,7 @@ const isFirstRender = ref<boolean>(true);
 
 watch(
   () => props.value,
-  (v) => {
+  async (v) => {
     if (isInnerOperate.value) {
       isInnerOperate.value = false;
       return;
@@ -90,19 +88,40 @@ watch(
       }
       // 直接赋值 可能为string | string[]
       value = v;
-      fileList.value = _fileList.map((item, i) => {
-        if (item && isString(item)) {
-          return {
-            uid: `${-i}`,
-            name: item.slice(Math.max(0, item.lastIndexOf('/') + 1)),
-            status: 'done',
-            url: item,
-          };
-        } else if (item && isObject(item)) {
-          return item;
+      const withUrlList: UploadProps['fileList'] = [];
+      for (const item of _fileList) {
+        // ossId情况
+        if (props.resultField === 'ossId') {
+          const resp = await ossInfo([item]);
+          if (item && isString(item)) {
+            withUrlList.push({
+              uid: item, // ossId作为uid 方便getValue获取
+              name: item.slice(Math.max(0, item.lastIndexOf('/') + 1)),
+              status: 'done',
+              url: resp?.[0]?.url,
+            });
+          } else if (item && isObject(item)) {
+            withUrlList.push({
+              ...(item as any),
+              uid: item,
+              url: resp?.[0]?.url,
+            });
+          }
+        } else {
+          // 非ossId情况
+          if (item && isString(item)) {
+            withUrlList.push({
+              uid: uniqueId(),
+              name: item.slice(Math.max(0, item.lastIndexOf('/') + 1)),
+              status: 'done',
+              url: item,
+            });
+          } else if (item && isObject(item)) {
+            withUrlList.push(item);
+          }
         }
-        return null;
-      }) as UploadProps['fileList'];
+      }
+      fileList.value = withUrlList;
     }
     if (!isFirstRender.value) {
       emit('change', value);
@@ -200,11 +219,16 @@ async function customRequest(info: UploadRequestOption<any>) {
 }
 
 function getValue() {
+  console.log(fileList.value);
   const list = (fileList.value || [])
     .filter((item) => item?.status === UploadResultStatus.DONE)
     .map((item: any) => {
       if (item?.response && props?.resultField) {
         return item?.response?.[props.resultField];
+      }
+      // ossId兼容 uid为ossId直接返回
+      if (props.resultField === 'ossId' && item.uid) {
+        return item.uid;
       }
       // 适用于已经有图片 回显的情况 会默认在init处理为{url: 'xx'}
       if (item?.url) {
