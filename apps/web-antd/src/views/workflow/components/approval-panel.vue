@@ -396,7 +396,7 @@ async function handleCopy(text: string) {
           <div class="flex items-center opacity-50">
             <span>XXXX有限公司</span>
             <Divider type="vertical" />
-            <span>提交于: {{ task.createTime }}</span>
+            <span>提交时间: {{ task.createTime }}</span>
           </div>
         </div>
       </div>

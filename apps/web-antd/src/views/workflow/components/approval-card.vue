@@ -4,9 +4,11 @@ import type { TaskInfo } from '#/api/workflow/task/model';
 import { VbenAvatar } from '@vben/common-ui';
 import { DictEnum } from '@vben/constants';
 
-import { Descriptions, DescriptionsItem } from 'ant-design-vue';
+import { Descriptions, DescriptionsItem, Tooltip } from 'ant-design-vue';
 
 import { renderDict } from '#/utils/render';
+
+import { getDiffTimeString } from './helper';
 
 interface Props extends TaskInfo {
   active: boolean;
@@ -42,10 +44,10 @@ function handleClick() {
           :is="renderDict(info.flowStatus, DictEnum.WF_BUSINESS_STATUS)"
         />
       </template>
-      <DescriptionsItem label="当前任务名称">
+      <DescriptionsItem label="当前任务">
         <div class="font-bold">{{ info.nodeName }}</div>
       </DescriptionsItem>
-      <DescriptionsItem label="开始时间">
+      <DescriptionsItem label="提交时间">
         {{ info.createTime }}
       </DescriptionsItem>
       <!-- <DescriptionsItem label="更新时间">
@@ -63,7 +65,14 @@ function handleClick() {
           {{ info.createByName }}
         </span>
       </div>
-      <div class="text-nowrap opacity-50">{{ info.updateTime }}更新</div>
+      <div class="text-nowrap opacity-50">
+        <Tooltip placement="top" :title="`更新时间: ${info.updateTime}`">
+          <div class="flex items-center gap-1">
+            <span class="icon-[mdi--clock-outline] size-[16px]"></span>
+            {{ getDiffTimeString(info.updateTime) }}前更新
+          </div>
+        </Tooltip>
+      </div>
     </div>
   </div>
 </template>
