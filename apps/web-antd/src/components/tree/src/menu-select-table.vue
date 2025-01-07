@@ -1,3 +1,8 @@
+<!--
+不兼容也不会兼容一些错误用法
+比如: 菜单下放目录 菜单下放菜单
+比如: 按钮下放目录 按钮下放菜单 按钮下放按钮
+-->
 <script setup lang="tsx">
 import type { RadioChangeEvent } from 'ant-design-vue';
 
@@ -189,7 +194,7 @@ onMounted(() => {
     async (menus) => {
       const clonedMenus = cloneDeep(menus);
       menusWithPermissions(clonedMenus);
-      console.log(clonedMenus);
+      // console.log(clonedMenus);
       await tableApi.grid.loadData(clonedMenus);
       // 展开全部 默认true
       if (props.defaultExpandAll) {
