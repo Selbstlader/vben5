@@ -51,7 +51,8 @@ const diffUpdateTimeString = computed(() => {
         />
       </template>
       <DescriptionsItem label="当前任务">
-        <div class="font-bold">{{ info.nodeName }}</div>
+        <!-- TODO: 这里有待确认 我的已办是有这个字段 其他没有 -->
+        <div class="font-bold">{{ info.targetNodeName ?? info.nodeName }}</div>
       </DescriptionsItem>
       <DescriptionsItem label="提交时间">
         {{ info.createTime }}

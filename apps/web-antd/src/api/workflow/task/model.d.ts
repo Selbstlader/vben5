@@ -26,6 +26,7 @@ export interface TaskInfo {
   nodeRatio?: string;
   createBy: string;
   createByName: string;
+  targetNodeName?: string;
 }
 
 export interface CompleteTaskReqData {
