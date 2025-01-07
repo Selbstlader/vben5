@@ -1,11 +1,16 @@
 <!-- eslint-disable no-use-before-define -->
 <script setup lang="ts">
+import type { RadioChangeEvent } from 'ant-design-vue';
+
+import type { VbenFormProps } from '@vben/common-ui';
 import type { Recordable } from '@vben/types';
+
+import type { VxeGridProps } from '#/adapter/vxe-table';
 
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { Page, useVbenModal, type VbenFormProps } from '@vben/common-ui';
+import { Page, useVbenModal } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 import { getVxePopupContainer } from '@vben/utils';
 
@@ -13,14 +18,12 @@ import {
   message,
   Modal,
   Popconfirm,
-  type RadioChangeEvent,
   RadioGroup,
   Space,
   Switch,
 } from 'ant-design-vue';
 
-import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
-import { vxeCheckboxChecked } from '#/adapter/vxe-table';
+import { useVbenVxeGrid, vxeCheckboxChecked } from '#/adapter/vxe-table';
 import {
   unPublishList,
   workflowDefinitionActive,
@@ -182,7 +185,9 @@ async function handlePublish(row: any) {
  */
 async function handleCopy(row: any) {
   await workflowDefinitionCopy(row.id);
-  await tableApi.query();
+  // 跳转到未发布流程tab
+  currentStatus.value = 0;
+  await tableApi.reload();
 }
 
 const [ProcessDefinitionModal, modalApi] = useVbenModal({
