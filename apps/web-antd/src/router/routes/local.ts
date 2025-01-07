@@ -124,7 +124,7 @@ const profileRoute: RouteRecordStringComponent[] = [
           keepAlive: true,
           title: '流程设计',
         },
-        name: 'RoleAssignIndex',
+        name: 'WorkflowDesignerIndex',
         path: '/workflow/designer',
       },
     ],
