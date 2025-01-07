@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { TaskInfo } from '#/api/workflow/task/model';
 
+import { computed } from 'vue';
+
 import { VbenAvatar } from '@vben/common-ui';
 import { DictEnum } from '@vben/constants';
 
@@ -27,6 +29,10 @@ function handleClick() {
   const idKey = props.rowKey as keyof TaskInfo;
   emit('click', props.info[idKey]);
 }
+
+const diffUpdateTimeString = computed(() => {
+  return getDiffTimeString(props.info.updateTime);
+});
 </script>
 
 <template>
@@ -69,7 +75,7 @@ function handleClick() {
         <Tooltip placement="top" :title="`更新时间: ${info.updateTime}`">
           <div class="flex items-center gap-1">
             <span class="icon-[mdi--clock-outline] size-[16px]"></span>
-            {{ getDiffTimeString(info.updateTime) }}前更新
+            <span>{{ diffUpdateTimeString }}前更新</span>
           </div>
         </Tooltip>
       </div>
