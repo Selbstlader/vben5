@@ -213,12 +213,8 @@ export function renderOsIcon(os: string, center = false) {
   if (os.toLocaleLowerCase().includes('windows')) {
     current = osOptions[0];
   }
-  if (current) {
-    return renderIconSpan(current.icon, os, center, '5px');
-  }
-  // 返回默认
-  const defaultIcon = DefaultOsIcon;
-  return renderIconSpan(defaultIcon, os, center, '5px');
+  const icon = current ? current.icon : DefaultOsIcon;
+  return renderIconSpan(icon, os, center, '5px');
 }
 
 export function renderBrowserIcon(browser: string, center = false) {
@@ -228,10 +224,6 @@ export function renderBrowserIcon(browser: string, center = false) {
   const current = browserOptions.find((item) =>
     browser.toLocaleLowerCase().includes(item.value),
   );
-  if (current) {
-    return renderIconSpan(current.icon, browser, center, '5px');
-  }
-  // 返回默认
-  const defaultIcon = DefaultBrowserIcon;
-  return renderIconSpan(defaultIcon, browser, center, '5px');
+  const icon = current ? current.icon : DefaultBrowserIcon;
+  return renderIconSpan(icon, browser, center, '5px');
 }
