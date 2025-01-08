@@ -52,7 +52,10 @@ function renderTag(text: string, color?: string) {
  */
 export function renderTags(tags: string[], wrap = false, gap = 1) {
   return (
-    <div class={['flex', `gap-${gap}`, wrap ? 'flex-col' : 'flex-row']}>
+    <div
+      class={['flex', wrap ? 'flex-col' : 'flex-row']}
+      style={{ gap: `${gap}px` }}
+    >
       {tags.map((tag, index) => {
         return <div key={index}>{renderTag(tag)}</div>;
       })}
@@ -135,7 +138,10 @@ export function renderDictTags(
     return <div>{value}</div>;
   }
   return (
-    <div class={['flex', `gap-${gap}`, wrap ? 'flex-col' : 'flex-row']}>
+    <div
+      class={['flex', wrap ? 'flex-col' : 'flex-row']}
+      style={{ gap: `${gap}px` }}
+    >
       {value.map((item, index) => {
         return <div key={index}>{renderDictTag(item, dicts)}</div>;
       })}
