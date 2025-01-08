@@ -1,6 +1,8 @@
+import type { Component as ComponentType } from 'vue';
+
 import type { DictData } from '#/api/system/dict/dict-data-model';
 
-import { type Component as ComponentType, h } from 'vue';
+import { h } from 'vue';
 
 import { JsonPreview } from '@vben/common-ui';
 import {
@@ -29,7 +31,7 @@ import { Tag } from 'ant-design-vue';
 
 import { DictTag } from '#/components/dict';
 
-import { getDict } from './dict';
+import { getDictOptions } from './dict';
 
 /**
  * 渲染标签
@@ -148,7 +150,7 @@ export function renderDictTags(
  * @returns tag
  */
 export function renderDict(value: string, dictName: string) {
-  const dictInfo = getDict(dictName);
+  const dictInfo = getDictOptions(dictName);
   return renderDictTag(value, dictInfo);
 }
 export function renderIconSpan(

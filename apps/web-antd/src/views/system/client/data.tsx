@@ -1,10 +1,10 @@
+import type { FormSchemaGetter } from '#/adapter/form';
 import type { VxeGridProps } from '#/adapter/vxe-table';
 
 import { DictEnum } from '@vben/constants';
 import { getPopupContainer } from '@vben/utils';
 
-import { type FormSchemaGetter } from '#/adapter/form';
-import { getDict, getDictOptions } from '#/utils/dict';
+import { getDictOptions } from '#/utils/dict';
 import { renderDict, renderDictTags } from '#/utils/render';
 
 export const querySchema: FormSchemaGetter = () => [
@@ -55,7 +55,7 @@ export const columns: VxeGridProps['columns'] = [
           <div class="my-3">
             {renderDictTags(
               row.grantTypeList,
-              getDict(DictEnum.SYS_GRANT_TYPE),
+              getDictOptions(DictEnum.SYS_GRANT_TYPE),
             )}
           </div>
         );

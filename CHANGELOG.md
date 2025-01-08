@@ -3,11 +3,13 @@
 **REFACTOR**
 
 - 菜单选择组件重构为Table形式
+- 字典相关功能重构 采用一个Map储存字典(之前为两个Map)
 
 **Features**
 
 - 通用的vxe-table排序事件(排序逻辑改为在排序事件中处理而非在api处理)
 - getDict/getDictOptions 提取公共逻辑 减少冗余代码
+- 字典新增对Number类型的支持 -> `getDictOptions('', true);`即可获取number类型的value
 
 **BUG FIXES**
 
@@ -17,6 +19,7 @@
 **OTHERS**
 
 - 用户管理 新增只获取一次(mounted)默认密码而非每次打开modal都获取
+- `apps/web-antd/src/utils/dict.ts` `getDict`方法将于下个版本删除 使用`getDictOptions`替代
 
 # 1.1.3
 

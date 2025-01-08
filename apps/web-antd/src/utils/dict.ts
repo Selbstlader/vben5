@@ -45,12 +45,13 @@ function fetchAndCacheDictData<T>(
 
 /**
  * 这里是提供给渲染标签使用的方法
+ * @deprecated 使用getDictOptions代替 于下个版本删除
  * @param dictName 字典名称
  * @returns 字典信息
  */
 export function getDict(dictName: string) {
-  const { getDict } = useDictStore();
-  return fetchAndCacheDictData(dictName, () => getDict(dictName));
+  const { getDictOptions } = useDictStore();
+  return fetchAndCacheDictData(dictName, () => getDictOptions(dictName));
 }
 
 /**

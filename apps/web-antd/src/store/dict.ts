@@ -7,8 +7,9 @@ import { defineStore } from 'pinia';
 
 /**
  * antd使用 select和radio通用
+ * 本质上是对DictData的拓展
  */
-export interface Option {
+export interface DictOption extends DictData {
   disabled?: boolean;
   label: string;
   value: number | string;
@@ -23,8 +24,9 @@ export interface Option {
 export function dictToOptions(
   data: DictData[],
   formatNumber = false,
-): Option[] {
+): DictOption[] {
   return data.map((item) => ({
+    ...item,
     label: item.dictLabel,
     value: formatNumber ? Number(item.dictValue) : item.dictValue,
   }));
@@ -32,13 +34,9 @@ export function dictToOptions(
 
 export const useDictStore = defineStore('app-dict', () => {
   /**
-   * 一般是dictTag使用
+   * select radio checkbox等使用 只能为固定格式{label, value}
    */
-  const dictMap = reactive(new Map<string, DictData[]>());
-  /**
-   * select radio radioButton使用 只能为固定格式(Option)
-   */
-  const dictOptionsMap = reactive(new Map<string, Option[]>());
+  const dictOptionsMap = reactive(new Map<string, DictOption[]>());
   /**
    * 添加一个字典请求状态的缓存
    *
@@ -50,17 +48,7 @@ export const useDictStore = defineStore('app-dict', () => {
     new Map<string, Promise<DictData[] | void>>(),
   );
 
-  function getDict(dictName: string): DictData[] {
-    if (!dictName) return [];
-    // 没有key 添加一个空数组
-    if (!dictMap.has(dictName)) {
-      dictMap.set(dictName, reactive([]));
-    }
-    // 这里拿到的就不可能为空了
-    return dictMap.get(dictName)!;
-  }
-
-  function getDictOptions(dictName: string): Option[] {
+  function getDictOptions(dictName: string): DictOption[] {
     if (!dictName) return [];
     // 没有key 添加一个空数组
     if (!dictOptionsMap.has(dictName)) {
@@ -71,7 +59,6 @@ export const useDictStore = defineStore('app-dict', () => {
   }
 
   function resetCache() {
-    dictMap.clear();
     dictOptionsMap.clear();
   }
 
@@ -89,11 +76,6 @@ export const useDictStore = defineStore('app-dict', () => {
     dictValue: DictData[],
     formatNumber = false,
   ) {
-    if (dictMap.has(dictName) && dictMap.get(dictName)?.length === 0) {
-      dictMap.get(dictName)?.push(...dictValue);
-    } else {
-      dictMap.set(dictName, dictValue);
-    }
     if (
       dictOptionsMap.has(dictName) &&
       dictOptionsMap.get(dictName)?.length === 0
@@ -114,10 +96,8 @@ export const useDictStore = defineStore('app-dict', () => {
 
   return {
     $reset,
-    dictMap,
     dictOptionsMap,
     dictRequestCache,
-    getDict,
     getDictOptions,
     resetCache,
     setDictInfo,
