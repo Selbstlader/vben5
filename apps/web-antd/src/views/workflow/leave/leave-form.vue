@@ -156,10 +156,17 @@ function handleComplete() {
   formApi.resetForm();
   router.push('/demo/leave');
 }
+
+/**
+ * 显示详情时 需要较小的padding
+ */
+const cardSize = computed(() => {
+  return showDescription.value ? 'small' : 'default';
+});
 </script>
 
 <template>
-  <Card ref="cardRef">
+  <Card ref="cardRef" :size="cardSize">
     <div id="leave-form">
       <!-- 使用v-if会影响生命周期 -->
       <BasicForm v-show="!showDescription" />
@@ -174,11 +181,18 @@ function handleComplete() {
 </template>
 
 <style lang="scss">
-/**
-去除 '菜单加载中' 主要是iframe内嵌使用
-*/
 html:has(#leave-form) {
+  /**
+  去除 '菜单加载中' 主要是iframe内嵌使用
+  */
   .ant-message-notice-content:has(.ant-message-loading) {
+    display: none;
+  }
+
+  /**
+  去除顶部进度条样式
+  */
+  #nprogress {
     display: none;
   }
 }

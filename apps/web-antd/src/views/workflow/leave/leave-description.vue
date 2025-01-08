@@ -28,7 +28,7 @@ function formatDate(date: string) {
 </script>
 
 <template>
-  <Descriptions :column="1" bordered size="small">
+  <Descriptions :column="1" size="middle">
     <DescriptionsItem label="请假类型">
       {{ leaveType }}
     </DescriptionsItem>
@@ -39,7 +39,7 @@ function formatDate(date: string) {
       {{ data.leaveDays }}天
     </DescriptionsItem>
     <DescriptionsItem label="请假原因">
-      {{ data.remark }}
+      {{ data.remark || '无' }}
     </DescriptionsItem>
   </Descriptions>
 </template>
