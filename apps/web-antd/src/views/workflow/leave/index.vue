@@ -207,7 +207,7 @@ const [ApplyModal, applyModalApi] = useVbenModal({
         </Space>
       </template>
     </BasicTable>
-    <UserSelectModal mode="single" />
+    <UserSelectModal mode="multiple" />
     <FlowInfoModal />
     <ApplyModal />
   </Page>

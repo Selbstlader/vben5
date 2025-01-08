@@ -1,12 +1,15 @@
 <!-- eslint-disable no-use-before-define -->
 <script setup lang="ts">
+import type { VbenFormProps } from '@vben/common-ui';
+
+import type { VxeGridProps } from '#/adapter/vxe-table';
 import type { User } from '#/api';
 
 import { ref } from 'vue';
 
-import { useVbenModal, type VbenFormProps } from '@vben/common-ui';
+import { useVbenModal, VbenAvatar } from '@vben/common-ui';
 
-import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
+import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { userList } from '#/api/system/user';
 import DeptTree from '#/views/system/user/dept-tree.vue';
 
@@ -91,21 +94,19 @@ const gridOptions: VxeGridProps = {
     strict: true,
   },
   columns: [
-    { type: props.mode === 'single' ? 'radio' : 'checkbox', width: 60 },
+    {
+      type: props.mode === 'single' ? 'radio' : 'checkbox',
+      width: 60,
+      resizable: false,
+    },
     {
       field: 'userName',
-      title: '名称',
-      width: 80,
-    },
-    {
-      field: 'nickName',
-      title: '昵称',
-      width: 140,
-    },
-    {
-      field: 'deptName',
-      title: '部门',
-      width: 120,
+      title: '用户',
+      headerAlign: 'left',
+      resizable: false,
+      slots: {
+        default: 'user',
+      },
     },
   ],
   height: 'auto',
@@ -148,13 +149,9 @@ const gridOptions: VxeGridProps = {
     keyField: 'userId',
   },
   toolbarConfig: {
-    // 自定义列
-    custom: false,
-    // 最大化
-    zoom: false,
-    // 刷新
-    refresh: false,
+    enabled: false,
   },
+  showOverflow: false,
 };
 
 const [BasicTable, tableApi] = useVbenVxeGrid({
@@ -199,6 +196,10 @@ const rightGridOptions: VxeGridProps = {
       field: 'nickName',
       title: '昵称',
       width: 200,
+      resizable: false,
+      slots: {
+        default: 'user',
+      },
     },
     {
       field: 'action',
@@ -220,13 +221,9 @@ const rightGridOptions: VxeGridProps = {
     keyField: 'userId',
   },
   toolbarConfig: {
-    // 自定义列
-    custom: false,
-    // 最大化
-    zoom: false,
-    // 刷新
-    refresh: false,
+    enabled: false,
   },
+  showOverflow: false,
 };
 
 const [RightBasicTable, rightTableApi] = useVbenVxeGrid({
@@ -288,7 +285,24 @@ function handleSubmit() {
         @select="handleDeptQuery"
       />
       <div class="h-[600px] w-[450px]">
-        <BasicTable />
+        <BasicTable>
+          <template #user="{ row }">
+            <div class="flex items-center gap-2">
+              <VbenAvatar
+                :alt="row.nickName"
+                :src="row.avatar"
+                :class="{ 'bg-primary': !row.avatar }"
+                class="size-[32px] rounded-full text-white"
+              />
+              <div class="flex flex-col items-baseline text-[12px]">
+                <div>{{ row.nickName }}</div>
+                <div class="opacity-50">
+                  {{ row.phonenumber || '暂无手机号' }}
+                </div>
+              </div>
+            </div>
+          </template>
+        </BasicTable>
       </div>
       <div class="flex h-[600px] flex-col">
         <div class="flex w-full px-4">
@@ -302,6 +316,24 @@ function handleSubmit() {
           </div>
         </div>
         <RightBasicTable>
+          <template #user="{ row }">
+            <div class="flex items-center gap-2 overflow-hidden">
+              <VbenAvatar
+                :alt="row.nickName"
+                :src="row.avatar"
+                :class="{ 'bg-primary': !row.avatar }"
+                class="size-[32px] rounded-full text-white"
+              />
+              <div class="flex flex-col items-baseline text-[12px]">
+                <div class="overflow-ellipsis whitespace-nowrap">
+                  {{ row.nickName }}
+                </div>
+                <div class="opacity-50">
+                  {{ row.phonenumber || '暂无手机号' }}
+                </div>
+              </div>
+            </div>
+          </template>
           <template #action="{ row }">
             <a-button size="small" @click="handleRemoveItem(row)">
               移除
