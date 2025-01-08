@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import type { DictData } from '#/api/system/dict/dict-data-model';
 
 import { reactive } from 'vue';
@@ -10,13 +11,22 @@ import { defineStore } from 'pinia';
 export interface Option {
   disabled?: boolean;
   label: string;
-  value: string;
+  value: number | string;
 }
 
-export function dictToOptions(data: DictData[]): Option[] {
+/**
+ * 将字典数据转为Options
+ * @param data 字典数据
+ * @param formatNumber 是否需要将value格式化为number类型
+ * @returns options
+ */
+export function dictToOptions(
+  data: DictData[],
+  formatNumber = false,
+): Option[] {
   return data.map((item) => ({
     label: item.dictLabel,
-    value: item.dictValue,
+    value: formatNumber ? Number(item.dictValue) : item.dictValue,
   }));
 }
 
@@ -47,7 +57,6 @@ export const useDictStore = defineStore('app-dict', () => {
       dictMap.set(dictName, reactive([]));
     }
     // 这里拿到的就不可能为空了
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return dictMap.get(dictName)!;
   }
 
@@ -58,7 +67,6 @@ export const useDictStore = defineStore('app-dict', () => {
       dictOptionsMap.set(dictName, []);
     }
     // 这里拿到的就不可能为空了
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return dictOptionsMap.get(dictName)!;
   }
 
@@ -76,7 +84,11 @@ export const useDictStore = defineStore('app-dict', () => {
    * 否则 直接set
    *
    */
-  function setDictInfo(dictName: string, dictValue: DictData[]) {
+  function setDictInfo(
+    dictName: string,
+    dictValue: DictData[],
+    formatNumber = false,
+  ) {
     if (dictMap.has(dictName) && dictMap.get(dictName)?.length === 0) {
       dictMap.get(dictName)?.push(...dictValue);
     } else {
@@ -86,9 +98,11 @@ export const useDictStore = defineStore('app-dict', () => {
       dictOptionsMap.has(dictName) &&
       dictOptionsMap.get(dictName)?.length === 0
     ) {
-      dictOptionsMap.get(dictName)?.push(...dictToOptions(dictValue));
+      dictOptionsMap
+        .get(dictName)
+        ?.push(...dictToOptions(dictValue, formatNumber));
     } else {
-      dictOptionsMap.set(dictName, dictToOptions(dictValue));
+      dictOptionsMap.set(dictName, dictToOptions(dictValue, formatNumber));
     }
   }
 

@@ -5,11 +5,13 @@ import { useDictStore } from '#/store/dict';
  * 抽取公共逻辑的基础方法
  * @param dictName 字典名称
  * @param dataGetter 获取字典数据的函数
+ * @param formatNumber 是否格式化字典value为number类型
  * @returns 数据
  */
 function fetchAndCacheDictData<T>(
   dictName: string,
   dataGetter: () => T[],
+  formatNumber = false,
 ): T[] {
   const { dictRequestCache, setDictInfo } = useDictStore();
   // 有调用方决定如何获取数据
@@ -23,7 +25,7 @@ function fetchAndCacheDictData<T>(
         .then((resp) => {
           // 缓存到store 这样就不用重复获取了
           // 内部处理了push的逻辑 这里不用push
-          setDictInfo(dictName, resp);
+          setDictInfo(dictName, resp, formatNumber);
         })
         .finally(() => {
           // 移除请求状态缓存
@@ -54,9 +56,14 @@ export function getDict(dictName: string) {
 /**
  * 一般是Select, Radio, Checkbox等组件使用
  * @param dictName 字典名称
+ * @param formatNumber 是否格式化字典value为number类型
  * @returns Options数组
  */
-export function getDictOptions(dictName: string) {
+export function getDictOptions(dictName: string, formatNumber = false) {
   const { getDictOptions } = useDictStore();
-  return fetchAndCacheDictData(dictName, () => getDictOptions(dictName));
+  return fetchAndCacheDictData(
+    dictName,
+    () => getDictOptions(dictName),
+    formatNumber,
+  );
 }
