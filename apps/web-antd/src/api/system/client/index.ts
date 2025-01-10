@@ -33,7 +33,7 @@ export function clientUpdate(data: any) {
 }
 
 export function clientChangeStatus(data: any) {
-  return requestClient.putWithMsg<void>(Api.root, data);
+  return requestClient.putWithMsg<void>(Api.clientChangeStatus, data);
 }
 
 export function clientRemove(ids: IDS) {

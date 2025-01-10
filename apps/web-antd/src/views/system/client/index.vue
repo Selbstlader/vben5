@@ -1,17 +1,16 @@
 <script setup lang="ts">
+import type { VbenFormProps } from '@vben/common-ui';
 import type { Recordable } from '@vben/types';
 
+import type { VxeGridProps } from '#/adapter/vxe-table';
+
 import { useAccess } from '@vben/access';
-import { Page, useVbenDrawer, type VbenFormProps } from '@vben/common-ui';
+import { Page, useVbenDrawer } from '@vben/common-ui';
 import { getVxePopupContainer } from '@vben/utils';
 
 import { Modal, Popconfirm, Space } from 'ant-design-vue';
 
-import {
-  useVbenVxeGrid,
-  vxeCheckboxChecked,
-  type VxeGridProps,
-} from '#/adapter/vxe-table';
+import { useVbenVxeGrid, vxeCheckboxChecked } from '#/adapter/vxe-table';
 import {
   clientChangeStatus,
   clientExport,
