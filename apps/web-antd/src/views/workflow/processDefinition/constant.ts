@@ -22,14 +22,15 @@ export const publishStatusOptions = [
     label: '已发布',
     value: 1,
     color: 'success',
-    enumName: 'Published',
   },
   {
     label: '未发布',
     value: 0,
-    color: 'error',
-    enumName: 'Unpublished',
+    color: 'warning',
   },
-] as const;
-
-export const PublishStatusEnum = optionsToEnum(publishStatusOptions);
+  {
+    label: '失效',
+    value: 9,
+    color: 'error',
+  },
+];
