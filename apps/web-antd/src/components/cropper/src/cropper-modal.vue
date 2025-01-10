@@ -1,7 +1,9 @@
 <script lang="ts" setup>
+import type { PropType } from 'vue';
+
 import type { CropendResult, Cropper } from './typing';
 
-import { type PropType, ref } from 'vue';
+import { ref } from 'vue';
 
 import { useVbenModal } from '@vben/common-ui';
 import { $t as t } from '@vben/locales';

@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import type { LoginCodeParams, VbenFormSchema } from '@vben/common-ui';
 
+import type { TenantResp } from '#/api';
+
 import { computed, onMounted, ref, useTemplateRef } from 'vue';
 
 import { AuthenticationCodeLogin, z } from '@vben/common-ui';
@@ -8,7 +10,7 @@ import { $t } from '@vben/locales';
 
 import { Alert, message } from 'ant-design-vue';
 
-import { tenantList, type TenantResp } from '#/api';
+import { tenantList } from '#/api';
 import { sendSmsCode } from '#/api/core/captcha';
 import { useAuthStore } from '#/store';
 

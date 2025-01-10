@@ -15,7 +15,7 @@ export interface FileItem {
   percent: number;
   file: File;
   status?: UploadResultStatus;
-  response?: { fileName: string; ossId: string; url: string } | Recordable<any>;
+  response?: Recordable<any> | { fileName: string; ossId: string; url: string };
   uuid: string;
 }
 

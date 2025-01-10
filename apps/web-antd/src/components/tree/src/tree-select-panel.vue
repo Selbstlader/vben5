@@ -3,9 +3,9 @@ import type { CheckboxChangeEvent } from 'ant-design-vue/es/checkbox/interface';
 import type { DataNode } from 'ant-design-vue/es/tree';
 import type { CheckInfo } from 'ant-design-vue/es/vc-tree/props';
 
-import type { PropType } from 'vue';
+import type { PropType, SetupContext } from 'vue';
 
-import { computed, nextTick, onMounted, ref, watch } from 'vue';
+import { computed, nextTick, onMounted, ref, useSlots, watch } from 'vue';
 
 import { findGroupParentIds, treeToList } from '@vben/utils';
 
@@ -159,6 +159,8 @@ onMounted(async () => {
     expandedKeys.value = allKeys.value;
   }
 });
+
+const slots = useSlots() as SetupContext['slots'];
 </script>
 
 <template>
@@ -207,7 +209,7 @@ onMounted(async () => {
         @check="handleChecked"
       >
         <template
-          v-for="slotName in Object.keys($slots)"
+          v-for="slotName in Object.keys(slots)"
           :key="slotName"
           #[slotName]="data"
         >

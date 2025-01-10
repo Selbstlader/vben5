@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { AuthApi } from '#/api';
+
 import { onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -7,7 +9,7 @@ import { useAccessStore } from '@vben/stores';
 
 import { message } from 'ant-design-vue';
 
-import { type AuthApi, authCallback } from '#/api';
+import { authCallback } from '#/api';
 import { useAuthStore } from '#/store';
 
 import { accountBindList } from '../oauth-common';

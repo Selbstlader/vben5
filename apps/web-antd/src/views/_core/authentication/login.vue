@@ -1,6 +1,9 @@
 <script lang="ts" setup>
 import type { LoginAndRegisterParams, VbenFormSchema } from '@vben/common-ui';
 
+import type { TenantResp } from '#/api';
+import type { CaptchaResponse } from '#/api/core/captcha';
+
 import { computed, onMounted, ref, useTemplateRef } from 'vue';
 
 import { AuthenticationLogin, z } from '@vben/common-ui';
@@ -8,8 +11,8 @@ import { $t } from '@vben/locales';
 
 import { omit } from 'lodash-es';
 
-import { tenantList, type TenantResp } from '#/api';
-import { captchaImage, type CaptchaResponse } from '#/api/core/captcha';
+import { tenantList } from '#/api';
+import { captchaImage } from '#/api/core/captcha';
 import { useAuthStore } from '#/store';
 
 import OAuthLogin from './oauth-login.vue';

@@ -2,6 +2,10 @@
 import type { IPropTypes } from '@tinymce/tinymce-vue/lib/cjs/main/ts/components/EditorPropTypes';
 import type { Editor as EditorType } from 'tinymce/tinymce';
 
+import type { PropType } from 'vue';
+
+import type { UploadResult } from '#/api/core/upload';
+
 import {
   computed,
   nextTick,
@@ -9,7 +13,6 @@ import {
   onBeforeUnmount,
   onDeactivated,
   onMounted,
-  type PropType,
   ref,
   unref,
   useAttrs,
@@ -22,7 +25,7 @@ import { buildShortUUID } from '@vben/utils';
 import Editor from '@tinymce/tinymce-vue';
 import { isNumber } from 'lodash-es';
 
-import { uploadApi, type UploadResult } from '#/api/core/upload';
+import { uploadApi } from '#/api/core/upload';
 
 import { bindHandlers } from './helper';
 import ImgUpload from './img-upload.vue';

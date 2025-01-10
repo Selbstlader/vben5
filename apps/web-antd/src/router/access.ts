@@ -4,13 +4,15 @@ import type {
   RouteRecordStringComponent,
 } from '@vben/types';
 
+import type { Menu } from '#/api';
+
 import { generateAccessible } from '@vben/access';
 import { preferences } from '@vben/preferences';
 
 import { message } from 'ant-design-vue';
 import { cloneDeep } from 'lodash-es';
 
-import { getAllMenusApi, type Menu } from '#/api';
+import { getAllMenusApi } from '#/api';
 import { BasicLayout, IFrameView } from '#/layouts';
 import { $t } from '#/locales';
 

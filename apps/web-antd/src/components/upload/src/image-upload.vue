@@ -2,13 +2,16 @@
 import type { UploadFile, UploadProps } from 'ant-design-vue';
 import type { UploadRequestOption } from 'ant-design-vue/lib/vc-upload/interface';
 
-import { uploadApi } from '#/api';
-import { ossInfo } from '#/api/system/oss';
-import { PlusOutlined } from '@ant-design/icons-vue';
+import { ref, toRefs, watch } from 'vue';
+
 import { $t } from '@vben/locales';
+
+import { PlusOutlined } from '@ant-design/icons-vue';
 import { message, Modal, Upload } from 'ant-design-vue';
 import { isArray, isFunction, isObject, isString, uniqueId } from 'lodash-es';
-import { ref, toRefs, watch } from 'vue';
+
+import { uploadApi } from '#/api';
+import { ossInfo } from '#/api/system/oss';
 
 import { checkImageFileType, defaultImageAccept } from './helper';
 import { UploadResultStatus } from './typing';
