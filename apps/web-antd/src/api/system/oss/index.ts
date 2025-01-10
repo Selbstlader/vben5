@@ -1,6 +1,6 @@
-import type { ID, IDS, PageQuery, PageResult } from '#/api/common';
-
 import type { OssFile } from './model';
+
+import type { ID, IDS, PageQuery, PageResult } from '#/api/common';
 
 import { ContentTypeEnum } from '#/api/helper';
 import { requestClient } from '#/api/request';
@@ -13,20 +13,30 @@ enum Api {
   root = '/resource/oss',
 }
 
+/**
+ * 文件list
+ * @param params 参数
+ * @returns 分页
+ */
 export function ossList(params?: PageQuery) {
   return requestClient.get<PageResult<OssFile>>(Api.ossList, { params });
 }
 
+/**
+ * 查询文件信息 返回为数组
+ * @param ossIds id数组
+ * @returns 信息数组
+ */
 export function ossInfo(ossIds: IDS) {
   return requestClient.get<OssFile[]>(`${Api.ossInfo}/${ossIds}`);
 }
 
 /**
- * @deprecated
+ * @deprecated 使用apps/web-antd/src/api/core/upload.ts uploadApi方法
  * @param file 文件
  * @returns void
  */
-export function ossUpload(file: any) {
+export function ossUpload(file: Blob | File) {
   const formData = new FormData();
   formData.append('file', file);
   return requestClient.postWithMsg(Api.ossUpload, formData, {
@@ -48,6 +58,11 @@ export function ossDownload(ossId: ID) {
   });
 }
 
+/**
+ * 删除文件
+ * @param ossIds id数组
+ * @returns void
+ */
 export function ossRemove(ossIds: IDS) {
   return requestClient.deleteWithMsg<void>(`${Api.root}/${ossIds}`);
 }

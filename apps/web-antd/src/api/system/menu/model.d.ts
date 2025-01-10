@@ -46,3 +46,12 @@ export interface MenuResp {
   checkedKeys: number[];
   menus: MenuOption[];
 }
+
+/**
+ * 菜单表单查询
+ */
+export interface MenuQuery {
+  menuName?: string;
+  visible?: string;
+  status?: string;
+}

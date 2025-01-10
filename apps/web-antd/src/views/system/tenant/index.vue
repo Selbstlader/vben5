@@ -1,20 +1,18 @@
 <script setup lang="ts">
-import type { Recordable } from '@vben/types';
+import type { VbenFormProps } from '@vben/common-ui';
+
+import type { VxeGridProps } from '#/adapter/vxe-table';
+import type { Tenant } from '#/api/system/tenant/model';
 
 import { computed } from 'vue';
 
 import { useAccess } from '@vben/access';
-import { Page, useVbenDrawer, type VbenFormProps } from '@vben/common-ui';
-import { Fallback } from '@vben/common-ui';
+import { Fallback, Page, useVbenDrawer } from '@vben/common-ui';
 import { getVxePopupContainer } from '@vben/utils';
 
 import { Modal, Popconfirm, Space } from 'ant-design-vue';
 
-import {
-  useVbenVxeGrid,
-  vxeCheckboxChecked,
-  type VxeGridProps,
-} from '#/adapter/vxe-table';
+import { useVbenVxeGrid, vxeCheckboxChecked } from '#/adapter/vxe-table';
 import {
   dictSyncTenant,
   tenantExport,
@@ -87,20 +85,20 @@ function handleAdd() {
   drawerApi.open();
 }
 
-async function handleEdit(record: Recordable<any>) {
+async function handleEdit(record: Tenant) {
   drawerApi.setData({ id: record.id });
   drawerApi.open();
 }
 
-async function handleSync(record: Recordable<any>) {
+async function handleSync(record: Tenant) {
   const { tenantId, packageId } = record;
   await tenantSyncPackage(tenantId, packageId);
   await tableApi.query();
 }
 
 const tenantStore = useTenantStore();
-async function handleDelete(row: Recordable<any>) {
-  await tenantRemove(row.id);
+async function handleDelete(row: Tenant) {
+  await tenantRemove([row.id]);
   await tableApi.query();
   // 重新加载租户信息
   tenantStore.initTenant();
@@ -108,7 +106,7 @@ async function handleDelete(row: Recordable<any>) {
 
 function handleMultiDelete() {
   const rows = tableApi.grid.getCheckboxRecords();
-  const ids = rows.map((row: any) => row.id);
+  const ids = rows.map((row: Tenant) => row.id);
   Modal.confirm({
     title: '提示',
     okType: 'danger',

@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import type { Recordable } from '@vben/types';
+import type { VbenFormProps } from '@vben/common-ui';
 
+import type { VxeGridProps } from '#/adapter/vxe-table';
+import type { PageQuery } from '#/api/common';
 import type { OperationLog } from '#/api/monitor/operlog/model';
 
-import { Page, useVbenDrawer, type VbenFormProps } from '@vben/common-ui';
+import { Page, useVbenDrawer } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 
 import { Modal, Space } from 'ant-design-vue';
@@ -12,7 +14,6 @@ import {
   addSortParams,
   useVbenVxeGrid,
   vxeCheckboxChecked,
-  type VxeGridProps,
 } from '#/adapter/vxe-table';
 import {
   operLogClean,
@@ -61,7 +62,7 @@ const gridOptions: VxeGridProps<OperationLog> = {
   proxyConfig: {
     ajax: {
       query: async ({ page, sorts }, formValues = {}) => {
-        const params: any = {
+        const params: PageQuery = {
           pageNum: page.currentPage,
           pageSize: page.pageSize,
           ...formValues,
@@ -102,7 +103,7 @@ const [OperationPreviewDrawer, drawerApi] = useVbenDrawer({
  * 预览
  * @param record 操作日志记录
  */
-function handlePreview(record: Recordable<any>) {
+function handlePreview(record: OperationLog) {
   drawerApi.setData({ record });
   drawerApi.open();
 }
@@ -123,7 +124,7 @@ function handleClear() {
  */
 async function handleDelete() {
   const rows = tableApi.grid.getCheckboxRecords();
-  const ids = rows.map((row: any) => row.operId);
+  const ids = rows.map((row: OperationLog) => row.operId);
   Modal.confirm({
     title: '提示',
     okType: 'danger',

@@ -1,20 +1,18 @@
 <script setup lang="ts">
-import type { Recordable } from '@vben/types';
+import type { VbenFormProps } from '@vben/common-ui';
+
+import type { VxeGridProps } from '#/adapter/vxe-table';
+import type { TenantPackage } from '#/api/system/tenant-package/model';
 
 import { computed } from 'vue';
 
 import { useAccess } from '@vben/access';
-import { Page, useVbenDrawer, type VbenFormProps } from '@vben/common-ui';
-import { Fallback } from '@vben/common-ui';
+import { Fallback, Page, useVbenDrawer } from '@vben/common-ui';
 import { getVxePopupContainer } from '@vben/utils';
 
 import { Modal, Popconfirm, Space } from 'ant-design-vue';
 
-import {
-  useVbenVxeGrid,
-  vxeCheckboxChecked,
-  type VxeGridProps,
-} from '#/adapter/vxe-table';
+import { useVbenVxeGrid, vxeCheckboxChecked } from '#/adapter/vxe-table';
 import {
   packageChangeStatus,
   packageExport,
@@ -83,19 +81,19 @@ function handleAdd() {
   drawerApi.open();
 }
 
-async function handleEdit(record: Recordable<any>) {
+async function handleEdit(record: TenantPackage) {
   drawerApi.setData({ id: record.packageId });
   drawerApi.open();
 }
 
-async function handleDelete(row: Recordable<any>) {
-  await packageRemove(row.packageId);
+async function handleDelete(row: TenantPackage) {
+  await packageRemove([row.packageId]);
   await tableApi.query();
 }
 
 function handleMultiDelete() {
   const rows = tableApi.grid.getCheckboxRecords();
-  const ids = rows.map((row: any) => row.packageId);
+  const ids = rows.map((row: TenantPackage) => row.packageId);
   Modal.confirm({
     title: '提示',
     okType: 'danger',

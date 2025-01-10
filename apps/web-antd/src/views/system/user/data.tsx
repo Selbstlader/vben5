@@ -1,9 +1,10 @@
+import type { FormSchemaGetter } from '#/adapter/form';
 import type { VxeGridProps } from '#/adapter/vxe-table';
 
 import { DictEnum } from '@vben/constants';
 import { getPopupContainer } from '@vben/utils';
 
-import { type FormSchemaGetter, z } from '#/adapter/form';
+import { z } from '#/adapter/form';
 import { getDictOptions } from '#/utils/dict';
 
 export const querySchema: FormSchemaGetter = () => [

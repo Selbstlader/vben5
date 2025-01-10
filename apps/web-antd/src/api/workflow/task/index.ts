@@ -95,7 +95,6 @@ export function getTaskByTaskId(taskId: string) {
 
 /**
  * 终止任务
- * @param data
  */
 export function terminationTask(data: { comment?: string; taskId: string }) {
   return requestClient.postWithMsg<void>(

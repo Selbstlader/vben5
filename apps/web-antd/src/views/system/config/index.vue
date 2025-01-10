@@ -1,16 +1,15 @@
 <script setup lang="ts">
-import type { Recordable } from '@vben/types';
+import type { VbenFormProps } from '@vben/common-ui';
 
-import { Page, useVbenModal, type VbenFormProps } from '@vben/common-ui';
+import type { VxeGridProps } from '#/adapter/vxe-table';
+import type { SysConfig } from '#/api/system/config/model';
+
+import { Page, useVbenModal } from '@vben/common-ui';
 import { getVxePopupContainer } from '@vben/utils';
 
 import { Modal, Popconfirm, Space } from 'ant-design-vue';
 
-import {
-  useVbenVxeGrid,
-  vxeCheckboxChecked,
-  type VxeGridProps,
-} from '#/adapter/vxe-table';
+import { useVbenVxeGrid, vxeCheckboxChecked } from '#/adapter/vxe-table';
 import {
   configExport,
   configList,
@@ -83,19 +82,19 @@ function handleAdd() {
   modalApi.open();
 }
 
-async function handleEdit(record: Recordable<any>) {
+async function handleEdit(record: SysConfig) {
   modalApi.setData({ id: record.configId });
   modalApi.open();
 }
 
-async function handleDelete(row: Recordable<any>) {
-  await configRemove(row.configId);
+async function handleDelete(row: SysConfig) {
+  await configRemove([row.configId]);
   await tableApi.query();
 }
 
 function handleMultiDelete() {
   const rows = tableApi.grid.getCheckboxRecords();
-  const ids = rows.map((row: any) => row.configId);
+  const ids = rows.map((row: SysConfig) => row.configId);
   Modal.confirm({
     title: '提示',
     okType: 'danger',

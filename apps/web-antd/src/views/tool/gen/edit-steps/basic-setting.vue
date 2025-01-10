@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import type { Ref } from 'vue';
+
 import type { Column, GenInfo } from '#/api/tool/gen/model';
 
-import { inject, onMounted, type Ref } from 'vue';
+import { inject, onMounted } from 'vue';
 
 import { useVbenForm } from '@vben/common-ui';
 import { $t } from '@vben/locales';

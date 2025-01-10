@@ -1,12 +1,15 @@
 <script setup lang="ts">
-import type { Recordable } from '@vben/types';
+import type { VbenFormProps } from '@vben/common-ui';
 
-import { Page, type VbenFormProps } from '@vben/common-ui';
+import type { VxeGridProps } from '#/adapter/vxe-table';
+import type { OnlineUser } from '#/api/monitor/online/model';
+
+import { Page } from '@vben/common-ui';
 import { getVxePopupContainer } from '@vben/utils';
 
 import { Popconfirm } from 'ant-design-vue';
 
-import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
+import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { forceLogout, onlineList } from '#/api/monitor/online';
 
 import { columns, querySchema } from './data';
@@ -51,7 +54,7 @@ const gridOptions: VxeGridProps = {
 
 const [BasicTable, tableApi] = useVbenVxeGrid({ formOptions, gridOptions });
 
-async function handleForceOffline(row: Recordable<any>) {
+async function handleForceOffline(row: OnlineUser) {
   await forceLogout(row.tokenId);
   await tableApi.query();
 }

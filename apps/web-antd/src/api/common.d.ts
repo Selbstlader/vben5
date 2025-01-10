@@ -38,4 +38,5 @@ export interface PageQuery {
   orderByColumn?: string;
   pageNum?: number;
   pageSize?: number;
+  [key: string]: any;
 }

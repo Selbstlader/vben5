@@ -1,12 +1,15 @@
 <script setup lang="ts">
+import type { Ref } from 'vue';
+
+import type { VxeGridProps } from '#/adapter/vxe-table';
 import type { GenInfo } from '#/api/tool/gen/model';
 
-import { inject, type Ref, unref } from 'vue';
+import { inject, unref } from 'vue';
 
 import { message, Space } from 'ant-design-vue';
 import { cloneDeep } from 'lodash-es';
 
-import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
+import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { editSave } from '#/api/tool/gen';
 
 import { toCurrentStep } from '../mitt';

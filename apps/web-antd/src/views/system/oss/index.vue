@@ -1,10 +1,14 @@
 <script setup lang="ts">
-import type { Recordable } from '@vben/types';
+import type { VbenFormProps } from '@vben/common-ui';
+
+import type { VxeGridProps } from '#/adapter/vxe-table';
+import type { PageQuery } from '#/api/common';
+import type { OssFile } from '#/api/system/oss/model';
 
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { Page, useVbenModal, type VbenFormProps } from '@vben/common-ui';
+import { Page, useVbenModal } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 import { getVxePopupContainer } from '@vben/utils';
 
@@ -22,7 +26,6 @@ import {
   addSortParams,
   useVbenVxeGrid,
   vxeCheckboxChecked,
-  type VxeGridProps,
 } from '#/adapter/vxe-table';
 import { configInfoByKey } from '#/api/system/config';
 import { ossDownload, ossList, ossRemove } from '#/api/system/oss';
@@ -67,7 +70,7 @@ const gridOptions: VxeGridProps = {
   proxyConfig: {
     ajax: {
       query: async ({ page, sorts }, formValues = {}) => {
-        const params: any = {
+        const params: PageQuery = {
           pageNum: page.currentPage,
           pageSize: page.pageSize,
           ...formValues,
@@ -101,7 +104,7 @@ const [BasicTable, tableApi] = useVbenVxeGrid({
   },
 });
 
-async function handleDownload(row: Recordable<any>) {
+async function handleDownload(row: OssFile) {
   const hideLoading = message.loading($t('pages.common.downloadLoading'), 0);
   try {
     const data = await ossDownload(row.ossId);
@@ -111,14 +114,14 @@ async function handleDownload(row: Recordable<any>) {
   }
 }
 
-async function handleDelete(row: Recordable<any>) {
-  await ossRemove(row.ossId);
+async function handleDelete(row: OssFile) {
+  await ossRemove([row.ossId]);
   await tableApi.query();
 }
 
 function handleMultiDelete() {
   const rows = tableApi.grid.getCheckboxRecords();
-  const ids = rows.map((row: any) => row.ossId);
+  const ids = rows.map((row: OssFile) => row.ossId);
   Modal.confirm({
     title: '提示',
     okType: 'danger',

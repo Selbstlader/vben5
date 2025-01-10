@@ -1,3 +1,4 @@
+import type { FormSchemaGetter } from '#/adapter/form';
 import type { VxeGridProps } from '#/adapter/vxe-table';
 
 import { h } from 'vue';
@@ -7,7 +8,7 @@ import { FolderIcon, MenuIcon, OkButtonIcon, VbenIcon } from '@vben/icons';
 import { $t } from '@vben/locales';
 import { getPopupContainer } from '@vben/utils';
 
-import { type FormSchemaGetter, z } from '#/adapter/form';
+import { z } from '#/adapter/form';
 import { getDictOptions } from '#/utils/dict';
 import { renderDict } from '#/utils/render';
 

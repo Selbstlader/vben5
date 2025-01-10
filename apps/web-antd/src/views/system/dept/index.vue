@@ -1,14 +1,17 @@
 <script setup lang="ts">
-import type { Recordable } from '@vben/types';
+import type { VbenFormProps } from '@vben/common-ui';
+
+import type { VxeGridProps } from '#/adapter/vxe-table';
+import type { Dept } from '#/api/system/dept/model';
 
 import { nextTick } from 'vue';
 
-import { Page, useVbenDrawer, type VbenFormProps } from '@vben/common-ui';
+import { Page, useVbenDrawer } from '@vben/common-ui';
 import { eachTree, getVxePopupContainer } from '@vben/utils';
 
 import { Popconfirm, Space } from 'ant-design-vue';
 
-import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
+import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { deptList, deptRemove } from '#/api/system/dept';
 
 import { columns, querySchema } from './data';
@@ -74,7 +77,7 @@ const [BasicTable, tableApi] = useVbenVxeGrid({
   formOptions,
   gridOptions,
   gridEvents: {
-    cellDblclick: (e: any) => {
+    cellDblclick: (e) => {
       const { row = {} } = e;
       if (!row?.children) {
         return;
@@ -84,7 +87,7 @@ const [BasicTable, tableApi] = useVbenVxeGrid({
       row.expand = !isExpanded;
     },
     // 需要监听使用箭头展开的情况 否则展开/折叠的数据不一致
-    toggleTreeExpand: (e: any) => {
+    toggleTreeExpand: (e) => {
       const { row = {}, expanded } = e;
       row.expand = expanded;
     },
@@ -99,18 +102,18 @@ function handleAdd() {
   drawerApi.open();
 }
 
-function handleSubAdd(row: Recordable<any>) {
+function handleSubAdd(row: Dept) {
   const { deptId } = row;
   drawerApi.setData({ id: deptId, update: false });
   drawerApi.open();
 }
 
-async function handleEdit(record: Recordable<any>) {
+async function handleEdit(record: Dept) {
   drawerApi.setData({ id: record.deptId, update: true });
   drawerApi.open();
 }
 
-async function handleDelete(row: Recordable<any>) {
+async function handleDelete(row: Dept) {
   await deptRemove(row.deptId);
   await tableApi.query();
 }

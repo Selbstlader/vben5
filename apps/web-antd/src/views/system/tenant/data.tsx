@@ -1,10 +1,11 @@
+import type { FormSchemaGetter } from '#/adapter/form';
 import type { VxeGridProps } from '#/adapter/vxe-table';
 
 import { getPopupContainer } from '@vben/utils';
 
 import dayjs from 'dayjs';
 
-import { type FormSchemaGetter, z } from '#/adapter/form';
+import { z } from '#/adapter/form';
 
 export const querySchema: FormSchemaGetter = () => [
   {

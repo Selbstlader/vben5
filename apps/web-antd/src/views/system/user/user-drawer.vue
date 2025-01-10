@@ -1,6 +1,14 @@
 <script setup lang="ts">
 import type { Role } from '#/api/system/user/model';
 
+import { computed, h, onMounted, ref } from 'vue';
+
+import { useVbenDrawer } from '@vben/common-ui';
+import { $t } from '@vben/locales';
+import { addFullName, cloneDeep, getPopupContainer } from '@vben/utils';
+
+import { Tag } from 'ant-design-vue';
+
 import { useVbenForm } from '#/adapter/form';
 import { configInfoByKey } from '#/api/system/config';
 import { postOptionSelect } from '#/api/system/post';
@@ -11,11 +19,6 @@ import {
   userUpdate,
 } from '#/api/system/user';
 import { authScopeOptions } from '#/views/system/role/data';
-import { useVbenDrawer } from '@vben/common-ui';
-import { $t } from '@vben/locales';
-import { addFullName, cloneDeep, getPopupContainer } from '@vben/utils';
-import { Tag } from 'ant-design-vue';
-import { computed, h, onMounted, ref } from 'vue';
 
 import { drawerSchema } from './data';
 

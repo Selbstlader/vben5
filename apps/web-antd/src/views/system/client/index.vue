@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { VbenFormProps } from '@vben/common-ui';
-import type { Recordable } from '@vben/types';
 
 import type { VxeGridProps } from '#/adapter/vxe-table';
+import type { Client } from '#/api/system/client/model';
 
 import { useAccess } from '@vben/access';
 import { Page, useVbenDrawer } from '@vben/common-ui';
@@ -42,7 +42,7 @@ const gridOptions: VxeGridProps = {
     reserve: true,
     // 点击行选中
     // trigger: 'row',
-    checkMethod: (row: any) => row?.id !== 1,
+    checkMethod: ({ row }) => (row as Client)?.id !== 1,
   },
   columns,
   height: 'auto',
@@ -80,19 +80,19 @@ function handleAdd() {
   drawerApi.open();
 }
 
-async function handleEdit(record: Recordable<any>) {
+async function handleEdit(record: Client) {
   drawerApi.setData({ id: record.id });
   drawerApi.open();
 }
 
-async function handleDelete(row: Recordable<any>) {
-  await clientRemove(row.id);
+async function handleDelete(row: Client) {
+  await clientRemove([row.id]);
   await tableApi.query();
 }
 
 function handleMultiDelete() {
   const rows = tableApi.grid.getCheckboxRecords();
-  const ids = rows.map((row: any) => row.id);
+  const ids = rows.map((row: Client) => row.id);
   Modal.confirm({
     title: '提示',
     okType: 'danger',

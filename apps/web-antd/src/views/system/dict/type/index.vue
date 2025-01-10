@@ -1,18 +1,17 @@
 <script setup lang="ts">
-import type { Recordable } from '@vben/types';
+import type { VbenFormProps } from '@vben/common-ui';
+
+import type { VxeGridProps } from '#/adapter/vxe-table';
+import type { DictType } from '#/api/system/dict/dict-type-model';
 
 import { ref } from 'vue';
 
-import { useVbenModal, type VbenFormProps } from '@vben/common-ui';
+import { useVbenModal } from '@vben/common-ui';
 import { getVxePopupContainer } from '@vben/utils';
 
 import { Modal, Popconfirm, Space } from 'ant-design-vue';
 
-import {
-  useVbenVxeGrid,
-  vxeCheckboxChecked,
-  type VxeGridProps,
-} from '#/adapter/vxe-table';
+import { useVbenVxeGrid, vxeCheckboxChecked } from '#/adapter/vxe-table';
 import {
   dictTypeExport,
   dictTypeList,
@@ -73,7 +72,7 @@ const [BasicTable, tableApi] = useVbenVxeGrid({
   formOptions,
   gridOptions,
   gridEvents: {
-    cellClick: (e: any) => {
+    cellClick: (e) => {
       const { row } = e;
       if (lastDictType.value === row.dictType) {
         return;
@@ -92,19 +91,19 @@ function handleAdd() {
   modalApi.open();
 }
 
-async function handleEdit(record: Recordable<any>) {
+async function handleEdit(record: DictType) {
   modalApi.setData({ id: record.dictId });
   modalApi.open();
 }
 
-async function handleDelete(row: Recordable<any>) {
-  await dictTypeRemove(row.dictId);
+async function handleDelete(row: DictType) {
+  await dictTypeRemove([row.dictId]);
   await tableApi.query();
 }
 
 function handleMultiDelete() {
   const rows = tableApi.grid.getCheckboxRecords();
-  const ids = rows.map((row: any) => row.dictId);
+  const ids = rows.map((row: DictType) => row.dictId);
   Modal.confirm({
     title: '提示',
     okType: 'danger',

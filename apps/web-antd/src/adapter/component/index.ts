@@ -3,13 +3,15 @@
  * 可用于 vben-form、vben-modal、vben-drawer 等组件使用,
  */
 
-import type { BaseFormComponentType } from '@vben/common-ui';
 import type { Component, SetupContext } from 'vue';
 
-import { Tinymce as RichTextarea } from '#/components/tinymce';
-import { FileUpload, ImageUpload } from '#/components/upload';
+import type { BaseFormComponentType } from '@vben/common-ui';
+
+import { h } from 'vue';
+
 import { ApiComponent, globalShareState, IconPicker } from '@vben/common-ui';
 import { $t } from '@vben/locales';
+
 import {
   AutoComplete,
   Button,
@@ -34,7 +36,9 @@ import {
   TreeSelect,
   Upload,
 } from 'ant-design-vue';
-import { h } from 'vue';
+
+import { Tinymce as RichTextarea } from '#/components/tinymce';
+import { FileUpload, ImageUpload } from '#/components/upload';
 
 const withDefaultPlaceholder = <T extends Component>(
   component: T,
