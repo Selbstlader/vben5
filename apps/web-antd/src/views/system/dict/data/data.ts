@@ -20,7 +20,7 @@ export const columns: VxeGridProps['columns'] = [
     slots: {
       default: ({ row }) => {
         const { dictValue } = row as DictData;
-        return renderDictTag(dictValue, row);
+        return renderDictTag(dictValue, [row]);
       },
     },
   },
