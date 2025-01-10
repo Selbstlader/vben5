@@ -51,13 +51,11 @@ export const columns: VxeGridProps['columns'] = [
         if (!row.grantTypeList) {
           return '无';
         }
-        return (
-          <div class="my-3">
-            {renderDictTags(
-              row.grantTypeList,
-              getDictOptions(DictEnum.SYS_GRANT_TYPE),
-            )}
-          </div>
+        return renderDictTags(
+          row.grantTypeList,
+          getDictOptions(DictEnum.SYS_GRANT_TYPE),
+          true,
+          4,
         );
       },
     },

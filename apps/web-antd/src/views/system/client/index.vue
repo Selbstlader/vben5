@@ -64,6 +64,7 @@ const gridOptions: VxeGridProps = {
     keyField: 'id',
   },
   id: 'system-client-index',
+  showOverflow: false,
 };
 
 const [BasicTable, tableApi] = useVbenVxeGrid({
