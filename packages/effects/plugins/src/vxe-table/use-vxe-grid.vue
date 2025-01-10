@@ -92,7 +92,7 @@ const [Form, formApi] = useTableForm({
   },
   showCollapseButton: true,
   submitButtonOptions: {
-    content: $t('common.query'),
+    content: computed(() => $t('common.search')),
   },
   // enter提交
   submitOnEnter: true,
