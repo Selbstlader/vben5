@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import type { VbenFormProps } from '@vben-core/form-ui';
 import type {
   VxeGridDefines,
   VxeGridInstance,
@@ -9,14 +8,12 @@ import type {
   VxeToolbarPropTypes,
 } from 'vxe-table';
 
+import type { SetupContext } from 'vue';
+
+import type { VbenFormProps } from '@vben-core/form-ui';
+
 import type { ExtendedVxeGridApi, VxeGridProps } from './types';
 
-import { usePriorityValues } from '@vben/hooks';
-import { EmptyIcon } from '@vben/icons';
-import { $t } from '@vben/locales';
-import { usePreferences } from '@vben/preferences';
-import { cloneDeep, cn, mergeWithArrayOverride } from '@vben/utils';
-import { VbenHelpTooltip, VbenLoading } from '@vben-core/shadcn-ui';
 import {
   computed,
   nextTick,
@@ -27,6 +24,15 @@ import {
   useTemplateRef,
   watch,
 } from 'vue';
+
+import { usePriorityValues } from '@vben/hooks';
+import { EmptyIcon } from '@vben/icons';
+import { $t } from '@vben/locales';
+import { usePreferences } from '@vben/preferences';
+import { cloneDeep, cn, mergeWithArrayOverride } from '@vben/utils';
+
+import { VbenHelpTooltip, VbenLoading } from '@vben-core/shadcn-ui';
+
 import { VxeGrid, VxeUI } from 'vxe-table';
 
 import { extendProxyOptions } from './extends';
@@ -64,18 +70,18 @@ const {
 
 const { isMobile } = usePreferences();
 
-const slots = useSlots();
+const slots: SetupContext['slots'] = useSlots();
 
 const [Form, formApi] = useTableForm({
   compact: true,
   handleSubmit: async () => {
-    const formValues = formApi.form.values;
+    const formValues = await formApi.getValues();
     formApi.setLatestSubmissionValues(toRaw(formValues));
     props.api.reload(formValues);
   },
   handleReset: async () => {
     await formApi.resetForm();
-    const formValues = formApi.form.values;
+    const formValues = await formApi.getValues();
     formApi.setLatestSubmissionValues(formValues);
     props.api.reload(formValues);
   },
@@ -247,7 +253,9 @@ async function init() {
     // 第一次拿到的是readonly的数据 如果需要修改 需要cloneDeep
     props.api.grid.commitProxy?.(
       '_init',
-      cloneDeep(formApi.form?.values) ?? {},
+      cloneDeep(formOptions.value)
+        ? (cloneDeep(await formApi.getValues()) ?? {})
+        : {},
     );
     // props.api.reload(formApi.form?.values ?? {});
   }
