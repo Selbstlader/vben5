@@ -18,6 +18,7 @@ import {
   Modal,
   Popconfirm,
   Space,
+  Spin,
   Switch,
   Tooltip,
 } from 'ant-design-vue';
@@ -31,7 +32,7 @@ import { configInfoByKey } from '#/api/system/config';
 import { ossDownload, ossList, ossRemove } from '#/api/system/oss';
 import { downloadByData } from '#/utils/file/download';
 
-import { columns, querySchema } from './data';
+import { columns, fallbackImageBase64, querySchema } from './data';
 import fileUploadModal from './file-upload-modal.vue';
 import imageUploadModal from './image-upload-modal.vue';
 
@@ -195,11 +196,22 @@ const [FileUploadModal, fileUploadApi] = useVbenModal({
         </Space>
       </template>
       <template #url="{ row }">
+        <!-- placeholder为图片未加载时显示的占位图 -->
+        <!-- fallback为图片加载失败时显示 -->
+        <!-- 需要设置key属性 否则切换翻页会有延迟 -->
         <Image
+          :key="row.ossId"
           v-if="preview && isImageFile(row.url)"
           :src="row.url"
           height="50px"
-        />
+          :fallback="fallbackImageBase64"
+        >
+          <template #placeholder>
+            <div class="flex size-full items-center justify-center">
+              <Spin />
+            </div>
+          </template>
+        </Image>
         <span v-else>{{ row.url }}</span>
       </template>
       <template #action="{ row }">
