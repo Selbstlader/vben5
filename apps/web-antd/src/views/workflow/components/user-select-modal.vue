@@ -35,7 +35,7 @@ const emit = defineEmits<{
 
 const [BasicModal, modalApi] = useVbenModal({
   title: '选择人员',
-  class: 'w-[1050px]',
+  class: 'w-[1060px]',
   fullscreenButton: false,
   onClosed: () => emit('cancel'),
   onConfirm: handleSubmit,
@@ -290,7 +290,7 @@ function handleSubmit() {
             <div class="flex items-center gap-2">
               <VbenAvatar
                 :alt="row.nickName"
-                :src="row.avatar"
+                :src="row.avatar ?? ''"
                 :class="{ 'bg-primary': !row.avatar }"
                 class="size-[32px] rounded-full text-white"
               />
@@ -315,12 +315,12 @@ function handleSubmit() {
             </div>
           </div>
         </div>
-        <RightBasicTable>
+        <RightBasicTable id="user-select-right-table">
           <template #user="{ row }">
             <div class="flex items-center gap-2 overflow-hidden">
               <VbenAvatar
                 :alt="row.nickName"
-                :src="row.avatar"
+                :src="row.avatar ?? ''"
                 :class="{ 'bg-primary': !row.avatar }"
                 class="size-[32px] rounded-full text-white"
               />
@@ -352,5 +352,16 @@ function handleSubmit() {
 
 :deep(.vxe-body--row) {
   cursor: pointer;
+}
+</style>
+
+<style lang="scss">
+/**
+默认显示右边的滚动条 防止出现滚动条被挤压
+*/
+#user-select-right-table {
+  div.vxe-table--body-wrapper.body--wrapper {
+    overflow: scroll;
+  }
 }
 </style>
