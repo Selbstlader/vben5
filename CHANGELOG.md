@@ -1,4 +1,4 @@
-# 1.1.4
+# 1.2.0
 
 **REFACTOR**
 
@@ -7,19 +7,23 @@
 
 **Features**
 
-- 通用的vxe-table排序事件(排序逻辑改为在排序事件中处理而非在api处理)
+- 对接后端工作流
+- ~~通用的vxe-table排序事件(排序逻辑改为在排序事件中处理而非在api处理)~~
 - getDict/getDictOptions 提取公共逻辑 减少冗余代码
 - 字典新增对Number类型的支持 -> `getDictOptions('', true);`即可获取number类型的value
+- 文件上传 增加上传进度条 下方上传提示
+- 图片上传 增加上传进度条 下方上传提示
 
 **BUG FIXES**
 
-- 字典项为空时getDict方法无限调用接口((无奈兼容 不给字典item本来就是错误用法))
+- 字典项为空时getDict方法无限调用接口(无奈兼容 不给字典item本来就是错误用法)
 - 表格排序翻页会丢失排序参数
 
 **OTHERS**
 
 - 用户管理 新增只获取一次(mounted)默认密码而非每次打开modal都获取
 - `apps/web-antd/src/utils/dict.ts` `getDict`方法将于下个版本删除 使用`getDictOptions`替代
+- VxeTable升级V4.10.0
 
 # 1.1.3
 
