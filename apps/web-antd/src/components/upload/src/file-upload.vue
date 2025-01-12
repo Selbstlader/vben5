@@ -199,6 +199,13 @@ function getValue() {
           {{ $t('component.upload.upload') }}
         </a-button>
       </div>
+      <div class="flex flex-wrap">
+        请上传不超过
+        <div class="text-primary font-bold">[{{ maxSize }}MB]</div>
+        的
+        <div class="text-primary font-bold">[{{ accept.join(', ') }}]</div>
+        格式文件
+      </div>
     </Upload>
   </div>
 </template>

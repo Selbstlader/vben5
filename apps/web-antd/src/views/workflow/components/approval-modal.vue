@@ -70,7 +70,7 @@ const [BasicForm, formApi] = useVbenForm({
       },
       defaultValue: [],
       label: '附件上传',
-      formItemClass: 'items-baseline',
+      formItemClass: 'items-start',
     },
     {
       fieldName: 'flowCopyList',
