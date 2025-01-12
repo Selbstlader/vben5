@@ -45,6 +45,10 @@ const props = withDefaults(
     // support xxx.xxx.xx
     // 返回的字段 默认url
     resultField?: 'fileName' | 'ossId' | 'url' | string;
+    /**
+     * 是否显示下面的描述
+     */
+    showDescription?: boolean;
     value?: string[];
   }>(),
   {
@@ -57,6 +61,7 @@ const props = withDefaults(
     multiple: false,
     api: uploadApi,
     resultField: '',
+    showDescription: true,
   },
 );
 const emit = defineEmits(['change', 'update:value', 'delete']);
@@ -214,11 +219,11 @@ function getValue() {
           {{ $t('component.upload.upload') }}
         </a-button>
       </div>
-      <div class="flex flex-wrap">
+      <div v-if="showDescription" class="mt-2 flex flex-wrap items-center">
         请上传不超过
-        <div class="text-primary font-bold">[{{ maxSize }}MB]</div>
+        <div class="text-primary mx-1 font-bold">{{ maxSize }}MB</div>
         的
-        <div class="text-primary font-bold">[{{ accept.join(', ') }}]</div>
+        <div class="text-primary mx-1 font-bold">{{ accept.join('/') }}</div>
         格式文件
       </div>
     </Upload>
