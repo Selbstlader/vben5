@@ -8,6 +8,7 @@ export * from './json-preview';
 export * from './markdown';
 export * from './page';
 export * from './resize';
+export * from './tippy';
 export * from '@vben-core/form-ui';
 export * from '@vben-core/popup-ui';
 
