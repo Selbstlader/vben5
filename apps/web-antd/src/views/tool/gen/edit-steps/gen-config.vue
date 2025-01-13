@@ -26,7 +26,6 @@ const gridOptions: VxeGridProps = {
   editConfig: { trigger: 'click', mode: 'cell', showStatus: true },
   editRules: validRules,
   rowConfig: {
-    isHover: true,
     keyField: 'id',
     isCurrent: true, // 高亮当前行
   },

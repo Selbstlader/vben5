@@ -65,7 +65,6 @@ const gridOptions: VxeGridProps = {
     },
   },
   rowConfig: {
-    isHover: true,
     keyField: 'id',
   },
   id: 'system-tenant-index',

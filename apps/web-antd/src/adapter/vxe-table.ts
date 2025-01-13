@@ -43,7 +43,7 @@ setupVbenVxeTable({
           // 鼠标移入行显示 hover 样式
           isHover: true,
           // 点击行高亮
-          isCurrent: true,
+          isCurrent: false,
         },
         columnConfig: {
           // 可拖拽列宽

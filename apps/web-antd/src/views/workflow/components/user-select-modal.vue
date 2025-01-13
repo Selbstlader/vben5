@@ -145,7 +145,6 @@ const gridOptions: VxeGridProps = {
     },
   },
   rowConfig: {
-    isHover: true,
     keyField: 'userId',
   },
   toolbarConfig: {
@@ -217,7 +216,6 @@ const rightGridOptions: VxeGridProps = {
     enabled: false,
   },
   rowConfig: {
-    isHover: true,
     keyField: 'userId',
   },
   toolbarConfig: {

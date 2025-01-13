@@ -67,7 +67,6 @@ const gridOptions: VxeGridProps = {
     },
   },
   rowConfig: {
-    isHover: true,
     keyField: 'dictCode',
   },
   id: 'system-dict-data-index',

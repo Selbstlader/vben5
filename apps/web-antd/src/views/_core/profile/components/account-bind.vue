@@ -107,7 +107,6 @@ const gridOptions: VxeGridProps = {
     },
   },
   rowConfig: {
-    isHover: true,
     isCurrent: false,
     keyField: 'id',
   },

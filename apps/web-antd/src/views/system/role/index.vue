@@ -79,7 +79,6 @@ const gridOptions: VxeGridProps = {
     },
   },
   rowConfig: {
-    isHover: true,
     keyField: 'roleId',
   },
   id: 'system-role-index',

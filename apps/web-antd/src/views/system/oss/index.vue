@@ -83,7 +83,6 @@ const gridOptions: VxeGridProps = {
     },
   },
   rowConfig: {
-    isHover: true,
     keyField: 'ossId',
     height: 65,
   },

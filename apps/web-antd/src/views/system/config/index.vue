@@ -63,7 +63,6 @@ const gridOptions: VxeGridProps = {
     },
   },
   rowConfig: {
-    isHover: true,
     keyField: 'configId',
   },
   id: 'system-config-index',

@@ -51,7 +51,6 @@ const gridOptions: VxeGridProps = {
     gt: 0,
   },
   rowConfig: {
-    isHover: true,
     keyField: 'tokenId',
   },
   id: 'monitor-online-index',

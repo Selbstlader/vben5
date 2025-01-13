@@ -51,7 +51,6 @@ const gridOptions: VxeGridProps = {
     },
   },
   rowConfig: {
-    isHover: true,
     keyField: 'noticeId',
   },
   id: 'system-notice-index',

@@ -72,7 +72,6 @@ const gridOptions: VxeGridProps = {
     },
   },
   rowConfig: {
-    isHover: true,
     keyField: 'postId',
   },
   id: 'system-post-index',

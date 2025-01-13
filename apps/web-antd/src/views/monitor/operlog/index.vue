@@ -74,7 +74,6 @@ const gridOptions: VxeGridProps<OperationLog> = {
     },
   },
   rowConfig: {
-    isHover: true,
     keyField: 'operId',
   },
   sortConfig: {

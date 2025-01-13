@@ -71,7 +71,6 @@ const gridOptions: VxeGridProps = {
     },
   },
   rowConfig: {
-    isHover: true,
     keyField: 'tableId',
   },
   id: 'tool-gen-index',

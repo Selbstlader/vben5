@@ -1,22 +1,20 @@
 <script setup lang="ts">
+import type { RadioChangeEvent } from 'ant-design-vue';
+
+import type { VbenFormProps } from '@vben/common-ui';
 import type { Recordable } from '@vben/types';
+
+import type { VxeGridProps } from '#/adapter/vxe-table';
 
 import { ref } from 'vue';
 
-import { Page, useVbenModal, type VbenFormProps } from '@vben/common-ui';
+import { Page, useVbenModal } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 import { getVxePopupContainer } from '@vben/utils';
 
-import {
-  Modal,
-  Popconfirm,
-  type RadioChangeEvent,
-  RadioGroup,
-  Space,
-} from 'ant-design-vue';
+import { Modal, Popconfirm, RadioGroup, Space } from 'ant-design-vue';
 
-import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
-import { vxeCheckboxChecked } from '#/adapter/vxe-table';
+import { useVbenVxeGrid, vxeCheckboxChecked } from '#/adapter/vxe-table';
 import {
   deleteByInstanceIds,
   pageByFinish,
@@ -106,7 +104,6 @@ const gridOptions: VxeGridProps = {
     },
   },
   rowConfig: {
-    isHover: true,
     keyField: 'id',
     height: 66,
   },

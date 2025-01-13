@@ -69,7 +69,6 @@ const gridOptions: VxeGridProps = {
     },
   },
   rowConfig: {
-    isHover: true,
     keyField: 'infoId',
   },
   id: 'monitor-logininfo-index',
