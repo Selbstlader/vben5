@@ -13,6 +13,14 @@ import { useVbenForm } from './form';
 setupVbenVxeTable({
   configVxeTable: (vxeUI) => {
     vxeUI.setConfig({
+      /**
+       * @see https://vxetable.cn/#/start/z-index
+       * 设置Vxe全局的zIndex
+       * 点击右上角全屏zIndex为1003 modal/drawer的zIndex为1000 新增/编辑表单会造成遮挡
+       * 在这里修改为<1000即可解决遮挡问题
+       * 全屏为995+3=998 全屏会增加3
+       */
+      zIndex: 995,
       grid: {
         align: 'center',
         border: false,
