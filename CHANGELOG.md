@@ -24,6 +24,8 @@
 - 用户管理 新增只获取一次(mounted)默认密码而非每次打开modal都获取
 - `apps/web-antd/src/utils/dict.ts` `getDict`方法将于下个版本删除 使用`getDictOptions`替代
 - VxeTable升级V4.10.0
+- 移除`@deprecated` `apps/web-antd/src/adapter/vxe-table.ts`的`tableCheckboxEvent`方法
+- 移除`由于更新方案弃用的` `apps/web-antd/src/adapter/vxe-table.ts`的`vxeSortEvent`方法
 
 # 1.1.3
 

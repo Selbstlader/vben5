@@ -1,6 +1,4 @@
-import type { Ref } from 'vue';
-
-import type { VxeGridDefines, VxeGridPropTypes } from '@vben/plugins/vxe-table';
+import type { VxeGridPropTypes } from '@vben/plugins/vxe-table';
 
 import { h } from 'vue';
 
@@ -106,21 +104,6 @@ export { useVbenVxeGrid };
 export type * from '@vben/plugins/vxe-table';
 
 /**
- * 通用的表格复选框是否选中事件
- * @deprecated 使用vxeCheckboxChecked代替
- * @param checked 是否选中
- * @returns function
- */
-export function tableCheckboxEvent(checked: Ref<boolean>) {
-  const event: (params: VxeGridDefines.CheckboxChangeEventParams) => void = (
-    params,
-  ) => {
-    checked.value = params.$table.getCheckboxRecords().length > 0;
-  };
-  return event;
-}
-
-/**
  * 判断vxe-table的复选框是否选中
  * @param tableApi api
  * @returns boolean
@@ -129,28 +112,6 @@ export function vxeCheckboxChecked(
   tableApi: ReturnType<typeof useVbenVxeGrid>[1],
 ) {
   return tableApi?.grid?.getCheckboxRecords?.()?.length > 0;
-}
-
-/**
- * 通用的vxe-table排序事件 支持单/多字段排序
- * @deprecated 翻页后排序会丢失，使用addSortParams代替
- * @param tableApi api
- * @param sortParams 排序参数
- */
-export function vxeSortEvent(
-  tableApi: ReturnType<typeof useVbenVxeGrid>[1],
-  sortParams: VxeGridDefines.SortChangeEventParams,
-) {
-  const { sortList } = sortParams;
-  // 这里是排序取消 length为0 就不传参数了
-  if (sortList.length === 0) {
-    tableApi.query();
-    return;
-  }
-  // 支持单/多字段排序
-  const orderByColumn = sortList.map((item) => item.field).join(',');
-  const isAsc = sortList.map((item) => item.order).join(',');
-  tableApi.query({ orderByColumn, isAsc });
 }
 
 /**
