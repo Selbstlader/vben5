@@ -161,6 +161,8 @@ const profileRoute: RouteRecordStringComponent[] = [
       keepAlive: true,
       title: '请假申请',
       hideInMenu: true,
+      // 不使用基础布局（仅在顶级生效）
+      noBasicLayout: true,
     },
     name: 'WorkflowLeaveInner',
     path: '/workflow/leaveEdit/index/iframe',
