@@ -18,7 +18,6 @@
 
 - 字典项为空时getDict方法无限调用接口(无奈兼容 不给字典item本来就是错误用法)
 - 表格排序翻页会丢失排序参数
-- 修改Vxe默认zIndex为995 解决右上角全屏后modal/drawer(zIndex: 1000)被遮挡
 
 **OTHERS**
 

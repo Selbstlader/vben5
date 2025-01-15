@@ -44,7 +44,12 @@ export function useFullScreenGuide() {
     inheritAttrs: false,
     setup() {
       return () => (
-        <Tour onClose={closeGuide} open={open.value} steps={steps} />
+        <Tour
+          onClose={closeGuide}
+          open={open.value}
+          steps={steps}
+          zIndex={9999}
+        />
       );
     },
   });
