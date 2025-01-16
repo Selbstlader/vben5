@@ -94,6 +94,8 @@ export const localMenuList: RouteRecordStringComponent[] = [
     meta: {
       order: -1,
       title: 'page.dashboard.title',
+      // 不使用基础布局（仅在顶级生效）
+      noBasicLayout: true,
     },
     name: 'Dashboard',
     path: '/',
