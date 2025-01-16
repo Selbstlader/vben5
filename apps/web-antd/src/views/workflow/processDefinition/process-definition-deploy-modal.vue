@@ -62,12 +62,12 @@ function handleCancel() {
       :before-upload="() => false"
       :max-count="1"
       :show-upload-list="true"
-      accept="text/xml"
+      accept="text/json"
     >
       <p class="ant-upload-drag-icon flex items-center justify-center">
         <InBoxIcon class="text-primary size-[48px]" />
       </p>
-      <p class="ant-upload-text">点击或者拖拽到此处上传文件</p>
+      <p class="ant-upload-text">点击或者拖拽到此处上传[json]文件</p>
     </UploadDragger>
   </BasicModal>
 </template>

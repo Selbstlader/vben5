@@ -217,7 +217,7 @@ async function handleExportXml(row: any) {
   const hideLoading = message.loading($t('pages.common.downloadLoading'), 0);
   try {
     const blob = await workflowDefinitionExport(row.id);
-    downloadByData(blob, `${row.flowName}-${Date.now()}.xml`);
+    downloadByData(blob, `${row.flowName}-${Date.now()}.json`);
   } catch (error) {
     console.error(error);
   } finally {
@@ -244,6 +244,12 @@ function handleDeploy() {
   }
   deployModalApi.setData({ category: selectedCategory });
   deployModalApi.open();
+}
+
+async function handleDeploySuccess() {
+  // 跳转到未发布
+  currentStatus.value = 0;
+  await tableApi.reload();
 }
 </script>
 
@@ -353,6 +359,6 @@ function handleDeploy() {
       </BasicTable>
     </div>
     <ProcessDefinitionModal @reload="() => tableApi.reload()" />
-    <ProcessDefinitionDeployModal @reload="() => tableApi.reload()" />
+    <ProcessDefinitionDeployModal @reload="handleDeploySuccess" />
   </Page>
 </template>
