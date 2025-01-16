@@ -15,7 +15,7 @@ import {
 
 import { modalSchema } from './data';
 
-const emit = defineEmits<{ reload: [] }>();
+const emit = defineEmits<{ reload: [type: 'add' | 'update'] }>();
 
 const isUpdate = ref(false);
 const title = computed(() => {
@@ -96,10 +96,13 @@ async function handleConfirm() {
       return;
     }
     const data = cloneDeep(await formApi.getValues());
-    await (isUpdate.value
-      ? workflowDefinitionUpdate(data)
-      : workflowDefinitionAdd(data));
-    emit('reload');
+    if (isUpdate.value) {
+      await workflowDefinitionUpdate(data);
+      emit('reload', 'update');
+    } else {
+      await workflowDefinitionAdd(data);
+      emit('reload', 'add');
+    }
     await handleCancel();
   } catch (error) {
     console.error(error);

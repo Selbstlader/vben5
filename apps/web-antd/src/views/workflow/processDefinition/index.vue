@@ -107,7 +107,7 @@ const [BasicTable, tableApi] = useVbenVxeGrid({
 
 // 左边的切换
 const statusOptions = [
-  { label: '全部流程', value: 1 },
+  { label: '已发布流程', value: 1 },
   { label: '未发布流程', value: 0 },
 ];
 const currentStatus = ref(1);
@@ -246,9 +246,18 @@ function handleDeploy() {
   deployModalApi.open();
 }
 
+// 部署流程json
 async function handleDeploySuccess() {
   // 跳转到未发布
   currentStatus.value = 0;
+  await tableApi.reload();
+}
+
+// 新增完成需要跳转到未发布
+async function handleReload(type: 'add' | 'update') {
+  if (type === 'add') {
+    currentStatus.value = 0;
+  }
   await tableApi.reload();
 }
 </script>
@@ -358,7 +367,7 @@ async function handleDeploySuccess() {
         </template>
       </BasicTable>
     </div>
-    <ProcessDefinitionModal @reload="() => tableApi.reload()" />
+    <ProcessDefinitionModal @reload="handleReload" />
     <ProcessDefinitionDeployModal @reload="handleDeploySuccess" />
   </Page>
 </template>
