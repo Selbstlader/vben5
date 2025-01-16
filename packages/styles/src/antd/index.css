@@ -112,7 +112,3 @@ button[disabled].btn-success {
   color: rgb(50 54 57 / 25%) !important;
   border-color: hsl(240deg 5.9% 90%) !important;
 }
-
-.ant-message {
-  z-index: var(--popup-z-index);
-}
