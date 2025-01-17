@@ -140,7 +140,7 @@ function createRequestClient(baseURL: string) {
   );
 
   client.addResponseInterceptor<HttpResponse>({
-    fulfilled: (response) => {
+    fulfilled: async (response) => {
       const encryptKey = (response.headers || {})['encrypt-key'];
       if (encryptKey) {
         /** RSA私钥解密 拿到解密秘钥的base64 */
@@ -164,7 +164,24 @@ function createRequestClient(baseURL: string) {
       // 不进行任何处理，直接返回
       // 用于页面代码可能需要直接获取code，data，message这些信息时开启
       if (!isTransformResponse) {
-        return response.data;
+        /**
+         * 需要判断下载二进制的情况 正常是返回二进制 报错会返回json
+         * 当type为blob且content-type为application/json时 则判断已经下载出错
+         * 不能直接去判断blob的类型 因为下载json类型和报错的类型是一致的 需要从响应头判断
+         */
+        if (
+          response.config.responseType === 'blob' &&
+          response.headers['content-type']?.includes?.('application/json')
+        ) {
+          // 这时候的data为blob类型
+          const blob = response.data as unknown as Blob;
+          // 拿到字符串转json对象
+          response.data = JSON.parse(await blob.text());
+          // 然后按正常逻辑执行下面的代码(判断业务状态码)
+        } else {
+          // 不为blob 直接返回
+          return response.data;
+        }
       }
 
       const axiosResponseData = response.data;
