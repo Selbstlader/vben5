@@ -105,10 +105,18 @@ const [BasicTable, tableApi] = useVbenVxeGrid({
 });
 
 async function handleDownload(row: OssFile) {
-  const hideLoading = message.loading($t('pages.common.downloadLoading'), 0);
+  const downloadSize = ref($t('pages.common.downloadLoading'));
+  const hideLoading = message.loading({
+    content: () => downloadSize.value,
+    duration: 0,
+  });
   try {
-    const data = await ossDownload(row.ossId);
+    const data = await ossDownload(row.ossId, (e) => {
+      // e.total这里为空 只能显示已经下载的
+      downloadSize.value = `已下载: ${Math.floor(e.loaded / 1024)}KB`;
+    });
     downloadByData(data, row.originalName);
+    message.success('下载完成');
   } finally {
     hideLoading();
   }

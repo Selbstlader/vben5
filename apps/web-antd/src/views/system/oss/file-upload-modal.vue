@@ -45,6 +45,7 @@ const message = computed(() => {
         v-model:value="fileList"
         :accept="accept"
         :max-number="maxNumber"
+        :max-size="5"
       />
     </div>
   </BasicModal>

@@ -1,3 +1,5 @@
+import type { AxiosRequestConfig } from '@vben/request';
+
 import type { OssFile } from './model';
 
 import type { ID, IDS, PageQuery, PageResult } from '#/api/common';
@@ -48,13 +50,18 @@ export function ossUpload(file: Blob | File) {
 /**
  * 下载文件  返回为二进制
  * @param ossId ossId
+ * @param onDownloadProgress 下载进度(可选)
  * @returns blob
  */
-export function ossDownload(ossId: ID) {
+export function ossDownload(
+  ossId: ID,
+  onDownloadProgress?: AxiosRequestConfig['onDownloadProgress'],
+) {
   return requestClient.get<Blob>(`${Api.ossDownload}/${ossId}`, {
     responseType: 'blob',
     timeout: 30 * 1000,
     isTransformResponse: false,
+    onDownloadProgress,
   });
 }
 

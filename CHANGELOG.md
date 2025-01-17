@@ -13,6 +13,7 @@
 - 字典新增对Number类型的支持 -> `getDictOptions('', true);`即可获取number类型的value
 - 文件上传 增加上传进度条 下方上传提示
 - 图片上传 增加上传进度条 下方上传提示
+- oss下载进度(已下载的KB 无法作为进度显示 total返回为null)
 
 **BUG FIXES**
 
