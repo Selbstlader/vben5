@@ -112,8 +112,8 @@ async function handleDownload(row: OssFile) {
   });
   try {
     const data = await ossDownload(row.ossId, (e) => {
-      // e.total这里为空 只能显示已经下载的
-      downloadSize.value = `已下载: ${Math.floor(e.loaded / 1024)}KB`;
+      const percent = Math.floor((e.loaded / e.total!) * 100);
+      downloadSize.value = `已下载: ${Math.floor(e.loaded / 1024)}KB / ${percent}%`;
     });
     downloadByData(data, row.originalName);
     message.success('下载完成');
