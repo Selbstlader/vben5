@@ -226,7 +226,7 @@ function createRequestClient(baseURL: string) {
             return;
           }
           isLogoutProcessing = true;
-          const _msg = '登录超时, 请重新登录';
+          const _msg = $t('http.loginTimeout');
           const userStore = useAuthStore();
           userStore.logout().finally(() => {
             message.error(_msg);
