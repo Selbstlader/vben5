@@ -30,6 +30,7 @@ import {
 } from '#/adapter/vxe-table';
 import { configInfoByKey } from '#/api/system/config';
 import { ossDownload, ossList, ossRemove } from '#/api/system/oss';
+import { calculateFileSize } from '#/utils/file';
 import { downloadByData } from '#/utils/file/download';
 
 import { columns, fallbackImageBase64, querySchema } from './data';
@@ -112,8 +113,13 @@ async function handleDownload(row: OssFile) {
   });
   try {
     const data = await ossDownload(row.ossId, (e) => {
+      // 计算下载进度
       const percent = Math.floor((e.loaded / e.total!) * 100);
-      downloadSize.value = `已下载: ${Math.floor(e.loaded / 1024)}KB / ${percent}%`;
+      // 已经下载
+      const current = calculateFileSize(e.loaded);
+      // 总大小
+      const total = calculateFileSize(e.total!);
+      downloadSize.value = `已下载: ${current}/${total} (${percent}%)`;
     });
     downloadByData(data, row.originalName);
     message.success('下载完成');
