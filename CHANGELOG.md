@@ -20,6 +20,7 @@
 - 字典项为空时getDict方法无限调用接口(无奈兼容 不给字典item本来就是错误用法)
 - 表格排序翻页会丢失排序参数
 - 下载文件时(responseType === 'blob')需要判断下载失败(返回json而非二进制)的情况
+- requestClient缺失i18n内容
 
 **OTHERS**
 

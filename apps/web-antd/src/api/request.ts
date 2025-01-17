@@ -186,7 +186,7 @@ function createRequestClient(baseURL: string) {
 
       const axiosResponseData = response.data;
       if (!axiosResponseData) {
-        throw new Error($t('fallback.http.apiRequestFailed'));
+        throw new Error($t('http.apiRequestFailed'));
       }
 
       //  ruoyi-plus没有采用严格的{code, msg, data}模式
@@ -198,13 +198,13 @@ function createRequestClient(baseURL: string) {
         let successMsg = msg;
 
         if (isNull(successMsg) || isEmpty(successMsg)) {
-          successMsg = $t(`fallback.http.operationSuccess`);
+          successMsg = $t(`http.operationSuccess`);
         }
 
         if (response.config.successMessageMode === 'modal') {
           Modal.success({
             content: successMsg,
-            title: $t('fallback.http.successTip'),
+            title: $t('http.successTip'),
           });
         } else if (response.config.successMessageMode === 'message') {
           message.success(successMsg);
@@ -247,13 +247,13 @@ function createRequestClient(baseURL: string) {
       if (response.config.errorMessageMode === 'modal') {
         Modal.error({
           content: timeoutMsg,
-          title: $t('fallback.http.errorTip'),
+          title: $t('http.errorTip'),
         });
       } else if (response.config.errorMessageMode === 'message') {
         message.error(timeoutMsg);
       }
 
-      throw new Error(timeoutMsg || $t('fallback.http.apiRequestFailed'));
+      throw new Error(timeoutMsg || $t('http.apiRequestFailed'));
     },
   });
 
