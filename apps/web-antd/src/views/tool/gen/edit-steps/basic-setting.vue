@@ -13,7 +13,6 @@ import { Col, Row } from 'ant-design-vue';
 
 import { menuList } from '#/api/system/menu';
 
-import { toCurrentStep } from '../mitt';
 import { formSchema } from './basic';
 
 /**
@@ -118,28 +117,34 @@ onMounted(async () => {
   await Promise.all([initTreeSelect(info.columns), initMenuSelect()]);
 });
 
-async function handleNext() {
-  try {
-    const { valid } = await formApi.validate();
-    if (!valid) {
-      return null;
-    }
-    const data = await formApi.getValues();
-    Object.assign(genInfoData.value, data);
-    toCurrentStep(1);
-  } catch (error) {
-    console.error(error);
+/**
+ * 校验表单
+ */
+async function validateForm() {
+  const { valid } = await formApi.validate();
+  if (!valid) {
+    return false;
   }
+  return true;
 }
+
+/**
+ * 获取表单值
+ */
+async function getFormValues() {
+  return await formApi.getValues();
+}
+
+defineExpose({
+  validateForm,
+  getFormValues,
+});
 </script>
 
 <template>
   <Row justify="center">
     <Col v-bind="{ xs: 24, sm: 24, md: 20, lg: 16, xl: 16 }">
       <BasicForm />
-      <div class="flex justify-center">
-        <a-button type="primary" @click="handleNext">下一步</a-button>
-      </div>
     </Col>
   </Row>
 </template>

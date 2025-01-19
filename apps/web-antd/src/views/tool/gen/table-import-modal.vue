@@ -59,6 +59,7 @@ const gridOptions: VxeGridProps = {
     {
       title: '表描述',
       field: 'tableComment',
+      align: 'left',
     },
     {
       title: '创建时间',
@@ -88,9 +89,7 @@ const gridOptions: VxeGridProps = {
     keyField: 'tableId',
   },
   toolbarConfig: {
-    refresh: false,
-    zoom: false,
-    custom: false,
+    enabled: false,
   },
 };
 
