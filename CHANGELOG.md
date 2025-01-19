@@ -29,6 +29,7 @@
 - VxeTable升级V4.10.0
 - 移除`@deprecated` `apps/web-antd/src/adapter/vxe-table.ts`的`tableCheckboxEvent`方法
 - 移除`由于更新方案弃用的` `apps/web-antd/src/adapter/vxe-table.ts`的`vxeSortEvent`方法
+- 移除apps下的ele和naive目录
 
 # 1.1.3
 
