@@ -102,6 +102,9 @@ export const modalSchema: FormSchemaGetter = () => [
     formItemClass: 'items-baseline',
     fieldName: 'configValue',
     label: '参数键值',
+    componentProps: {
+      autosize: true,
+    },
     rules: 'required',
   },
   {
