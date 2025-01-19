@@ -16,8 +16,7 @@ import { useVbenVxeGrid, vxeCheckboxChecked } from '#/adapter/vxe-table';
 import { cancelProcessApply } from '#/api/workflow/instance';
 import { commonDownloadExcel } from '#/utils/file/download';
 
-import { applyModal, flowInfoModal } from '../components';
-import userSelectModal from '../components/user-select-modal.vue';
+import { flowInfoModal } from '../components';
 import { leaveExport, leaveList, leaveRemove } from './api';
 import { columns, querySchema } from './data';
 
@@ -121,17 +120,6 @@ function handleInfo(row: Required<LeaveForm>) {
   flowInfoModalApi.setData({ businessId: row.id });
   flowInfoModalApi.open();
 }
-
-const [UserSelectModal, testApi] = useVbenModal({
-  connectedComponent: userSelectModal,
-});
-
-function handleTest() {
-  testApi.open();
-}
-const [ApplyModal, applyModalApi] = useVbenModal({
-  connectedComponent: applyModal,
-});
 </script>
 
 <template>
@@ -139,8 +127,6 @@ const [ApplyModal, applyModalApi] = useVbenModal({
     <BasicTable table-title="请假申请列表">
       <template #toolbar-tools>
         <Space>
-          <a-button @click="handleTest">test选人</a-button>
-          <a-button @click="() => applyModalApi.open()">test抄送</a-button>
           <a-button
             v-access:code="['workflow:leave:export']"
             @click="handleDownloadExcel"
@@ -207,8 +193,6 @@ const [ApplyModal, applyModalApi] = useVbenModal({
         </Space>
       </template>
     </BasicTable>
-    <UserSelectModal mode="multiple" />
     <FlowInfoModal />
-    <ApplyModal />
   </Page>
 </template>
