@@ -88,6 +88,10 @@ async function handleConfirm() {
       return;
     }
     const data = cloneDeep(await formApi.getValues());
+    // 需要置空的情况 undefined不会提交给后端 需要改为空字符串
+    if (!data.listClass) {
+      data.listClass = '';
+    }
     await (isUpdate.value ? dictDataUpdate(data) : dictDataAdd(data));
     emit('reload');
     await handleCancel();
