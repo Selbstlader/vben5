@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import type { LoginCodeParams, VbenFormSchema } from '@vben/common-ui';
 
+import type { TenantResp } from '#/api';
+
 import { computed, onMounted, ref, useTemplateRef } from 'vue';
 
 import { AuthenticationCodeLogin, z } from '@vben/common-ui';
@@ -8,13 +10,14 @@ import { $t } from '@vben/locales';
 
 import { Alert, message } from 'ant-design-vue';
 
-import { tenantList, type TenantResp } from '#/api';
+import { tenantList } from '#/api';
 import { sendSmsCode } from '#/api/core/captcha';
 import { useAuthStore } from '#/store';
 
 defineOptions({ name: 'CodeLogin' });
 
 const loading = ref(false);
+const CODE_LENGTH = 6;
 
 const tenantInfo = ref<TenantResp>({
   tenantEnabled: false,
@@ -98,7 +101,9 @@ const formSchema = computed((): VbenFormSchema[] => {
       },
       fieldName: 'code',
       label: $t('authentication.code'),
-      rules: z.string().min(1, { message: $t('authentication.codeTip') }),
+      rules: z.string().length(CODE_LENGTH, {
+        message: $t('authentication.codeTip', [CODE_LENGTH]),
+      }),
     },
   ];
 });

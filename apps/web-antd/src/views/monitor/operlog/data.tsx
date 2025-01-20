@@ -1,3 +1,4 @@
+import type { FormSchemaGetter } from '#/adapter/form';
 import type { VxeGridProps } from '#/adapter/vxe-table';
 import type { DescItem } from '#/components/description';
 
@@ -5,7 +6,6 @@ import { DictEnum } from '@vben/constants';
 
 import { Tag } from 'ant-design-vue';
 
-import { type FormSchemaGetter } from '#/adapter/form';
 import { getDictOptions } from '#/utils/dict';
 import {
   renderDict,

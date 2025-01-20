@@ -1,10 +1,11 @@
+import type { FormSchemaGetter } from '#/adapter/form';
 import type { VxeGridProps } from '#/adapter/vxe-table';
 
 import { DictEnum } from '@vben/constants';
 
 import { Tag } from 'ant-design-vue';
 
-import { type FormSchemaGetter, z } from '#/adapter/form';
+import { z } from '#/adapter/form';
 import { getDictOptions } from '#/utils/dict';
 
 const accessPolicyOptions = [
@@ -127,6 +128,12 @@ export const drawerSchema: FormSchemaGetter = () => [
     component: 'Input',
     fieldName: 'domain',
     label: '自定义域名',
+  },
+  {
+    component: 'Input',
+    fieldName: 'tip',
+    label: '占位作为提示使用',
+    hideLabel: true,
   },
   {
     component: 'Divider',

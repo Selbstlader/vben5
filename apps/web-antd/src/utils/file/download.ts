@@ -4,6 +4,7 @@ import { $t } from '@vben/locales';
 import { cloneDeep, formatDate } from '@vben/utils';
 
 import { message } from 'ant-design-vue';
+import { isFunction } from 'lodash-es';
 
 import { dataURLtoBlob, urlToBase64 } from './base64Conver';
 
@@ -54,37 +55,42 @@ function handleRangeTimeValue(
 
   fieldMappingTime.forEach(
     ([field, [startTimeKey, endTimeKey], format = 'YYYY-MM-DD']) => {
-      if (
-        values[field] === null &&
-        values[startTimeKey] &&
-        values[endTimeKey]
-      ) {
+      if (startTimeKey && endTimeKey && values[field] === null) {
         Reflect.deleteProperty(values, startTimeKey);
         Reflect.deleteProperty(values, endTimeKey);
-        return;
+        // delete values[startTimeKey];
+        // delete values[endTimeKey];
       }
 
       if (!values[field]) {
         Reflect.deleteProperty(values, field);
+        // delete values[field];
         return;
       }
 
       const [startTime, endTime] = values[field];
-      const [startTimeFormat, endTimeFormat] = Array.isArray(format)
-        ? format
-        : [format, format];
+      if (format === null) {
+        values[startTimeKey] = startTime;
+        values[endTimeKey] = endTime;
+      } else if (isFunction(format)) {
+        values[startTimeKey] = format(startTime, startTimeKey);
+        values[endTimeKey] = format(endTime, endTimeKey);
+      } else {
+        const [startTimeFormat, endTimeFormat] = Array.isArray(format)
+          ? format
+          : [format, format];
 
-      values[startTimeKey] = startTime
-        ? formatDate(startTime, startTimeFormat)
-        : undefined;
-      values[endTimeKey] = endTime
-        ? formatDate(endTime, endTimeFormat)
-        : undefined;
-
+        values[startTimeKey] = startTime
+          ? formatDate(startTime, startTimeFormat)
+          : undefined;
+        values[endTimeKey] = endTime
+          ? formatDate(endTime, endTimeFormat)
+          : undefined;
+      }
+      // delete values[field];
       Reflect.deleteProperty(values, field);
     },
   );
-
   return values;
 }
 

@@ -48,7 +48,12 @@ async function setupMenuSelect() {
     item.menuName = $t(item.menuName);
   });
   // const folderArray = menuArray.filter((item) => item.menuType === 'M');
-  const menuTree = listToTree(menuArray, { id: 'menuId', pid: 'parentId' });
+  /**
+   * 这里需要过滤掉按钮类型
+   * 不允许在按钮下添加数据
+   */
+  const filteredList = menuArray.filter((item) => item.menuType !== 'F');
+  const menuTree = listToTree(filteredList, { id: 'menuId', pid: 'parentId' });
   const fullMenuTree = [
     {
       menuId: 0,

@@ -1,18 +1,17 @@
 <script setup lang="ts">
-import type { Recordable } from '@vben/types';
+import type { VbenFormProps } from '@vben/common-ui';
+
+import type { VxeGridProps } from '#/adapter/vxe-table';
+import type { User } from '#/api/system/user/model';
 
 import { useRoute } from 'vue-router';
 
-import { Page, useVbenDrawer, type VbenFormProps } from '@vben/common-ui';
+import { Page, useVbenDrawer } from '@vben/common-ui';
 import { getVxePopupContainer } from '@vben/utils';
 
 import { Modal, Popconfirm, Space } from 'ant-design-vue';
 
-import {
-  useVbenVxeGrid,
-  vxeCheckboxChecked,
-  type VxeGridProps,
-} from '#/adapter/vxe-table';
+import { useVbenVxeGrid, vxeCheckboxChecked } from '#/adapter/vxe-table';
 import {
   roleAllocatedList,
   roleAuthCancel,
@@ -62,7 +61,6 @@ const gridOptions: VxeGridProps = {
     },
   },
   rowConfig: {
-    isHover: true,
     keyField: 'userId',
   },
   id: 'system-role-assign-index',
@@ -85,7 +83,7 @@ function handleAdd() {
 /**
  * 取消授权 一条记录
  */
-async function handleAuthCancel(record: Recordable<any>) {
+async function handleAuthCancel(record: User) {
   await roleAuthCancel({ userId: record.userId, roleId });
   await tableApi.query();
 }
@@ -95,7 +93,7 @@ async function handleAuthCancel(record: Recordable<any>) {
  */
 function handleMultipleAuthCancel() {
   const rows = tableApi.grid.getCheckboxRecords();
-  const ids = rows.map((row: any) => row.userId);
+  const ids = rows.map((row: User) => row.userId);
   Modal.confirm({
     title: '提示',
     okType: 'danger',

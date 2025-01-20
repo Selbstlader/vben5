@@ -14,11 +14,13 @@ import evergreenTree from '@iconify/icons-emojione/evergreen-tree';
 import RoleBindingOutlined from '@iconify/icons-eos-icons/role-binding-outlined';
 import SystemGroup from '@iconify/icons-eos-icons/system-group';
 import NoticePush from '@iconify/icons-fe/notice-push';
+import leave from '@iconify/icons-flat-color-icons/leave';
 import plus from '@iconify/icons-flat-color-icons/plus';
-import from24 from '@iconify/icons-fluent/form-24-regular';
 import builDefinition from '@iconify/icons-fluent-mdl2/build-definition';
 import Dictionary from '@iconify/icons-fluent-mdl2/dictionary';
+import flow from '@iconify/icons-fluent-mdl2/flow';
 import leaveUser from '@iconify/icons-fluent-mdl2/leave-user';
+import from24 from '@iconify/icons-fluent/form-24-regular';
 import BaseLineHouse from '@iconify/icons-ic/baseline-house';
 import monitor from '@iconify/icons-ic/baseline-monitor';
 import roundLaunch from '@iconify/icons-ic/round-launch';
@@ -100,3 +102,7 @@ addIcon('lucide:copyright', copyright);
 addIcon('mingcute:profile-line', profileLine);
 // oss配置
 addIcon('ant-design:setting-outlined', settingOutline);
+// 请假
+addIcon('flat-color-icons:leave', leave);
+// flow
+addIcon('fluent-mdl2:flow', flow);

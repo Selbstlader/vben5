@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Recordable } from '@vben/types';
+import type { OperationLog } from '#/api/monitor/operlog/model';
 
 import { useVbenDrawer } from '@vben/common-ui';
 
@@ -20,7 +20,7 @@ function handleOpenChange(open: boolean) {
   if (!open) {
     return null;
   }
-  const { record } = drawerApi.getData() as { record: Recordable<any> };
+  const { record } = drawerApi.getData() as { record: OperationLog };
   setDescProps({ data: record }, true);
 }
 </script>

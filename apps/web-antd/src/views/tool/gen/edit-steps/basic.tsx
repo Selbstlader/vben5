@@ -1,6 +1,8 @@
+import type { FormSchemaGetter } from '#/adapter/form';
+
 import { getPopupContainer } from '@vben/utils';
 
-import { type FormSchemaGetter, z } from '#/adapter/form';
+import { z } from '#/adapter/form';
 
 export const formSchema: FormSchemaGetter = () => [
   {

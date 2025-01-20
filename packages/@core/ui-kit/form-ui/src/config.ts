@@ -1,11 +1,10 @@
+import type { Component } from 'vue';
+
 import type {
   BaseFormComponentType,
   FormCommonConfig,
   VbenFormAdapterOptions,
 } from './types';
-
-import type { Component } from 'vue';
-import { h } from 'vue';
 
 import {
   VbenButton,
@@ -17,8 +16,8 @@ import {
   VbenSelect,
 } from '@vben-core/shadcn-ui';
 import { globalShareState } from '@vben-core/shared/global-state';
-
 import { defineRule } from 'vee-validate';
+import { h } from 'vue';
 
 const DEFAULT_MODEL_PROP_NAME = 'modelValue';
 
@@ -46,11 +45,15 @@ export function setupVbenForm<
 >(options: VbenFormAdapterOptions<T>) {
   const { config, defineRules } = options;
 
-  const { disabledOnChangeListener = false, emptyStateValue = undefined } =
-    (config || {}) as FormCommonConfig;
+  const {
+    disabledOnChangeListener = true,
+    disabledOnInputListener = true,
+    emptyStateValue = undefined,
+  } = (config || {}) as FormCommonConfig;
 
   Object.assign(DEFAULT_FORM_COMMON_CONFIG, {
     disabledOnChangeListener,
+    disabledOnInputListener,
     emptyStateValue,
   });
 

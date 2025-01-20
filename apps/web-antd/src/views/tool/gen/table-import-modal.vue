@@ -1,7 +1,11 @@
 <script setup lang="ts">
-import { useVbenModal, type VbenFormProps } from '@vben/common-ui';
+import type { VbenFormProps } from '@vben/common-ui';
 
-import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
+import type { VxeGridProps } from '#/adapter/vxe-table';
+
+import { useVbenModal } from '@vben/common-ui';
+
+import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import {
   getDataSourceNames,
   importTable,
@@ -55,6 +59,7 @@ const gridOptions: VxeGridProps = {
     {
       title: '表描述',
       field: 'tableComment',
+      align: 'left',
     },
     {
       title: '创建时间',
@@ -81,13 +86,10 @@ const gridOptions: VxeGridProps = {
     },
   },
   rowConfig: {
-    isHover: true,
     keyField: 'tableId',
   },
   toolbarConfig: {
-    refresh: false,
-    zoom: false,
-    custom: false,
+    enabled: false,
   },
 };
 

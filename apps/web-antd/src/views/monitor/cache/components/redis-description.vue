@@ -1,13 +1,12 @@
 <script setup lang="ts">
+import type { PropType } from 'vue';
+
 import type { RedisInfo } from '#/api/monitor/cache';
+import type { DescItem } from '#/components/description';
 
-import { onMounted, type PropType, watch } from 'vue';
+import { onMounted, watch } from 'vue';
 
-import {
-  type DescItem,
-  Description,
-  useDescription,
-} from '#/components/description';
+import { Description, useDescription } from '#/components/description';
 
 interface IRedisInfo extends RedisInfo {
   dbSize: string;

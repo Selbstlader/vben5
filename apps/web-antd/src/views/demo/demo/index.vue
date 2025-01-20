@@ -1,19 +1,18 @@
 <script setup lang="ts">
+import type { VbenFormProps } from '@vben/common-ui';
 import type { Recordable } from '@vben/types';
+
+import type { VxeGridProps } from '#/adapter/vxe-table';
 
 import { ref } from 'vue';
 
-import { Page, useVbenModal, type VbenFormProps } from '@vben/common-ui';
+import { Page, useVbenModal } from '@vben/common-ui';
 import { getPopupContainer } from '@vben/utils';
 
 import { Modal, Popconfirm, Space } from 'ant-design-vue';
 
-import {
-  tableCheckboxEvent,
-  useVbenVxeGrid,
-  type VxeGridProps,
-} from '#/adapter/vxe-table';
-import { downloadExcel } from '#/utils/file/download';
+import { useVbenVxeGrid, vxeCheckboxChecked } from '#/adapter/vxe-table';
+import { commonDownloadExcel } from '#/utils/file/download';
 
 import { demoExport, demoList, demoRemove } from './api';
 import { columns, querySchema } from './data';
@@ -61,10 +60,6 @@ const checked = ref(false);
 const [BasicTable, tableApi] = useVbenVxeGrid({
   formOptions,
   gridOptions,
-  gridEvents: {
-    checkboxChange: tableCheckboxEvent(checked),
-    checkboxAll: tableCheckboxEvent(checked),
-  },
 });
 
 const [DemoModal, modalApi] = useVbenModal({
@@ -113,7 +108,7 @@ function handleMultiDelete() {
           <a-button
             v-access:code="['system:demo:export']"
             @click="
-              downloadExcel(
+              commonDownloadExcel(
                 demoExport,
                 '测试单数据',
                 tableApi.formApi.form.values,
@@ -123,7 +118,7 @@ function handleMultiDelete() {
             {{ $t('pages.common.export') }}
           </a-button>
           <a-button
-            :disabled="!checked"
+            :disabled="!vxeCheckboxChecked(tableApi)"
             danger
             type="primary"
             v-access:code="['system:demo:remove']"

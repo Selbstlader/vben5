@@ -1,19 +1,17 @@
 <script setup lang="ts">
-import type { Recordable } from '@vben/types';
+import type { VbenFormProps } from '@vben/common-ui';
+
+import type { VxeGridProps } from '#/adapter/vxe-table';
+import type { LoginLog } from '#/api/monitor/logininfo/model';
 
 import { ref } from 'vue';
 
-import { Page, useVbenModal, type VbenFormProps } from '@vben/common-ui';
+import { Page, useVbenModal } from '@vben/common-ui';
 import { getVxePopupContainer } from '@vben/utils';
 
 import { Modal, Popconfirm, Space } from 'ant-design-vue';
 
-import {
-  useVbenVxeGrid,
-  vxeCheckboxChecked,
-  type VxeGridDefines,
-  type VxeGridProps,
-} from '#/adapter/vxe-table';
+import { useVbenVxeGrid, vxeCheckboxChecked } from '#/adapter/vxe-table';
 import {
   loginInfoClean,
   loginInfoExport,
@@ -71,7 +69,6 @@ const gridOptions: VxeGridProps = {
     },
   },
   rowConfig: {
-    isHover: true,
     keyField: 'infoId',
   },
   id: 'monitor-logininfo-index',
@@ -82,9 +79,9 @@ const [BasicTable, tableApi] = useVbenVxeGrid({
   formOptions,
   gridOptions,
   gridEvents: {
-    checkboxChange: (e: VxeGridDefines.CheckboxChangeEventParams) => {
+    checkboxChange: (e) => {
       const records = e.$grid.getCheckboxRecords();
-      canUnlock.value = records.length === 1 && records[0]?.status === '1';
+      canUnlock.value = records.length === 1 && records[0]!.status === '1';
     },
   },
 });
@@ -93,7 +90,7 @@ const [LoginInfoModal, modalApi] = useVbenModal({
   connectedComponent: loginInfoModal,
 });
 
-function handlePreview(record: Recordable<any>) {
+function handlePreview(record: LoginLog) {
   modalApi.setData(record);
   modalApi.open();
 }
@@ -107,14 +104,14 @@ function handleClear() {
   });
 }
 
-async function handleDelete(row: Recordable<any>) {
-  await loginInfoRemove(row.infoId);
+async function handleDelete(row: LoginLog) {
+  await loginInfoRemove([row.infoId]);
   await tableApi.query();
 }
 
 function handleMultiDelete() {
   const rows = tableApi.grid.getCheckboxRecords();
-  const ids = rows.map((row: any) => row.infoId);
+  const ids = rows.map((row: LoginLog) => row.infoId);
   Modal.confirm({
     title: '提示',
     okType: 'danger',

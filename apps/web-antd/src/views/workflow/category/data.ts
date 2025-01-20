@@ -21,11 +21,7 @@ export const columns: VxeGridProps['columns'] = [
     treeNode: true,
   },
   {
-    field: 'categoryCode',
-    title: '分类编码',
-  },
-  {
-    field: 'sortNum',
+    field: 'orderNum',
     title: '排序',
   },
   {
@@ -39,8 +35,8 @@ export const columns: VxeGridProps['columns'] = [
 
 export const modalSchema: FormSchemaGetter = () => [
   {
-    label: 'id',
-    fieldName: 'id',
+    label: 'categoryId',
+    fieldName: 'categoryId',
     component: 'Input',
     dependencies: {
       show: () => false,
@@ -51,7 +47,7 @@ export const modalSchema: FormSchemaGetter = () => [
     fieldName: 'parentId',
     label: '父级分类',
     rules: 'required',
-    defaultValue: 0,
+    defaultValue: 100,
     component: 'TreeSelect',
   },
   {
@@ -61,15 +57,8 @@ export const modalSchema: FormSchemaGetter = () => [
     rules: 'required',
   },
   {
-    fieldName: 'categoryCode',
-    label: '分类编码',
-    component: 'Input',
-    rules: 'required',
-  },
-  {
-    fieldName: 'sortNum',
+    fieldName: 'orderNum',
     label: '排序',
     component: 'InputNumber',
-    rules: 'required',
   },
 ];

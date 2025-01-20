@@ -30,6 +30,7 @@ export interface CategoryVO {
    * 子对象
    */
   children: CategoryVO[];
+  key: string;
 }
 
 export interface CategoryForm extends BaseEntity {
@@ -84,4 +85,13 @@ export interface CategoryQuery {
    * 日期范围参数
    */
   params?: any;
+}
+
+export interface CategoryTree {
+  id: number;
+  parentId: number;
+  label: string;
+  weight: number;
+  children: CategoryTree[];
+  key: string;
 }

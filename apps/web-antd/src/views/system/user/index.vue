@@ -1,15 +1,13 @@
 <script setup lang="ts">
-import type { Recordable } from '@vben/types';
+import type { VbenFormProps } from '@vben/common-ui';
+
+import type { VxeGridProps } from '#/adapter/vxe-table';
+import type { User } from '#/api/system/user/model';
 
 import { ref } from 'vue';
 
 import { useAccess } from '@vben/access';
-import {
-  Page,
-  useVbenDrawer,
-  useVbenModal,
-  type VbenFormProps,
-} from '@vben/common-ui';
+import { Page, useVbenDrawer, useVbenModal } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 import { preferences } from '@vben/preferences';
 import { getVxePopupContainer } from '@vben/utils';
@@ -24,8 +22,7 @@ import {
   Space,
 } from 'ant-design-vue';
 
-import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
-import { vxeCheckboxChecked } from '#/adapter/vxe-table';
+import { useVbenVxeGrid, vxeCheckboxChecked } from '#/adapter/vxe-table';
 import {
   userExport,
   userList,
@@ -117,7 +114,6 @@ const gridOptions: VxeGridProps = {
     },
   },
   rowConfig: {
-    isHover: true,
     keyField: 'userId',
     height: 48,
   },
@@ -137,19 +133,19 @@ function handleAdd() {
   userDrawerApi.open();
 }
 
-function handleEdit(row: Recordable<any>) {
+function handleEdit(row: User) {
   userDrawerApi.setData({ id: row.userId });
   userDrawerApi.open();
 }
 
-async function handleDelete(row: Recordable<any>) {
-  await userRemove(row.userId);
+async function handleDelete(row: User) {
+  await userRemove([row.userId]);
   await tableApi.query();
 }
 
 function handleMultiDelete() {
   const rows = tableApi.grid.getCheckboxRecords();
-  const ids = rows.map((row: any) => row.userId);
+  const ids = rows.map((row: User) => row.userId);
   Modal.confirm({
     title: '提示',
     okType: 'danger',
@@ -170,7 +166,7 @@ function handleDownloadExcel() {
 const [UserInfoModal, userInfoModalApi] = useVbenModal({
   connectedComponent: userInfoModal,
 });
-function handleUserInfo(row: Recordable<any>) {
+function handleUserInfo(row: User) {
   userInfoModalApi.setData({ userId: row.userId });
   userInfoModalApi.open();
 }
@@ -179,7 +175,7 @@ const [UserResetPwdModal, userResetPwdModalApi] = useVbenModal({
   connectedComponent: userResetPwdModal,
 });
 
-function handleResetPwd(record: Recordable<any>) {
+function handleResetPwd(record: User) {
   userResetPwdModalApi.setData({ record });
   userResetPwdModalApi.open();
 }

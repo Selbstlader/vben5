@@ -1,7 +1,11 @@
 <script setup lang="tsx">
+import type { VxeGridProps } from '@vben/plugins/vxe-table';
+
+import type { BindItem } from '../../oauth-common';
+
 import { computed, ref, unref } from 'vue';
 
-import { useVbenVxeGrid, type VxeGridProps } from '@vben/plugins/vxe-table';
+import { useVbenVxeGrid } from '@vben/plugins/vxe-table';
 
 import {
   Alert,
@@ -16,7 +20,7 @@ import {
 import { authUnbinding } from '#/api';
 import { socialList } from '#/api/system/social';
 
-import { accountBindList, type BindItem } from '../../oauth-common';
+import { accountBindList } from '../../oauth-common';
 
 /**
  * 没有传递action事件则不支持绑定 弹出默认提示
@@ -103,7 +107,6 @@ const gridOptions: VxeGridProps = {
     },
   },
   rowConfig: {
-    isHover: true,
     isCurrent: false,
     keyField: 'id',
   },

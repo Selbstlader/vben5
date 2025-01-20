@@ -5,105 +5,83 @@ import { $t } from '@vben/locales';
 /**
  * 该文件放非后台返回的路由 比如个人中心 等需要跳转显示的页面
  */
-
-/**
- * 个人中心
- */
-const profileRoute: RouteRecordStringComponent[] = [
+const localRoutes: RouteRecordStringComponent[] = [
   {
-    component: 'BasicLayout',
+    component: '/_core/profile/index',
     meta: {
-      hideChildrenInMenu: true,
-      hideInMenu: true,
+      icon: 'mingcute:profile-line',
       title: $t('ui.widgets.profile'),
+      hideInMenu: true,
     },
     name: 'Profile',
-    path: '/',
-    redirect: '/profile',
-    children: [
-      {
-        component: '/_core/profile/index',
-        meta: {
-          icon: 'mingcute:profile-line',
-          keepAlive: true,
-          title: $t('ui.widgets.profile'),
-        },
-        name: 'ProfileIndex',
-        path: '/profile',
-      },
-    ],
+    path: '/profile',
   },
   {
-    component: 'BasicLayout',
+    component: '/system/oss-config/index',
     meta: {
-      hideChildrenInMenu: true,
-      hideInMenu: true,
+      activePath: '/system/oss',
+      icon: 'ant-design:setting-outlined',
       title: 'oss配置',
+      hideInMenu: true,
     },
     name: 'OssConfig',
-    path: '/',
-    redirect: '/system/oss-config',
-    children: [
-      {
-        component: '/system/oss-config/index',
-        meta: {
-          activePath: '/system/oss',
-          icon: 'ant-design:setting-outlined',
-          keepAlive: true,
-          title: 'oss配置',
-        },
-        name: 'OssConfigIndex',
-        path: '/system/oss-config',
-      },
-    ],
+    path: '/system/oss-config',
   },
   {
-    component: 'BasicLayout',
+    component: '/tool/gen/edit-gen',
     meta: {
-      hideChildrenInMenu: true,
+      activePath: '/tool/gen',
+      icon: 'tabler:code',
+      title: '生成配置',
       hideInMenu: true,
-      title: '修改生成配置',
     },
     name: 'GenConfig',
-    path: '/',
-    redirect: '/code-gen/edit',
-    children: [
-      {
-        component: '/tool/gen/edit-gen',
-        meta: {
-          activePath: '/tool/gen',
-          icon: 'tabler:code',
-          keepAlive: true,
-          title: '生成配置',
-        },
-        name: 'GenConfigIndex',
-        path: '/code-gen/edit/:tableId',
-      },
-    ],
+    path: '/code-gen/edit/:tableId',
   },
   {
-    component: 'BasicLayout',
+    component: '/system/role-assign/index',
     meta: {
-      hideChildrenInMenu: true,
-      hideInMenu: true,
+      activePath: '/system/role',
+      icon: 'eos-icons:role-binding-outlined',
       title: '分配角色',
+      hideInMenu: true,
     },
     name: 'RoleAssign',
-    path: '/',
-    redirect: '/system/role-assign',
-    children: [
-      {
-        component: '/system/role-assign/index',
-        meta: {
-          activePath: '/system/role',
-          icon: 'eos-icons:role-binding-outlined',
-          keepAlive: true,
-          title: '分配角色',
-        },
-        name: 'RoleAssignIndex',
-        path: '/system/role-assign/:roleId',
-      },
-    ],
+    path: '/system/role-assign/:roleId',
+  },
+  {
+    component: '/workflow/components/flow-designer',
+    meta: {
+      activePath: '/workflow/processDefinition',
+      icon: 'fluent-mdl2:flow',
+      title: '流程设计',
+      hideInMenu: true,
+    },
+    name: 'WorkflowDesigner',
+    path: '/workflow/designer',
+  },
+  {
+    component: 'workflow/leave/leave-form',
+    meta: {
+      icon: 'flat-color-icons:leave',
+      title: '请假申请',
+      activePath: '/demo/leave',
+      hideInMenu: true,
+    },
+    name: 'WorkflowLeaveIndex',
+    path: '/workflow/leaveEdit/index',
+  },
+  // 这里是iframe使用的 去掉外层的BasicLayout
+  {
+    component: 'workflow/leave/leave-form',
+    meta: {
+      title: '请假申请',
+      hideInMenu: true,
+      // 不使用基础布局（仅在顶级生效）
+      noBasicLayout: true,
+    },
+    name: 'WorkflowLeaveInner',
+    path: '/workflow/leaveEdit/index/iframe',
   },
 ];
 
@@ -116,6 +94,8 @@ export const localMenuList: RouteRecordStringComponent[] = [
     meta: {
       order: -1,
       title: 'page.dashboard.title',
+      // 不使用基础布局（仅在顶级生效）
+      noBasicLayout: true,
     },
     name: 'Dashboard',
     path: '/',
@@ -152,25 +132,14 @@ export const localMenuList: RouteRecordStringComponent[] = [
     ],
   },
   {
-    component: 'BasicLayout',
+    component: '/_core/about/index',
     meta: {
-      hideChildrenInMenu: true,
       icon: 'lucide:copyright',
       order: 9999,
       title: $t('demos.vben.about'),
     },
     name: 'About',
-    path: '/about',
-    children: [
-      {
-        component: '/_core/about/index',
-        meta: {
-          title: $t('demos.vben.about'),
-        },
-        name: 'VbenAbout',
-        path: '/vben-admin/about',
-      },
-    ],
+    path: '/vben-admin/about',
   },
-  ...profileRoute,
+  ...localRoutes,
 ];

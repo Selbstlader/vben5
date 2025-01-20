@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import type { Recordable } from '@vben/types';
+import type { VbenFormProps } from '@vben/common-ui';
+
+import type { VxeGridProps } from '#/adapter/vxe-table';
+import type { PageQuery } from '#/api/common';
+import type { DictData } from '#/api/system/dict/dict-data-model';
 
 import { ref } from 'vue';
 
-import { useVbenDrawer, type VbenFormProps } from '@vben/common-ui';
+import { useVbenDrawer } from '@vben/common-ui';
 import { getVxePopupContainer } from '@vben/utils';
 
 import { Modal, Popconfirm, Space } from 'ant-design-vue';
 
-import {
-  useVbenVxeGrid,
-  vxeCheckboxChecked,
-  type VxeGridProps,
-} from '#/adapter/vxe-table';
+import { useVbenVxeGrid, vxeCheckboxChecked } from '#/adapter/vxe-table';
 import {
   dictDataExport,
   dictDataList,
@@ -53,7 +53,7 @@ const gridOptions: VxeGridProps = {
   proxyConfig: {
     ajax: {
       query: async ({ page }, formValues = {}) => {
-        const params: any = {
+        const params: PageQuery = {
           pageNum: page.currentPage,
           pageSize: page.pageSize,
           ...formValues,
@@ -67,7 +67,6 @@ const gridOptions: VxeGridProps = {
     },
   },
   rowConfig: {
-    isHover: true,
     keyField: 'dictCode',
   },
   id: 'system-dict-data-index',
@@ -87,7 +86,7 @@ function handleAdd() {
   drawerApi.open();
 }
 
-async function handleEdit(record: Recordable<any>) {
+async function handleEdit(record: DictData) {
   drawerApi.setData({
     dictType: dictType.value,
     dictCode: record.dictCode,
@@ -95,14 +94,14 @@ async function handleEdit(record: Recordable<any>) {
   drawerApi.open();
 }
 
-async function handleDelete(row: Recordable<any>) {
-  await dictDataRemove(row.dictCode);
+async function handleDelete(row: DictData) {
+  await dictDataRemove([row.dictCode]);
   await tableApi.query();
 }
 
 function handleMultiDelete() {
   const rows = tableApi.grid.getCheckboxRecords();
-  const ids = rows.map((row: any) => row.dictCode);
+  const ids = rows.map((row: DictData) => row.dictCode);
   Modal.confirm({
     title: '提示',
     okType: 'danger',

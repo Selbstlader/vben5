@@ -1,6 +1,8 @@
+import type { Component as ComponentType } from 'vue';
+
 import type { DictData } from '#/api/system/dict/dict-data-model';
 
-import { type Component as ComponentType, h } from 'vue';
+import { h } from 'vue';
 
 import { JsonPreview } from '@vben/common-ui';
 import {
@@ -29,7 +31,7 @@ import { Tag } from 'ant-design-vue';
 
 import { DictTag } from '#/components/dict';
 
-import { getDict } from './dict';
+import { getDictOptions } from './dict';
 
 /**
  * 渲染标签
@@ -50,7 +52,10 @@ function renderTag(text: string, color?: string) {
  */
 export function renderTags(tags: string[], wrap = false, gap = 1) {
   return (
-    <div class={['flex', `gap-${gap}`, wrap ? 'flex-col' : 'flex-row']}>
+    <div
+      class={['flex', wrap ? 'flex-col' : 'flex-row']}
+      style={{ gap: `${gap}px` }}
+    >
       {tags.map((tag, index) => {
         return <div key={index}>{renderTag(tag)}</div>;
       })}
@@ -133,7 +138,10 @@ export function renderDictTags(
     return <div>{value}</div>;
   }
   return (
-    <div class={['flex', `gap-${gap}`, wrap ? 'flex-col' : 'flex-row']}>
+    <div
+      class={['flex', wrap ? 'flex-col' : 'flex-row']}
+      style={{ gap: `${gap}px` }}
+    >
       {value.map((item, index) => {
         return <div key={index}>{renderDictTag(item, dicts)}</div>;
       })}
@@ -148,7 +156,7 @@ export function renderDictTags(
  * @returns tag
  */
 export function renderDict(value: string, dictName: string) {
-  const dictInfo = getDict(dictName);
+  const dictInfo = getDictOptions(dictName);
   return renderDictTag(value, dictInfo);
 }
 export function renderIconSpan(
@@ -205,12 +213,8 @@ export function renderOsIcon(os: string, center = false) {
   if (os.toLocaleLowerCase().includes('windows')) {
     current = osOptions[0];
   }
-  if (current) {
-    return renderIconSpan(current.icon, os, center, '5px');
-  }
-  // 返回默认
-  const defaultIcon = DefaultOsIcon;
-  return renderIconSpan(defaultIcon, os, center, '5px');
+  const icon = current ? current.icon : DefaultOsIcon;
+  return renderIconSpan(icon, os, center, '5px');
 }
 
 export function renderBrowserIcon(browser: string, center = false) {
@@ -220,10 +224,6 @@ export function renderBrowserIcon(browser: string, center = false) {
   const current = browserOptions.find((item) =>
     browser.toLocaleLowerCase().includes(item.value),
   );
-  if (current) {
-    return renderIconSpan(current.icon, browser, center, '5px');
-  }
-  // 返回默认
-  const defaultIcon = DefaultBrowserIcon;
-  return renderIconSpan(defaultIcon, browser, center, '5px');
+  const icon = current ? current.icon : DefaultBrowserIcon;
+  return renderIconSpan(icon, browser, center, '5px');
 }

@@ -1,10 +1,14 @@
 <script setup lang="ts">
-import type { Recordable } from '@vben/types';
+import type { VbenFormProps } from '@vben/common-ui';
+
+import type { VxeGridProps } from '#/adapter/vxe-table';
+import type { PageQuery } from '#/api/common';
+import type { OssFile } from '#/api/system/oss/model';
 
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { Page, useVbenModal, type VbenFormProps } from '@vben/common-ui';
+import { Page, useVbenModal } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 import { getVxePopupContainer } from '@vben/utils';
 
@@ -14,21 +18,22 @@ import {
   Modal,
   Popconfirm,
   Space,
+  Spin,
   Switch,
   Tooltip,
 } from 'ant-design-vue';
 
 import {
+  addSortParams,
   useVbenVxeGrid,
   vxeCheckboxChecked,
-  type VxeGridProps,
-  vxeSortEvent,
 } from '#/adapter/vxe-table';
 import { configInfoByKey } from '#/api/system/config';
 import { ossDownload, ossList, ossRemove } from '#/api/system/oss';
+import { calculateFileSize } from '#/utils/file';
 import { downloadByData } from '#/utils/file/download';
 
-import { columns, querySchema } from './data';
+import { columns, fallbackImageBase64, querySchema } from './data';
 import fileUploadModal from './file-upload-modal.vue';
 import imageUploadModal from './image-upload-modal.vue';
 
@@ -66,18 +71,19 @@ const gridOptions: VxeGridProps = {
   pagerConfig: {},
   proxyConfig: {
     ajax: {
-      query: async ({ page }, formValues = {}) => {
-        const params: any = {
+      query: async ({ page, sorts }, formValues = {}) => {
+        const params: PageQuery = {
           pageNum: page.currentPage,
           pageSize: page.pageSize,
           ...formValues,
         };
+        // 添加排序参数
+        addSortParams(params, sorts);
         return await ossList(params);
       },
     },
   },
   rowConfig: {
-    isHover: true,
     keyField: 'ossId',
     height: 65,
   },
@@ -94,28 +100,42 @@ const [BasicTable, tableApi] = useVbenVxeGrid({
   formOptions,
   gridOptions,
   gridEvents: {
-    sortChange: (sortParams) => vxeSortEvent(tableApi, sortParams),
+    // 排序 重新请求接口
+    sortChange: () => tableApi.query(),
   },
 });
 
-async function handleDownload(row: Recordable<any>) {
-  const hideLoading = message.loading($t('pages.common.downloadLoading'), 0);
+async function handleDownload(row: OssFile) {
+  const downloadSize = ref($t('pages.common.downloadLoading'));
+  const hideLoading = message.loading({
+    content: () => downloadSize.value,
+    duration: 0,
+  });
   try {
-    const data = await ossDownload(row.ossId);
+    const data = await ossDownload(row.ossId, (e) => {
+      // 计算下载进度
+      const percent = Math.floor((e.loaded / e.total!) * 100);
+      // 已经下载
+      const current = calculateFileSize(e.loaded);
+      // 总大小
+      const total = calculateFileSize(e.total!);
+      downloadSize.value = `已下载: ${current}/${total} (${percent}%)`;
+    });
     downloadByData(data, row.originalName);
+    message.success('下载完成');
   } finally {
     hideLoading();
   }
 }
 
-async function handleDelete(row: Recordable<any>) {
-  await ossRemove(row.ossId);
+async function handleDelete(row: OssFile) {
+  await ossRemove([row.ossId]);
   await tableApi.query();
 }
 
 function handleMultiDelete() {
   const rows = tableApi.grid.getCheckboxRecords();
-  const ids = rows.map((row: any) => row.ossId);
+  const ids = rows.map((row: OssFile) => row.ossId);
   Modal.confirm({
     title: '提示',
     okType: 'danger',
@@ -134,8 +154,8 @@ function handleToSettings() {
 
 const preview = ref(false);
 onMounted(async () => {
-  const resp = await configInfoByKey('sys.oss.previewListResource');
-  preview.value = Boolean(resp);
+  const previewStr = await configInfoByKey('sys.oss.previewListResource');
+  preview.value = previewStr === 'true';
 });
 
 function isImageFile(ext: string) {
@@ -189,11 +209,22 @@ const [FileUploadModal, fileUploadApi] = useVbenModal({
         </Space>
       </template>
       <template #url="{ row }">
+        <!-- placeholder为图片未加载时显示的占位图 -->
+        <!-- fallback为图片加载失败时显示 -->
+        <!-- 需要设置key属性 否则切换翻页会有延迟 -->
         <Image
+          :key="row.ossId"
           v-if="preview && isImageFile(row.url)"
           :src="row.url"
           height="50px"
-        />
+          :fallback="fallbackImageBase64"
+        >
+          <template #placeholder>
+            <div class="flex size-full items-center justify-center">
+              <Spin />
+            </div>
+          </template>
+        </Image>
         <span v-else>{{ row.url }}</span>
       </template>
       <template #action="{ row }">

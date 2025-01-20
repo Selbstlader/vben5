@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import type { PropType } from 'vue';
+
 import type { DeptTree } from '#/api/system/user/model';
 
-import { onMounted, type PropType, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 
 import { SyncOutlined } from '@ant-design/icons-vue';
 import { Empty, InputSearch, Skeleton, Tree } from 'ant-design-vue';
@@ -9,6 +11,8 @@ import { Empty, InputSearch, Skeleton, Tree } from 'ant-design-vue';
 import { getDeptTree } from '#/api/system/user';
 
 defineOptions({ inheritAttrs: false });
+
+withDefaults(defineProps<{ showSearch?: boolean }>(), { showSearch: true });
 
 const emit = defineEmits<{
   /**
@@ -68,7 +72,10 @@ onMounted(loadTree);
         class="bg-background flex h-full flex-col overflow-y-auto rounded-lg"
       >
         <!-- 固定在顶部 必须加上bg-background背景色 否则会产生'穿透'效果 -->
-        <div class="bg-background z-100 sticky left-0 top-0 p-[8px]">
+        <div
+          v-if="showSearch"
+          class="bg-background z-100 sticky left-0 top-0 p-[8px]"
+        >
           <InputSearch
             v-model:value="searchValue"
             :placeholder="$t('pages.common.search')"

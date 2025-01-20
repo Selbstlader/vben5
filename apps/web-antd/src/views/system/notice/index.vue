@@ -1,16 +1,15 @@
 <script setup lang="ts">
-import type { Recordable } from '@vben/types';
+import type { VbenFormProps } from '@vben/common-ui';
 
-import { Page, useVbenModal, type VbenFormProps } from '@vben/common-ui';
+import type { VxeGridProps } from '#/adapter/vxe-table';
+import type { Notice } from '#/api/system/notice/model';
+
+import { Page, useVbenModal } from '@vben/common-ui';
 import { getVxePopupContainer } from '@vben/utils';
 
 import { Modal, Popconfirm, Space } from 'ant-design-vue';
 
-import {
-  useVbenVxeGrid,
-  vxeCheckboxChecked,
-  type VxeGridProps,
-} from '#/adapter/vxe-table';
+import { useVbenVxeGrid, vxeCheckboxChecked } from '#/adapter/vxe-table';
 import { noticeList, noticeRemove } from '#/api/system/notice';
 
 import { columns, querySchema } from './data';
@@ -52,7 +51,6 @@ const gridOptions: VxeGridProps = {
     },
   },
   rowConfig: {
-    isHover: true,
     keyField: 'noticeId',
   },
   id: 'system-notice-index',
@@ -72,19 +70,19 @@ function handleAdd() {
   modalApi.open();
 }
 
-async function handleEdit(record: Recordable<any>) {
+async function handleEdit(record: Notice) {
   modalApi.setData({ id: record.noticeId });
   modalApi.open();
 }
 
-async function handleDelete(row: Recordable<any>) {
-  await noticeRemove(row.noticeId);
+async function handleDelete(row: Notice) {
+  await noticeRemove([row.noticeId]);
   await tableApi.query();
 }
 
 function handleMultiDelete() {
   const rows = tableApi.grid.getCheckboxRecords();
-  const ids = rows.map((row: any) => row.noticeId);
+  const ids = rows.map((row: Notice) => row.noticeId);
   Modal.confirm({
     title: '提示',
     okType: 'danger',

@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import type { Recordable } from '@vben/types';
 import type { Key } from 'ant-design-vue/es/vc-tree/interface';
 
-import { type Component, markRaw, ref } from 'vue';
+import type { Component } from 'vue';
 
-import {
-  CodeMirror,
-  type LanguageSupport,
-  useVbenModal,
-} from '@vben/common-ui';
+import type { LanguageSupport } from '@vben/common-ui';
+import type { Recordable } from '@vben/types';
+
+import { markRaw, ref } from 'vue';
+
+import { CodeMirror, useVbenModal } from '@vben/common-ui';
 import {
   DefaultFileIcon,
   FolderIcon,

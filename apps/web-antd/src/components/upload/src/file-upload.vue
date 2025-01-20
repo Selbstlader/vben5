@@ -2,6 +2,10 @@
 import type { UploadFile, UploadProps } from 'ant-design-vue';
 import type { UploadRequestOption } from 'ant-design-vue/lib/vc-upload/interface';
 
+import type { AxiosResponse } from '@vben/request';
+
+import type { AxiosProgressEvent } from '#/api';
+
 import { ref, toRefs, watch } from 'vue';
 
 import { $t } from '@vben/locales';
@@ -26,7 +30,10 @@ const props = withDefaults(
      * 需自行改造 ./helper/checkFileType方法
      */
     accept?: string[];
-    api?: (...args: any[]) => Promise<any>;
+    api?: (
+      file: Blob | File,
+      onUploadProgress?: AxiosProgressEvent,
+    ) => Promise<AxiosResponse<any>>;
     disabled?: boolean;
     helpText?: string;
     // 最大数量的文件，Infinity不限制
@@ -38,6 +45,10 @@ const props = withDefaults(
     // support xxx.xxx.xx
     // 返回的字段 默认url
     resultField?: 'fileName' | 'ossId' | 'url' | string;
+    /**
+     * 是否显示下面的描述
+     */
+    showDescription?: boolean;
     value?: string[];
   }>(),
   {
@@ -50,6 +61,7 @@ const props = withDefaults(
     multiple: false,
     api: uploadApi,
     resultField: '',
+    showDescription: true,
   },
 );
 const emit = defineEmits(['change', 'update:value', 'delete']);
@@ -144,12 +156,19 @@ async function customRequest(info: UploadRequestOption<any>) {
     return;
   }
   try {
-    const res = await api?.(info.file);
+    // 进度条事件
+    const progressEvent: AxiosProgressEvent = (e) => {
+      const percent = Math.trunc((e.loaded / e.total!) * 100);
+      info.onProgress!({ percent });
+    };
+    const res = await api?.(info.file as File, progressEvent);
     /**
      * 由getValue处理 传对象过去
      * 直接传string(id)会被转为Number
+     * 内部的逻辑由requestClient.upload处理 这里不用判断业务状态码 不符合会自动reject
      */
     info.onSuccess!(res);
+    message.success($t('component.upload.uploadSuccess'));
     // 获取
     const value = getValue();
     isInnerOperate.value = true;
@@ -191,6 +210,7 @@ function getValue() {
       :max-count="maxNumber"
       :multiple="multiple"
       list-type="text"
+      :progress="{ showInfo: true }"
       @remove="handleRemove"
     >
       <div v-if="fileList && fileList.length < maxNumber">
@@ -198,6 +218,13 @@ function getValue() {
           <UploadOutlined />
           {{ $t('component.upload.upload') }}
         </a-button>
+      </div>
+      <div v-if="showDescription" class="mt-2 flex flex-wrap items-center">
+        请上传不超过
+        <div class="text-primary mx-1 font-bold">{{ maxSize }}MB</div>
+        的
+        <div class="text-primary mx-1 font-bold">{{ accept.join('/') }}</div>
+        格式文件
       </div>
     </Upload>
   </div>

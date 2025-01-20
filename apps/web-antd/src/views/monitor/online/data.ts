@@ -1,10 +1,10 @@
-import type { VxeGridProps } from '#/adapter/vxe-table';
-
 import type { VNode } from 'vue';
+
+import type { FormSchemaGetter } from '#/adapter/form';
+import type { VxeGridProps } from '#/adapter/vxe-table';
 
 import dayjs from 'dayjs';
 
-import { type FormSchemaGetter } from '#/adapter/form';
 import { renderBrowserIcon, renderOsIcon } from '#/utils/render';
 
 export const querySchema: FormSchemaGetter = () => [

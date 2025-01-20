@@ -1,18 +1,17 @@
 <script setup lang="ts">
-import type { Recordable } from '@vben/types';
+import type { VbenFormProps } from '@vben/common-ui';
+
+import type { VxeGridProps } from '#/adapter/vxe-table';
+import type { Post } from '#/api/system/post/model';
 
 import { ref } from 'vue';
 
-import { Page, useVbenDrawer, type VbenFormProps } from '@vben/common-ui';
+import { Page, useVbenDrawer } from '@vben/common-ui';
 import { getVxePopupContainer } from '@vben/utils';
 
 import { Modal, Popconfirm, Space } from 'ant-design-vue';
 
-import {
-  useVbenVxeGrid,
-  vxeCheckboxChecked,
-  type VxeGridProps,
-} from '#/adapter/vxe-table';
+import { useVbenVxeGrid, vxeCheckboxChecked } from '#/adapter/vxe-table';
 import { postExport, postList, postRemove } from '#/api/system/post';
 import { commonDownloadExcel } from '#/utils/file/download';
 import DeptTree from '#/views/system/user/dept-tree.vue';
@@ -73,7 +72,6 @@ const gridOptions: VxeGridProps = {
     },
   },
   rowConfig: {
-    isHover: true,
     keyField: 'postId',
   },
   id: 'system-post-index',
@@ -93,19 +91,19 @@ function handleAdd() {
   drawerApi.open();
 }
 
-async function handleEdit(record: Recordable<any>) {
+async function handleEdit(record: Post) {
   drawerApi.setData({ id: record.postId });
   drawerApi.open();
 }
 
-async function handleDelete(row: Recordable<any>) {
-  await postRemove(row.postId);
+async function handleDelete(row: Post) {
+  await postRemove([row.postId]);
   await tableApi.query();
 }
 
 function handleMultiDelete() {
   const rows = tableApi.grid.getCheckboxRecords();
-  const ids = rows.map((row: any) => row.postId);
+  const ids = rows.map((row: Post) => row.postId);
   Modal.confirm({
     title: '提示',
     okType: 'danger',

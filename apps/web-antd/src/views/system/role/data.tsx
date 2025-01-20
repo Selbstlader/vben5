@@ -1,3 +1,4 @@
+import type { FormSchemaGetter } from '#/adapter/form';
 import type { VxeGridProps } from '#/adapter/vxe-table';
 
 import { DictEnum } from '@vben/constants';
@@ -5,7 +6,6 @@ import { getPopupContainer } from '@vben/utils';
 
 import { Tag } from 'ant-design-vue';
 
-import { type FormSchemaGetter } from '#/adapter/form';
 import { getDictOptions } from '#/utils/dict';
 
 /**
@@ -17,6 +17,7 @@ export const authScopeOptions = [
   { color: 'orange', label: '本部门数据权限', value: '3' },
   { color: 'cyan', label: '本部门及以下数据权限', value: '4' },
   { color: 'error', label: '仅本人数据权限', value: '5' },
+  { color: 'default', label: '部门及以下或本人数据权限', value: '6' },
 ];
 
 export const querySchema: FormSchemaGetter = () => [

@@ -1,20 +1,18 @@
 <script lang="ts">
-import type { EChartsOption } from 'echarts';
+import type { PropType } from 'vue';
+
+import type { EchartsUIType } from '@vben/plugins/echarts';
 
 import { defineComponent, onActivated, onMounted, ref, watch } from 'vue';
 
-import {
-  EchartsUI,
-  type EchartsUIType,
-  useEcharts,
-} from '@vben/plugins/echarts';
+import { EchartsUI, useEcharts } from '@vben/plugins/echarts';
 
 export default defineComponent({
   components: { EchartsUI },
   props: {
     data: {
       default: () => [],
-      type: Array,
+      type: Array as PropType<{ name: string; value: string }[]>,
     },
   },
   setup(props, { expose }) {
@@ -41,6 +39,7 @@ export default defineComponent({
      */
     onActivated(() => resize(false));
 
+    type EChartsOption = Parameters<typeof renderEcharts>['0'];
     function setEchartsOption(data: any[]) {
       const option: EChartsOption = {
         series: [

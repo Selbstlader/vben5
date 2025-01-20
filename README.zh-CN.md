@@ -2,21 +2,15 @@
 
 ## 提示
 
-该仓库使用vben最新版本v5开发, ~~老版本v2地址(不维护)~~ [前往](https://gitee.com/dapppp/ruoyi-plus-vben)
+该仓库使用vben最新版本v5开发
 
 v5版本采用分仓(包)目录结构, 具体开发路径为: `根目录/apps/web-antd`
 
-目前对应后端版本: **5.2.3/2.2.3**
+目前对应后端版本: **分布式5.3.0-beta/微服务2.2.3**
 
 V1.1.0版本已支持离线图标
 
-## 进度
-
-**工作流相关模块等待后端重构后开发**
-
-基础功能已经开发完毕
-
-👉 [更新日志](https://gitee.com/dapppp/ruoyi-plus-vben5/blob/main/CHANGELOG.md)
+V1.2.0版本对接warmflow工作流
 
 ## 简介
 
@@ -24,9 +18,9 @@ V1.1.0版本已支持离线图标
 
 | 组件/框架      | 版本   |
 | :------------- | :----- |
-| vben           | 5.4.5  |
-| ant-design-vue | 4.2.5  |
-| vue            | 3.5.11 |
+| vben           | 5.5.2  |
+| ant-design-vue | 4.2.6  |
+| vue            | 3.5.13 |
 
 对应后端项目: **(分布式 5.X 分支 微服务 2.分支)**
 
@@ -194,4 +188,4 @@ pnpm build:antd
 
 如果项目帮助到您 可以考虑请作者喝杯咖啡 万分感谢您对开源的支持!
 
-<img src=https://plus.dapdap.top/minio-server/plus/2024/03/16/98a9d704eb0c4c04b721bf7799217571.jpg height=360px />
+<img src=https://vben5.dapdap.top/minio-server/plus/2024/03/16/98a9d704eb0c4c04b721bf7799217571.jpg height=360px />

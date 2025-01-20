@@ -1,6 +1,7 @@
 /**
  * 该文件可自行根据业务逻辑进行调整
  */
+
 import type { HttpResponse } from '@vben/request';
 
 import { useAppConfig } from '@vben/hooks';
@@ -134,14 +135,14 @@ function createRequestClient(baseURL: string) {
   });
 
   // 通用的错误处理, 如果没有进入上面的错误处理逻辑，就会进入这里
-  // 主要处理http状态码不为200的情况 必须放在在下面的响应拦截器之前
+  // 主要处理http状态码不为200(如网络异常/离线)的情况 必须放在在下面的响应拦截器之前
   client.addResponseInterceptor(
     errorMessageResponseInterceptor((msg: string) => message.error(msg)),
   );
 
   client.addResponseInterceptor<HttpResponse>({
-    fulfilled: (response) => {
-      const encryptKey = (response.headers || {})['encrypt-key'];
+    fulfilled: async (response) => {
+      const encryptKey = (response.headers ?? {})['encrypt-key'];
       if (encryptKey) {
         /** RSA私钥解密 拿到解密秘钥的base64 */
         const base64Str = encryptUtil.decrypt(encryptKey);
@@ -164,39 +165,57 @@ function createRequestClient(baseURL: string) {
       // 不进行任何处理，直接返回
       // 用于页面代码可能需要直接获取code，data，message这些信息时开启
       if (!isTransformResponse) {
-        return response.data;
+        /**
+         * 需要判断下载二进制的情况 正常是返回二进制 报错会返回json
+         * 当type为blob且content-type为application/json时 则判断已经下载出错
+         */
+        if (
+          response.config.responseType === 'blob' &&
+          response.headers['content-type']?.includes?.('application/json')
+        ) {
+          // 这时候的data为blob类型
+          const blob = response.data as unknown as Blob;
+          // 拿到字符串转json对象
+          response.data = JSON.parse(await blob.text());
+          // 然后按正常逻辑执行下面的代码(判断业务状态码)
+        } else {
+          // 其他情况 直接返回
+          return response.data;
+        }
       }
 
       const axiosResponseData = response.data;
       if (!axiosResponseData) {
-        throw new Error($t('fallback.http.apiRequestFailed'));
+        throw new Error($t('http.apiRequestFailed'));
       }
 
-      //  ruoyi-plus没有采用严格的{code, msg, data}模式
+      // 后端并没有采用严格的{code, msg, data}模式
       const { code, data, msg, ...other } = axiosResponseData;
 
-      // 这里逻辑可以根据项目进行修改
+      // 业务状态码为200则请求成功
       const hasSuccess = Reflect.has(axiosResponseData, 'code') && code === 200;
       if (hasSuccess) {
         let successMsg = msg;
 
         if (isNull(successMsg) || isEmpty(successMsg)) {
-          successMsg = $t(`fallback.http.operationSuccess`);
+          successMsg = $t(`http.operationSuccess`);
         }
 
         if (response.config.successMessageMode === 'modal') {
           Modal.success({
             content: successMsg,
-            title: $t('fallback.http.successTip'),
+            title: $t('http.successTip'),
           });
         } else if (response.config.successMessageMode === 'message') {
           message.success(successMsg);
         }
+        // 分页情况下为code msg rows total 并没有data字段
         // 如果有data 直接返回data 没有data将剩余参数(...other)封装为data返回
-        // 需要考虑data为null的情况(比如查询为空)
+        // 需要考虑data为null的情况(比如查询为空) 所以这里直接判断undefined
         if (data !== undefined) {
           return data;
         }
+        // 没有data 将其他参数包装为data
         return other;
       }
       // 在此处根据自己项目的实际情况对不同的code执行不同的操作
@@ -209,7 +228,7 @@ function createRequestClient(baseURL: string) {
             return;
           }
           isLogoutProcessing = true;
-          const _msg = '登录超时, 请重新登录';
+          const _msg = $t('http.loginTimeout');
           const userStore = useAuthStore();
           userStore.logout().finally(() => {
             message.error(_msg);
@@ -230,13 +249,13 @@ function createRequestClient(baseURL: string) {
       if (response.config.errorMessageMode === 'modal') {
         Modal.error({
           content: timeoutMsg,
-          title: $t('fallback.http.errorTip'),
+          title: $t('http.errorTip'),
         });
       } else if (response.config.errorMessageMode === 'message') {
         message.error(timeoutMsg);
       }
 
-      throw new Error(timeoutMsg || $t('fallback.http.apiRequestFailed'));
+      throw new Error(timeoutMsg || $t('http.apiRequestFailed'));
     },
   });
 

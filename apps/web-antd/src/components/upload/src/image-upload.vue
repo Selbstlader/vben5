@@ -2,15 +2,20 @@
 import type { UploadFile, UploadProps } from 'ant-design-vue';
 import type { UploadRequestOption } from 'ant-design-vue/lib/vc-upload/interface';
 
+import type { AxiosResponse } from '@vben/request';
+
+import type { AxiosProgressEvent } from '#/api';
+
 import { ref, toRefs, watch } from 'vue';
 
 import { $t } from '@vben/locales';
 
 import { PlusOutlined } from '@ant-design/icons-vue';
 import { message, Modal, Upload } from 'ant-design-vue';
-import { isArray, isFunction, isObject, isString } from 'lodash-es';
+import { isArray, isFunction, isObject, isString, uniqueId } from 'lodash-es';
 
 import { uploadApi } from '#/api';
+import { ossInfo } from '#/api/system/oss';
 
 import { checkImageFileType, defaultImageAccept } from './helper';
 import { UploadResultStatus } from './typing';
@@ -24,7 +29,10 @@ const props = withDefaults(
      * 包括拓展名(不带点) 文件头(image/png等 不包括泛写法即image/*)
      */
     accept?: string[];
-    api?: (...args: any[]) => Promise<any>;
+    api?: (
+      file: Blob | File,
+      onUploadProgress?: AxiosProgressEvent,
+    ) => Promise<AxiosResponse<any>>;
     disabled?: boolean;
     helpText?: string;
     // eslint-disable-next-line no-use-before-define
@@ -37,7 +45,11 @@ const props = withDefaults(
     multiple?: boolean;
     // support xxx.xxx.xx
     // 返回的字段 默认url
-    resultField?: 'fileName' | 'ossId' | 'url' | string;
+    resultField?: 'fileName' | 'ossId' | 'url';
+    /**
+     * 是否显示下面的描述
+     */
+    showDescription?: boolean;
     value?: string | string[];
   }>(),
   {
@@ -50,7 +62,8 @@ const props = withDefaults(
     accept: () => defaultImageAccept,
     multiple: false,
     api: uploadApi,
-    resultField: '',
+    resultField: 'url',
+    showDescription: true,
   },
 );
 const emit = defineEmits(['change', 'update:value', 'delete']);
@@ -74,7 +87,7 @@ const isFirstRender = ref<boolean>(true);
 
 watch(
   () => props.value,
-  (v) => {
+  async (v) => {
     if (isInnerOperate.value) {
       isInnerOperate.value = false;
       return;
@@ -90,19 +103,40 @@ watch(
       }
       // 直接赋值 可能为string | string[]
       value = v;
-      fileList.value = _fileList.map((item, i) => {
-        if (item && isString(item)) {
-          return {
-            uid: `${-i}`,
-            name: item.slice(Math.max(0, item.lastIndexOf('/') + 1)),
-            status: 'done',
-            url: item,
-          };
-        } else if (item && isObject(item)) {
-          return item;
+      const withUrlList: UploadProps['fileList'] = [];
+      for (const item of _fileList) {
+        // ossId情况
+        if (props.resultField === 'ossId') {
+          const resp = await ossInfo([item]);
+          if (item && isString(item)) {
+            withUrlList.push({
+              uid: item, // ossId作为uid 方便getValue获取
+              name: item.slice(Math.max(0, item.lastIndexOf('/') + 1)),
+              status: 'done',
+              url: resp?.[0]?.url,
+            });
+          } else if (item && isObject(item)) {
+            withUrlList.push({
+              ...(item as any),
+              uid: item,
+              url: resp?.[0]?.url,
+            });
+          }
+        } else {
+          // 非ossId情况
+          if (item && isString(item)) {
+            withUrlList.push({
+              uid: uniqueId(),
+              name: item.slice(Math.max(0, item.lastIndexOf('/') + 1)),
+              status: 'done',
+              url: item,
+            });
+          } else if (item && isObject(item)) {
+            withUrlList.push(item);
+          }
         }
-        return null;
-      }) as UploadProps['fileList'];
+      }
+      fileList.value = withUrlList;
     }
     if (!isFirstRender.value) {
       emit('change', value);
@@ -182,12 +216,19 @@ async function customRequest(info: UploadRequestOption<any>) {
     return;
   }
   try {
-    const res = await api?.(info.file);
+    // 进度条事件
+    const progressEvent: AxiosProgressEvent = (e) => {
+      const percent = Math.trunc((e.loaded / e.total!) * 100);
+      info.onProgress!({ percent });
+    };
+    const res = await api?.(info.file as File, progressEvent);
     /**
      * 由getValue处理 传对象过去
      * 直接传string(id)会被转为Number
+     * 内部的逻辑由requestClient.upload处理 这里不用判断业务状态码 不符合会自动reject
      */
     info.onSuccess!(res);
+    message.success($t('component.upload.uploadSuccess'));
     // 获取
     const value = getValue();
     isInnerOperate.value = true;
@@ -200,11 +241,16 @@ async function customRequest(info: UploadRequestOption<any>) {
 }
 
 function getValue() {
+  console.log(fileList.value);
   const list = (fileList.value || [])
     .filter((item) => item?.status === UploadResultStatus.DONE)
     .map((item: any) => {
       if (item?.response && props?.resultField) {
         return item?.response?.[props.resultField];
+      }
+      // ossId兼容 uid为ossId直接返回
+      if (props.resultField === 'ossId' && item.uid) {
+        return item.uid;
       }
       // 适用于已经有图片 回显的情况 会默认在init处理为{url: 'xx'}
       if (item?.url) {
@@ -237,6 +283,7 @@ function getValue() {
       :list-type="listType"
       :max-count="maxNumber"
       :multiple="multiple"
+      :progress="{ showInfo: true }"
       @preview="handlePreview"
       @remove="handleRemove"
     >
@@ -245,6 +292,16 @@ function getValue() {
         <div style="margin-top: 8px">{{ $t('component.upload.upload') }}</div>
       </div>
     </Upload>
+    <div
+      v-if="showDescription"
+      class="mt-2 flex flex-wrap items-center text-[14px]"
+    >
+      请上传不超过
+      <div class="text-primary mx-1 font-bold">{{ maxSize }}MB</div>
+      的
+      <div class="text-primary mx-1 font-bold">{{ accept.join('/') }}</div>
+      格式文件
+    </div>
     <Modal
       :footer="null"
       :open="previewOpen"

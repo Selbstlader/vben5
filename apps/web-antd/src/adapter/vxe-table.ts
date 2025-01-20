@@ -1,10 +1,8 @@
-import { h, type Ref } from 'vue';
+import type { VxeGridPropTypes } from '@vben/plugins/vxe-table';
 
-import {
-  setupVbenVxeTable,
-  useVbenVxeGrid,
-  type VxeGridDefines,
-} from '@vben/plugins/vxe-table';
+import { h } from 'vue';
+
+import { setupVbenVxeTable, useVbenVxeGrid } from '@vben/plugins/vxe-table';
 
 import { Button, Image } from 'ant-design-vue';
 
@@ -43,7 +41,7 @@ setupVbenVxeTable({
           // 鼠标移入行显示 hover 样式
           isHover: true,
           // 点击行高亮
-          isCurrent: true,
+          isCurrent: false,
         },
         columnConfig: {
           // 可拖拽列宽
@@ -106,21 +104,6 @@ export { useVbenVxeGrid };
 export type * from '@vben/plugins/vxe-table';
 
 /**
- * 通用的表格复选框是否选中事件
- * @deprecated 使用vxeCheckboxChecked代替
- * @param checked 是否选中
- * @returns function
- */
-export function tableCheckboxEvent(checked: Ref<boolean>) {
-  const event: (params: VxeGridDefines.CheckboxChangeEventParams) => void = (
-    params,
-  ) => {
-    checked.value = params.$table.getCheckboxRecords().length > 0;
-  };
-  return event;
-}
-
-/**
  * 判断vxe-table的复选框是否选中
  * @param tableApi api
  * @returns boolean
@@ -132,22 +115,21 @@ export function vxeCheckboxChecked(
 }
 
 /**
- * 通用的vxe-table排序事件 支持单/多字段排序
- * @param tableApi api
- * @param sortParams 排序参数
+ * 通用的 排序参数添加到请求参数中
+ * @param params 请求参数
+ * @param sortList vxe-table的排序参数
  */
-export function vxeSortEvent(
-  tableApi: ReturnType<typeof useVbenVxeGrid>[1],
-  sortParams: VxeGridDefines.SortChangeEventParams,
+export function addSortParams(
+  params: Record<string, any>,
+  sortList: VxeGridPropTypes.ProxyAjaxQuerySortCheckedParams[],
 ) {
-  const { sortList } = sortParams;
-  // 这里是排序取消 length为0 就不传参数了
+  // 这里是排序取消 length为0 就不添加参数了
   if (sortList.length === 0) {
-    tableApi.query();
     return;
   }
   // 支持单/多字段排序
   const orderByColumn = sortList.map((item) => item.field).join(',');
   const isAsc = sortList.map((item) => item.order).join(',');
-  tableApi.query({ orderByColumn, isAsc });
+  params.orderByColumn = orderByColumn;
+  params.isAsc = isAsc;
 }

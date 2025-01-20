@@ -12,4 +12,5 @@ export enum DictEnum {
   SYS_YES_NO = 'sys_yes_no', // 是否
   WF_BUSINESS_STATUS = 'wf_business_status', // 业务状态
   WF_FORM_TYPE = 'wf_form_type', // 表单类型
+  WF_TASK_STATUS = 'wf_task_status', // 任务状态
 }

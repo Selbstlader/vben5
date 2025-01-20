@@ -1,6 +1,7 @@
+import type { FormSchemaGetter } from '#/adapter/form';
 import type { VxeGridProps } from '#/adapter/vxe-table';
+import type { DictData } from '#/api/system/dict/dict-data-model';
 
-import { type FormSchemaGetter } from '#/adapter/form';
 import { renderDictTag } from '#/utils/render';
 
 export const querySchema: FormSchemaGetter = () => [
@@ -18,8 +19,8 @@ export const columns: VxeGridProps['columns'] = [
     field: 'cssClass',
     slots: {
       default: ({ row }) => {
-        const { dictValue } = row;
-        return renderDictTag(dictValue, [row as any]);
+        const { dictValue } = row as DictData;
+        return renderDictTag(dictValue, [row]);
       },
     },
   },

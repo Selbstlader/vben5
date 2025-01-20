@@ -1,12 +1,17 @@
 <script setup lang="ts">
-import type { Recordable } from '@vben/types';
+import type { VbenFormProps } from '@vben/common-ui';
 
-import { Page, type VbenFormProps } from '@vben/common-ui';
+import type { VxeGridProps } from '#/adapter/vxe-table';
+import type { OnlineUser } from '#/api/monitor/online/model';
+
+import { ref } from 'vue';
+
+import { Page } from '@vben/common-ui';
 import { getVxePopupContainer } from '@vben/utils';
 
 import { Popconfirm } from 'ant-design-vue';
 
-import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
+import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { forceLogout, onlineList } from '#/api/monitor/online';
 
 import { columns, querySchema } from './data';
@@ -22,24 +27,30 @@ const formOptions: VbenFormProps = {
   wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
 };
 
+const onlineCount = ref(0);
 const gridOptions: VxeGridProps = {
   columns,
   height: 'auto',
   keepSource: true,
-  pagerConfig: {},
+  pagerConfig: {
+    enabled: false,
+  },
   proxyConfig: {
     ajax: {
-      query: async ({ page }, formValues) => {
-        return await onlineList({
-          pageNum: page.currentPage,
-          pageSize: page.pageSize,
+      query: async (_, formValues = {}) => {
+        const resp = await onlineList({
           ...formValues,
         });
+        onlineCount.value = resp.total;
+        return resp;
       },
     },
   },
+  scrollY: {
+    enabled: true,
+    gt: 0,
+  },
   rowConfig: {
-    isHover: true,
     keyField: 'tokenId',
   },
   id: 'monitor-online-index',
@@ -47,7 +58,7 @@ const gridOptions: VxeGridProps = {
 
 const [BasicTable, tableApi] = useVbenVxeGrid({ formOptions, gridOptions });
 
-async function handleForceOffline(row: Recordable<any>) {
+async function handleForceOffline(row: OnlineUser) {
   await forceLogout(row.tokenId);
   await tableApi.query();
 }
@@ -55,7 +66,16 @@ async function handleForceOffline(row: Recordable<any>) {
 
 <template>
   <Page :auto-content-height="true">
-    <BasicTable table-title="在线用户列表">
+    <BasicTable>
+      <template #toolbar-actions>
+        <div class="mr-1 pl-1 text-[1rem]">
+          <div>
+            在线用户列表 (共
+            <span class="text-primary font-bold">{{ onlineCount }}</span>
+            人在线)
+          </div>
+        </div>
+      </template>
       <template #action="{ row }">
         <Popconfirm
           :get-popup-container="getVxePopupContainer"

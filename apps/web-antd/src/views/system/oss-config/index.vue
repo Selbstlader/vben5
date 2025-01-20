@@ -1,17 +1,16 @@
 <script setup lang="ts">
-import type { Recordable } from '@vben/types';
+import type { VbenFormProps } from '@vben/common-ui';
+
+import type { VxeGridProps } from '#/adapter/vxe-table';
+import type { OssConfig } from '#/api/system/oss-config/model';
 
 import { useAccess } from '@vben/access';
-import { Page, useVbenDrawer, type VbenFormProps } from '@vben/common-ui';
+import { Page, useVbenDrawer } from '@vben/common-ui';
 import { getVxePopupContainer } from '@vben/utils';
 
 import { Modal, Popconfirm, Space } from 'ant-design-vue';
 
-import {
-  useVbenVxeGrid,
-  vxeCheckboxChecked,
-  type VxeGridProps,
-} from '#/adapter/vxe-table';
+import { useVbenVxeGrid, vxeCheckboxChecked } from '#/adapter/vxe-table';
 import {
   ossConfigChangeStatus,
   ossConfigList,
@@ -58,7 +57,6 @@ const gridOptions: VxeGridProps = {
     },
   },
   rowConfig: {
-    isHover: true,
     keyField: 'ossConfigId',
   },
   id: 'system-oss-config-index',
@@ -78,19 +76,19 @@ function handleAdd() {
   drawerApi.open();
 }
 
-async function handleEdit(record: Recordable<any>) {
+async function handleEdit(record: OssConfig) {
   drawerApi.setData({ id: record.ossConfigId });
   drawerApi.open();
 }
 
-async function handleDelete(row: Recordable<any>) {
-  await ossConfigRemove(row.ossConfigId);
+async function handleDelete(row: OssConfig) {
+  await ossConfigRemove([row.ossConfigId]);
   await tableApi.query();
 }
 
 function handleMultiDelete() {
   const rows = tableApi.grid.getCheckboxRecords();
-  const ids = rows.map((row: any) => row.ossConfigId);
+  const ids = rows.map((row: OssConfig) => row.ossConfigId);
   Modal.confirm({
     title: '提示',
     okType: 'danger',

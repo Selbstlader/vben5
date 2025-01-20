@@ -1,16 +1,14 @@
 <script setup lang="ts">
-import type { Recordable } from '@vben/types';
+import type { VbenFormProps } from '@vben/common-ui';
+
+import type { VxeGridProps } from '#/adapter/vxe-table';
+import type { Role } from '#/api/system/role/model';
 
 import { computed } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { useAccess } from '@vben/access';
-import {
-  Page,
-  useVbenDrawer,
-  useVbenModal,
-  type VbenFormProps,
-} from '@vben/common-ui';
+import { Page, useVbenDrawer, useVbenModal } from '@vben/common-ui';
 import { getVxePopupContainer } from '@vben/utils';
 
 import {
@@ -22,11 +20,7 @@ import {
   Space,
 } from 'ant-design-vue';
 
-import {
-  useVbenVxeGrid,
-  vxeCheckboxChecked,
-  type VxeGridProps,
-} from '#/adapter/vxe-table';
+import { useVbenVxeGrid, vxeCheckboxChecked } from '#/adapter/vxe-table';
 import {
   roleChangeStatus,
   roleExport,
@@ -85,7 +79,6 @@ const gridOptions: VxeGridProps = {
     },
   },
   rowConfig: {
-    isHover: true,
     keyField: 'roleId',
   },
   id: 'system-role-index',
@@ -104,19 +97,19 @@ function handleAdd() {
   drawerApi.open();
 }
 
-async function handleEdit(record: Recordable<any>) {
+async function handleEdit(record: Role) {
   drawerApi.setData({ id: record.roleId });
   drawerApi.open();
 }
 
-async function handleDelete(row: Recordable<any>) {
-  await roleRemove(row.roleId);
+async function handleDelete(row: Role) {
+  await roleRemove([row.roleId]);
   await tableApi.query();
 }
 
 function handleMultiDelete() {
   const rows = tableApi.grid.getCheckboxRecords();
-  const ids = rows.map((row: any) => row.roleId);
+  const ids = rows.map((row: Role) => row.roleId);
   Modal.confirm({
     title: '提示',
     okType: 'danger',
@@ -142,13 +135,13 @@ const [RoleAuthModal, authModalApi] = useVbenModal({
   connectedComponent: roleAuthModal,
 });
 
-function handleAuthEdit(record: Recordable<any>) {
+function handleAuthEdit(record: Role) {
   authModalApi.setData({ id: record.roleId });
   authModalApi.open();
 }
 
 const router = useRouter();
-function handleAssignRole(record: Recordable<any>) {
+function handleAssignRole(record: Role) {
   router.push(`/system/role-assign/${record.roleId}`);
 }
 </script>

@@ -1,9 +1,10 @@
+import type { AxiosInstance, AxiosResponse } from 'axios';
+
 import type {
-  AxiosInstance,
-  AxiosRequestConfig,
-  AxiosResponse,
-  CreateAxiosDefaults,
-} from 'axios';
+  HttpResponse,
+  RequestClientConfig,
+  RequestClientOptions,
+} from './types';
 
 import { bindMethods, merge } from '@vben/utils';
 
@@ -12,20 +13,19 @@ import axios from 'axios';
 import { FileDownloader } from './modules/downloader';
 import { InterceptorManager } from './modules/interceptor';
 import { FileUploader } from './modules/uploader';
-import { type RequestClientOptions } from './types';
 
 class RequestClient {
-  private readonly instance: AxiosInstance;
-
   public addRequestInterceptor: InterceptorManager['addRequestInterceptor'];
-  public addResponseInterceptor: InterceptorManager['addResponseInterceptor'];
 
+  public addResponseInterceptor: InterceptorManager['addResponseInterceptor'];
   public download: FileDownloader['download'];
+
   // 是否正在刷新token
   public isRefreshing = false;
   // 刷新token队列
   public refreshTokenQueue: ((token: string) => void)[] = [];
   public upload: FileUploader['upload'];
+  private readonly instance: AxiosInstance;
 
   /**
    * 构造函数，用于创建Axios实例
@@ -33,10 +33,11 @@ class RequestClient {
    */
   constructor(options: RequestClientOptions = {}) {
     // 合并默认配置和传入的配置
-    const defaultConfig: CreateAxiosDefaults = {
+    const defaultConfig: RequestClientOptions = {
       headers: {
         'Content-Type': 'application/json;charset=utf-8',
       },
+      responseReturn: 'raw',
       // 默认超时时间
       timeout: 10_000,
     };
@@ -53,6 +54,24 @@ class RequestClient {
     this.addResponseInterceptor =
       interceptorManager.addResponseInterceptor.bind(interceptorManager);
 
+    // 添加基础的响应处理，根据设置决定返回响应的哪一部分
+    this.addResponseInterceptor<HttpResponse>({
+      fulfilled: (response) => {
+        const { config, data: responseData, status } = response;
+
+        if (config.responseReturn === 'raw') {
+          return response;
+        }
+
+        const { code, data } = responseData;
+
+        if (status >= 200 && status < 400 && code === 0) {
+          return config.responseReturn === 'body' ? responseData : data;
+        }
+        throw Object.assign({}, response, { response });
+      },
+    });
+
     // 实例化文件上传器
     const fileUploader = new FileUploader(this);
     this.upload = fileUploader.upload.bind(fileUploader);
@@ -64,7 +83,10 @@ class RequestClient {
   /**
    * DELETE请求方法
    */
-  public delete<T = any>(url: string, config?: AxiosRequestConfig): Promise<T> {
+  public delete<T = any>(
+    url: string,
+    config?: RequestClientConfig,
+  ): Promise<T> {
     return this.request<T>(url, { ...config, method: 'DELETE' });
   }
 
@@ -85,7 +107,7 @@ class RequestClient {
   /**
    * GET请求方法
    */
-  public get<T = any>(url: string, config?: AxiosRequestConfig): Promise<T> {
+  public get<T = any>(url: string, config?: RequestClientConfig): Promise<T> {
     return this.request<T>(url, { ...config, method: 'GET' });
   }
 
@@ -95,7 +117,7 @@ class RequestClient {
   public post<T = any>(
     url: string,
     data?: any,
-    config?: AxiosRequestConfig,
+    config?: RequestClientConfig,
   ): Promise<T> {
     return this.request<T>(url, { ...config, data, method: 'POST' });
   }
@@ -122,7 +144,7 @@ class RequestClient {
   public put<T = any>(
     url: string,
     data?: any,
-    config?: AxiosRequestConfig,
+    config?: RequestClientConfig,
   ): Promise<T> {
     return this.request<T>(url, { ...config, data, method: 'PUT' });
   }
@@ -146,7 +168,10 @@ class RequestClient {
   /**
    * 通用的请求方法
    */
-  public async request<T>(url: string, config: AxiosRequestConfig): Promise<T> {
+  public async request<T>(
+    url: string,
+    config: RequestClientConfig,
+  ): Promise<T> {
     try {
       const response: AxiosResponse<T> = await this.instance({
         url,

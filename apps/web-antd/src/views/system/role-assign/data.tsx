@@ -1,6 +1,5 @@
+import type { FormSchemaGetter } from '#/adapter/form';
 import type { VxeGridProps } from '#/adapter/vxe-table';
-
-import { type FormSchemaGetter } from '#/adapter/form';
 
 export const querySchema: FormSchemaGetter = () => [
   {

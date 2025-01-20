@@ -1,11 +1,10 @@
+import type { TenantOption } from '#/api/core/auth';
+
 import { ref } from 'vue';
 
 import { defineStore } from 'pinia';
 
-import {
-  tenantList as tenantListApi,
-  type TenantOption,
-} from '#/api/core/auth';
+import { tenantList as tenantListApi } from '#/api/core/auth';
 
 /**
  * 用于超级管理员切换租户
