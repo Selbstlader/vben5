@@ -1,6 +1,6 @@
+import type { FormSchemaGetter } from '#/adapter/form';
 import type { VxeGridProps } from '#/adapter/vxe-table';
 
-import { type FormSchemaGetter } from '#/adapter/form';
 import { OptionsTag } from '#/components/table';
 
 import { publishStatusOptions } from './constant';
@@ -92,6 +92,12 @@ export const modalSchema: FormSchemaGetter = () => [
     component: 'Input',
     fieldName: 'flowName',
     label: '流程名称',
+    rules: 'required',
+  },
+  {
+    component: 'Input',
+    fieldName: 'formPath',
+    label: '表单路径',
     rules: 'required',
   },
 ];
