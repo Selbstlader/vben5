@@ -28,6 +28,7 @@ const modelValue = defineModel({ default: '', type: String });
   <div class="flex w-full">
     <div class="flex-1">
       <VbenInput
+        autocomplete="off"
         id="code"
         v-model="modelValue"
         :class="$attrs.class ?? {}"
