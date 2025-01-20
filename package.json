@@ -114,8 +114,5 @@
       "canvas",
       "node-gyp"
     ]
-  },
-  "resolutions": {
-    "esbuild": "0.24.0"
   }
 }
