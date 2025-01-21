@@ -145,12 +145,7 @@ const gridOptions: VxeGridProps = {
     enabled: false,
   },
   toolbarConfig: {
-    // 自定义列
-    custom: false,
-    // 最大化
-    zoom: false,
-    // 刷新
-    refresh: false,
+    enabled: false,
   },
   showOverflow: false,
 };

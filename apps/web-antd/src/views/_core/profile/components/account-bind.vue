@@ -85,9 +85,7 @@ const gridOptions: VxeGridProps = {
     enabled: false,
   },
   toolbarConfig: {
-    custom: false,
-    zoom: false,
-    refresh: false,
+    enabled: false,
   },
   proxyConfig: {
     ajax: {
