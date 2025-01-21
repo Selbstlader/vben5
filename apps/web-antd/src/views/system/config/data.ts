@@ -103,7 +103,7 @@ export const modalSchema: FormSchemaGetter = () => [
     fieldName: 'configValue',
     label: '参数键值',
     componentProps: {
-      autosize: true,
+      autoSize: true,
     },
     rules: 'required',
   },
