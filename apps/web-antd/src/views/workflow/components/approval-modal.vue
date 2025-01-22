@@ -1,5 +1,4 @@
 <!-- 审批同意的弹窗 -->
-<!-- 审批驳回窗口 -->
 <script setup lang="ts">
 import type { CompleteTaskReqData } from '#/api/workflow/task/model';
 

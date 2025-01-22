@@ -51,6 +51,29 @@ const [BasicForm, formApi] = useVbenForm({
       label: '驳回节点',
     },
     {
+      fieldName: 'attachment',
+      component: 'FileUpload',
+      componentProps: {
+        resultField: 'ossId',
+        maxNumber: 10,
+        maxSize: 20,
+        accept: [
+          'png',
+          'jpg',
+          'jpeg',
+          'doc',
+          'docx',
+          'xlsx',
+          'xls',
+          'ppt',
+          'pdf',
+        ],
+      },
+      defaultValue: [],
+      label: '附件上传',
+      formItemClass: 'items-start',
+    },
+    {
       fieldName: 'message',
       component: 'Textarea',
       label: '审批意见',
@@ -112,7 +135,10 @@ async function handleSubmit() {
       return;
     }
     const data = cloneDeep(await formApi.getValues());
-    console.log(data);
+    // 附件join
+    data.fileId = data.attachment?.join?.(',');
+    // 取消attachment参数的传递
+    data.attachment = undefined;
     await backProcess(data);
     modalApi.close();
     emit('complete');
