@@ -194,6 +194,7 @@ const browserOptions = [
   { icon: OperaIcon, value: 'opera' },
   { icon: SafariIcon, value: 'safari' },
   { icon: MicromessengerIcon, value: 'micromessenger' },
+  { icon: MicromessengerIcon, value: 'windowswechat' },
   { icon: QuarkIcon, value: 'quark' },
   { icon: MicromessengerIcon, value: 'wxwork' },
   { icon: QQIcon, value: 'qq' },
