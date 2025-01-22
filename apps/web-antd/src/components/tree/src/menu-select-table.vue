@@ -78,7 +78,8 @@ const gridOptions: VxeGridProps = {
     enabled: false,
   },
   toolbarConfig: {
-    enabled: false,
+    refresh: false,
+    custom: false,
   },
   rowConfig: {
     isHover: false,
