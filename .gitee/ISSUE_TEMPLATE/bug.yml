@@ -22,18 +22,6 @@ body:
           required: true
   - type: checkboxes
     attributes:
-      label: 我已经给项目点赞(star)
-      options:
-        - label: 未点赞(star)问题直接删除, 不予理会
-          required: true
-  - type: checkboxes
-    attributes:
-      label: 基础框架问题(如布局,modal,drawer等)请提交给vben官方
-      options:
-        - label: 我确认是业务问题而非基础框架问题
-          required: true
-  - type: checkboxes
-    attributes:
       label: 基础框架问题(如布局,modal,drawer等)请提交给vben官方
       options:
         - label: 我确认是业务问题而非基础框架问题
