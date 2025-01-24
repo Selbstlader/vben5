@@ -13,8 +13,8 @@ const props = defineProps<{
 <template>
   <Timeline v-if="props.list.length > 0">
     <ApprovalTimelineItem
-      v-for="(item, index) in props.list"
-      :key="index"
+      v-for="item in props.list"
+      :key="item.id"
       :item="item"
     />
   </Timeline>

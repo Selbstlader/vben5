@@ -13,7 +13,6 @@ import { renderDict } from '#/utils/render';
 
 defineOptions({
   name: 'ApprovalTimelineItem',
-  inheritAttrs: false,
 });
 
 const props = defineProps<{ item: Flow }>();
@@ -42,7 +41,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <TimelineItem :key="item.id">
+  <TimelineItem>
     <template #dot>
       <div class="relative rounded-full border">
         <VbenAvatar
