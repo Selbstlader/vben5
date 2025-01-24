@@ -48,7 +48,7 @@ admin 账号: admin admin123
 
 ## 预览图
 
-![图片](https://gitee.com/dapppp/ruoyi-plus-vben5/raw/main/scripts/preview/1.png) ![图片](https://gitee.com/dapppp/ruoyi-plus-vben5/raw/main/scripts/preview/2.png) ![图片](https://gitee.com/dapppp/ruoyi-plus-vben5/raw/main/scripts/preview/3.png) ![图片](https://gitee.com/dapppp/ruoyi-plus-vben5/raw/main/scripts/preview/4.png) ![图片](https://gitee.com/dapppp/ruoyi-plus-vben5/raw/main/scripts/preview/5.png) ![图片](https://gitee.com/dapppp/ruoyi-plus-vben5/raw/main/scripts/preview/6.png) ![图片](https://gitee.com/dapppp/ruoyi-plus-vben5/raw/main/scripts/preview/7.png) ![图片](https://gitee.com/dapppp/ruoyi-plus-vben5/raw/main/scripts/preview/8.png) ![图片](https://gitee.com/dapppp/ruoyi-plus-vben5/raw/main/scripts/preview/9.png) ![图片](https://gitee.com/dapppp/ruoyi-plus-vben5/raw/main/scripts/preview/10.png)
+![图片](https://gitee.com/dapppp/ruoyi-plus-vben5/raw/main/scripts/preview/1.png) ![图片](https://gitee.com/dapppp/ruoyi-plus-vben5/raw/main/scripts/preview/2.png) ![图片](https://gitee.com/dapppp/ruoyi-plus-vben5/raw/main/scripts/preview/3.png) ![图片](https://gitee.com/dapppp/ruoyi-plus-vben5/raw/main/scripts/preview/4.png) ![图片](https://gitee.com/dapppp/ruoyi-plus-vben5/raw/main/scripts/preview/5.png) ![图片](https://gitee.com/dapppp/ruoyi-plus-vben5/raw/main/scripts/preview/6.png) ![图片](https://gitee.com/dapppp/ruoyi-plus-vben5/raw/main/scripts/preview/7.png) ![图片](https://gitee.com/dapppp/ruoyi-plus-vben5/raw/main/scripts/preview/8.png) ![图片](https://gitee.com/dapppp/ruoyi-plus-vben5/raw/main/scripts/preview/9.png)
 
 ## 安装使用
 
@@ -183,9 +183,3 @@ pnpm build:antd
 | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt=" Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>IE | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt=" Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Edge | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Firefox | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Chrome | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Safari |
 | :-: | :-: | :-: | :-: | :-: |
 | not support | last 2 versions | last 2 versions | last 2 versions | last 2 versions |
-
-## 捐赠
-
-如果项目帮助到您 可以考虑请作者喝杯咖啡 万分感谢您对开源的支持!
-
-<img src=https://vben5.dapdap.top/minio-server/plus/2024/03/16/98a9d704eb0c4c04b721bf7799217571.jpg height=360px />
