@@ -107,11 +107,7 @@ function filterOption(input: string, option: TenantOption) {
       show-search
       @deselect="onDeselect"
       @select="onSelected"
-    >
-      <template #suffixIcon>
-        <span class="icon-mdi--company"></span>
-      </template>
-    </Select>
+    />
   </div>
 </template>
 
