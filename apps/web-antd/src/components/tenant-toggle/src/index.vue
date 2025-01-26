@@ -10,7 +10,6 @@ import { useAccess } from '@vben/access';
 import { DEFAULT_HOME_PATH } from '@vben/constants';
 import { useTabs } from '@vben/hooks';
 import { $t } from '@vben/locales';
-import { getPopupContainer } from '@vben/utils';
 
 import { message, Select } from 'ant-design-vue';
 import { storeToRefs } from 'pinia';
@@ -97,7 +96,6 @@ function filterOption(input: string, option: TenantOption) {
   <div v-if="showToggle" class="mr-[8px] hidden md:block">
     <Select
       v-model:value="selected"
-      :get-popup-container="getPopupContainer"
       :field-names="{ label: 'companyName', value: 'tenantId' }"
       :filter-option="filterOption"
       :options="tenantList"
