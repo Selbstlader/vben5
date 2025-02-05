@@ -60,6 +60,9 @@ const localRoutes: RouteRecordStringComponent[] = [
     name: 'WorkflowDesigner',
     path: '/workflow/designer',
   },
+  /**
+   * 需要添加iframe路由 同目录的./workflow-iframe.ts
+   */
   {
     component: 'workflow/leave/leave-form',
     meta: {
@@ -70,18 +73,6 @@ const localRoutes: RouteRecordStringComponent[] = [
     },
     name: 'WorkflowLeaveIndex',
     path: '/workflow/leaveEdit/index',
-  },
-  // 这里是iframe使用的 去掉外层的BasicLayout
-  {
-    component: 'workflow/leave/leave-form',
-    meta: {
-      title: '请假申请',
-      hideInMenu: true,
-      // 不使用基础布局（仅在顶级生效）
-      noBasicLayout: true,
-    },
-    name: 'WorkflowLeaveInner',
-    path: '/workflow/leaveEdit/index/iframe',
   },
 ];
 
