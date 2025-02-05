@@ -1,3 +1,9 @@
+# 1.2.1
+
+# BUG FIXES
+
+- 客户端管理 错误的status disabled
+
 # 1.2.0
 
 **REFACTOR**

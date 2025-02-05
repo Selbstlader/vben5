@@ -55,6 +55,14 @@ function setupForm(update: boolean) {
   ]);
 }
 
+// 提取生成状态字段Schema的函数
+const getStatusSchema = (disabled: boolean) => [
+  {
+    componentProps: { disabled },
+    fieldName: 'status',
+  },
+];
+
 const [BasicDrawer, drawerApi] = useVbenDrawer({
   onCancel: handleCancel,
   onConfirm: handleConfirm,
@@ -70,15 +78,11 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
     if (isUpdate.value && id) {
       const record = await clientInfo(id);
       // 不能禁用id为1的记录
-      formApi.updateSchema([
-        {
-          componentProps: {
-            disabled: record.id === 1,
-          },
-          fieldName: 'status',
-        },
-      ]);
+      formApi.updateSchema(getStatusSchema(record.id === 1));
       await formApi.setValues(record);
+    } else {
+      // 新增模式: 确保状态字段可用
+      formApi.updateSchema(getStatusSchema(false));
     }
     drawerApi.drawerLoading(false);
   },
