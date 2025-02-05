@@ -30,6 +30,7 @@ const [BasicForm, formApi] = useVbenForm({
 
 const [BasicModal, modalApi] = useVbenModal({
   fullscreenButton: false,
+  closeOnClickModal: false,
   onCancel: handleCancel,
   onConfirm: handleConfirm,
   onOpenChange: async (isOpen) => {
@@ -72,7 +73,7 @@ async function handleCancel() {
 </script>
 
 <template>
-  <BasicModal :fullscreen-button="true" :title="title" class="w-[800px]">
+  <BasicModal :title="title" class="w-[800px]">
     <BasicForm />
   </BasicModal>
 </template>
