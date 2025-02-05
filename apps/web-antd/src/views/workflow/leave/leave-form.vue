@@ -179,21 +179,3 @@ const cardSize = computed(() => {
     </div>
   </Card>
 </template>
-
-<style lang="scss">
-html:has(#leave-form) {
-  /**
-  去除 '菜单加载中' 主要是iframe内嵌使用
-  */
-  .ant-message-notice-content:has(.ant-message-loading) {
-    display: none;
-  }
-
-  /**
-  去除顶部进度条样式
-  */
-  #nprogress {
-    display: none;
-  }
-}
-</style>
