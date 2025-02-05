@@ -345,13 +345,24 @@ function handleDone(name: string, url: string) {
       v-if="!initOptions.inline && init"
       v-model="modelValue"
       :init="initOptions"
-      :style="{ visibility: 'hidden' }"
+      :style="{ visibility: 'hidden', zIndex: 3000 }"
       :tinymce-script-src="tinymceScriptSrc"
       license-key="gpl"
     />
     <slot v-else></slot>
   </div>
 </template>
+
+<style lang="scss">
+/***
+由于modal/drawer的zIndex升级后为2000
+这里会造成遮挡 修改为更高的zIndex
+*/
+.tox.tox-silver-sink.tox-tinymce-aux {
+  /** 该样式默认为1300的zIndex  */
+  z-index: 2025;
+}
+</style>
 
 <style lang="scss" scoped>
 /**
