@@ -179,3 +179,14 @@ const cardSize = computed(() => {
     </div>
   </Card>
 </template>
+
+<style lang="scss">
+html:has(#leave-form) {
+  /**
+  去除顶部进度条样式
+  */
+  #nprogress {
+    display: none;
+  }
+}
+</style>
