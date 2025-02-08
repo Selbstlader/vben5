@@ -18,6 +18,7 @@ import {
   batchGenCode,
   generatedList,
   genRemove,
+  genWithPath,
   getDataSourceNames,
   syncDb,
 } from '#/api/tool/gen';
@@ -139,8 +140,15 @@ async function handleBatchGen() {
 }
 
 async function handleDownload(record: Recordable<any>) {
-  const hideLoading = message.loading('下载中...');
+  const hideLoading = message.loading('加载中...');
   try {
+    // 路径生成
+    if (record.genType === '1' && record.genPath) {
+      await genWithPath(record.tableId);
+      message.success(`生成成功: ${record.genPath}`);
+      return;
+    }
+    // zip生成
     const blob = await batchGenCode(record.tableId);
     const filename = `代码生成_${record.tableName}_${dayjs().valueOf()}.zip`;
     downloadByData(blob, filename);

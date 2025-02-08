@@ -77,8 +77,8 @@ export function genDownload(tableId: ID) {
 }
 
 // 生成代码（自定义路径）
-export function genDownloadWithPath(tableId: ID) {
-  return requestClient.get(`${Api.download}/${tableId}`);
+export function genWithPath(tableId: ID) {
+  return requestClient.get<void>(`${Api.genCode}/${tableId}`);
 }
 
 // 同步数据库
