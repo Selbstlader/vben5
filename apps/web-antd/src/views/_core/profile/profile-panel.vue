@@ -24,7 +24,7 @@ defineEmits<{
 }>();
 
 const avatar = computed(
-  () => props.profile?.user.avatar ?? preferences.app.defaultAvatar,
+  () => props.profile?.user.avatar || preferences.app.defaultAvatar,
 );
 
 const { isDark } = usePreferences();

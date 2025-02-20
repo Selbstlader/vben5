@@ -94,7 +94,7 @@ const menus = computed(() => {
 });
 
 const avatar = computed(() => {
-  return userStore.userInfo?.avatar ?? preferences.app.defaultAvatar;
+  return userStore.userInfo?.avatar || preferences.app.defaultAvatar;
 });
 
 async function handleLogout() {
