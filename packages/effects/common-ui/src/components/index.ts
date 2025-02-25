@@ -7,6 +7,7 @@ export * from './ellipsis-text';
 export * from './icon-picker';
 export * from './json-preview';
 export * from './json-viewer';
+export * from './loading';
 export * from './markdown';
 export * from './page';
 export * from './resize';
@@ -17,6 +18,8 @@ export * from '@vben-core/popup-ui';
 // 给文档用
 export {
   VbenButton,
+  VbenButtonGroup,
+  VbenCheckButtonGroup,
   VbenCountToAnimator,
   VbenInputPassword,
   VbenLoading,
