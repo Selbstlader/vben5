@@ -81,7 +81,7 @@ const [BasicForm, formApi] = useVbenForm({
       fieldName: 'message',
       component: 'Textarea',
       label: '审批意见',
-      formItemClass: 'items-baseline',
+      formItemClass: 'items-start',
     },
   ],
   showDefaultActions: false,

@@ -99,7 +99,7 @@ export const modalSchema: FormSchemaGetter = () => [
   },
   {
     component: 'Textarea',
-    formItemClass: 'items-baseline',
+    formItemClass: 'items-start',
     fieldName: 'configValue',
     label: '参数键值',
     componentProps: {
@@ -122,7 +122,7 @@ export const modalSchema: FormSchemaGetter = () => [
   {
     component: 'Textarea',
     fieldName: 'remark',
-    formItemClass: 'items-baseline',
+    formItemClass: 'items-start',
     label: '备注',
   },
 ];

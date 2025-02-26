@@ -89,7 +89,7 @@ export const drawerSchema: FormSchemaGetter = () => [
       placeholder: '可使用tailwind类名 如bg-blue w-full h-full等',
     },
     fieldName: 'cssClass',
-    formItemClass: 'items-baseline',
+    formItemClass: 'items-start',
     help: '标签的css样式, 可添加已经编译的css类名',
     label: 'css类名',
   },
@@ -102,7 +102,7 @@ export const drawerSchema: FormSchemaGetter = () => [
   {
     component: 'Textarea',
     fieldName: 'remark',
-    formItemClass: 'items-baseline',
+    formItemClass: 'items-start',
     label: '备注',
   },
 ];

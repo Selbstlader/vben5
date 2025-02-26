@@ -168,6 +168,6 @@ export const modalSchema: (isEdit: boolean) => VbenFormSchema[] = (
     label: '请假原因',
     fieldName: 'remark',
     component: 'Textarea',
-    formItemClass: 'items-baseline',
+    formItemClass: 'items-start',
   },
 ];

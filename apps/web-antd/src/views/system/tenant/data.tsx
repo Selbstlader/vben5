@@ -255,13 +255,13 @@ export const drawerSchema: FormSchemaGetter = () => [
   {
     component: 'Textarea',
     fieldName: 'intro',
-    formItemClass: 'items-baseline',
+    formItemClass: 'items-start',
     label: '企业介绍',
   },
   {
     component: 'Textarea',
     fieldName: 'remark',
-    formItemClass: 'items-baseline',
+    formItemClass: 'items-start',
     label: '备注',
   },
 ];
