@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue';
+import { computed, ref } from 'vue';
 
 import { useVbenModal } from '@vben/common-ui';
 import { DictEnum } from '@vben/constants';
@@ -20,6 +20,9 @@ const title = computed(() => {
   return isUpdate.value ? $t('pages.common.edit') : $t('pages.common.add');
 });
 
+/**
+ * 定义表单数据类型
+ */
 interface FormData {
   noticeId?: number;
   noticeTitle?: string;
@@ -28,6 +31,9 @@ interface FormData {
   noticeContent?: string;
 }
 
+/**
+ * 定义默认值 用于reset
+ */
 const defaultValues: FormData = {
   noticeId: undefined,
   noticeTitle: '',
@@ -36,15 +42,23 @@ const defaultValues: FormData = {
   noticeContent: '',
 };
 
+/**
+ * 表单数据ref
+ */
 const formData = ref(defaultValues);
-
-const formRules = reactive<AntdFormRules<FormData>>({
+/**
+ * 表单校验规则
+ */
+const formRules = ref<AntdFormRules<FormData>>({
   status: [{ required: true, message: $t('ui.formRules.selectRequired') }],
   noticeContent: [{ required: true, message: $t('ui.formRules.required') }],
   noticeType: [{ required: true, message: $t('ui.formRules.selectRequired') }],
   noticeTitle: [{ required: true, message: $t('ui.formRules.required') }],
 });
 
+/**
+ * useForm解构出表单方法
+ */
 const { validate, validateInfos, resetFields } = Form.useForm(
   formData,
   formRules,
@@ -65,6 +79,7 @@ const [BasicModal, modalApi] = useVbenModal({
     isUpdate.value = !!id;
     if (isUpdate.value && id) {
       const record = await noticeInfo(id);
+      // 只赋值存在的字段
       const filterRecord = pick(record, Object.keys(defaultValues));
       formData.value = filterRecord;
     }
@@ -75,8 +90,8 @@ const [BasicModal, modalApi] = useVbenModal({
 async function handleConfirm() {
   try {
     modalApi.modalLoading(true);
-    const test = await validate();
-    console.log(test);
+    await validate();
+    // 可能会做数据处理 使用cloneDeep深拷贝
     const data = cloneDeep(formData.value);
     await (isUpdate.value ? noticeUpdate(data) : noticeAdd(data));
     emit('reload');
