@@ -90,6 +90,8 @@ const [BasicForm, formApi] = useVbenForm({
 
 interface ModalProps {
   taskId: string;
+  // 是否具有抄送权限
+  copyPermission: boolean;
 }
 
 const [BasicModal, modalApi] = useVbenModal({
@@ -104,7 +106,18 @@ const [BasicModal, modalApi] = useVbenModal({
     }
     modalApi.modalLoading(true);
 
-    const { taskId } = modalApi.getData() as ModalProps;
+    const { taskId, copyPermission } = modalApi.getData() as ModalProps;
+    // 是否显示抄送选择
+    formApi.updateSchema([
+      {
+        fieldName: 'flowCopyList',
+        dependencies: {
+          show: copyPermission,
+          triggerFields: [''],
+        },
+      },
+    ]);
+
     await formApi.setFieldValue('taskId', taskId);
 
     modalApi.modalLoading(false);

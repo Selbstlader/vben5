@@ -1,3 +1,9 @@
+export interface ButtonWithPermission {
+  code: string;
+  value: null | string;
+  show: boolean;
+}
+
 export interface TaskInfo {
   id: string;
   categoryName: string;
@@ -28,6 +34,7 @@ export interface TaskInfo {
   createBy: string;
   createByName: string;
   targetNodeName?: string;
+  buttonList: ButtonWithPermission[];
 }
 
 export interface CompleteTaskReqData {

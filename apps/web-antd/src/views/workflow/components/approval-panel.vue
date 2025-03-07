@@ -25,7 +25,7 @@ import {
   TabPane,
   Tabs,
 } from 'ant-design-vue';
-import { isObject } from 'lodash-es';
+import { isEmpty, isObject } from 'lodash-es';
 
 import {
   cancelProcessApply,
@@ -74,6 +74,33 @@ const showMultiActions = computed(() => {
     return true;
   }
   return false;
+});
+
+/**
+ * 按钮权限
+ */
+const buttonPermissions = computed(() => {
+  const record: Record<string, boolean> = {};
+  if (!currentTask.value) {
+    return record;
+  }
+  currentTask.value.buttonList.forEach((item) => {
+    record[item.code] = item.show;
+  });
+  return record;
+});
+
+// 是否显示 `其他` 按钮
+const showButtonOther = computed(() => {
+  if (isEmpty(buttonPermissions.value)) {
+    return false;
+  }
+  // 加签 减 委托 转办
+  const moreCollections = new Set(['addSign', 'subSign', 'transfer', 'trust']);
+  // 是否包含其中之一
+  return Object.keys(buttonPermissions.value).some((key) => {
+    return moreCollections.has(key) && buttonPermissions.value[key];
+  });
 });
 
 /**
@@ -227,7 +254,9 @@ const [ApprovalModal, approvalModalApi] = useVbenModal({
   connectedComponent: approvalModal,
 });
 function handleApproval() {
-  approvalModalApi.setData({ taskId: props.task?.id });
+  // 是否具有抄送权限
+  const copyPermission = buttonPermissions.value?.copy ?? false;
+  approvalModalApi.setData({ taskId: props.task?.id, copyPermission });
   approvalModalApi.open();
 }
 
@@ -459,10 +488,20 @@ async function handleCopy(text: string) {
         </Space>
         <Space v-if="type === 'approve'">
           <a-button type="primary" @click="handleApproval">通过</a-button>
-          <a-button danger type="primary" @click="handleTermination">
+          <a-button
+            v-if="buttonPermissions?.termination"
+            danger
+            type="primary"
+            @click="handleTermination"
+          >
             终止
           </a-button>
-          <a-button danger type="primary" @click="handleRejection">
+          <a-button
+            v-if="buttonPermissions?.back"
+            danger
+            type="primary"
+            @click="handleRejection"
+          >
             驳回
           </a-button>
           <Dropdown
@@ -471,21 +510,29 @@ async function handleCopy(text: string) {
           >
             <template #overlay>
               <Menu>
-                <MenuItem key="1" @click="() => delegationModalApi.open()">
+                <MenuItem
+                  v-if="buttonPermissions?.trust"
+                  key="1"
+                  @click="() => delegationModalApi.open()"
+                >
                   委托
                 </MenuItem>
-                <MenuItem key="2" @click="() => transferModalApi.open()">
+                <MenuItem
+                  v-if="buttonPermissions?.transfer"
+                  key="2"
+                  @click="() => transferModalApi.open()"
+                >
                   转办
                 </MenuItem>
                 <MenuItem
-                  v-if="showMultiActions"
+                  v-if="showMultiActions && buttonPermissions?.addSign"
                   key="3"
                   @click="() => addSignatureModalApi.open()"
                 >
                   加签
                 </MenuItem>
                 <MenuItem
-                  v-if="showMultiActions"
+                  v-if="showMultiActions && buttonPermissions?.subSign"
                   key="4"
                   @click="() => reductionSignatureModalApi.open()"
                 >
@@ -493,7 +540,7 @@ async function handleCopy(text: string) {
                 </MenuItem>
               </Menu>
             </template>
-            <a-button> 其他 </a-button>
+            <a-button v-if="showButtonOther"> 其他 </a-button>
           </Dropdown>
           <ApprovalModal @complete="$emit('reload')" />
           <RejectionModal @complete="$emit('reload')" />
