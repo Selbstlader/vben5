@@ -109,9 +109,12 @@ onMounted(async () => {
   await formApi.setValues(info);
   // 弹出框类型需要手动赋值
   if (info.options) {
-    const popupComponent = JSON.parse(info.options)?.popupComponent;
+    const { popupComponent, formComponent } = JSON.parse(info.options);
     if (popupComponent) {
-      await formApi.setFieldValue('popupComponent', popupComponent);
+      formApi.setFieldValue('popupComponent', popupComponent);
+    }
+    if (formComponent) {
+      formApi.setFieldValue('formComponent', formComponent);
     }
   }
   await Promise.all([initTreeSelect(info.columns), initMenuSelect()]);

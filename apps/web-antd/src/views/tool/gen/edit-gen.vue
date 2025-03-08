@@ -82,6 +82,7 @@ async function handleSave() {
         ...requestData.params,
         parentMenuId: requestData.parentMenuId,
         popupComponent: requestData.popupComponent,
+        formComponent: requestData.formComponent,
       };
     }
     // 保存
