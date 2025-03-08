@@ -162,6 +162,21 @@ export const formSchema: FormSchemaGetter = () => [
     componentProps: {
       buttonStyle: 'solid',
       options: [
+        { label: 'useVbenForm', value: 'useForm' },
+        { label: 'antd原生表单', value: 'native' },
+      ],
+      optionType: 'button',
+    },
+    help: '自定义功能, 需要后端支持\n复杂(布局, 联动等)表单建议用antd原生表单',
+    defaultValue: 'useForm',
+    fieldName: 'formComponent',
+    label: '生成表单类型',
+  },
+  {
+    component: 'RadioGroup',
+    componentProps: {
+      buttonStyle: 'solid',
+      options: [
         { label: 'zip压缩包', value: '0' },
         { label: '自定义路径', value: '1' },
       ],
