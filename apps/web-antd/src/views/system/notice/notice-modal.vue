@@ -1,4 +1,10 @@
+<!--
+2025年03月08日重构为原生表单(反向重构??)
+该文件作为例子 使用原生表单而非useVbenForm
+-->
 <script setup lang="ts">
+import type { RuleObject } from 'ant-design-vue/es/form';
+
 import { computed, ref } from 'vue';
 
 import { useVbenModal } from '@vben/common-ui';
@@ -46,6 +52,10 @@ const defaultValues: FormData = {
  * 表单数据ref
  */
 const formData = ref(defaultValues);
+
+type AntdFormRules<T> = Partial<Record<keyof T, RuleObject[]>> & {
+  [key: string]: RuleObject[];
+};
 /**
  * 表单校验规则
  */
