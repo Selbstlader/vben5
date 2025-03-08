@@ -256,7 +256,13 @@ const [ApprovalModal, approvalModalApi] = useVbenModal({
 function handleApproval() {
   // 是否具有抄送权限
   const copyPermission = buttonPermissions.value?.copy ?? false;
-  approvalModalApi.setData({ taskId: props.task?.id, copyPermission });
+  // 是否具有选人权限
+  const assignPermission = buttonPermissions.value?.pop ?? false;
+  approvalModalApi.setData({
+    taskId: props.task?.id,
+    copyPermission,
+    assignPermission,
+  });
   approvalModalApi.open();
 }
 

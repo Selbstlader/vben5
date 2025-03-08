@@ -45,6 +45,8 @@ export interface CompleteTaskReqData {
   variables: any;
   // 附件ID 1,2,3,4形式
   fileId?: string;
+  // 选人 key为节点code value为用户ID join(,)
+  assigneeMap: { [key: string]: string };
 }
 
 export interface StartWorkFlowReqData {
@@ -79,3 +81,28 @@ export type TaskOperationType =
   | 'delegateTask'
   | 'reductionSignature'
   | 'transferTask';
+
+export interface NextNodeInfo {
+  skipList: string[];
+  id: string;
+  createTime: string;
+  updateTime: string;
+  tenantId: string;
+  delFlag: string;
+  nodeType: number;
+  definitionId: string;
+  nodeCode: string;
+  nodeName: string;
+  permissionFlag: string;
+  nodeRatio: string;
+  coordinate: string;
+  version: string;
+  anyNodeSkip: any;
+  listenerType: any;
+  listenerPath: any;
+  handlerType: any;
+  handlerPath: any;
+  formCustom: string;
+  formPath: any;
+  ext: string;
+}

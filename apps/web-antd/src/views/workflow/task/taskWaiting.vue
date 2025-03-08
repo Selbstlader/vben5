@@ -30,7 +30,7 @@ import { ApprovalCard, ApprovalPanel, CopyComponent } from '../components';
 
 const emptyImage = Empty.PRESENTED_IMAGE_SIMPLE;
 
-const taskList = ref<({ active: boolean } & TaskInfo)[]>([]);
+const taskList = ref<(TaskInfo & { active: boolean })[]>([]);
 const taskTotal = ref(0);
 const page = ref(1);
 const loading = ref(false);

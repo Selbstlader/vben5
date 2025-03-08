@@ -1,8 +1,10 @@
 <!--抄送组件-->
 <script setup lang="ts">
+import type { PropType } from 'vue';
+
 import type { User } from '#/api/system/user/model';
 
-import { computed, type PropType } from 'vue';
+import { computed } from 'vue';
 
 import { useVbenModal, VbenAvatar } from '@vben/common-ui';
 
@@ -15,12 +17,19 @@ defineOptions({
   inheritAttrs: false,
 });
 
-const props = withDefaults(defineProps<{ ellipseNumber?: number }>(), {
-  /**
-   * 最大显示的头像数量 超过显示为省略号头像
-   */
-  ellipseNumber: 3,
-});
+const props = withDefaults(
+  defineProps<{ allowUserIds?: string; ellipseNumber?: number }>(),
+  {
+    /**
+     * 最大显示的头像数量 超过显示为省略号头像
+     */
+    ellipseNumber: 3,
+    /**
+     * 允许选择允许选择的人员ID 会当做参数拼接在uselist接口
+     */
+    allowUserIds: '',
+  },
+);
 
 const emit = defineEmits<{ cancel: []; finish: [User[]] }>();
 
@@ -80,6 +89,10 @@ const displayedList = computed(() => {
       </Tooltip>
     </AvatarGroup>
     <a-button size="small" @click="handleOpen">选择人员</a-button>
-    <UserSelectModal @cancel="$emit('cancel')" @finish="handleFinish" />
+    <UserSelectModal
+      :allow-user-ids="allowUserIds"
+      @cancel="$emit('cancel')"
+      @finish="handleFinish"
+    />
   </div>
 </template>

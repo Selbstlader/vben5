@@ -1,5 +1,6 @@
 import type {
   CompleteTaskReqData,
+  NextNodeInfo,
   StartWorkFlowReqData,
   TaskInfo,
   TaskOperationData,
@@ -155,4 +156,17 @@ export function getBackTaskNode(definitionId: string, nodeCode: string) {
  */
 export function currentTaskAllUser(taskId: ID) {
   return requestClient.get<any>(`/workflow/task/currentTaskAllUser/${taskId}`);
+}
+
+/**
+ * 获取下一节点
+ * @param data data
+ * @param data.taskId taskId
+ * @returns NextNodeInfo
+ */
+export function getNextNodeList(data: { taskId: string }) {
+  return requestClient.post<NextNodeInfo[]>(
+    '/workflow/task/getNextNodeList',
+    data,
+  );
 }

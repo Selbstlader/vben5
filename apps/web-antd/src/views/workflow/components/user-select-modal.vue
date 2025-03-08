@@ -18,9 +18,16 @@ defineOptions({
   inheritAttrs: false,
 });
 
-const props = withDefaults(defineProps<{ mode?: 'multiple' | 'single' }>(), {
-  mode: 'multiple',
-});
+const props = withDefaults(
+  defineProps<{ allowUserIds?: string; mode?: 'multiple' | 'single' }>(),
+  {
+    mode: 'multiple',
+    /**
+     * 允许选择允许选择的人员ID 会当做参数拼接在uselist接口
+     */
+    allowUserIds: '',
+  },
+);
 
 const emit = defineEmits<{
   /**
@@ -136,11 +143,17 @@ const gridOptions: VxeGridProps = {
           }
         }
 
-        return await userList({
+        const params: any = {
           pageNum: page.currentPage,
           pageSize: page.pageSize,
           ...formValues,
-        });
+        };
+        // 添加参数
+        if (props.allowUserIds) {
+          params.userIds = props.allowUserIds;
+        }
+
+        return await userList(params);
       },
     },
   },
