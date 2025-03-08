@@ -8,7 +8,7 @@ import { useVbenModal } from '@vben/common-ui';
 import { cloneDeep } from 'lodash-es';
 
 import { useVbenForm } from '#/adapter/form';
-import { completeTask } from '#/api/workflow/task';
+import { completeTask, getTaskByTaskId } from '#/api/workflow/task';
 
 import { CopyComponent } from '.';
 
@@ -31,6 +31,31 @@ const [BasicModal, modalApi] = useVbenModal({
   title: '流程发起',
   fullscreenButton: false,
   onConfirm: handleSubmit,
+  async onOpenChange(isOpen) {
+    if (!isOpen) {
+      return null;
+    }
+    const { taskId } = modalApi.getData() as ModalProps;
+
+    // 查询是否有按钮权限
+    const resp = await getTaskByTaskId(taskId);
+    const buttonPermissions: Record<string, boolean> = {};
+    resp.buttonList.forEach((item) => {
+      buttonPermissions[item.code] = item.show;
+    });
+
+    // 是否具有抄送权限
+    const copyPermission = buttonPermissions?.copy ?? false;
+    formApi.updateSchema([
+      {
+        fieldName: 'flowCopyList',
+        dependencies: {
+          if: copyPermission,
+          triggerFields: [''],
+        },
+      },
+    ]);
+  },
 });
 
 const [BasicForm, formApi] = useVbenForm({
