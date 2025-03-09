@@ -1,3 +1,4 @@
+<!-- 该文件需要重构 但我没空 -->
 <script setup lang="ts">
 import type { User } from '#/api/core/user';
 import type { FlowInfoResponse } from '#/api/workflow/instance/model';
@@ -20,12 +21,11 @@ import {
   MenuItem,
   message,
   Modal,
-  Skeleton,
   Space,
   TabPane,
   Tabs,
 } from 'ant-design-vue';
-import { isEmpty, isObject } from 'lodash-es';
+import { isObject } from 'lodash-es';
 
 import {
   cancelProcessApply,
@@ -40,12 +40,8 @@ import {
 } from '#/api/workflow/task';
 import { renderDict } from '#/utils/render';
 
-import {
-  approvalModal,
-  approvalRejectionModal,
-  ApprovalTimeline,
-  flowInterfereModal,
-} from '.';
+import { approvalModal, approvalRejectionModal, flowInterfereModal } from '.';
+import ApprovalDetails from './approval-details.vue';
 import { approveWithReasonModal } from './helper';
 import userSelectModal from './user-select-modal.vue';
 
@@ -92,15 +88,10 @@ const buttonPermissions = computed(() => {
 
 // 是否显示 `其他` 按钮
 const showButtonOther = computed(() => {
-  if (isEmpty(buttonPermissions.value)) {
-    return false;
-  }
-  // 加签 减 委托 转办
   const moreCollections = new Set(['addSign', 'subSign', 'transfer', 'trust']);
-  // 是否包含其中之一
-  return Object.keys(buttonPermissions.value).some((key) => {
-    return moreCollections.has(key) && buttonPermissions.value[key];
-  });
+  return Object.keys(buttonPermissions.value).some(
+    (key) => moreCollections.has(key) && buttonPermissions.value[key],
+  );
 });
 
 /**
@@ -443,18 +434,12 @@ async function handleCopy(text: string) {
       </div>
       <Tabs v-if="currentFlowInfo" class="flex-1">
         <TabPane key="1" tab="审批详情">
-          <div class="h-fulloverflow-y-auto">
-            <!-- 约定${task.formPath}/frame 为内嵌表单 用于展示 需要在本地路由添加 -->
-            <iframe
-              v-show="iframeLoaded"
-              :src="`${task.formPath}/iframe?readonly=true&id=${task.businessId}`"
-              :style="{ height: `${iframeHeight}px` }"
-              class="w-full"
-            ></iframe>
-            <Skeleton v-show="!iframeLoaded" :paragraph="{ rows: 6 }" active />
-            <Divider />
-            <ApprovalTimeline :list="currentFlowInfo.list" />
-          </div>
+          <ApprovalDetails
+            :current-flow-info="currentFlowInfo"
+            :iframe-loaded="iframeLoaded"
+            :iframe-height="iframeHeight"
+            :task="task"
+          />
         </TabPane>
         <TabPane key="2" tab="审批流程图">
           <img
