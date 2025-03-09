@@ -24,6 +24,7 @@ export const leaveFlowOptions = [
   { label: '请假流程-并行网关', value: 'leave3' },
   { label: '请假流程-会签', value: 'leave4' },
   { label: '请假申请-并行会签网关', value: 'leave5' },
+  { label: '请假申请-排他并行网关', value: 'leave6' },
 ];
 
 export const querySchema: FormSchemaGetter = () => [
