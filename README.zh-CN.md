@@ -52,6 +52,14 @@ admin 账号: admin admin123
 
 [RuoYi-Plus 文档地址](https://plus-doc.dromara.org/#/)
 
+## 关于表单
+
+如果你觉得`useVbenForm`难度很大, 完全可以**使用原生antd表单**进行开发, 不一定非得用`useVbenForm`进行开发
+
+`apps/web-antd/src/views/system/notice/notice-modal.vue`即`通知公告modal`使用**原生antd form**进行(反向🤔)重构, 不想用`useVbenForm`可参考该页面进行表单开发
+
+复杂表单(如各种联动, 需要自定义样式布局, 需要自定义组件)**优先使用原生表单**(反正说了也没人听听😅)
+
 ## 预览图
 
 ![图片](https://gitee.com/dapppp/ruoyi-plus-vben5/raw/main/scripts/preview/1.png) ![图片](https://gitee.com/dapppp/ruoyi-plus-vben5/raw/main/scripts/preview/2.png) ![图片](https://gitee.com/dapppp/ruoyi-plus-vben5/raw/main/scripts/preview/3.png) ![图片](https://gitee.com/dapppp/ruoyi-plus-vben5/raw/main/scripts/preview/4.png) ![图片](https://gitee.com/dapppp/ruoyi-plus-vben5/raw/main/scripts/preview/5.png) ![图片](https://gitee.com/dapppp/ruoyi-plus-vben5/raw/main/scripts/preview/6.png) ![图片](https://gitee.com/dapppp/ruoyi-plus-vben5/raw/main/scripts/preview/7.png) ![图片](https://gitee.com/dapppp/ruoyi-plus-vben5/raw/main/scripts/preview/8.png) ![图片](https://gitee.com/dapppp/ruoyi-plus-vben5/raw/main/scripts/preview/9.png)
