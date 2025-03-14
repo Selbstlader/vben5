@@ -1,3 +1,9 @@
+# 1.2.3
+
+**BUG FIX**
+
+- `withDefaultPlaceholder`中将`placeholder`修改为computed, 解决后续使用`updateSchema`无法正常更新显示placeholder(响应式问题)
+
 # 1.2.2
 
 **FEATURES**

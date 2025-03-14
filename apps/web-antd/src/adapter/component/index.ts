@@ -8,7 +8,7 @@ import type { Component } from 'vue';
 import type { BaseFormComponentType } from '@vben/common-ui';
 import type { Recordable } from '@vben/types';
 
-import { defineComponent, getCurrentInstance, h, ref } from 'vue';
+import { computed, defineComponent, getCurrentInstance, h, ref } from 'vue';
 
 import { ApiComponent, globalShareState, IconPicker } from '@vben/common-ui';
 import { $t } from '@vben/locales';
@@ -49,10 +49,16 @@ const withDefaultPlaceholder = <T extends Component>(
     inheritAttrs: false,
     name: component.name,
     setup: (props: any, { attrs, expose, slots }) => {
-      const placeholder =
-        props?.placeholder ||
-        attrs?.placeholder ||
-        $t(`ui.placeholder.${type}`);
+      /**
+       * 需要使用computed 否则后续updateSchema更新的placeholder无法显示(响应式问题)
+       */
+      const placeholder = computed(
+        () =>
+          props?.placeholder ||
+          attrs?.placeholder ||
+          $t(`ui.placeholder.${type}`),
+      );
+
       // 透传组件暴露的方法
       const innerRef = ref();
       const publicApi: Recordable<any> = {};
@@ -66,7 +72,11 @@ const withDefaultPlaceholder = <T extends Component>(
         }
       });
       return () =>
-        h(component, { ...props, ...attrs, placeholder, ref: innerRef }, slots);
+        h(
+          component,
+          { ...props, ...attrs, placeholder: placeholder.value, ref: innerRef },
+          slots,
+        );
     },
   });
 };
