@@ -1,22 +1,18 @@
 <script setup lang="ts">
 import { Input as VbenInput } from '../../ui/input';
-/**
- * 非通用组件 直接按业务来写
- */
-defineProps({
-  captcha: {
-    default: '',
-    type: String,
+
+withDefaults(
+  defineProps<{
+    captcha?: string;
+    label?: string;
+    placeholder?: string;
+  }>(),
+  {
+    captcha: '',
+    label: '验证码',
+    placeholder: '请输入验证码',
   },
-  label: {
-    default: '验证码',
-    type: String,
-  },
-  placeholder: {
-    default: '验证码',
-    type: String,
-  },
-});
+);
 
 defineEmits<{ captchaClick: [] }>();
 
@@ -31,7 +27,7 @@ const modelValue = defineModel({ default: '', type: String });
         autocomplete="off"
         id="code"
         v-model="modelValue"
-        :class="$attrs.class ?? {}"
+        :class="$attrs?.class ?? {}"
         :label="label"
         :placeholder="placeholder"
         name="code"
@@ -41,7 +37,7 @@ const modelValue = defineModel({ default: '', type: String });
     </div>
     <img
       :src="captcha"
-      class="h-[40px] w-[115px] rounded-r-md"
+      class="h-[40px] w-[115px] cursor-pointer rounded-r-md"
       @click="$emit('captchaClick')"
     />
   </div>
