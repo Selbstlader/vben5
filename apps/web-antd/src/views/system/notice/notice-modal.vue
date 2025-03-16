@@ -76,7 +76,7 @@ const { validate, validateInfos, resetFields } = Form.useForm(
 
 const [BasicModal, modalApi] = useVbenModal({
   class: 'w-[800px]',
-  fullscreenButton: false,
+  fullscreenButton: true,
   closeOnClickModal: false,
   onClosed: handleCancel,
   onConfirm: handleConfirm,
