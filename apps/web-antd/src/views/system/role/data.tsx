@@ -160,7 +160,7 @@ export const drawerSchema: FormSchemaGetter = () => [
     component: 'Textarea',
     defaultValue: '',
     fieldName: 'remark',
-    formItemClass: 'items-baseline col-span-2',
+    formItemClass: 'col-span-2',
     label: '备注',
   },
 ];
