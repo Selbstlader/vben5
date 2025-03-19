@@ -219,7 +219,6 @@ export const authModalSchemas: FormSchemaGetter = () => [
       triggerFields: ['dataScope'],
     },
     fieldName: 'deptIds',
-    formItemClass: 'items-start',
     help: '更改后立即生效',
     label: '部门权限',
   },
