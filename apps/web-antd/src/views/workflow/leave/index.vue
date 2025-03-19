@@ -174,10 +174,7 @@ function handleInfo(row: Required<LeaveForm>) {
               撤销
             </ghost-button>
           </Popconfirm>
-          <ghost-button
-            v-if="['draft'].includes(row.status)"
-            @click="handleInfo(row)"
-          >
+          <ghost-button v-if="row.status !== 'draft'" @click="handleInfo(row)">
             详情
           </ghost-button>
           <Popconfirm
