@@ -4,6 +4,8 @@
 
 - `withDefaultPlaceholder`中将`placeholder`修改为computed, 解决后续使用`updateSchema`无法正常更新显示placeholder(响应式问题)
 
+- 流程定义 修改accept类型 解决无法拖拽上传
+
 **FEATURES**
 
 - 增加`环境变量`打包配置demo -> build:antd:test

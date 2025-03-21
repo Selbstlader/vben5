@@ -62,7 +62,7 @@ function handleCancel() {
       :before-upload="() => false"
       :max-count="1"
       :show-upload-list="true"
-      accept="text/json"
+      accept="application/json"
     >
       <p class="ant-upload-drag-icon flex items-center justify-center">
         <InBoxIcon class="text-primary size-[48px]" />
