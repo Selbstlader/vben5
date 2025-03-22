@@ -7,6 +7,7 @@ import type { CaptchaResponse } from '#/api/core/captcha';
 import { computed, onMounted, ref, useTemplateRef } from 'vue';
 
 import { AuthenticationLogin, z } from '@vben/common-ui';
+import { DEFAULT_TENANT_ID } from '@vben/constants';
 import { $t } from '@vben/locales';
 
 import { omit } from 'lodash-es';
@@ -15,6 +16,7 @@ import { tenantList } from '#/api';
 import { captchaImage } from '#/api/core/captcha';
 import { useAuthStore } from '#/store';
 
+import { useLoginTenantId } from '../oauth-common';
 import OAuthLogin from './oauth-login.vue';
 
 defineOptions({ name: 'Login' });
@@ -56,6 +58,8 @@ onMounted(async () => {
   await Promise.all([loadCaptcha(), loadTenant()]);
 });
 
+const { loginTenantId } = useLoginTenantId();
+
 const formSchema = computed((): VbenFormSchema[] => {
   return [
     {
@@ -69,16 +73,13 @@ const formSchema = computed((): VbenFormSchema[] => {
         })),
         placeholder: $t('authentication.selectAccount'),
       },
-      defaultValue: '000000',
+      defaultValue: DEFAULT_TENANT_ID,
       dependencies: {
         if: () => tenantInfo.value.tenantEnabled,
-        // 这里大致上是watch的一个效果
-        componentProps: (model) => {
-          localStorage.setItem(
-            '__oauth_tenant_id',
-            model?.tenantId ?? '000000',
-          );
-          return {};
+        // 可以把这里当做watch
+        trigger: (model) => {
+          // 给oauth登录使用
+          loginTenantId.value = model?.tenantId ?? DEFAULT_TENANT_ID;
         },
         triggerFields: ['', 'tenantId'],
       },

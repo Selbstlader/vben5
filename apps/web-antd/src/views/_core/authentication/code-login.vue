@@ -6,6 +6,7 @@ import type { TenantResp } from '#/api';
 import { computed, onMounted, ref, useTemplateRef } from 'vue';
 
 import { AuthenticationCodeLogin, z } from '@vben/common-ui';
+import { DEFAULT_TENANT_ID } from '@vben/constants';
 import { $t } from '@vben/locales';
 
 import { Alert, message } from 'ant-design-vue';
@@ -50,7 +51,7 @@ const formSchema = computed((): VbenFormSchema[] => {
         })),
         placeholder: $t('authentication.selectAccount'),
       },
-      defaultValue: '000000',
+      defaultValue: DEFAULT_TENANT_ID,
       dependencies: {
         if: () => tenantInfo.value.tenantEnabled,
         triggerFields: [''],

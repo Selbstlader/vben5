@@ -7,27 +7,12 @@ import { computed, ref, unref } from 'vue';
 
 import { useVbenVxeGrid } from '@vben/plugins/vxe-table';
 
-import {
-  Alert,
-  Avatar,
-  Card,
-  List,
-  ListItem,
-  message,
-  Modal,
-} from 'ant-design-vue';
+import { Alert, Avatar, Card, List, ListItem, Modal } from 'ant-design-vue';
 
 import { authUnbinding } from '#/api';
 import { socialList } from '#/api/system/social';
 
-import { accountBindList } from '../../oauth-common';
-
-/**
- * 没有传递action事件则不支持绑定 弹出默认提示
- */
-function defaultTip(title: string) {
-  message.info({ content: `暂不支持绑定${title}` });
-}
+import { accountBindList, handleAuthBinding } from '../../oauth-common';
 
 function buttonText(item: BindItem) {
   return item.bound ? '已绑定' : '绑定';
@@ -151,7 +136,7 @@ function handleUnbind(record: Record<string, any>) {
                   <component
                     :is="item.avatar"
                     v-if="item.avatar"
-                    :style="{ color: item.color }"
+                    :style="item?.style ?? {}"
                     class="size-[40px]"
                   />
                 </div>
@@ -170,9 +155,7 @@ function handleUnbind(record: Record<string, any>) {
                     :disabled="item.bound"
                     size="small"
                     type="link"
-                    @click="
-                      item.action ? item.action() : defaultTip(item.title)
-                    "
+                    @click="handleAuthBinding(item.source)"
                   >
                     {{ buttonText(item) }}
                   </a-button>
@@ -190,10 +173,6 @@ function handleUnbind(record: Record<string, any>) {
               apps\web-antd\src\views\_core\oauth-common.ts
             </span>
             中accountBindList按模板添加
-          </p>
-          <p>
-            添加对应模板后会在此处显示绑定, 但只有
-            <span class="font-bold">实现了action才能在登录页显示</span>
           </p>
         </template>
       </Alert>

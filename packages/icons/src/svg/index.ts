@@ -11,6 +11,9 @@ const SvgCardIcon = createIconifyIcon('svg:card');
 const SvgBellIcon = createIconifyIcon('svg:bell');
 const SvgCakeIcon = createIconifyIcon('svg:cake');
 const SvgAntdvLogoIcon = createIconifyIcon('svg:antdv-logo');
+const SvgMaxKeyIcon = createIconifyIcon('svg:max-key');
+const SvgTopiamIcon = createIconifyIcon('svg:topiam');
+const SvgWechatIcon = createIconifyIcon('svg:wechat');
 
 export {
   SvgAntdvLogoIcon,
@@ -22,6 +25,9 @@ export {
   SvgCakeIcon,
   SvgCardIcon,
   SvgDownloadIcon,
+  SvgMaxKeyIcon,
+  SvgTopiamIcon,
+  SvgWechatIcon,
 };
 
 export { default as SvgMessageUrl } from './icons/message.svg';
