@@ -6,20 +6,13 @@ import { Input } from 'ant-design-vue';
 
 defineOptions({ name: 'SecretInput' });
 
-defineProps({
-  disabled: {
-    default: false,
-    type: Boolean,
-  },
-  placeholder: {
-    default: '请输入密钥或随机生成',
-    type: String,
-  },
+withDefaults(defineProps<{ disabled?: boolean; placeholder?: string }>(), {
+  disabled: false,
+  placeholder: '请输入密钥或随机生成',
 });
 
 const value = defineModel<string>('value', {
   required: false,
-  type: String,
 });
 
 function refreshSecret() {
