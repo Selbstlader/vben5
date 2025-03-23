@@ -31,12 +31,6 @@ const bindList = computed<BindItem[]>(() => {
 });
 
 const gridOptions: VxeGridProps = {
-  checkboxConfig: {
-    // 高亮
-    highlight: true,
-    // 翻页时保留选中状态
-    reserve: true,
-  },
   columns: [
     {
       field: 'source',
@@ -132,14 +126,12 @@ function handleUnbind(record: Record<string, any>) {
           <ListItem>
             <Card>
               <div class="flex w-full items-center gap-4">
-                <div>
-                  <component
-                    :is="item.avatar"
-                    v-if="item.avatar"
-                    :style="item?.style ?? {}"
-                    class="size-[40px]"
-                  />
-                </div>
+                <component
+                  :is="item.avatar"
+                  v-if="item.avatar"
+                  :style="item?.style ?? {}"
+                  class="size-[40px]"
+                />
                 <div class="flex flex-1 items-center justify-between">
                   <div class="flex flex-col">
                     <h4
