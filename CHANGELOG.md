@@ -10,6 +10,11 @@
 
 - 增加`环境变量`打包配置demo -> build:antd:test
 
+**REFACTOR**
+
+- OAuth内部逻辑重构 增加新的默认OAuth登录方式
+- 重构部分setup组件为setup语法糖形式
+
 # 1.2.2
 
 **FEATURES**
