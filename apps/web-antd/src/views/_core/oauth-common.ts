@@ -86,7 +86,6 @@ export const accountBindList: BindItem[] = [
     description: '绑定MaxKey账号',
     source: 'maxkey',
     title: 'MaxKey',
-    style: { verticalAlign: 'middle' },
   },
   {
     avatar: SvgTopiamIcon,
