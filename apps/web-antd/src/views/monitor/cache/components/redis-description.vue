@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { PropType } from 'vue';
-
 import type { RedisInfo } from '#/api/monitor/cache';
 import type { DescItem } from '#/components/description';
 
@@ -12,12 +10,7 @@ interface IRedisInfo extends RedisInfo {
   dbSize: string;
 }
 
-const props = defineProps({
-  data: {
-    required: true,
-    type: Object as PropType<IRedisInfo>,
-  },
-});
+const props = defineProps<{ data: IRedisInfo }>();
 
 const descSchemas: DescItem[] = [
   { field: 'redis_version', label: 'redis版本' },

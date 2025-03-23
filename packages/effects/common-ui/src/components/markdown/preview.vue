@@ -2,7 +2,6 @@
 import {
   onBeforeUnmount,
   onMounted,
-  type PropType,
   shallowRef,
   useTemplateRef,
   watch,
@@ -14,18 +13,14 @@ import Vditor from 'vditor';
 
 import 'vditor/dist/index.css';
 
-const props = defineProps({
-  // 编辑器高度
-  height: {
-    // string或者number类型
-    type: [String, Number],
-    default: 500,
-  },
-  // 其他配置项
-  options: {
-    type: Object as PropType<IOptions>,
-    default: () => ({}),
-  },
+interface Props {
+  height?: number | string;
+  options?: IOptions;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  height: 500,
+  options: () => ({}),
 });
 
 const emit = defineEmits<{
