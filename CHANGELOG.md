@@ -9,6 +9,7 @@
 **FEATURES**
 
 - 增加`环境变量`打包配置demo -> build:antd:test
+- 角色管理 勾选权限组件添加对错误用法的校验提示
 
 **REFACTOR**
 

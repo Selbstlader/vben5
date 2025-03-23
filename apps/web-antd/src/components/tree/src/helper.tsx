@@ -5,6 +5,7 @@ import type { MenuOption } from '#/api/system/menu/model';
 
 import { eachTree, treeToList } from '@vben/utils';
 
+import { notification } from 'ant-design-vue';
 import { difference, isEmpty, isUndefined } from 'lodash-es';
 
 /**
@@ -48,6 +49,7 @@ export function rowAndChildrenChecked(
  */
 export function menusWithPermissions(menus: MenuOption[]) {
   eachTree(menus, (item: MenuPermissionOption) => {
+    validateMenuTree(item);
     if (item.children && item.children.length > 0) {
       /**
        * 所有为按钮的节点提取出来
@@ -129,5 +131,52 @@ export function setTableChecked(
     });
     // 设置为不选中
     tableApi.grid.setCheckboxRow(emptyRows, false);
+  }
+}
+
+/**
+ * 校验是否符合规范 给出warning提示
+ *
+ * 不符合规范
+ * 比如: 菜单下放目录 菜单下放菜单
+ * 比如: 按钮下放目录 按钮下放菜单 按钮下放按钮
+ * @param menu menu
+ */
+function validateMenuTree(menu: MenuOption) {
+  /**
+   * C: { icon: markRaw(MenuIcon), value: '菜单' },
+      F: { icon: markRaw(OkButtonIcon), value: '按钮' },
+      M: { icon: markRaw(FolderIcon), value: '目录' },
+   */
+  // 菜单下不能放目录/菜单
+  if (menu.menuType === 'C') {
+    menu.children?.forEach?.((item) => {
+      if (['C', 'M'].includes(item.menuType)) {
+        const description = `错误用法: [${menu.label} - 菜单]下不能放 目录/菜单 -> [${item.label}]`;
+        console.warn(description);
+        notification.warning({
+          message: '提示',
+          description,
+          duration: 0,
+        });
+      }
+    });
+  }
+  // 按钮为最末级 不能再放置
+  if (menu.menuType === 'F') {
+    /**
+     * 其实可以直接判断length 这里为了更准确知道label 采用遍历的形式
+     */
+    menu.children?.forEach?.((item) => {
+      if (['C', 'F', 'M'].includes(item.menuType)) {
+        const description = `错误用法: [${menu.label} - 按钮]下不能放置'目录/菜单/按钮' -> [${item.label}]`;
+        console.warn(description);
+        notification.warning({
+          message: '提示',
+          description,
+          duration: 0,
+        });
+      }
+    });
   }
 }

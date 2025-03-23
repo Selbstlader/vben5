@@ -55,8 +55,7 @@ const props = withDefaults(
 /**
  * 是否节点关联
  */
-const association = defineModel('association', {
-  type: Boolean,
+const association = defineModel<boolean>('association', {
   default: true,
 });
 
