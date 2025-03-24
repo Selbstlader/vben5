@@ -14,6 +14,7 @@ const SvgAntdvLogoIcon = createIconifyIcon('svg:antdv-logo');
 const SvgMaxKeyIcon = createIconifyIcon('svg:max-key');
 const SvgTopiamIcon = createIconifyIcon('svg:topiam');
 const SvgWechatIcon = createIconifyIcon('svg:wechat');
+const SvgQQIcon = createIconifyIcon('svg:qq');
 
 export {
   SvgAntdvLogoIcon,
@@ -26,6 +27,7 @@ export {
   SvgCardIcon,
   SvgDownloadIcon,
   SvgMaxKeyIcon,
+  SvgQQIcon,
   SvgTopiamIcon,
   SvgWechatIcon,
 };
