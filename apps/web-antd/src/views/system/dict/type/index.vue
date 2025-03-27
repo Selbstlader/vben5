@@ -196,3 +196,14 @@ function handleDownloadExcel() {
     <DictTypeModal @reload="tableApi.query()" />
   </div>
 </template>
+
+<style lang="scss">
+div#dict-type {
+  .vxe-body--row {
+    &.row--current {
+      // 选中行bold
+      @apply font-semibold;
+    }
+  }
+}
+</style>
