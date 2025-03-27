@@ -37,8 +37,8 @@ const gridOptions: VxeGridProps = {
     highlight: true,
     // 翻页时保留选中状态
     reserve: true,
-    // 点击行选中
-    // trigger: 'row',
+    // 选中 需要根据状态判断
+    checkMethod: ({ row }) => ['back', 'cancel', 'draft'].includes(row.status),
   },
   columns,
   height: 'auto',
