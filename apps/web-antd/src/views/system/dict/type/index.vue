@@ -61,8 +61,11 @@ const gridOptions: VxeGridProps = {
   },
   rowConfig: {
     keyField: 'dictId',
+    // 高亮当前行
+    isCurrent: true,
   },
   id: 'system-dict-type-index',
+  rowClassName: 'hover:cursor-pointer',
 };
 
 const lastDictType = ref('');
