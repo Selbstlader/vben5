@@ -5,9 +5,11 @@
 <script setup lang="ts">
 import type { UploadFile } from 'ant-design-vue';
 
+import { computed } from 'vue';
+
 import { $t, I18nT } from '@vben/locales';
 
-import { UploadOutlined } from '@ant-design/icons-vue';
+import { InboxOutlined, UploadOutlined } from '@ant-design/icons-vue';
 import { Upload } from 'ant-design-vue';
 
 import { defaultFileAcceptExts, defaultFilePreview } from './helper';
@@ -68,6 +70,7 @@ interface Props {
    * @param file file
    */
   preview?: (file: UploadFile) => Promise<void> | void;
+  enableDragUpload?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -81,6 +84,13 @@ const props = withDefaults(defineProps<Props>(), {
   disabled: false,
   helpMessage: true,
   preview: defaultFilePreview,
+});
+
+const CurrentUploadComponent = computed(() => {
+  if (props.enableDragUpload) {
+    return Upload.Dragger;
+  }
+  return Upload;
 });
 
 // 双向绑定 ossId
@@ -101,7 +111,7 @@ const {
 
 <template>
   <div>
-    <Upload
+    <CurrentUploadComponent
       v-model:file-list="innerFileList"
       :action="uploadUrl"
       :headers="headers"
@@ -116,28 +126,57 @@ const {
       @change="handleChange"
       @remove="handleRemove"
     >
-      <div v-if="innerFileList?.length < maxCount">
+      <div v-if="!enableDragUpload && innerFileList?.length < maxCount">
         <a-button :disabled="disabled">
           <UploadOutlined />
           {{ $t('component.upload.upload') }}
         </a-button>
       </div>
-    </Upload>
+      <div v-if="enableDragUpload && innerFileList?.length < maxCount">
+        <p class="ant-upload-drag-icon">
+          <InboxOutlined />
+        </p>
+        <p class="ant-upload-text">
+          {{ $t('component.upload.clickOrDrag') }}
+        </p>
+      </div>
+    </CurrentUploadComponent>
     <I18nT
       v-if="helpMessage"
       scope="global"
       keypath="component.upload.uploadHelpMessage"
       tag="div"
       class="mt-2"
+      :class="{ 'upload-text__disabled': disabled }"
     >
       <template #size>
-        <span class="text-primary mx-1 font-medium"> {{ maxSize }}MB </span>
+        <span
+          class="text-primary mx-1 font-medium"
+          :class="{ 'upload-text__disabled': disabled }"
+        >
+          {{ maxSize }}MB
+        </span>
       </template>
       <template #ext>
-        <span class="text-primary mx-1 font-medium">
+        <span
+          class="text-primary mx-1 font-medium"
+          :class="{ 'upload-text__disabled': disabled }"
+        >
           {{ acceptFormat }}
         </span>
       </template>
     </I18nT>
   </div>
 </template>
+
+<style lang="scss">
+// 禁用的样式和antd保持一致
+.upload-text__disabled {
+  color: rgb(50 54 57 / 25%);
+  cursor: not-allowed;
+
+  &:where(.dark, .dark *) {
+    color: rgb(242 242 242 / 25%);
+  }
+}
+</style>

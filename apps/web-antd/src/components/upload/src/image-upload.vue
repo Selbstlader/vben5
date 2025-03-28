@@ -130,12 +130,21 @@ const { previewVisible, previewImage, handleCancel, handlePreview } =
       scope="global"
       keypath="component.upload.uploadHelpMessage"
       tag="div"
+      :class="{ 'upload-text__disabled': disabled }"
     >
       <template #size>
-        <span class="text-primary mx-1 font-medium"> {{ maxSize }}MB </span>
+        <span
+          class="text-primary mx-1 font-medium"
+          :class="{ 'upload-text__disabled': disabled }"
+        >
+          {{ maxSize }}MB
+        </span>
       </template>
       <template #ext>
-        <span class="text-primary mx-1 font-medium">
+        <span
+          class="text-primary mx-1 font-medium"
+          :class="{ 'upload-text__disabled': disabled }"
+        >
           {{ acceptFormat }}
         </span>
       </template>
@@ -165,6 +174,16 @@ const { previewVisible, previewImage, handleCancel, handlePreview } =
 .ant-upload-list-picture-card {
   .ant-upload-list-item::before {
     border-radius: 4px;
+  }
+}
+
+// 禁用的样式和antd保持一致
+.upload-text__disabled {
+  color: rgb(50 54 57 / 25%);
+  cursor: not-allowed;
+
+  &:where(.dark, .dark *) {
+    color: rgb(242 242 242 / 25%);
   }
 }
 </style>

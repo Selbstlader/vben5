@@ -58,6 +58,15 @@ function handlePreview(file: UploadFile) {
         当前绑定值: {{ multipleFileId }}
       </Card>
 
+      <Card title="文件拖拽上传" size="small">
+        <FileUpload
+          v-model:value="multipleFileId"
+          :max-count="3"
+          :enable-drag-upload="true"
+        />
+        当前绑定值: {{ multipleFileId }}
+      </Card>
+
       <Card title="图片禁用上传" size="small">
         <ImageUpload :disabled="true" :max-count="3" :help-message="false" />
       </Card>
