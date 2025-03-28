@@ -29,7 +29,7 @@ export function ossList(params?: PageQuery) {
  * @param ossIds id数组
  * @returns 信息数组
  */
-export function ossInfo(ossIds: IDS) {
+export function ossInfo(ossIds: ID | IDS) {
   return requestClient.get<OssFile[]>(`${Api.ossInfo}/${ossIds}`);
 }
 

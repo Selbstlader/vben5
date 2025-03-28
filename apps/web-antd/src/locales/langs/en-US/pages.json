@@ -18,6 +18,7 @@
     "refresh": "Refresh",
     "generate": "Generate",
     "downloadLoading": "Downloading... Please wait.",
-    "preview": "Preview"
+    "preview": "Preview",
+    "tip": "Tip"
   }
 }

@@ -1,65 +1,70 @@
 <script setup lang="ts">
+import type { UploadFile } from 'ant-design-vue/es/upload/interface';
+
+import { h, ref } from 'vue';
+
+import { Page } from '@vben/common-ui';
+
+import { Alert, Card, Modal } from 'ant-design-vue';
+
 import { FileUpload, ImageUpload } from '#/components/upload';
-import { JsonPreview, Page } from '@vben/common-ui';
-import { Alert, RadioGroup } from 'ant-design-vue';
-import { ref } from 'vue';
 
-const resultField = ref<'ossId' | 'url'>('ossId');
+const singleImageId = ref('1905537674682916865');
+const singleFileId = ref('1905191167882518529');
+const multipleImageId = ref<string[]>(['1905537674682916865']);
+const multipleFileId = ref<string[]>(['1905191167882518529']);
 
-const imageList = ref([]);
-const fileList = ref(['111', '2222']);
-const fieldOptions = [
-  { label: 'ossId', value: 'ossId' },
-  { label: '链接地址', value: 'url' },
-];
-const fileAccept = ['xlsx', 'word', 'pdf'];
-
-const signleImage = ref<string>('1745443704356782081');
+function handlePreview(file: UploadFile) {
+  Modal.info({
+    content: h('div', { class: 'break-all' }, JSON.stringify(file, null, 2)),
+  });
+}
 </script>
 
 <template>
-  <Page content-class="flex flex-col gap-[12px]">
-    <div class="bg-background flex flex-col gap-[12px] rounded-lg p-6">
-      <Alert
-        :show-icon="true"
-        message="新特性: 设置max-number为1时, 会被绑定为string而非string[]类型 省去手动转换"
-      />
-      <ImageUpload
-        v-model:value="signleImage"
-        :max-number="1"
-        result-field="ossId"
-      />
-      <JsonPreview :data="signleImage" />
-    </div>
-    <div class="bg-background flex flex-col gap-[12px] rounded-lg p-6">
-      <div class="flex gap-[8px]">
-        <span>返回字段: </span>
-        <RadioGroup v-model:value="resultField" :options="fieldOptions" />
-      </div>
-      <ImageUpload
-        v-model:value="imageList"
-        :max-number="3"
-        :result-field="resultField"
-      />
-      <JsonPreview :data="imageList" />
-    </div>
-    <div class="bg-background flex flex-col gap-[12px] rounded-lg p-6">
-      <div class="flex gap-[8px]">
-        <span>返回字段: </span>
-        <RadioGroup v-model:value="resultField" :options="fieldOptions" />
-      </div>
-      <Alert
-        :message="`支持的文件类型：${fileAccept.join(', ')}`"
-        :show-icon="true"
-        type="info"
-      />
-      <FileUpload
-        v-model:value="fileList"
-        :accept="fileAccept"
-        :max-number="3"
-        :result-field="resultField"
-      />
-      <JsonPreview :data="fileList" />
+  <Page>
+    <div class="grid grid-cols-2 gap-4">
+      <Card title="单图片上传, 会绑定为string" size="small">
+        <ImageUpload v-model:value="singleImageId" />
+        当前绑定值: {{ singleImageId }}
+      </Card>
+
+      <Card title="单文件上传, 会绑定为string" size="small">
+        <FileUpload v-model:value="singleFileId" />
+        当前绑定值: {{ singleFileId }}
+      </Card>
+
+      <Card title="多图片上传, maxCount参数控制" size="small">
+        <ImageUpload v-model:value="multipleImageId" :max-count="3" />
+        当前绑定值: {{ multipleImageId }}
+      </Card>
+
+      <Card title="多文件上传, maxCount参数控制" size="small">
+        <FileUpload v-model:value="multipleFileId" :max-count="3" />
+        当前绑定值: {{ multipleFileId }}
+      </Card>
+
+      <Card title="文件自定义预览逻辑" size="small">
+        <Alert
+          message="你可以自定义预览逻辑, 比如改为下载, 回调参数为文件信息(图片有默认预览逻辑 不支持自定义)"
+          class="my-2"
+        />
+        <FileUpload
+          v-model:value="multipleFileId"
+          :max-count="3"
+          :preview="handlePreview"
+          :help-message="false"
+        />
+        当前绑定值: {{ multipleFileId }}
+      </Card>
+
+      <Card title="图片禁用上传" size="small">
+        <ImageUpload :disabled="true" :max-count="3" :help-message="false" />
+      </Card>
+
+      <Card title="文件禁用上传" size="small">
+        <FileUpload :disabled="true" :max-count="3" :help-message="false" />
+      </Card>
     </div>
   </Page>
 </template>
