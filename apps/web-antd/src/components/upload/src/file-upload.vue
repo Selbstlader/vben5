@@ -3,8 +3,6 @@
 去除使用`file-type`库进行文件类型检测 在Safari无法使用
 -->
 <script setup lang="ts">
-import type { UploadFile } from 'ant-design-vue';
-
 import type { BaseUploadProps } from './props';
 
 import { computed } from 'vue';
@@ -20,11 +18,6 @@ import { defaultFileAcceptExts, defaultFilePreview } from './helper';
 import { useUpload } from './hook';
 
 interface FileUploadProps extends BaseUploadProps {
-  /**
-   * 自定义文件预览逻辑 比如: 你可以改为下载
-   * @param file file
-   */
-  preview?: (file: UploadFile) => Promise<void> | void;
   /**
    * 是否支持拖拽上传
    * @default false

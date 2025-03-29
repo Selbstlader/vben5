@@ -17,6 +17,7 @@ const multipleFileId = ref<string[]>(['1905191167882518529']);
 function handlePreview(file: UploadFile) {
   Modal.info({
     content: h('div', { class: 'break-all' }, JSON.stringify(file, null, 2)),
+    maskClosable: true,
   });
 }
 </script>
@@ -34,7 +35,7 @@ function handlePreview(file: UploadFile) {
         当前绑定值: {{ singleFileId }}
       </Card>
 
-      <Card title="多图片上传, maxCount参数控制" size="small">
+      <Card title="多图片上传, maxCount参数控制(开启深度监听)" size="small">
         <ImageUpload
           v-model:value="multipleImageId"
           :max-count="3"
@@ -43,14 +44,18 @@ function handlePreview(file: UploadFile) {
         当前绑定值: {{ multipleImageId }}
       </Card>
 
-      <Card title="多文件上传, maxCount参数控制" size="small">
-        <FileUpload v-model:value="multipleFileId" :max-count="3" />
+      <Card title="多文件上传, maxCount参数控制(开启深度监听)" size="small">
+        <FileUpload
+          v-model:value="multipleFileId"
+          :max-count="3"
+          :deep-watch="true"
+        />
         当前绑定值: {{ multipleFileId }}
       </Card>
 
       <Card title="文件自定义预览逻辑" size="small">
         <Alert
-          message="你可以自定义预览逻辑, 比如改为下载, 回调参数为文件信息(图片有默认预览逻辑 不支持自定义)"
+          message="你可以自定义预览逻辑, 比如改为下载, 回调参数为文件信息"
           class="my-2"
         />
         <FileUpload
@@ -59,7 +64,13 @@ function handlePreview(file: UploadFile) {
           :preview="handlePreview"
           :help-message="false"
         />
-        当前绑定值: {{ multipleFileId }}
+        <ImageUpload
+          class="mt-3"
+          v-model:value="multipleImageId"
+          :max-count="3"
+          :preview="handlePreview"
+          :help-message="false"
+        />
       </Card>
 
       <Card title="文件拖拽上传" size="small">

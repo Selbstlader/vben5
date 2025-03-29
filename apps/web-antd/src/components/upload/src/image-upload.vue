@@ -3,7 +3,10 @@
 去除使用`file-type`库进行文件类型检测 在Safari无法使用
 -->
 <script setup lang="ts">
-import type { UploadListType } from 'ant-design-vue/es/upload/interface';
+import type {
+  UploadFile,
+  UploadListType,
+} from 'ant-design-vue/es/upload/interface';
 
 import type { BaseUploadProps } from './props';
 
@@ -11,6 +14,7 @@ import { $t, I18nT } from '@vben/locales';
 
 import { PlusOutlined } from '@ant-design/icons-vue';
 import { Image, ImagePreviewGroup, Upload } from 'ant-design-vue';
+import { isFunction } from 'lodash-es';
 
 import { uploadApi } from '#/api';
 
@@ -55,6 +59,15 @@ const {
 
 const { previewVisible, previewImage, handleCancel, handlePreview } =
   useImagePreview();
+
+function currentPreview(file: UploadFile) {
+  // 有自定义预览逻辑走自定义
+  if (isFunction(props.preview)) {
+    return props.preview(file);
+  }
+  // 否则走默认预览
+  return handlePreview(file);
+}
 </script>
 
 <template>
@@ -70,7 +83,7 @@ const { previewVisible, previewImage, handleCancel, handlePreview } =
       :multiple="multiple"
       :before-upload="beforeUpload"
       :custom-request="customRequest"
-      @preview="handlePreview"
+      @preview="currentPreview"
       @change="handleChange"
       @remove="handleRemove"
     >

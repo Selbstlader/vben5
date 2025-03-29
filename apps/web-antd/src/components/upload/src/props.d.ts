@@ -72,4 +72,11 @@ export interface BaseUploadProps {
    * @default false
    */
   keepMissingId?: boolean;
+  /**
+   * 自定义文件/图片预览逻辑 比如: 你可以改为下载
+   * 图片上传默认为预览
+   * 文件上传默认为window.open
+   * @param file file
+   */
+  preview?: (file: UploadFile) => Promise<void> | void;
 }
