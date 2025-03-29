@@ -75,13 +75,17 @@ function handlePreview(file: UploadFile) {
         <FileUpload :disabled="true" :max-count="3" :help-message="false" />
       </Card>
 
-      <Card title="文件夹上传" size="small">
+      <Card title="文件夹上传/自定义helpMessage" size="small">
         <FileUpload
           v-model:value="multipleFileId"
           :max-count="3"
           :directory="true"
           accept="*"
-        />
+        >
+          <template #helpMessage="slotProps">
+            <div>自定义helpMessage: {{ JSON.stringify(slotProps) }}</div>
+          </template>
+        </FileUpload>
         当前绑定值: {{ multipleFileId }}
       </Card>
     </div>

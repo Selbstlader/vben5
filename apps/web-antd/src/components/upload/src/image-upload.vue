@@ -79,30 +79,33 @@ const { previewVisible, previewImage, handleCancel, handlePreview } =
         <div class="mt-[8px]">{{ $t('component.upload.upload') }}</div>
       </div>
     </Upload>
-    <I18nT
-      v-if="helpMessage"
-      scope="global"
-      keypath="component.upload.uploadHelpMessage"
-      tag="div"
-      :class="{ 'upload-text__disabled': disabled }"
-    >
-      <template #size>
-        <span
-          class="text-primary mx-1 font-medium"
-          :class="{ 'upload-text__disabled': disabled }"
-        >
-          {{ maxSize }}MB
-        </span>
-      </template>
-      <template #ext>
-        <span
-          class="text-primary mx-1 font-medium"
-          :class="{ 'upload-text__disabled': disabled }"
-        >
-          {{ acceptFormat }}
-        </span>
-      </template>
-    </I18nT>
+    <slot name="helpMessage" v-bind="{ maxCount, disabled, maxSize, accept }">
+      <I18nT
+        v-if="helpMessage"
+        scope="global"
+        keypath="component.upload.uploadHelpMessage"
+        tag="div"
+        :class="{ 'upload-text__disabled': disabled }"
+      >
+        <template #size>
+          <span
+            class="text-primary mx-1 font-medium"
+            :class="{ 'upload-text__disabled': disabled }"
+          >
+            {{ maxSize }}MB
+          </span>
+        </template>
+        <template #ext>
+          <span
+            class="text-primary mx-1 font-medium"
+            :class="{ 'upload-text__disabled': disabled }"
+          >
+            {{ acceptFormat }}
+          </span>
+        </template>
+      </I18nT>
+    </slot>
+
     <ImagePreviewGroup
       :preview="{
         visible: previewVisible,

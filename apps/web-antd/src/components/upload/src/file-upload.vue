@@ -102,31 +102,33 @@ const {
         </p>
       </div>
     </CurrentUploadComponent>
-    <I18nT
-      v-if="helpMessage"
-      scope="global"
-      keypath="component.upload.uploadHelpMessage"
-      tag="div"
-      class="mt-2"
-      :class="{ 'upload-text__disabled': disabled }"
-    >
-      <template #size>
-        <span
-          class="text-primary mx-1 font-medium"
-          :class="{ 'upload-text__disabled': disabled }"
-        >
-          {{ maxSize }}MB
-        </span>
-      </template>
-      <template #ext>
-        <span
-          class="text-primary mx-1 font-medium"
-          :class="{ 'upload-text__disabled': disabled }"
-        >
-          {{ acceptFormat }}
-        </span>
-      </template>
-    </I18nT>
+    <slot name="helpMessage" v-bind="{ maxCount, disabled, maxSize, accept }">
+      <I18nT
+        v-if="helpMessage"
+        scope="global"
+        keypath="component.upload.uploadHelpMessage"
+        tag="div"
+        class="mt-2"
+        :class="{ 'upload-text__disabled': disabled }"
+      >
+        <template #size>
+          <span
+            class="text-primary mx-1 font-medium"
+            :class="{ 'upload-text__disabled': disabled }"
+          >
+            {{ maxSize }}MB
+          </span>
+        </template>
+        <template #ext>
+          <span
+            class="text-primary mx-1 font-medium"
+            :class="{ 'upload-text__disabled': disabled }"
+          >
+            {{ acceptFormat }}
+          </span>
+        </template>
+      </I18nT>
+    </slot>
   </div>
 </template>
 
