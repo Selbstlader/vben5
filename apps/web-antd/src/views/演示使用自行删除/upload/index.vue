@@ -20,6 +20,13 @@ function handlePreview(file: UploadFile) {
     maskClosable: true,
   });
 }
+
+function customAccept(accept: string) {
+  return accept
+    .split(',')
+    .map((str) => str.toUpperCase())
+    .join(',');
+}
 </script>
 
 <template>
@@ -82,12 +89,14 @@ function handlePreview(file: UploadFile) {
         当前绑定值: {{ multipleFileId }}
       </Card>
 
-      <Card title="图片禁用上传" size="small">
+      <Card title="禁用上传" size="small">
         <ImageUpload :disabled="true" :max-count="3" :help-message="false" />
-      </Card>
-
-      <Card title="文件禁用上传" size="small">
-        <FileUpload :disabled="true" :max-count="3" :help-message="false" />
+        <FileUpload
+          class="mt-3"
+          :disabled="true"
+          :max-count="3"
+          :help-message="false"
+        />
       </Card>
 
       <Card title="文件夹上传/自定义helpMessage" size="small">
@@ -101,7 +110,17 @@ function handlePreview(file: UploadFile) {
             <div>自定义helpMessage: {{ JSON.stringify(slotProps) }}</div>
           </template>
         </FileUpload>
-        当前绑定值: {{ multipleFileId }}
+      </Card>
+
+      <Card title="自定义accept显示" size="small">
+        <ImageUpload
+          v-model:value="singleImageId"
+          :accept-format="customAccept"
+        />
+        <ImageUpload
+          v-model:value="singleImageId"
+          accept-format="自定义显示允许的文件类型"
+        />
       </Card>
     </div>
   </Page>

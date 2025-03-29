@@ -49,7 +49,7 @@ const ossIdList = defineModel<string | string[]>('value', {
 });
 
 const {
-  acceptFormat,
+  acceptStr,
   handleChange,
   handleRemove,
   beforeUpload,
@@ -113,7 +113,7 @@ function currentPreview(file: UploadFile) {
             class="text-primary mx-1 font-medium"
             :class="{ 'upload-text__disabled': disabled }"
           >
-            {{ acceptFormat }}
+            {{ acceptStr }}
           </span>
         </template>
       </I18nT>

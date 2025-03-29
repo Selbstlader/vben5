@@ -25,6 +25,11 @@ export interface BaseUploadProps {
    */
   accept?: string;
   /**
+   * 你可能使用的是application/pdf这种mime类型, 但是这样用户可能看不懂, 在这里自定义逻辑
+   * @default 原始accept
+   */
+  acceptFormat?: ((accept: string) => string) | string;
+  /**
    * 附带的请求参数
    */
   data?: any;

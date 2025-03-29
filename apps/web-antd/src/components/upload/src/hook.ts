@@ -15,7 +15,7 @@ import { computed, ref, watch } from 'vue';
 import { $t } from '@vben/locales';
 
 import { message, Modal } from 'ant-design-vue';
-import { isFunction } from 'lodash-es';
+import { isFunction, isString } from 'lodash-es';
 
 import { ossInfo } from '#/api/system/oss';
 
@@ -88,7 +88,16 @@ export function useUpload(
   // 组件内部维护fileList
   const innerFileList = ref<UploadFile[]>([]);
 
-  const acceptFormat = computed(() => {
+  const acceptStr = computed(() => {
+    // string类型
+    if (isString(props.acceptFormat)) {
+      return props.acceptFormat;
+    }
+    // 函数类型
+    if (isFunction(props.acceptFormat)) {
+      return props.acceptFormat(props.accept!);
+    }
+    // 默认 会对拓展名做处理
     return props.accept
       ?.split(',')
       .map((item) => {
@@ -272,6 +281,6 @@ export function useUpload(
     beforeUpload,
     customRequest,
     innerFileList,
-    acceptFormat,
+    acceptStr,
   };
 }
