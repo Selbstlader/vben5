@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 
 import { useVbenModal } from '@vben/common-ui';
-
-import { Alert } from 'ant-design-vue';
 
 import { ImageUpload } from '#/components/upload';
 
@@ -23,13 +21,6 @@ const [BasicModal, modalApi] = useVbenModal({
     }
   },
 });
-
-const accept = ref(['jpg', 'jpeg', 'png', 'gif', 'webp']);
-const maxNumber = ref(3);
-
-const message = computed(() => {
-  return `支持 [${accept.value.join(', ')}] 格式，最多上传 ${maxNumber.value} 张图片`;
-});
 </script>
 
 <template>
@@ -40,12 +31,7 @@ const message = computed(() => {
     title="图片上传"
   >
     <div class="flex flex-col gap-4">
-      <Alert :message="message" show-icon type="info">aaa</Alert>
-      <ImageUpload
-        v-model:value="fileList"
-        :accept="accept"
-        :max-number="maxNumber"
-      />
+      <ImageUpload v-model:value="fileList" />
     </div>
   </BasicModal>
 </template>
