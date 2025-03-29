@@ -1,21 +1,21 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import type { UploadChangeParam, UploadFile } from 'ant-design-vue';
 import type { FileType } from 'ant-design-vue/es/upload/interface';
+import type { UploadRequestOption } from 'ant-design-vue/es/vc-upload/interface';
 
 import type { ModelRef } from 'vue';
 
-import type { HttpResponse } from '@vben/request';
+import type { BaseUploadProps } from './props';
 
-import type { UploadResult } from '#/api';
+import type { AxiosProgressEvent, UploadResult } from '#/api';
 import type { OssFile } from '#/api/system/oss/model';
 
 import { computed, ref, watch } from 'vue';
 
-import { useAppConfig } from '@vben/hooks';
 import { $t } from '@vben/locales';
-import { useAccessStore } from '@vben/stores';
 
 import { message, Modal } from 'ant-design-vue';
+import { isFunction } from 'lodash-es';
 
 import { ossInfo } from '#/api/system/oss';
 
@@ -85,28 +85,8 @@ export function useUpload(
   props: Readonly<BaseUploadProps>,
   bindValue: ModelRef<string | string[]>,
 ) {
-  const { apiURL, clientId } = useAppConfig(
-    import.meta.env,
-    import.meta.env.PROD,
-  );
-
-  // 内部维护fileList
+  // 组件内部维护fileList
   const innerFileList = ref<UploadFile[]>([]);
-
-  /** oss上传地址 */
-  const uploadUrl = `${apiURL}/resource/oss/upload`;
-
-  const accessStore = useAccessStore();
-
-  /**
-   * header参数 需要带上token和clientId
-   */
-  const headers = computed(() => {
-    return {
-      Authorization: `Bearer ${accessStore.accessToken}`,
-      clientId,
-    };
-  });
 
   const acceptFormat = computed(() => {
     return props.accept
@@ -121,6 +101,11 @@ export function useUpload(
   });
 
   function handleChange(info: UploadChangeParam) {
+    /**
+     * 移除当前文件
+     * @param currentFile 当前文件
+     * @param currentFileList 当前所有文件list
+     */
     function removeCurrentFile(
       currentFile: UploadChangeParam['file'],
       currentFileList: UploadChangeParam['fileList'],
@@ -140,19 +125,9 @@ export function useUpload(
         if (!currentFile.response) {
           return;
         }
-        // 获取返回结果
-        const response = currentFile.response as HttpResponse<UploadResult>;
-        // 上传异常
-        if (response.code !== 200) {
-          message.error(response.msg);
-          removeCurrentFile(currentFile, fileList);
-          return;
-        }
-        // 上传成功 做转换
-        if (props.showSuccessMsg) {
-          message.success($t('component.upload.uploadSuccess'));
-        }
-        const { ossId, fileName, url } = response.data;
+        // 获取返回结果 为customRequest的reslove参数
+        // 只有success才会走到这里
+        const { ossId, fileName, url } = currentFile.response as UploadResult;
         currentFile.url = url;
         currentFile.fileName = fileName;
         currentFile.uid = ossId;
@@ -166,7 +141,6 @@ export function useUpload(
       }
       // 上传失败 网络原因导致httpStatus 不等于200
       case 'error': {
-        message.error($t('component.upload.uploadError'));
         removeCurrentFile(currentFile, fileList);
       }
     }
@@ -207,6 +181,12 @@ export function useUpload(
     });
   }
 
+  /**
+   * 上传前检测文件大小
+   * 拖拽时候前置会有浏览器自身的accept校验 校验失败不会执行此方法
+   * @param file file
+   * @returns file | false
+   */
   function beforeUpload(file: FileType) {
     const isLtMax = file.size / 1024 / 1024 < props.maxSize!;
     if (!isLtMax) {
@@ -215,6 +195,37 @@ export function useUpload(
     }
     // 大坑 Safari不支持file-type库 去除文件类型的校验
     return file;
+  }
+
+  /**
+   * 自定义上传实现
+   * @param info
+   */
+  async function customRequest(info: UploadRequestOption<any>) {
+    const { api } = props;
+    if (!isFunction(api)) {
+      console.warn('upload api must exist and be a function');
+      return;
+    }
+    try {
+      // 进度条事件
+      const progressEvent: AxiosProgressEvent = (e) => {
+        const percent = Math.trunc((e.loaded / e.total!) * 100);
+        info.onProgress!({ percent });
+      };
+      const res = await api(
+        info.file as File,
+        props?.data ?? {},
+        progressEvent,
+      );
+      info.onSuccess!(res);
+      if (props.showSuccessMsg) {
+        message.success($t('component.upload.uploadSuccess'));
+      }
+    } catch (error: any) {
+      console.error(error);
+      info.onError!(error);
+    }
   }
 
   /**
@@ -244,11 +255,10 @@ export function useUpload(
   );
 
   return {
-    uploadUrl,
-    headers,
     handleChange,
     handleRemove,
     beforeUpload,
+    customRequest,
     innerFileList,
     acceptFormat,
   };

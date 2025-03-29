@@ -19,4 +19,8 @@ return new Promise<FileType>((resolve) =>
 );
 ```
 
-根本原因在于`file-typ`库可能不支持Safari 去掉可以正常上传
+根本原因在于`file-typ`库的`fileTypeFromBlob`方法不支持Safari 去掉可以正常上传
+
+safari不支持`ReadableStreamBYOBReader`api
+
+详见: https://github.com/sindresorhus/file-type/issues/690

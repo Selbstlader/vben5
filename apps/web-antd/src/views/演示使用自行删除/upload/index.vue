@@ -9,7 +9,7 @@ import { Alert, Card, Modal } from 'ant-design-vue';
 
 import { FileUpload, ImageUpload } from '#/components/upload';
 
-const singleImageId = ref('1905537674682916865');
+const singleImageId = ref('');
 const singleFileId = ref('1905191167882518529');
 const multipleImageId = ref<string[]>(['1905537674682916865']);
 const multipleFileId = ref<string[]>(['1905191167882518529']);
@@ -73,6 +73,16 @@ function handlePreview(file: UploadFile) {
 
       <Card title="文件禁用上传" size="small">
         <FileUpload :disabled="true" :max-count="3" :help-message="false" />
+      </Card>
+
+      <Card title="文件夹上传" size="small">
+        <FileUpload
+          v-model:value="multipleFileId"
+          :max-count="3"
+          :directory="true"
+          accept="*"
+        />
+        当前绑定值: {{ multipleFileId }}
       </Card>
     </div>
   </Page>

@@ -5,6 +5,8 @@
 <script setup lang="ts">
 import type { UploadFile } from 'ant-design-vue';
 
+import type { BaseUploadProps } from './props';
+
 import { computed } from 'vue';
 
 import { $t, I18nT } from '@vben/locales';
@@ -12,68 +14,26 @@ import { $t, I18nT } from '@vben/locales';
 import { InboxOutlined, UploadOutlined } from '@ant-design/icons-vue';
 import { Upload } from 'ant-design-vue';
 
+import { uploadApi } from '#/api';
+
 import { defaultFileAcceptExts, defaultFilePreview } from './helper';
 import { useUpload } from './hook';
 
-interface Props {
-  /**
-   * 文件上传失败 是否从展示列表中删除
-   * @default true
-   */
-  removeOnError?: boolean;
-  /**
-   * 上传成功 是否展示提示信息
-   * @default true
-   */
-  showSuccessMsg?: boolean;
-  /**
-   * 删除文件前是否需要确认
-   * @default false
-   */
-  removeConfirm?: boolean;
-  /**
-   * 同antdv参数
-   */
-  accept?: string;
-  /**
-   * 附带的请求参数
-   */
-  data?: any;
-  /**
-   * 最大上传图片数量
-   * maxCount为1时 会被绑定为string而非string[]
-   * @default 1
-   */
-  maxCount?: number;
-  /**
-   * 文件最大 单位M
-   * @default 5
-   */
-  maxSize?: number;
-  /**
-   * 是否禁用
-   * @default false
-   */
-  disabled?: boolean;
-  /**
-   * 是否显示文案 请上传不超过...
-   * @default true
-   */
-  helpMessage?: boolean;
-  /**
-   * 是否支持多选文件，ie10+ 支持。开启后按住 ctrl 可选择多个文件。
-   * @default false
-   */
-  multiple?: boolean;
+interface FileUploadProps extends BaseUploadProps {
   /**
    * 自定义文件预览逻辑 比如: 你可以改为下载
    * @param file file
    */
   preview?: (file: UploadFile) => Promise<void> | void;
+  /**
+   * 是否支持拖拽上传
+   * @default false
+   */
   enableDragUpload?: boolean;
 }
 
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<FileUploadProps>(), {
+  api: () => uploadApi,
   removeOnError: true,
   showSuccessMsg: true,
   removeConfirm: false,
@@ -84,8 +44,11 @@ const props = withDefaults(defineProps<Props>(), {
   disabled: false,
   helpMessage: true,
   preview: defaultFilePreview,
+  enableDragUpload: false,
+  directory: false,
 });
 
+/** 返回不同的上传组件 */
 const CurrentUploadComponent = computed(() => {
   if (props.enableDragUpload) {
     return Upload.Dragger;
@@ -99,8 +62,7 @@ const ossIdList = defineModel<string | string[]>('value', {
 });
 
 const {
-  uploadUrl,
-  headers,
+  customRequest,
   acceptFormat,
   handleChange,
   handleRemove,
@@ -113,15 +75,14 @@ const {
   <div>
     <CurrentUploadComponent
       v-model:file-list="innerFileList"
-      :action="uploadUrl"
-      :headers="headers"
-      :data="data"
       :accept="accept"
       :disabled="disabled"
+      :directory="directory"
       :max-count="maxCount"
       :progress="{ showInfo: true }"
       :multiple="multiple"
       :before-upload="beforeUpload"
+      :custom-request="customRequest"
       @preview="preview"
       @change="handleChange"
       @remove="handleRemove"

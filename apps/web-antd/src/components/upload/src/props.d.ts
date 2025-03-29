@@ -1,4 +1,10 @@
-interface BaseUploadProps {
+import type { UploadApi } from '#/api';
+
+export interface BaseUploadProps {
+  /**
+   * 上传接口
+   */
+  api?: UploadApi;
   /**
    * 文件上传失败 是否从展示列表中删除
    * @default true
@@ -48,4 +54,9 @@ interface BaseUploadProps {
    * @default false
    */
   multiple?: boolean;
+  /**
+   * 是否支持上传文件夹
+   * @default false
+   */
+  directory?: boolean;
 }
