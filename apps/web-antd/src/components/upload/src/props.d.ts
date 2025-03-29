@@ -66,4 +66,10 @@ export interface BaseUploadProps {
    * @default false
    */
   deepWatch?: boolean;
+  /**
+   * 当ossId查询不到文件信息时  比如被删除了
+   * 是否保留列表对应的ossId 默认不保留
+   * @default false
+   */
+  keepMissingId?: boolean;
 }

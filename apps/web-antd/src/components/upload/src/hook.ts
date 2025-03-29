@@ -249,7 +249,19 @@ export function useUpload(
         };
         return fileitem;
       }
-      innerFileList.value = resp.map((item) => transformFile(item));
+      const transformOptions = resp.map((item) => transformFile(item));
+      innerFileList.value = transformOptions;
+      // 单文件 丢弃策略
+      if (props.maxCount === 1 && resp.length === 0 && !props.keepMissingId) {
+        bindValue.value = '';
+        return;
+      }
+      // 多文件
+      if (resp.length !== value.length && !props.keepMissingId) {
+        bindValue.value = (bindValue.value as string[]).filter((ossId) =>
+          resp.map((res) => res.ossId).includes(ossId),
+        );
+      }
     },
     { immediate: true, deep: props.deepWatch },
   );
