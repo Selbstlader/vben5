@@ -229,7 +229,7 @@ export function useUpload(
   }
 
   /**
-   * 这里只监听list地址变化 即重新赋值才会触发watch
+   * 这里默认只监听list地址变化 即重新赋值才会触发watch
    * immediate用于初始化触发
    */
   watch(
@@ -251,7 +251,7 @@ export function useUpload(
       }
       innerFileList.value = resp.map((item) => transformFile(item));
     },
-    { immediate: true },
+    { immediate: true, deep: props.deepWatch },
   );
 
   return {

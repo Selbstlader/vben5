@@ -35,7 +35,11 @@ function handlePreview(file: UploadFile) {
       </Card>
 
       <Card title="多图片上传, maxCount参数控制" size="small">
-        <ImageUpload v-model:value="multipleImageId" :max-count="3" />
+        <ImageUpload
+          v-model:value="multipleImageId"
+          :max-count="3"
+          :deep-watch="true"
+        />
         当前绑定值: {{ multipleImageId }}
       </Card>
 
