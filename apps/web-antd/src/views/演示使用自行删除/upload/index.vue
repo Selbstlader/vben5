@@ -9,7 +9,7 @@ import { Alert, Card, Modal } from 'ant-design-vue';
 
 import { FileUpload, ImageUpload } from '#/components/upload';
 
-const singleImageId = ref('');
+const singleImageId = ref('1905537674682916865');
 const singleFileId = ref('1905191167882518529');
 const multipleImageId = ref<string[]>(['1905537674682916865']);
 const multipleFileId = ref<string[]>(['1905191167882518529']);
