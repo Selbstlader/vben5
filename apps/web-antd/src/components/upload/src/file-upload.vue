@@ -17,13 +17,7 @@ import { uploadApi } from '#/api';
 import { defaultFileAcceptExts, defaultFilePreview } from './helper';
 import { useUpload } from './hook';
 
-interface FileUploadProps extends BaseUploadProps {
-  /**
-   * 是否支持拖拽上传
-   * @default false
-   */
-  enableDragUpload?: boolean;
-}
+interface FileUploadProps extends BaseUploadProps {}
 
 const props = withDefaults(defineProps<FileUploadProps>(), {
   api: () => uploadApi,
@@ -64,6 +58,10 @@ const {
 } = useUpload(props, ossIdList);
 </script>
 
+<!--
+Upload.Dragger只会影响样式
+使用普通Upload也是支持拖拽上传的
+-->
 <template>
   <div>
     <CurrentUploadComponent

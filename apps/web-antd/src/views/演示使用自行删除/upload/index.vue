@@ -86,7 +86,12 @@ function customAccept(accept: string) {
           :max-count="3"
           :enable-drag-upload="true"
         />
-        当前绑定值: {{ multipleFileId }}
+        <ImageUpload
+          class="mt-3"
+          v-model:value="multipleImageId"
+          :enable-drag-upload="true"
+          :max-count="6"
+        />
       </Card>
 
       <Card title="禁用上传" size="small">
