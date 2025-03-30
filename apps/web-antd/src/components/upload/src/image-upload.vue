@@ -8,7 +8,7 @@ import type {
   UploadListType,
 } from 'ant-design-vue/es/upload/interface';
 
-import type { BaseUploadProps } from './props';
+import type { BaseUploadProps, UploadEmits } from './props';
 
 import { $t, I18nT } from '@vben/locales';
 
@@ -45,6 +45,8 @@ const props = withDefaults(defineProps<ImageUploadProps>(), {
   abortOnUnmounted: true,
 });
 
+const emit = defineEmits<UploadEmits>();
+
 // 双向绑定 ossId
 const ossIdList = defineModel<string | string[]>('value', {
   default: () => [],
@@ -57,7 +59,7 @@ const {
   beforeUpload,
   innerFileList,
   customRequest,
-} = useUpload(props, ossIdList);
+} = useUpload(props, emit, ossIdList);
 
 const { previewVisible, previewImage, handleCancel, handlePreview } =
   useImagePreview();

@@ -1,11 +1,14 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import type { UploadChangeParam, UploadFile } from 'ant-design-vue';
 import type { FileType } from 'ant-design-vue/es/upload/interface';
-import type { UploadRequestOption } from 'ant-design-vue/es/vc-upload/interface';
+import type {
+  RcFile,
+  UploadRequestOption,
+} from 'ant-design-vue/es/vc-upload/interface';
 
 import type { ModelRef } from 'vue';
 
-import type { BaseUploadProps } from './props';
+import type { BaseUploadProps, UploadEmits } from './props';
 
 import type { AxiosProgressEvent, UploadResult } from '#/api';
 import type { OssFile } from '#/api/system/oss/model';
@@ -78,11 +81,13 @@ export function useImagePreview() {
 /**
  * 图片上传和文件上传的通用hook
  * @param props 组件props
+ * @param emit 事件
  * @param bindValue 双向绑定的idList
  * @returns hook
  */
 export function useUpload(
   props: Readonly<BaseUploadProps>,
+  emit: UploadEmits,
   bindValue: ModelRef<string | string[]>,
 ) {
   // 组件内部维护fileList
@@ -153,6 +158,7 @@ export function useUpload(
         removeCurrentFile(currentFile, fileList);
       }
     }
+    emit('change', info);
   }
 
   function handleRemove(currentFile: UploadFile) {
@@ -166,6 +172,8 @@ export function useUpload(
           1,
         );
       }
+      // 触发remove事件
+      emit('remove', currentFile);
     }
 
     if (!props.removeConfirm) {
@@ -231,6 +239,7 @@ export function useUpload(
       if (props.showSuccessMsg) {
         message.success($t('component.upload.uploadSuccess'));
       }
+      emit('success', info.file as RcFile, res);
     } catch (error: any) {
       console.error(error);
       info.onError!(error);

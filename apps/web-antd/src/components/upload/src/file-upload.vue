@@ -3,7 +3,7 @@
 去除使用`file-type`库进行文件类型检测 在Safari无法使用
 -->
 <script setup lang="ts">
-import type { BaseUploadProps } from './props';
+import type { BaseUploadProps, UploadEmits } from './props';
 
 import { computed } from 'vue';
 
@@ -36,6 +36,8 @@ const props = withDefaults(defineProps<FileUploadProps>(), {
   abortOnUnmounted: true,
 });
 
+const emit = defineEmits<UploadEmits>();
+
 /** 返回不同的上传组件 */
 const CurrentUploadComponent = computed(() => {
   if (props.enableDragUpload) {
@@ -56,7 +58,7 @@ const {
   handleRemove,
   beforeUpload,
   innerFileList,
-} = useUpload(props, ossIdList);
+} = useUpload(props, emit, ossIdList);
 </script>
 
 <!--

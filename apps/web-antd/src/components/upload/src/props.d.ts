@@ -1,4 +1,9 @@
-import type { UploadApi } from '#/api';
+import type { UploadFile } from 'ant-design-vue';
+import type { RcFile } from 'ant-design-vue/es/vc-upload/interface';
+
+import type { UploadApi, UploadResult } from '#/api';
+
+import { UploadChangeParam } from 'ant-design-vue';
 
 export interface BaseUploadProps {
   /**
@@ -94,4 +99,10 @@ export interface BaseUploadProps {
    * @default true
    */
   abortOnUnmounted?: boolean;
+}
+
+export interface UploadEmits {
+  (e: 'success', file: RcFile, response: UploadResult): void;
+  (e: 'remove', file: UploadFile): void;
+  (e: 'change', info: UploadChangeParam): void;
 }
