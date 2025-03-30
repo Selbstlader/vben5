@@ -5,9 +5,11 @@ import { h, ref } from 'vue';
 
 import { Page } from '@vben/common-ui';
 
-import { Alert, Card, Modal, Switch } from 'ant-design-vue';
+import { Alert, Card, Modal, RadioGroup, Switch } from 'ant-design-vue';
 
 import { FileUpload, ImageUpload } from '#/components/upload';
+
+import { useFileType, useImageType } from './hook';
 
 const singleImageId = ref('1905537674682916865');
 const singleFileId = ref('1905191167882518529');
@@ -29,6 +31,9 @@ function customAccept(accept: string) {
 }
 
 const showComponent = ref(true);
+
+const { imageListOptions, currentImageListType } = useImageType();
+const { fileListOptions, currentFileListType } = useFileType();
 </script>
 
 <template>
@@ -134,6 +139,37 @@ const showComponent = ref(true);
         <div>将开发者工具调整网络为3G 切换挂载/卸载 可见请求在卸载被取消</div>
         挂载/卸载组件: <Switch v-model:checked="showComponent" />
         <FileUpload v-if="showComponent" v-model:value="singleFileId" />
+      </Card>
+
+      <Card title="图片: listType控制上传样式" size="small">
+        <RadioGroup
+          v-model:value="currentImageListType"
+          :options="imageListOptions"
+          button-style="solid"
+          option-type="button"
+        />
+        <ImageUpload
+          class="mt-2"
+          v-model:value="singleImageId"
+          :list-type="currentImageListType"
+        />
+      </Card>
+
+      <Card title="文件: listType控制上传样式" size="small">
+        <div class="mb-2 text-red-500">
+          注意文件上传不支持`picture-card`类型
+        </div>
+        <RadioGroup
+          v-model:value="currentFileListType"
+          :options="fileListOptions"
+          button-style="solid"
+          option-type="button"
+        />
+        <FileUpload
+          class="mt-2"
+          v-model:value="singleFileId"
+          :list-type="currentFileListType"
+        />
       </Card>
     </div>
   </Page>

@@ -12,7 +12,7 @@ import type { BaseUploadProps, UploadEmits } from './props';
 
 import { $t, I18nT } from '@vben/locales';
 
-import { PlusOutlined } from '@ant-design/icons-vue';
+import { PlusOutlined, UploadOutlined } from '@ant-design/icons-vue';
 import { Image, ImagePreviewGroup, Upload } from 'ant-design-vue';
 import { isFunction } from 'lodash-es';
 
@@ -91,10 +91,19 @@ function currentPreview(file: UploadFile) {
       @change="handleChange"
       @remove="handleRemove"
     >
-      <div v-if="innerFileList?.length < maxCount">
+      <div
+        v-if="innerFileList?.length < maxCount && listType === 'picture-card'"
+      >
         <PlusOutlined />
         <div class="mt-[8px]">{{ $t('component.upload.upload') }}</div>
       </div>
+      <a-button
+        v-if="innerFileList?.length < maxCount && listType !== 'picture-card'"
+        :disabled="disabled"
+      >
+        <UploadOutlined />
+        {{ $t('component.upload.upload') }}
+      </a-button>
     </Upload>
     <slot name="helpMessage" v-bind="{ maxCount, disabled, maxSize, accept }">
       <I18nT
@@ -102,7 +111,10 @@ function currentPreview(file: UploadFile) {
         scope="global"
         keypath="component.upload.uploadHelpMessage"
         tag="div"
-        :class="{ 'upload-text__disabled': disabled }"
+        :class="{
+          'upload-text__disabled': disabled,
+          'mt-2': listType !== 'picture-card',
+        }"
       >
         <template #size>
           <span

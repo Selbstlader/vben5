@@ -3,6 +3,8 @@
 去除使用`file-type`库进行文件类型检测 在Safari无法使用
 -->
 <script setup lang="ts">
+import type { UploadListType } from 'ant-design-vue/es/upload/interface';
+
 import type { BaseUploadProps, UploadEmits } from './props';
 
 import { computed } from 'vue';
@@ -17,7 +19,14 @@ import { uploadApi } from '#/api';
 import { defaultFileAcceptExts, defaultFilePreview } from './helper';
 import { useUpload } from './hook';
 
-interface FileUploadProps extends BaseUploadProps {}
+interface FileUploadProps extends BaseUploadProps {
+  /**
+   * 同antdv的listType 但是排除picture-card
+   * 文件上传不适合用picture-card显示
+   * @default text
+   */
+  listType?: Exclude<UploadListType, 'picture-card'>;
+}
 
 const props = withDefaults(defineProps<FileUploadProps>(), {
   api: () => uploadApi,
@@ -34,6 +43,7 @@ const props = withDefaults(defineProps<FileUploadProps>(), {
   enableDragUpload: false,
   directory: false,
   abortOnUnmounted: true,
+  listType: 'text',
 });
 
 const emit = defineEmits<UploadEmits>();
@@ -70,6 +80,7 @@ Upload.Dragger只会影响样式
     <CurrentUploadComponent
       v-model:file-list="innerFileList"
       :accept="accept"
+      :list-type="listType"
       :disabled="disabled"
       :directory="directory"
       :max-count="maxCount"
