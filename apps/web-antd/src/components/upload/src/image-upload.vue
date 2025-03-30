@@ -42,6 +42,7 @@ const props = withDefaults(defineProps<ImageUploadProps>(), {
   listType: 'picture-card',
   helpMessage: true,
   enableDragUpload: false,
+  abortOnUnmounted: true,
 });
 
 // 双向绑定 ossId

@@ -10,7 +10,7 @@ import type { BaseUploadProps } from './props';
 import type { AxiosProgressEvent, UploadResult } from '#/api';
 import type { OssFile } from '#/api/system/oss/model';
 
-import { computed, ref, watch } from 'vue';
+import { computed, onUnmounted, ref, watch } from 'vue';
 
 import { $t } from '@vben/locales';
 
@@ -206,6 +206,7 @@ export function useUpload(
     return file;
   }
 
+  const uploadAbort = new AbortController();
   /**
    * 自定义上传实现
    * @param info
@@ -222,11 +223,10 @@ export function useUpload(
         const percent = Math.trunc((e.loaded / e.total!) * 100);
         info.onProgress!({ percent });
       };
-      const res = await api(
-        info.file as File,
-        props?.data ?? {},
-        progressEvent,
-      );
+      const res = await api(info.file as File, props?.data ?? {}, {
+        onUploadProgress: progressEvent,
+        signal: uploadAbort.signal,
+      });
       info.onSuccess!(res);
       if (props.showSuccessMsg) {
         message.success($t('component.upload.uploadSuccess'));
@@ -236,6 +236,10 @@ export function useUpload(
       info.onError!(error);
     }
   }
+
+  onUnmounted(() => {
+    props.abortOnUnmounted && uploadAbort.abort();
+  });
 
   /**
    * 这里默认只监听list地址变化 即重新赋值才会触发watch

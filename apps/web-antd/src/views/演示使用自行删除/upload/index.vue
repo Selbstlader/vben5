@@ -5,7 +5,7 @@ import { h, ref } from 'vue';
 
 import { Page } from '@vben/common-ui';
 
-import { Alert, Card, Modal } from 'ant-design-vue';
+import { Alert, Card, Modal, Switch } from 'ant-design-vue';
 
 import { FileUpload, ImageUpload } from '#/components/upload';
 
@@ -27,6 +27,8 @@ function customAccept(accept: string) {
     .map((str) => str.toUpperCase())
     .join(',');
 }
+
+const showComponent = ref(true);
 </script>
 
 <template>
@@ -126,6 +128,12 @@ function customAccept(accept: string) {
           v-model:value="singleImageId"
           accept-format="自定义显示允许的文件类型"
         />
+      </Card>
+
+      <Card title="默认在unMounted会取消上传" size="small">
+        <div>将开发者工具调整网络为3G 切换挂载/卸载 可见请求在卸载被取消</div>
+        挂载/卸载组件: <Switch v-model:checked="showComponent" />
+        <FileUpload v-if="showComponent" v-model:value="singleFileId" />
       </Card>
     </div>
   </Page>

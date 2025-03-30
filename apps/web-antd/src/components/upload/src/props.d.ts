@@ -89,4 +89,9 @@ export interface BaseUploadProps {
    * @param file file
    */
   preview?: (file: UploadFile) => Promise<void> | void;
+  /**
+   * 是否在组件Unmounted时取消上传
+   * @default true
+   */
+  abortOnUnmounted?: boolean;
 }

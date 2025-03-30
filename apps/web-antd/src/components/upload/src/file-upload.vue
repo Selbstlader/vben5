@@ -33,6 +33,7 @@ const props = withDefaults(defineProps<FileUploadProps>(), {
   preview: defaultFilePreview,
   enableDragUpload: false,
   directory: false,
+  abortOnUnmounted: true,
 });
 
 /** 返回不同的上传组件 */
