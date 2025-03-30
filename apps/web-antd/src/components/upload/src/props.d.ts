@@ -2,8 +2,21 @@ import type { UploadFile } from 'ant-design-vue';
 import type { RcFile } from 'ant-design-vue/es/vc-upload/interface';
 
 import type { UploadApi, UploadResult } from '#/api';
+import type { OssFile } from '#/api/system/oss/model';
 
 import { UploadChangeParam } from 'ant-design-vue';
+
+export type UploadType = 'file' | 'image';
+
+/**
+ * 自定义返回文件名/缩略图使用 泛型控制返回是否必填
+ * type 为不同的接口返回值 需要自行if判断
+ */
+export type CustomGetter<T extends string | undefined> = (
+  cb:
+    | { response: OssFile; type: 'info' }
+    | { response: UploadResult; type: 'upload' },
+) => T extends undefined ? string | undefined : string;
 
 export interface BaseUploadProps {
   /**
@@ -99,6 +112,14 @@ export interface BaseUploadProps {
    * @default true
    */
   abortOnUnmounted?: boolean;
+  /**
+   * 自定义文件名 需要区分两个接口的返回值
+   */
+  customFilename?: CustomGetter<string>;
+  /**
+   * 自定义缩略图 需要区分两个接口的返回值
+   */
+  customThumbUrl?: CustomGetter<undefined>;
 }
 
 export interface UploadEmits {

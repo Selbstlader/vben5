@@ -8,7 +8,12 @@ import type {
 
 import type { ModelRef } from 'vue';
 
-import type { BaseUploadProps, UploadEmits } from './props';
+import type {
+  BaseUploadProps,
+  CustomGetter,
+  UploadEmits,
+  UploadType,
+} from './props';
 
 import type { AxiosProgressEvent, UploadResult } from '#/api';
 import type { OssFile } from '#/api/system/oss/model';
@@ -83,12 +88,14 @@ export function useImagePreview() {
  * @param props 组件props
  * @param emit 事件
  * @param bindValue 双向绑定的idList
+ * @param uploadType 区分是文件还是图片上传
  * @returns hook
  */
 export function useUpload(
   props: Readonly<BaseUploadProps>,
   emit: UploadEmits,
   bindValue: ModelRef<string | string[]>,
+  uploadType: UploadType,
 ) {
   // 组件内部维护fileList
   const innerFileList = ref<UploadFile[]>([]);
@@ -113,6 +120,45 @@ export function useUpload(
       })
       .join(', ');
   });
+
+  /**
+   * 自定义文件显示名称 需要区分不同的接口
+   * @param cb callback
+   * @returns 文件名
+   */
+  function transformFilename(cb: Parameters<CustomGetter<string>>[0]) {
+    if (isFunction(props.customFilename)) {
+      return props.customFilename(cb);
+    }
+    // info接口
+    if (cb.type === 'info') {
+      return cb.response.originalName;
+    }
+    // 上传接口
+    return cb.response.fileName;
+  }
+
+  /**
+   * 自定义缩略图 需要区分不同的接口
+   * @param cb callback
+   * @returns 缩略图地址
+   */
+  function transformThumbUrl(cb: Parameters<CustomGetter<undefined>>[0]) {
+    if (isFunction(props.customThumbUrl)) {
+      return props.customThumbUrl(cb);
+    }
+    // image 默认返回图片链接
+    if (uploadType === 'image') {
+      // info接口
+      if (cb.type === 'info') {
+        return cb.response.url;
+      }
+      // 上传接口
+      return cb.response.url;
+    }
+    // 文件默认返回空 走antd默认的预览图逻辑
+    return undefined;
+  }
 
   function handleChange(info: UploadChangeParam) {
     /**
@@ -141,10 +187,19 @@ export function useUpload(
         }
         // 获取返回结果 为customRequest的reslove参数
         // 只有success才会走到这里
-        const { ossId, fileName, url } = currentFile.response as UploadResult;
+        const { ossId, url } = currentFile.response as UploadResult;
         currentFile.url = url;
-        currentFile.fileName = fileName;
         currentFile.uid = ossId;
+
+        const cb = {
+          type: 'upload',
+          response: currentFile.response as UploadResult,
+        } as const;
+
+        currentFile.fileName = transformFilename(cb);
+        currentFile.name = transformFilename(cb);
+        currentFile.thumbUrl = transformThumbUrl(cb);
+
         // ossID添加 单个文件会被当做string
         if (props.maxCount === 1) {
           bindValue.value = ossId;
@@ -262,11 +317,14 @@ export function useUpload(
       }
       const resp = await ossInfo(value);
       function transformFile(info: OssFile) {
+        const cb = { type: 'info', response: info } as const;
+
         const fileitem: UploadFile = {
           uid: info.ossId,
-          name: info.originalName,
-          fileName: info.originalName,
+          name: transformFilename(cb),
+          fileName: transformFilename(cb),
           url: info.url,
+          thumbUrl: transformThumbUrl(cb),
           status: 'done',
         };
         return fileitem;

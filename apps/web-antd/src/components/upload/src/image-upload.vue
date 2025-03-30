@@ -59,7 +59,7 @@ const {
   beforeUpload,
   innerFileList,
   customRequest,
-} = useUpload(props, emit, ossIdList);
+} = useUpload(props, emit, ossIdList, 'image');
 
 const { previewVisible, previewImage, handleCancel, handlePreview } =
   useImagePreview();

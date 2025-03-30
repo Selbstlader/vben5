@@ -68,7 +68,7 @@ const {
   handleRemove,
   beforeUpload,
   innerFileList,
-} = useUpload(props, emit, ossIdList);
+} = useUpload(props, emit, ossIdList, 'file');
 </script>
 
 <!--

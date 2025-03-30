@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { UploadFile } from 'ant-design-vue/es/upload/interface';
 
+import type { CustomGetter } from '#/components/upload/src/props';
+
 import { h, ref } from 'vue';
 
 import { Page } from '@vben/common-ui';
@@ -34,32 +36,40 @@ const showComponent = ref(true);
 
 const { imageListOptions, currentImageListType } = useImageType();
 const { fileListOptions, currentFileListType } = useFileType();
+
+const customName: CustomGetter<string> = (cb) => {
+  if (cb.type === 'info') {
+    return `加上自定义前缀显示 - ${cb.response.originalName.toUpperCase()}`;
+  }
+  return `加上自定义前缀显示 - ${cb.response.fileName.toUpperCase()}`;
+};
+
+const customThumbnailUrl: CustomGetter<undefined> = () => {
+  return 'https://unpkg.com/@vbenjs/static-source@0.1.7/source/logo-v1.webp';
+};
 </script>
 
 <template>
   <Page>
     <div class="grid grid-cols-2 gap-4">
-      <Card title="单图片上传, 会绑定为string" size="small">
+      <Card title="单上传, 会绑定为string" size="small">
         <ImageUpload v-model:value="singleImageId" />
         当前绑定值: {{ singleImageId }}
-      </Card>
 
-      <Card title="单文件上传, 会绑定为string" size="small">
-        <FileUpload v-model:value="singleFileId" />
+        <FileUpload class="mt-6" v-model:value="singleFileId" />
         当前绑定值: {{ singleFileId }}
       </Card>
 
-      <Card title="多图片上传, maxCount参数控制(开启深度监听)" size="small">
+      <Card title="多上传, maxCount参数控制(开启深度监听)" size="small">
         <ImageUpload
           v-model:value="multipleImageId"
           :max-count="3"
           :deep-watch="true"
         />
         当前绑定值: {{ multipleImageId }}
-      </Card>
 
-      <Card title="多文件上传, maxCount参数控制(开启深度监听)" size="small">
         <FileUpload
+          class="mt-6"
           v-model:value="multipleFileId"
           :max-count="3"
           :deep-watch="true"
@@ -79,7 +89,7 @@ const { fileListOptions, currentFileListType } = useFileType();
           :help-message="false"
         />
         <ImageUpload
-          class="mt-3"
+          class="mt-6"
           v-model:value="multipleImageId"
           :max-count="3"
           :preview="handlePreview"
@@ -87,14 +97,14 @@ const { fileListOptions, currentFileListType } = useFileType();
         />
       </Card>
 
-      <Card title="文件拖拽上传" size="small">
+      <Card title="文件/图片拖拽上传" size="small">
         <FileUpload
           v-model:value="multipleFileId"
           :max-count="3"
           :enable-drag-upload="true"
         />
         <ImageUpload
-          class="mt-3"
+          class="mt-6"
           v-model:value="multipleImageId"
           :enable-drag-upload="true"
           :max-count="6"
@@ -104,7 +114,7 @@ const { fileListOptions, currentFileListType } = useFileType();
       <Card title="禁用上传" size="small">
         <ImageUpload :disabled="true" :max-count="3" :help-message="false" />
         <FileUpload
-          class="mt-3"
+          class="mt-6"
           :disabled="true"
           :max-count="3"
           :help-message="false"
@@ -119,7 +129,9 @@ const { fileListOptions, currentFileListType } = useFileType();
           accept="*"
         >
           <template #helpMessage="slotProps">
-            <div>自定义helpMessage: {{ JSON.stringify(slotProps) }}</div>
+            <div class="mt-2 font-semibold text-green-500">
+              自定义helpMessage: {{ JSON.stringify(slotProps) }}
+            </div>
           </template>
         </FileUpload>
       </Card>
@@ -130,6 +142,7 @@ const { fileListOptions, currentFileListType } = useFileType();
           :accept-format="customAccept"
         />
         <ImageUpload
+          class="mt-6"
           v-model:value="singleImageId"
           accept-format="自定义显示允许的文件类型"
         />
@@ -169,6 +182,16 @@ const { fileListOptions, currentFileListType } = useFileType();
           class="mt-2"
           v-model:value="singleFileId"
           :list-type="currentFileListType"
+        />
+      </Card>
+
+      <Card title="自定义缩略图和文件名" size="small">
+        <FileUpload
+          v-model:value="multipleFileId"
+          :max-count="5"
+          list-type="picture"
+          :custom-filename="customName"
+          :custom-thumb-url="customThumbnailUrl"
         />
       </Card>
     </div>
