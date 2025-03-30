@@ -177,14 +177,14 @@ function handleAssignRole(record: Role) {
       </template>
       <template #status="{ row }">
         <TableSwitch
-          v-model="row.status"
+          v-model:value="row.status"
           :api="() => roleChangeStatus(row)"
           :disabled="
             row.roleId === 1 ||
             row.roleKey === 'admin' ||
             !hasAccessByCodes(['system:role:edit'])
           "
-          :reload="() => tableApi.query()"
+          @reload="tableApi.query()"
         />
       </template>
       <template #action="{ row }">

@@ -110,7 +110,11 @@ export function userUpdate(data: Partial<User>) {
  * @returns void
  */
 export function userStatusChange(data: Partial<User>) {
-  return requestClient.putWithMsg<void>(Api.userStatusChange, data);
+  const requestData = {
+    userId: data.userId,
+    status: data.status,
+  };
+  return requestClient.putWithMsg<void>(Api.userStatusChange, requestData);
 }
 
 /**

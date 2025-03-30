@@ -37,5 +37,9 @@ export function ossConfigRemove(ossConfigIds: IDS) {
 
 // 更改OSS配置的状态
 export function ossConfigChangeStatus(data: any) {
-  return requestClient.putWithMsg(Api.ossConfigChangeStatus, data);
+  const requestData = {
+    ossConfigId: data.ossConfigId,
+    status: data.status,
+  };
+  return requestClient.putWithMsg(Api.ossConfigChangeStatus, requestData);
 }

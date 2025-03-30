@@ -128,10 +128,10 @@ const { hasAccessByCodes } = useAccess();
       </template>
       <template #status="{ row }">
         <TableSwitch
-          v-model="row.status"
+          v-model:value="row.status"
           :api="() => ossConfigChangeStatus(row)"
           :disabled="!hasAccessByCodes(['system:ossConfig:edit'])"
-          :reload="() => tableApi.query()"
+          @reload="tableApi.query()"
         />
       </template>
       <template #action="{ row }">

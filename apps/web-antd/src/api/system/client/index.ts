@@ -59,7 +59,11 @@ export function clientUpdate(data: Partial<Client>) {
  * @param data 状态
  */
 export function clientChangeStatus(data: any) {
-  return requestClient.putWithMsg<void>(Api.clientChangeStatus, data);
+  const requestData = {
+    clientId: data.clientId,
+    status: data.status,
+  };
+  return requestClient.putWithMsg<void>(Api.clientChangeStatus, requestData);
 }
 
 /**

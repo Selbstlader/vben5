@@ -183,10 +183,10 @@ function handleSyncTenantDict() {
       </template>
       <template #status="{ row }">
         <TableSwitch
-          v-model="row.status"
+          v-model:value="row.status"
           :api="() => tenantStatusChange(row)"
           :disabled="row.id === 1 || !hasAccessByCodes(['system:tenant:edit'])"
-          :reload="() => tableApi.query()"
+          @reload="tableApi.query()"
         />
       </template>
       <template #action="{ row }">

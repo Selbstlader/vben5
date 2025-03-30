@@ -74,7 +74,11 @@ export function packageUpdate(data: Partial<TenantPackage>) {
  * @returns void
  */
 export function packageChangeStatus(data: Partial<TenantPackage>) {
-  return requestClient.putWithMsg<void>(Api.packageChangeStatus, data);
+  const packageId = {
+    packageId: data.packageId,
+    status: data.status,
+  };
+  return requestClient.putWithMsg<void>(Api.packageChangeStatus, packageId);
 }
 
 /**

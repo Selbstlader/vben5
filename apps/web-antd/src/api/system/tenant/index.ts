@@ -67,7 +67,12 @@ export function tenantUpdate(data: Partial<Tenant>) {
  * @returns void
  */
 export function tenantStatusChange(data: Partial<Tenant>) {
-  return requestClient.putWithMsg(Api.tenantStatus, data);
+  const requestData = {
+    id: data.id,
+    tenantId: data.tenantId,
+    status: data.status,
+  };
+  return requestClient.putWithMsg(Api.tenantStatus, requestData);
 }
 
 /**

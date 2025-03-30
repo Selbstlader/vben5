@@ -64,7 +64,7 @@ const formOptions: VbenFormProps = {
   wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
   handleReset: async () => {
     selectDeptId.value = [];
-    // eslint-disable-next-line no-use-before-define
+
     const { formApi, reload } = tableApi;
     await formApi.resetForm();
     const formValues = formApi.form.values;
@@ -231,12 +231,12 @@ const { hasAccessByCodes } = useAccess();
         </template>
         <template #status="{ row }">
           <TableSwitch
-            v-model="row.status"
+            v-model:value="row.status"
             :api="() => userStatusChange(row)"
             :disabled="
               row.userId === 1 || !hasAccessByCodes(['system:user:edit'])
             "
-            :reload="() => tableApi.query()"
+            @reload="() => tableApi.query()"
           />
         </template>
         <template #action="{ row }">

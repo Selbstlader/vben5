@@ -72,7 +72,11 @@ export function roleUpdate(data: Partial<Role>) {
  * @returns void
  */
 export function roleChangeStatus(data: Partial<Role>) {
-  return requestClient.putWithMsg<void>(Api.roleChangeStatus, data);
+  const requestData = {
+    roleId: data.roleId,
+    status: data.status,
+  };
+  return requestClient.putWithMsg<void>(Api.roleChangeStatus, requestData);
 }
 
 /**
