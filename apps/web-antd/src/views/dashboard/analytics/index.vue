@@ -14,11 +14,13 @@ import {
   SvgDownloadIcon,
 } from '@vben/icons';
 
+import { Card } from 'ant-design-vue';
+
 import AnalyticsTrends from './analytics-trends.vue';
-import AnalyticsVisits from './analytics-visits.vue';
 import AnalyticsVisitsData from './analytics-visits-data.vue';
 import AnalyticsVisitsSales from './analytics-visits-sales.vue';
 import AnalyticsVisitsSource from './analytics-visits-source.vue';
+import AnalyticsVisits from './analytics-visits.vue';
 
 const overviewItems: AnalysisOverviewItem[] = [
   {
@@ -65,6 +67,17 @@ const chartTabs: TabOption[] = [
 
 <template>
   <div class="p-5">
+    <Card class="mb-3 text-lg" size="small" title="公告">
+      1.3.0版本(dev中 未发布) 存在不兼容更新 包括
+      <div class="text-red-500">
+        ImageUpload/FileUpload完全重构 与之前版本api完全不兼容
+      </div>
+      <div class="text-red-500">TableSwitch组件重构 与之前版本api不兼容</div>
+      <div class="text-red-500">
+        不再推荐使用useDescription, 这个版本会标记为@deprecated,
+        下个次版本将会移除 框架所有使用useDescription组件的会替换为原生(TODO)
+      </div>
+    </Card>
     <AnalysisOverview :items="overviewItems" />
     <AnalysisChartsTabs :tabs="chartTabs" class="mt-5">
       <template #trends>

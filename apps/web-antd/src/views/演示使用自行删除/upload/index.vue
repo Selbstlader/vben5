@@ -5,13 +5,15 @@ import type { CustomGetter } from '#/components/upload/src/props';
 
 import { h, ref } from 'vue';
 
-import { Page } from '@vben/common-ui';
+import { CodeMirror, Page } from '@vben/common-ui';
 
+import { useClipboard } from '@vueuse/core';
 import { Alert, Card, Modal, RadioGroup, Switch } from 'ant-design-vue';
 
 import { FileUpload, ImageUpload } from '#/components/upload';
 
 import { useFileType, useImageType } from './hook';
+import sql from './insert.sql?raw';
 
 const singleImageId = ref('1905537674682916865');
 const singleFileId = ref('1905191167882518529');
@@ -47,10 +49,17 @@ const customName: CustomGetter<string> = (cb) => {
 const customThumbnailUrl: CustomGetter<undefined> = () => {
   return 'https://unpkg.com/@vbenjs/static-source@0.1.7/source/logo-v1.webp';
 };
+
+const { copy } = useClipboard({ legacy: true });
 </script>
 
 <template>
   <Page>
+    <Card class="mb-2" title="提示" size="small">
+      本地想体验可以导入这个sql(mysql的 其他的自行处理或者手动从菜单添加)
+      <a-button size="small" @click="copy(sql)">复制</a-button>
+      <CodeMirror class="mt-2" v-model="sql" language="sql" readonly />
+    </Card>
     <div class="grid grid-cols-2 gap-4">
       <Card title="单上传, 会绑定为string" size="small">
         <ImageUpload v-model:value="singleImageId" />
