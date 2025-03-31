@@ -16,7 +16,7 @@ import { useFileType, useImageType } from './hook';
 import sql from './insert.sql?raw';
 
 const singleImageId = ref('1905537674682916865');
-const singleFileId = ref('1905191167882518529');
+const singleFileId = ref('1906520520833949698');
 const multipleImageId = ref<string[]>(['1905537674682916865']);
 const multipleFileId = ref<string[]>(['1905191167882518529']);
 
@@ -180,6 +180,10 @@ const { copy } = useClipboard({ legacy: true });
       <Card title="文件: listType控制上传样式" size="small">
         <div class="mb-2 text-red-500">
           注意文件上传不支持`picture-card`类型
+        </div>
+        <div class="mb-2 text-red-500">
+          注意不要中途切换list-type(应该仅作为初始化属性使用) 会导致样式计算问题
+          helpMessage和文件会重叠
         </div>
         <RadioGroup
           v-model:value="currentFileListType"

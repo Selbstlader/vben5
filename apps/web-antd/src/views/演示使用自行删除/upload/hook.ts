@@ -23,7 +23,7 @@ export function useFileType() {
     value: str,
   }));
 
-  const currentFileListType = ref<(typeof fileListTypes)[number]>('text');
+  const currentFileListType = ref<(typeof fileListTypes)[number]>('picture');
 
   return {
     fileListOptions,
