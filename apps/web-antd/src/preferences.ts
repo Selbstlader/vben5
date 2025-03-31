@@ -46,6 +46,11 @@ export const overridesPreferences = defineOverridesPreferences({
      * 浅色sidebar
      */
     semiDarkSidebar: false,
+    /**
+     * 圆角大小 换算比例为1.6px = 0.1radius
+     * 这里为6px 与antd保持一致
+     */
+    radius: '0.375',
   },
   /**
    * !!! 更改配置后请清空浏览器缓存
