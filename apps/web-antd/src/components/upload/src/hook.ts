@@ -337,7 +337,12 @@ export function useUpload(
         return;
       }
       // 多文件
-      if (resp.length !== value.length && !props.keepMissingId) {
+      // 单文件查到了也会走这里的逻辑 filter会报错 需要maxCount判断处理
+      if (
+        resp.length !== value.length &&
+        !props.keepMissingId &&
+        props.maxCount !== 1
+      ) {
         bindValue.value = (bindValue.value as string[]).filter((ossId) =>
           resp.map((res) => res.ossId).includes(ossId),
         );
