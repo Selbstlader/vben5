@@ -51,6 +51,8 @@ const customThumbnailUrl: CustomGetter<undefined> = () => {
 };
 
 const { copy } = useClipboard({ legacy: true });
+
+const animationEnable = ref(false);
 </script>
 
 <template>
@@ -206,6 +208,19 @@ const { copy } = useClipboard({ legacy: true });
           :custom-filename="customName"
           :custom-thumb-url="customThumbnailUrl"
         />
+      </Card>
+
+      <Card title="图片上传的动画效果" size="small">
+        <div class="my-2">
+          是否启用
+          <span class="font-semibold">list-type: picture-card</span> 的动画效果:
+          <Switch v-model:checked="animationEnable" />
+        </div>
+        <ImageUpload
+          v-model:value="singleImageId"
+          :with-animation="animationEnable"
+        />
+        当前绑定值: {{ singleImageId }}
       </Card>
     </div>
   </Page>

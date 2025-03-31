@@ -27,6 +27,12 @@ interface ImageUploadProps extends BaseUploadProps {
    * @default picture-card
    */
   listType?: UploadListType;
+  /**
+   * 使用list-type: picture-card时 是否显示动画
+   * 会有一个`弹跳`的效果 默认关闭
+   * @default false
+   */
+  withAnimation?: boolean;
 }
 
 const props = withDefaults(defineProps<ImageUploadProps>(), {
@@ -43,6 +49,7 @@ const props = withDefaults(defineProps<ImageUploadProps>(), {
   helpMessage: true,
   enableDragUpload: false,
   abortOnUnmounted: true,
+  withAnimation: false,
 });
 
 const emit = defineEmits<UploadEmits>();
@@ -78,6 +85,7 @@ function currentPreview(file: UploadFile) {
   <div>
     <Upload
       v-model:file-list="innerFileList"
+      :class="{ 'upload-animation__disabled': !withAnimation }"
       :list-type="listType"
       :accept="accept"
       :disabled="disabled"
@@ -170,6 +178,13 @@ function currentPreview(file: UploadFile) {
 
   &:where(.dark, .dark *) {
     color: rgb(242 242 242 / 25%);
+  }
+}
+
+// list-type: picture-card动画效果关闭样式
+.upload-animation__disabled {
+  .ant-upload-animate-inline {
+    animation-duration: 0s !important;
   }
 }
 </style>
