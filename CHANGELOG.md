@@ -8,12 +8,14 @@
 
 **BUG FIX**
 
+- 重新登录 字典会unknown的情况[详细分析](https://gitee.com/dapppp/ruoyi-plus-vben5/issues/IBY27D)
 - 测试菜单 请假申请 选中删除 需要根据状态判断
 - 修复文件/图片在Safari中无法上传 file-type库与Safari不兼容导致
 
 **OTHER**
 
 - 字典管理 字典类型 表格选中行增加bold效果
+- 全局圆角修改 与antd保持一致
 
 # 1.2.3
 
