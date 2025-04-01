@@ -225,7 +225,7 @@ function createRequestClient(baseURL: string) {
         case 401: {
           // 已经在登出过程中 不再执行
           if (isLogoutProcessing) {
-            return;
+            throw new Error(timeoutMsg);
           }
           isLogoutProcessing = true;
           const _msg = $t('http.loginTimeout');
@@ -235,7 +235,7 @@ function createRequestClient(baseURL: string) {
             isLogoutProcessing = false;
           });
           // 不再执行下面逻辑
-          return;
+          throw new Error(_msg);
         }
         default: {
           if (msg) {

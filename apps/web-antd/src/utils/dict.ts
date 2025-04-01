@@ -27,6 +27,10 @@ function fetchAndCacheDictData<T>(
           // 内部处理了push的逻辑 这里不用push
           setDictInfo(dictName, resp, formatNumber);
         })
+        .catch(() => {
+          // 401时 移除字典缓存 下次登录重新获取
+          dictRequestCache.delete(dictName);
+        })
         .finally(() => {
           // 移除请求状态缓存
           /**
