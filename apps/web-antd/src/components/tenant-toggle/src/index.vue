@@ -1,13 +1,13 @@
 <script setup lang="ts">
+import type { MessageType } from 'ant-design-vue/es/message';
 import type { SelectHandler } from 'ant-design-vue/es/vc-select/Select';
 
 import type { TenantOption } from '#/api';
 
-import { computed, onMounted, ref, unref } from 'vue';
-import { useRouter } from 'vue-router';
+import { computed, onMounted, ref, shallowRef, unref } from 'vue';
+import { useRoute } from 'vue-router';
 
 import { useAccess } from '@vben/access';
-import { DEFAULT_HOME_PATH } from '@vben/constants';
 import { useTabs } from '@vben/hooks';
 import { $t } from '@vben/locales';
 
@@ -41,15 +41,26 @@ onMounted(async () => {
   await initTenant();
 });
 
-const { closeAllTabs } = useTabs();
-const router = useRouter();
-function close(checked: boolean) {
+const route = useRoute();
+
+const messageInstance = shallowRef<MessageType | null>();
+
+const { closeOtherTabs, refreshTab, closeAllTabs } = useTabs();
+async function close(checked: boolean) {
   // store设置状态
   setChecked(checked);
-  // 需要关闭全部标签页
-  closeAllTabs();
-  // 切换完加载首页
-  router.push(DEFAULT_HOME_PATH);
+
+  /**
+   * 切换租户需要回到首页的页面 一般为带id的页面
+   * 其他则直接刷新页面
+   */
+  if (route.meta.requireHomeRedirect) {
+    await closeAllTabs();
+  } else {
+    // 先关闭再刷新 这里不用Promise.all()
+    await closeOtherTabs();
+    await refreshTab();
+  }
 }
 
 const dictStore = useDictStore();
@@ -65,9 +76,13 @@ const onSelected: SelectHandler = async (tenantId: string, option: any) => {
   }
   await tenantDynamicToggle(tenantId);
   lastSelected.value = tenantId;
-  message.success(
+
+  // 关闭之前的message 只保留一条
+  messageInstance.value?.();
+  messageInstance.value = message.success(
     `${$t('component.tenantToggle.switch')} ${option.companyName}`,
   );
+
   close(true);
   // 需要放在宏队列处理 直接清空页面由于没有字典会有样式问题(标签变成unknown)
   setTimeout(() => dictStore.resetCache());
@@ -75,7 +90,11 @@ const onSelected: SelectHandler = async (tenantId: string, option: any) => {
 
 async function onDeselect() {
   await tenantDynamicClear();
-  message.success($t('component.tenantToggle.reset'));
+
+  // 关闭之前的message 只保留一条
+  messageInstance.value?.();
+  messageInstance.value = message.success($t('component.tenantToggle.reset'));
+
   lastSelected.value = '';
   close(false);
   // 需要放在宏队列处理 直接清空页面由于没有字典会有样式问题(标签变成unknown)
