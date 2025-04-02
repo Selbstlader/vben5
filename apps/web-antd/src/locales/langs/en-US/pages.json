@@ -20,7 +20,7 @@
     "downloadLoading": "Downloading... Please wait.",
     "preview": "Preview",
     "tip": "Tip",
-    "enable": "Enable",
-    "disable": "Disabled"
+    "enable": "On",
+    "disable": "Off"
   }
 }
