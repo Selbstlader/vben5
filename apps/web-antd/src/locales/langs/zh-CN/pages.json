@@ -19,6 +19,8 @@
     "generate": "生成",
     "downloadLoading": "下载中, 请稍后...",
     "preview": "预览",
-    "tip": "提示"
+    "tip": "提示",
+    "enable": "启用",
+    "disable": "禁用"
   }
 }

@@ -19,6 +19,8 @@
     "generate": "Generate",
     "downloadLoading": "Downloading... Please wait.",
     "preview": "Preview",
-    "tip": "Tip"
+    "tip": "Tip",
+    "enable": "Enable",
+    "disable": "Disabled"
   }
 }
