@@ -7,6 +7,7 @@
 - TableSwitch组件重构
 - 管理员租户切换不再返回首页 直接刷新当前页(除特殊页面外会回到首页)
 - modalLoading/drawerLoading改为调用内部的lock/unlock方法
+- 登录验证码 增加loading
 
 **BUG FIX**
 
