@@ -110,3 +110,11 @@ html[data-vxe-ui-theme='dark'] .vxe-grid {
 .vxe-tools--operate:not(:has(button)) {
   margin-left: 0;
 }
+
+.vxe-grid--layout-header-wrapper {
+  overflow: visible;
+}
+
+.vxe-grid--layout-body-content-wrapper {
+  overflow: hidden;
+}
