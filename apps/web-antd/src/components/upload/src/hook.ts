@@ -286,9 +286,10 @@ export function useUpload(
         const percent = Math.trunc((e.loaded / e.total!) * 100);
         info.onProgress!({ percent });
       };
-      const res = await api(info.file as File, props?.data ?? {}, {
+      const res = await api(info.file as File, {
         onUploadProgress: progressEvent,
         signal: uploadAbort.signal,
+        otherData: props?.data,
       });
       info.onSuccess!(res);
       if (props.showSuccessMsg) {

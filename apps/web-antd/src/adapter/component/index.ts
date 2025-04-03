@@ -40,6 +40,7 @@ import {
 
 import { Tinymce as RichTextarea } from '#/components/tinymce';
 import { FileUpload, ImageUpload } from '#/components/upload';
+import { FileUploadOld, ImageUploadOld } from '#/components/upload-old';
 
 const withDefaultPlaceholder = <T extends Component>(
   component: T,
@@ -99,8 +100,10 @@ export type ComponentType =
   | 'DefaultButton'
   | 'Divider'
   | 'FileUpload'
+  | 'FileUploadOld'
   | 'IconPicker'
   | 'ImageUpload'
+  | 'ImageUploadOld'
   | 'Input'
   | 'InputNumber'
   | 'InputPassword'
@@ -175,6 +178,8 @@ async function initComponentAdapter() {
     ImageUpload,
     FileUpload,
     RichTextarea,
+    ImageUploadOld,
+    FileUploadOld,
   };
 
   // 将组件注册到全局共享状态中

@@ -1,9 +1,24 @@
 # 1.3.0
 
+注意: 如果你使用老版本的`文件上传`/`图片上传` 可暂时使用
+
+- `component: 'ImageUploadOld'`
+- `component: 'FileUploadOld'`
+
+代替 **建议替换为新版本**
+
+大致变动:
+
+- `accept string[] -> string`
+- `resultField 已经移除 统一使用ossId`
+- `maxNumber -> maxCount`
+
+具体参数查看: `apps/web-antd/src/components/upload/src/props.d.ts`
+
 **REFACTOR**
 
-- 文件上传/图片上传重构(破坏性更新 不兼容之前的api)
-- 文件上传/图片上传**不再支持**url用法 强制使用ossId
+- **文件上传/图片上传重构(破坏性更新 不兼容之前的api)**
+- **文件上传/图片上传**不再支持**url用法 强制使用ossId**
 - TableSwitch组件重构
 - 管理员租户切换不再返回首页 直接刷新当前页(除特殊页面外会回到首页)
 - modalLoading/drawerLoading改为调用内部的lock/unlock方法
