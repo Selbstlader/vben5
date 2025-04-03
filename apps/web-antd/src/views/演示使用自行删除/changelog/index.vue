@@ -3,7 +3,7 @@ import { ref } from 'vue';
 
 import { MarkdownPreviewer, Page } from '@vben/common-ui';
 
-import { Skeleton } from 'ant-design-vue';
+import { Spin } from 'ant-design-vue';
 
 import changelog from '../../../../../../CHANGELOG.md?raw';
 
@@ -14,11 +14,13 @@ const loading = ref(true);
 
 <template>
   <Page :auto-content-height="true">
-    <Skeleton v-show="loading" active />
-    <MarkdownPreviewer
-      v-model:value="content"
-      height="100%"
-      @mounted="loading = false"
-    />
+    <Spin :spinning="loading" tip="加载markdown中...">
+      <MarkdownPreviewer
+        v-model:value="content"
+        height="100%"
+        class="min-h-[50vh]"
+        @mounted="loading = false"
+      />
+    </Spin>
   </Page>
 </template>
