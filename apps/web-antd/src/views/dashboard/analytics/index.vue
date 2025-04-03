@@ -2,10 +2,13 @@
 import type { AnalysisOverviewItem } from '@vben/common-ui';
 import type { TabOption } from '@vben/types';
 
+import { ref } from 'vue';
+
 import {
   AnalysisChartCard,
   AnalysisChartsTabs,
   AnalysisOverview,
+  MarkdownPreviewer,
 } from '@vben/common-ui';
 import {
   SvgBellIcon,
@@ -14,13 +17,14 @@ import {
   SvgDownloadIcon,
 } from '@vben/icons';
 
-import { Card } from 'ant-design-vue';
+import { Card, Spin } from 'ant-design-vue';
 
 import AnalyticsTrends from './analytics-trends.vue';
 import AnalyticsVisitsData from './analytics-visits-data.vue';
 import AnalyticsVisitsSales from './analytics-visits-sales.vue';
 import AnalyticsVisitsSource from './analytics-visits-source.vue';
 import AnalyticsVisits from './analytics-visits.vue';
+import updateLog from './update_log.md?raw';
 
 const overviewItems: AnalysisOverviewItem[] = [
   {
@@ -63,20 +67,24 @@ const chartTabs: TabOption[] = [
     value: 'visits',
   },
 ];
+
+const loading = ref(true);
+function handleMdMounted() {
+  console.log('markdown mounted');
+  loading.value = false;
+}
 </script>
 
 <template>
   <div class="p-5">
     <Card class="mb-3 text-lg" size="small" title="公告">
-      1.3.0版本(dev中 未发布) 存在不兼容更新 包括
-      <div class="text-red-500">
-        ImageUpload/FileUpload完全重构 与之前版本api完全不兼容
-      </div>
-      <div class="text-red-500">TableSwitch组件重构 与之前版本api不兼容</div>
-      <div class="text-red-500">
-        不再推荐使用useDescription, 这个版本会标记为@deprecated,
-        下个次版本将会移除 框架所有使用useDescription组件的会替换为原生(TODO)
-      </div>
+      <Spin :spinning="loading">
+        <MarkdownPreviewer
+          class="h-[400px] w-full"
+          v-model:value="updateLog"
+          @mounted="handleMdMounted"
+        />
+      </Spin>
     </Card>
     <AnalysisOverview :items="overviewItems" />
     <AnalysisChartsTabs :tabs="chartTabs" class="mt-5">
