@@ -2,13 +2,10 @@
 import type { AnalysisOverviewItem } from '@vben/common-ui';
 import type { TabOption } from '@vben/types';
 
-import { ref } from 'vue';
-
 import {
   AnalysisChartCard,
   AnalysisChartsTabs,
   AnalysisOverview,
-  MarkdownPreviewer,
 } from '@vben/common-ui';
 import {
   SvgBellIcon,
@@ -17,14 +14,11 @@ import {
   SvgDownloadIcon,
 } from '@vben/icons';
 
-import { Card, Spin } from 'ant-design-vue';
-
 import AnalyticsTrends from './analytics-trends.vue';
 import AnalyticsVisitsData from './analytics-visits-data.vue';
 import AnalyticsVisitsSales from './analytics-visits-sales.vue';
 import AnalyticsVisitsSource from './analytics-visits-source.vue';
 import AnalyticsVisits from './analytics-visits.vue';
-import updateLog from './update_log.md?raw';
 
 const overviewItems: AnalysisOverviewItem[] = [
   {
@@ -67,25 +61,10 @@ const chartTabs: TabOption[] = [
     value: 'visits',
   },
 ];
-
-const loading = ref(true);
-function handleMdMounted() {
-  console.log('markdown mounted');
-  loading.value = false;
-}
 </script>
 
 <template>
   <div class="p-5">
-    <Card class="mb-3 text-lg" size="small" title="公告">
-      <Spin :spinning="loading">
-        <MarkdownPreviewer
-          class="h-[400px] w-full"
-          v-model:value="updateLog"
-          @mounted="handleMdMounted"
-        />
-      </Spin>
-    </Card>
     <AnalysisOverview :items="overviewItems" />
     <AnalysisChartsTabs :tabs="chartTabs" class="mt-5">
       <template #trends>

@@ -126,6 +126,18 @@ export const localMenuList: RouteRecordStringComponent[] = [
           title: $t('demos.vben.document'),
         },
       },
+      {
+        name: 'V5UpdateLog',
+        path: '/changelog',
+        component: '/演示使用自行删除/changelog/index',
+        meta: {
+          icon: 'lucide:book-open-text',
+          keepAlive: true,
+          title: '更新记录',
+          badge: '1.3.0',
+          badgeVariants: '#CC0033',
+        },
+      },
     ],
   },
   {

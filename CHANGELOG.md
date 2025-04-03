@@ -15,6 +15,10 @@
 
 具体参数查看: `apps/web-antd/src/components/upload/src/props.d.ts`
 
+不再推荐使用useDescription, 这个版本会标记为@deprecated, 下个次版本将会移除
+
+框架所有使用useDescription组件的会替换为原生(TODO)
+
 **REFACTOR**
 
 - **文件上传/图片上传重构(破坏性更新 不兼容之前的api)**
