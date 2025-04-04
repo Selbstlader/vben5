@@ -66,6 +66,7 @@ export interface User {
   roleIds?: string[];
   postIds?: number[];
   roleId: string;
+  deptName: string;
 }
 
 export interface Post {
