@@ -28,6 +28,7 @@
 - modalLoading/drawerLoading改为调用内部的lock/unlock方法
 - 登录验证码 增加loading
 - DictEnum使用const代替enum
+- TinyMCE组件重构 移除冗余代码/功能 增加loading
 
 **BUG FIX**
 
