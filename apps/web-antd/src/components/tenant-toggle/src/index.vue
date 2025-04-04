@@ -11,7 +11,7 @@ import { useAccess } from '@vben/access';
 import { useTabs } from '@vben/hooks';
 import { $t } from '@vben/locales';
 
-import { message, Select } from 'ant-design-vue';
+import { message, Select, Spin } from 'ant-design-vue';
 import { storeToRefs } from 'pinia';
 
 import { tenantDynamicClear, tenantDynamicToggle } from '#/api/system/tenant';
@@ -35,6 +35,7 @@ const showToggle = computed<boolean>(() => {
 });
 
 onMounted(async () => {
+  // 没有超级管理员权限 不会调用接口
   if (!hasAccessByRoles(['superadmin'])) {
     return;
   }
@@ -42,10 +43,8 @@ onMounted(async () => {
 });
 
 const route = useRoute();
-
-const messageInstance = shallowRef<MessageType | null>();
-
 const { closeOtherTabs, refreshTab, closeAllTabs } = useTabs();
+
 async function close(checked: boolean) {
   // store设置状态
   setChecked(checked);
@@ -64,6 +63,11 @@ async function close(checked: boolean) {
 }
 
 const dictStore = useDictStore();
+// 用于清理上一条message
+const messageInstance = shallowRef<MessageType | null>();
+// loading加载中效果
+const loading = ref(false);
+
 /**
  * 选中租户的处理
  * @param tenantId tenantId
@@ -74,31 +78,46 @@ const onSelected: SelectHandler = async (tenantId: string, option: any) => {
     // createMessage.info('选择一致');
     return;
   }
-  await tenantDynamicToggle(tenantId);
-  lastSelected.value = tenantId;
+  try {
+    loading.value = true;
 
-  // 关闭之前的message 只保留一条
-  messageInstance.value?.();
-  messageInstance.value = message.success(
-    `${$t('component.tenantToggle.switch')} ${option.companyName}`,
-  );
+    await tenantDynamicToggle(tenantId);
+    lastSelected.value = tenantId;
 
-  close(true);
-  // 需要放在宏队列处理 直接清空页面由于没有字典会有样式问题(标签变成unknown)
-  setTimeout(() => dictStore.resetCache());
+    // 关闭之前的message 只保留一条
+    messageInstance.value?.();
+    messageInstance.value = message.success(
+      `${$t('component.tenantToggle.switch')} ${option.companyName}`,
+    );
+
+    close(true);
+    // 需要放在宏队列处理 直接清空页面由于没有字典会有样式问题(标签变成unknown)
+    setTimeout(() => dictStore.resetCache());
+  } catch (error) {
+    console.error(error);
+  } finally {
+    loading.value = false;
+  }
 };
 
 async function onDeselect() {
-  await tenantDynamicClear();
+  try {
+    loading.value = true;
 
-  // 关闭之前的message 只保留一条
-  messageInstance.value?.();
-  messageInstance.value = message.success($t('component.tenantToggle.reset'));
+    await tenantDynamicClear();
+    // 关闭之前的message 只保留一条
+    messageInstance.value?.();
+    messageInstance.value = message.success($t('component.tenantToggle.reset'));
 
-  lastSelected.value = '';
-  close(false);
-  // 需要放在宏队列处理 直接清空页面由于没有字典会有样式问题(标签变成unknown)
-  setTimeout(() => dictStore.resetCache());
+    lastSelected.value = '';
+    close(false);
+    // 需要放在宏队列处理 直接清空页面由于没有字典会有样式问题(标签变成unknown)
+    setTimeout(() => dictStore.resetCache());
+  } catch (error) {
+    console.error(error);
+  } finally {
+    loading.value = false;
+  }
 }
 
 /**
@@ -115,6 +134,7 @@ function filterOption(input: string, option: TenantOption) {
   <div v-if="showToggle" class="mr-[8px] hidden md:block">
     <Select
       v-model:value="selected"
+      :disabled="loading"
       :field-names="{ label: 'companyName', value: 'tenantId' }"
       :filter-option="filterOption"
       :options="tenantList"
@@ -124,7 +144,11 @@ function filterOption(input: string, option: TenantOption) {
       show-search
       @deselect="onDeselect"
       @select="onSelected"
-    />
+    >
+      <template v-if="loading" #suffixIcon>
+        <Spin size="small" spinning />
+      </template>
+    </Select>
   </div>
 </template>
 
