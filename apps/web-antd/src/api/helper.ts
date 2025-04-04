@@ -3,14 +3,14 @@ import { requestClient } from './request';
 /**
  * @description:  contentType
  */
-export enum ContentTypeEnum {
+export const ContentTypeEnum = {
   // form-data  upload
-  FORM_DATA = 'multipart/form-data;charset=UTF-8',
+  FORM_DATA: 'multipart/form-data;charset=UTF-8',
   // form-data qs
-  FORM_URLENCODED = 'application/x-www-form-urlencoded;charset=UTF-8',
+  FORM_URLENCODED: 'application/x-www-form-urlencoded;charset=UTF-8',
   // json
-  JSON = 'application/json;charset=UTF-8',
-}
+  JSON: 'application/json;charset=UTF-8',
+} as const;
 
 /**
  * 通用下载接口 封装一层
