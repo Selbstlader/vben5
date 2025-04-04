@@ -22,7 +22,7 @@
 **REFACTOR**
 
 - **文件上传/图片上传重构(破坏性更新 不兼容之前的api)**
-- **文件上传/图片上传**不再支持**url用法 强制使用ossId**
+- **文件上传/图片上传不再支持url用法 强制使用ossId**
 - TableSwitch组件重构
 - 管理员租户切换不再返回首页 直接刷新当前页(除特殊页面外会回到首页)
 - modalLoading/drawerLoading改为调用内部的lock/unlock方法
@@ -40,6 +40,8 @@
 - 字典管理 字典类型 表格选中行增加bold效果
 - 全局圆角修改 与antd保持一致
 - vditor(Markdown)升级3.10.9
+- 老版本的文件/图片上传将于下个版本移除
+- useDescription将于下个版本移除
 
 # 1.2.3
 
