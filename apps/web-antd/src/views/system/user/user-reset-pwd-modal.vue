@@ -1,36 +1,21 @@
 <script setup lang="ts">
 import type { ResetPwdParam, User } from '#/api/system/user/model';
 
+import { ref } from 'vue';
+
 import { useVbenModal, z } from '@vben/common-ui';
+
+import { Descriptions, DescriptionsItem } from 'ant-design-vue';
 
 import { useVbenForm } from '#/adapter/form';
 import { userResetPassword } from '#/api/system/user';
-import { Description, useDescription } from '#/components/description';
 
 const emit = defineEmits<{ reload: [] }>();
 
 const [BasicModal, modalApi] = useVbenModal({
-  onCancel: handleCancel,
+  onClosed: handleClosed,
   onConfirm: handleSubmit,
   onOpenChange: handleOpenChange,
-});
-
-const [registerDescription, { setDescProps }] = useDescription({
-  column: 1,
-  schema: [
-    {
-      field: 'userId',
-      label: '用户ID',
-    },
-    {
-      field: 'userName',
-      label: '用户名',
-    },
-    {
-      field: 'nickName',
-      label: '昵称',
-    },
-  ],
 });
 
 const [BasicForm, formApi] = useVbenForm({
@@ -64,13 +49,18 @@ const [BasicForm, formApi] = useVbenForm({
   },
 });
 
+const currentUser = ref<null | User>(null);
 async function handleOpenChange(open: boolean) {
   if (!open) {
     return null;
   }
+  modalApi.modalLoading(true);
+
   const { record } = modalApi.getData() as { record: User };
-  setDescProps({ data: record }, true);
+  currentUser.value = record;
   await formApi.setValues({ userId: record.userId });
+
+  modalApi.modalLoading(false);
 }
 
 async function handleSubmit() {
@@ -83,7 +73,7 @@ async function handleSubmit() {
     const data = await formApi.getValues();
     await userResetPassword(data as ResetPwdParam);
     emit('reload');
-    handleCancel();
+    handleClosed();
   } catch (error) {
     console.error(error);
   } finally {
@@ -91,9 +81,10 @@ async function handleSubmit() {
   }
 }
 
-async function handleCancel() {
+async function handleClosed() {
   modalApi.close();
   await formApi.resetForm();
+  currentUser.value = null;
 }
 </script>
 
@@ -104,7 +95,17 @@ async function handleCancel() {
     title="重置密码"
   >
     <div class="flex flex-col gap-[12px]">
-      <Description @register="registerDescription" />
+      <Descriptions v-if="currentUser" size="small" :column="1" bordered>
+        <DescriptionsItem label="用户ID">
+          {{ currentUser.userId }}
+        </DescriptionsItem>
+        <DescriptionsItem label="用户名">
+          {{ currentUser.userName }}
+        </DescriptionsItem>
+        <DescriptionsItem label="昵称">
+          {{ currentUser.nickName }}
+        </DescriptionsItem>
+      </Descriptions>
       <BasicForm />
     </div>
   </BasicModal>
