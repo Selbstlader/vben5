@@ -116,7 +116,7 @@ export function renderHttpMethodTag(type: string) {
   return <Tag color={color}>{title}</Tag>;
 }
 
-export function renderDictTag(value: string, dicts: DictData[]) {
+export function renderDictTag(value: number | string, dicts: DictData[]) {
   return <DictTag dicts={dicts} value={value}></DictTag>;
 }
 
@@ -155,7 +155,7 @@ export function renderDictTags(
  * @param dictName dictName
  * @returns tag
  */
-export function renderDict(value: string, dictName: string) {
+export function renderDict(value: number | string, dictName: string) {
   const dictInfo = getDictOptions(dictName);
   return renderDictTag(value, dictInfo);
 }
