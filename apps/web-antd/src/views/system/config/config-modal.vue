@@ -40,24 +40,28 @@ const [BasicModal, modalApi] = useVbenModal({
     if (!isOpen) {
       return null;
     }
-    modalApi.modalLoading(true);
+    try {
+      modalApi.lock(true);
 
-    const { id } = modalApi.getData() as { id?: number | string };
-    isUpdate.value = !!id;
+      const { id } = modalApi.getData() as { id?: number | string };
+      isUpdate.value = !!id;
 
-    if (isUpdate.value && id) {
-      const record = await configInfo(id);
-      await formApi.setValues(record);
+      if (isUpdate.value && id) {
+        const record = await configInfo(id);
+        await formApi.setValues(record);
+      }
+      await updateInitialized();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      modalApi.lock(false);
     }
-    await updateInitialized();
-
-    modalApi.modalLoading(false);
   },
 });
 
 async function handleConfirm() {
   try {
-    modalApi.modalLoading(true);
+    modalApi.lock(true);
     const { valid } = await formApi.validate();
     if (!valid) {
       return;
@@ -70,7 +74,7 @@ async function handleConfirm() {
   } catch (error) {
     console.error(error);
   } finally {
-    modalApi.modalLoading(false);
+    modalApi.lock(false);
   }
 }
 
