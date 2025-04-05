@@ -33,6 +33,8 @@ const defaultOptions: Options = {
   autoCrop: true,
   background: true,
   center: true,
+  // 需要设置为false 否则会自动拼接timestamp 导致私有桶sign错误
+  // 需要配合img crossorigin='anonymous'使用(默认已经做了处理)
   checkCrossOrigin: false,
   checkOrientation: true,
   cropBoxMovable: true,

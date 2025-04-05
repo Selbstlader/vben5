@@ -40,6 +40,8 @@
 - 重新登录 字典会unknown的情况[详细分析](https://gitee.com/dapppp/ruoyi-plus-vben5/issues/IBY27D)
 - 测试菜单 请假申请 选中删除 需要根据状态判断
 - 修复文件/图片在Safari中无法上传 file-type库与Safari不兼容导致
+- 头像裁剪 图片加载失败一直处于loading无法上传
+- 头像裁剪 私有桶会拼接timestamp参数导致sign计算异常无法上传 感谢cropperjs作者 https://github.com/fengyuanchen/cropperjs/issues/1230
 
 **OTHER**
 
