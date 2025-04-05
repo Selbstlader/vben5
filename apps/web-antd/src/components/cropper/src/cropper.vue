@@ -97,8 +97,12 @@ async function init() {
     return;
   }
   // 判断是否为正常访问的图片
-  const resp = await fetch(props.src);
-  if (resp.status !== 200) {
+  try {
+    const resp = await fetch(props.src);
+    if (resp.status !== 200) {
+      emit('readyError');
+    }
+  } catch {
     emit('readyError');
   }
   cropper.value = new Cropper(imgEl, {
