@@ -26,14 +26,14 @@ const props = defineProps({
   src: { required: true, type: String },
 });
 
-const emit = defineEmits(['cropend', 'ready', 'cropendError']);
+const emit = defineEmits(['cropend', 'ready', 'cropendError', 'readyError']);
 
 const defaultOptions: Options = {
   aspectRatio: 1,
   autoCrop: true,
   background: true,
   center: true,
-  checkCrossOrigin: true,
+  checkCrossOrigin: false,
   checkOrientation: true,
   cropBoxMovable: true,
   cropBoxResizable: true,
@@ -93,6 +93,11 @@ async function init() {
   const imgEl = unref(imgElRef);
   if (!imgEl) {
     return;
+  }
+  // 判断是否为正常访问的图片
+  const resp = await fetch(props.src);
+  if (resp.status !== 200) {
+    emit('readyError');
   }
   cropper.value = new Cropper(imgEl, {
     ...defaultOptions,

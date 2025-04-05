@@ -84,6 +84,10 @@ function handleReady(cropperInstance: Cropper) {
   modalLoading(false);
 }
 
+function handleReadyError() {
+  modalLoading(false);
+}
+
 function handlerToolbar(event: string, arg?: number) {
   if (event === 'scaleX') {
     scaleX = arg = scaleX === -1 ? 1 : -1;
@@ -128,9 +132,11 @@ async function handleOk() {
             v-if="src"
             :circled="circled"
             :src="src"
+            crossorigin="anonymous"
             height="300px"
             @cropend="handleCropend"
             @ready="handleReady"
+            @ready-error="handleReadyError"
           />
         </div>
 
@@ -322,7 +328,8 @@ async function handleOk() {
   &-cropper {
     height: 300px;
     background: #eee;
-    background-image: linear-gradient(
+    background-image:
+      linear-gradient(
         45deg,
         rgb(0 0 0 / 25%) 25%,
         transparent 0,
