@@ -102,11 +102,13 @@ export class DrawerApi {
   }
 
   /**
-   * 为了兼容之前的代码 >=1.3.0调整为调用内部的lock/unlock方法
+   * loading和lock的区别
+   * loading允许关闭窗口
+   * lock不允许关闭窗口
    * @param loading 是否loading
    */
   drawerLoading(loading: boolean) {
-    this.setState({ submitting: loading });
+    this.setState({ confirmLoading: loading, loading });
   }
 
   getData<T extends object = Record<string, any>>() {
