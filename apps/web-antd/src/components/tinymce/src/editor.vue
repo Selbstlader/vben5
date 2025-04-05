@@ -194,6 +194,15 @@ const events = computed(() => {
 </template>
 
 <style lang="scss">
+/***
+由于modal/drawer的zIndex升级后为2000
+这里会造成遮挡 修改为更高的zIndex
+*/
+.tox.tox-silver-sink.tox-tinymce-aux {
+  /** 该样式默认为1300的zIndex  */
+  z-index: 2025;
+}
+
 .app-tinymce {
   /**
   隐藏右上角upgrade按钮
