@@ -139,6 +139,7 @@ function filterOption(input: string, option: TenantOption) {
       :filter-option="filterOption"
       :options="tenantList"
       :placeholder="$t('component.tenantToggle.placeholder')"
+      :dropdown-style="{ position: 'fixed' }"
       allow-clear
       class="w-60"
       show-search
