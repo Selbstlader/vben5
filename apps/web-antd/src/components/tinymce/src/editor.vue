@@ -2,7 +2,7 @@
 import type { IPropTypes } from '@tinymce/tinymce-vue/lib/cjs/main/ts/components/EditorPropTypes';
 import type { Editor as EditorType } from 'tinymce/tinymce';
 
-import type { UploadResult } from '#/api';
+import type { AxiosProgressEvent, UploadResult } from '#/api';
 
 import { computed, nextTick, ref, shallowRef, useAttrs, watch } from 'vue';
 
@@ -121,6 +121,7 @@ const initOptions = computed((): InitOptions => {
      * images_upload_handler启用时为上传
      */
     paste_data_images: true,
+    images_file_types: 'jpeg,jpg,png,gif,bmp,webp',
     plugins,
     quickbars_selection_toolbar:
       'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
@@ -133,12 +134,18 @@ const initOptions = computed((): InitOptions => {
      * @param blobInfo
      * 大坑 不要调用这两个函数  success failure:
      * 使用resolve/reject代替
+     * (PS: 新版已经没有success failure)
      */
-    images_upload_handler: (blobInfo) => {
+    images_upload_handler: (blobInfo, progress) => {
       return new Promise((resolve, reject) => {
         const file = blobInfo.blob();
         // const filename = blobInfo.filename();
-        uploadApi(file)
+        // 进度条事件
+        const progressEvent: AxiosProgressEvent = (e) => {
+          const percent = Math.trunc((e.loaded / e.total!) * 100);
+          progress(percent);
+        };
+        uploadApi(file, { onUploadProgress: progressEvent })
           .then((response) => {
             const { url } = response as unknown as UploadResult;
             console.log('tinymce上传图片:', url);
@@ -146,7 +153,8 @@ const initOptions = computed((): InitOptions => {
           })
           .catch((error) => {
             console.error('tinymce上传图片失败:', error);
-            reject(error.message);
+            // eslint-disable-next-line prefer-promise-reject-errors
+            reject({ message: error.message, remove: true });
           });
       });
     },
