@@ -113,9 +113,11 @@ const gridOptions: VxeGridProps = {
       },
     },
   },
+  cellConfig: {
+    height: 48,
+  },
   rowConfig: {
     keyField: 'userId',
-    height: 48,
   },
   id: 'system-user-index',
 };

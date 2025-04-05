@@ -83,9 +83,11 @@ const gridOptions: VxeGridProps = {
       },
     },
   },
+  cellConfig: {
+    height: 65,
+  },
   rowConfig: {
     keyField: 'ossId',
-    height: 65,
   },
   sortConfig: {
     // 远程排序
