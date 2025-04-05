@@ -24,7 +24,7 @@ export function getVxePopupContainer(
   _node?: HTMLElement,
   id?: string,
 ): HTMLElement {
-  let selector = 'div.vxe-table--body-wrapper.body--wrapper';
+  let selector = '.vxe-table--row-expanded-wrapper';
   if (id) {
     selector = `div#${id} ${selector}`;
   }
