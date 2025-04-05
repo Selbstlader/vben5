@@ -7,6 +7,7 @@ import { cloneDeep } from '@vben/utils';
 
 import { useVbenForm } from '#/adapter/form';
 import { configAdd, configInfo, configUpdate } from '#/api/system/config';
+import { defaultFormValueGetter, useBeforeCloseDiff } from '#/utils/popup';
 
 import { modalSchema } from './data';
 
@@ -25,9 +26,15 @@ const [BasicForm, formApi] = useVbenForm({
   showDefaultActions: false,
 });
 
+const { onBeforeClose, updateInitialized, setSubmitted } = useBeforeCloseDiff({
+  initializedGetter: defaultFormValueGetter(formApi),
+  currentGetter: defaultFormValueGetter(formApi),
+});
+
 const [BasicModal, modalApi] = useVbenModal({
   fullscreenButton: false,
-  onCancel: handleCancel,
+  onBeforeClose,
+  onClosed: handleClosed,
   onConfirm: handleConfirm,
   onOpenChange: async (isOpen) => {
     if (!isOpen) {
@@ -42,6 +49,7 @@ const [BasicModal, modalApi] = useVbenModal({
       const record = await configInfo(id);
       await formApi.setValues(record);
     }
+    await updateInitialized();
 
     modalApi.modalLoading(false);
   },
@@ -56,8 +64,9 @@ async function handleConfirm() {
     }
     const data = cloneDeep(await formApi.getValues());
     await (isUpdate.value ? configUpdate(data) : configAdd(data));
+    setSubmitted();
     emit('reload');
-    await handleCancel();
+    modalApi.close();
   } catch (error) {
     console.error(error);
   } finally {
@@ -65,14 +74,13 @@ async function handleConfirm() {
   }
 }
 
-async function handleCancel() {
-  modalApi.close();
+async function handleClosed() {
   await formApi.resetForm();
 }
 </script>
 
 <template>
-  <BasicModal :close-on-click-modal="false" :title="title" class="w-[550px]">
+  <BasicModal :title="title" class="w-[550px]">
     <BasicForm />
   </BasicModal>
 </template>
