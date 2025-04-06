@@ -42,7 +42,7 @@
 - 修复文件/图片在Safari中无法上传 file-type库与Safari不兼容导致
 - 头像裁剪 图片加载失败一直处于loading无法上传
 - 头像裁剪 私有桶会拼接timestamp参数导致sign计算异常无法上传 感谢cropperjs作者 https://github.com/fengyuanchen/cropperjs/issues/1230
-- 租户选择下拉框会跟随body滚动
+- 租户选择下拉框会跟随body滚动(将下拉框样式的默认absolute改为fixed)
 
 **OTHER**
 
