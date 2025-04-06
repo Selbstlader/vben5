@@ -21,9 +21,11 @@ export function getVxePopupContainer(_node?: HTMLElement): HTMLElement {
    * 如果是固定列的情况直接返回body 但是这样不会跟随滚动(个人认为这属于极限场景)
    * 如果有更好的办法解决 请告知
    */
-  if (_node?.closest('td.fixed--width')) {
-    return document.body;
-  }
-  // 返回parent元素
+  // if (_node?.closest('td.fixed--width')) {
+  //   return document.body;
+  // }
+  /**
+   * 兼容以前代码 先返回body 这样会造成无法跟随滚动
+   */
   return _node?.parentElement ?? document.body;
 }

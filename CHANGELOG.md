@@ -51,6 +51,7 @@
 - vditor(Markdown)升级3.10.9
 - 老版本的文件/图片上传将于下个版本移除
 - useDescription将于下个版本移除
+- getVxePopupContainer与新版Vxe不兼容 先返回body(会导致滚动不跟随)后续版本再优化
 
 # 1.2.3
 
