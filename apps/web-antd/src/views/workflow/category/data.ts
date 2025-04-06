@@ -19,7 +19,6 @@ export const columns: VxeGridProps['columns'] = [
     field: 'categoryName',
     title: '分类名称',
     treeNode: true,
-    align: 'left',
   },
   {
     field: 'orderNum',
