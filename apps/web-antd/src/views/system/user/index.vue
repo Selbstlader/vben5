@@ -265,10 +265,7 @@ const { hasAccessByCodes } = useAccess();
                 </ghost-button>
               </Popconfirm>
             </Space>
-            <Dropdown
-              :get-popup-container="getVxePopupContainer"
-              placement="bottomRight"
-            >
+            <Dropdown placement="bottomRight">
               <template #overlay>
                 <Menu>
                   <MenuItem key="1" @click="handleUserInfo(row)">
