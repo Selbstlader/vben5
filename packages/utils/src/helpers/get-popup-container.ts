@@ -27,5 +27,5 @@ export function getVxePopupContainer(_node?: HTMLElement): HTMLElement {
   /**
    * 兼容以前代码 先返回body 这样会造成无法跟随滚动
    */
-  return _node?.parentElement ?? document.body;
+  return document.body;
 }
