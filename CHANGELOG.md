@@ -1,3 +1,13 @@
+# 1.3.1
+
+**BUG FIX**
+
+- getVxePopupContainer逻辑调整 解决表格固定高度展开不全的问题
+
+**FEATURES**
+
+- 字典渲染支持loading(length为0情况)
+
 # 1.3.0
 
 注意: 如果你使用老版本的`文件上传`/`图片上传` 可暂时使用
