@@ -26,10 +26,11 @@ const [BasicForm, formApi] = useVbenForm({
   showDefaultActions: false,
 });
 
-const { onBeforeClose, updateInitialized, setSubmitted } = useBeforeCloseDiff({
-  initializedGetter: defaultFormValueGetter(formApi),
-  currentGetter: defaultFormValueGetter(formApi),
-});
+const { onBeforeClose, updateInitialized, setSubmitted, resetInitialized } =
+  useBeforeCloseDiff({
+    initializedGetter: defaultFormValueGetter(formApi),
+    currentGetter: defaultFormValueGetter(formApi),
+  });
 
 const [BasicModal, modalApi] = useVbenModal({
   fullscreenButton: false,
@@ -40,22 +41,18 @@ const [BasicModal, modalApi] = useVbenModal({
     if (!isOpen) {
       return null;
     }
-    try {
-      modalApi.lock(true);
+    modalApi.modalLoading(true);
 
-      const { id } = modalApi.getData() as { id?: number | string };
-      isUpdate.value = !!id;
+    const { id } = modalApi.getData() as { id?: number | string };
+    isUpdate.value = !!id;
 
-      if (isUpdate.value && id) {
-        const record = await configInfo(id);
-        await formApi.setValues(record);
-      }
-      await updateInitialized();
-    } catch (error) {
-      console.error(error);
-    } finally {
-      modalApi.lock(false);
+    if (isUpdate.value && id) {
+      const record = await configInfo(id);
+      await formApi.setValues(record);
     }
+    await updateInitialized();
+
+    modalApi.modalLoading(false);
   },
 });
 
@@ -80,6 +77,7 @@ async function handleConfirm() {
 
 async function handleClosed() {
   await formApi.resetForm();
+  resetInitialized();
 }
 </script>
 

@@ -47,6 +47,11 @@ export function useBeforeCloseDiff(props: BeforeCloseDiffProps) {
     isInitialized.value = true;
   }
 
+  function resetInitialized() {
+    initialized.value = '';
+    isInitialized.value = false;
+  }
+
   function setSubmitted() {
     isSubmitted.value = true;
   }
@@ -101,6 +106,7 @@ export function useBeforeCloseDiff(props: BeforeCloseDiffProps) {
     onBeforeClose,
     updateInitialized,
     setSubmitted,
+    resetInitialized,
   };
 }
 
