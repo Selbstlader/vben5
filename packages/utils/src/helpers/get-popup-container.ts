@@ -52,11 +52,13 @@ export function getVxePopupContainer(
     return tableContainer as HTMLElement;
   }
 
-  // 非固定列情况下，为了保证滚动跟随，找到最近的单元格或行
-  const cell =
-    node.closest('.vxe-cell') || node.closest('td') || node.closest('tr');
-  if (cell) {
-    return cell as HTMLElement;
+  /**
+   * 设置行高度需要特殊处理
+   */
+  const fixedHeightElement = node.closest('td.col--cs-height');
+  if (fixedHeightElement) {
+    // 默认为hidden 显示异常
+    (fixedHeightElement as HTMLTableCellElement).style.overflow = 'visible';
   }
 
   // 兜底方案：使用元素的父节点或文档体
