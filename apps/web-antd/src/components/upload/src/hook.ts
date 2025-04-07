@@ -358,8 +358,7 @@ export function useUpload(
         );
       }
     },
-    // TODO: deepWatch参数需要删除
-    { immediate: true, deep: props.deepWatch },
+    { immediate: true },
   );
 
   return {

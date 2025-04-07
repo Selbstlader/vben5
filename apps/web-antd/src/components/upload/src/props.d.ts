@@ -88,13 +88,6 @@ export interface BaseUploadProps {
    */
   enableDragUpload?: boolean;
   /**
-   * 是否开启深度监听
-   * 默认外部的数组地址重新改变才会触发watch 不会监听内部元素的变化
-   * 开启后 无论内部还是外部改变都会触发查询信息接口(包括上传后, 删除等操作都会触发)
-   * @default false
-   */
-  deepWatch?: boolean;
-  /**
    * 当ossId查询不到文件信息时  比如被删除了
    * 是否保留列表对应的ossId 默认不保留
    * @default false
