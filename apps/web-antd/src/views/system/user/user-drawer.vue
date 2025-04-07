@@ -18,6 +18,7 @@ import {
   userAdd,
   userUpdate,
 } from '#/api/system/user';
+import { defaultFormValueGetter, useBeforeCloseDiff } from '#/utils/popup';
 import { authScopeOptions } from '#/views/system/role/data';
 
 import { drawerSchema } from './data';
@@ -134,8 +135,15 @@ async function loadDefaultPassword(update: boolean) {
   }
 }
 
+const { onBeforeClose, updateInitialized, setSubmitted, resetInitialized } =
+  useBeforeCloseDiff({
+    initializedGetter: defaultFormValueGetter(formApi),
+    currentGetter: defaultFormValueGetter(formApi),
+  });
+
 const [BasicDrawer, drawerApi] = useVbenDrawer({
-  onCancel: handleCancel,
+  onBeforeClose,
+  onClosed: handleClosed,
   onConfirm: handleConfirm,
   async onOpenChange(isOpen) {
     if (!isOpen) {
@@ -149,6 +157,7 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
       return null;
     }
     drawerApi.drawerLoading(true);
+
     const { id } = drawerApi.getData() as { id?: number | string };
     isUpdate.value = !!id;
     /** update时 禁用用户名修改 不显示密码框 */
@@ -199,36 +208,39 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
         setupPostOptions(user.deptId),
       ]);
     }
+    await updateInitialized();
+
     drawerApi.drawerLoading(false);
   },
 });
 
 async function handleConfirm() {
   try {
-    drawerApi.drawerLoading(true);
+    drawerApi.lock(true);
     const { valid } = await formApi.validate();
     if (!valid) {
       return;
     }
     const data = cloneDeep(await formApi.getValues());
     await (isUpdate.value ? userUpdate(data) : userAdd(data));
+    setSubmitted();
     emit('reload');
-    await handleCancel();
+    drawerApi.close();
   } catch (error) {
     console.error(error);
   } finally {
-    drawerApi.drawerLoading(false);
+    drawerApi.lock(false);
   }
 }
 
-async function handleCancel() {
-  drawerApi.close();
-  await formApi.resetForm();
+async function handleClosed() {
+  formApi.resetForm();
+  resetInitialized();
 }
 </script>
 
 <template>
-  <BasicDrawer :close-on-click-modal="false" :title="title" class="w-[600px]">
+  <BasicDrawer :title="title" class="w-[600px]">
     <BasicForm />
   </BasicDrawer>
 </template>
