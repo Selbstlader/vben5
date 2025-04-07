@@ -5,7 +5,7 @@ import type { CustomGetter } from '#/components/upload/src/props';
 
 import { h, ref } from 'vue';
 
-import { CodeMirror, Page } from '@vben/common-ui';
+import { CodeMirror, Page, useVbenModal } from '@vben/common-ui';
 
 import { useClipboard } from '@vueuse/core';
 import { Alert, Card, Modal, RadioGroup, Switch } from 'ant-design-vue';
@@ -14,6 +14,7 @@ import { FileUpload, ImageUpload } from '#/components/upload';
 
 import { useFileType, useImageType } from './hook';
 import sql from './insert.sql?raw';
+import uploadModal from './upload-modal.vue';
 
 const singleImageId = ref('1905537674682916865');
 const singleFileId = ref('1905191167882518529');
@@ -53,6 +54,10 @@ const customThumbnailUrl: CustomGetter<undefined> = () => {
 const { copy } = useClipboard({ legacy: true });
 
 const animationEnable = ref(false);
+
+const [UploadModal, uploadModalApi] = useVbenModal({
+  connectedComponent: uploadModal,
+});
 </script>
 
 <template>
@@ -63,6 +68,10 @@ const animationEnable = ref(false);
       <CodeMirror class="mt-2" v-model="sql" language="sql" readonly />
     </Card>
     <div class="grid grid-cols-2 gap-4">
+      <Card title="表单上传">
+        <a-button @click="uploadModalApi.open()">打开</a-button>
+        <UploadModal />
+      </Card>
       <Card title="单上传, 会绑定为string" size="small">
         <ImageUpload v-model:value="singleImageId" />
         当前绑定值: {{ singleImageId }}

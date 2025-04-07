@@ -204,7 +204,12 @@ export function useUpload(
         if (props.maxCount === 1) {
           bindValue.value = ossId;
         } else {
-          (bindValue.value as string[]).push(ossId);
+          // 给默认值
+          if (!Array.isArray(bindValue.value)) {
+            bindValue.value = [];
+          }
+          // 直接使用.value无法触发useForm的更新(原生是正常的) 需要修改地址
+          bindValue.value = [...bindValue.value, ossId];
         }
         break;
       }
@@ -344,11 +349,16 @@ export function useUpload(
         !props.keepMissingId &&
         props.maxCount !== 1
       ) {
-        bindValue.value = (bindValue.value as string[]).filter((ossId) =>
+        // 给默认值
+        if (!Array.isArray(bindValue.value)) {
+          bindValue.value = [];
+        }
+        bindValue.value = bindValue.value.filter((ossId) =>
           resp.map((res) => res.ossId).includes(ossId),
         );
       }
     },
+    // TODO: deepWatch参数需要删除
     { immediate: true, deep: props.deepWatch },
   );
 
