@@ -12,20 +12,53 @@ export function getPopupContainer(node?: HTMLElement): HTMLElement {
 /**
  * VxeTable专用弹窗层
  * 解决问题: https://gitee.com/dapppp/ruoyi-plus-vben5/issues/IB1DM3
- * @param _node 触发的元素
+ * @param node 触发的元素
+ * @param tableId 表格ID，用于区分不同表格（可选）
  * @returns 挂载节点
  */
-export function getVxePopupContainer(_node?: HTMLElement): HTMLElement {
-  /**
-   * 需要区分是否为固定列情况 如果为固定列返回parent会导致展开宽度不正常
-   * 如果是固定列的情况直接返回body 但是这样不会跟随滚动(个人认为这属于极限场景)
-   * 如果有更好的办法解决 请告知
-   */
-  // if (_node?.closest('td.fixed--width')) {
-  //   return document.body;
-  // }
-  /**
-   * 兼容以前代码 先返回body 这样会造成无法跟随滚动
-   */
-  return document.body;
+export function getVxePopupContainer(
+  node?: HTMLElement,
+  tableId?: string,
+): HTMLElement {
+  if (!node) return document.body;
+
+  // 检查是否在固定列内
+  const isInFixedColumn =
+    node.closest('.vxe-table--fixed-wrapper') ||
+    node.closest('.vxe-table--fixed-left-wrapper') ||
+    node.closest('.vxe-table--fixed-right-wrapper');
+
+  // 如果在固定列内，则挂载到固定列容器
+  if (isInFixedColumn) {
+    // 优先查找表格容器及父级容器
+    const tableContainer =
+      // 查找通用固定列容器
+      node.closest('.vxe-table--fixed-wrapper') ||
+      // 查找固定列容器（左侧固定列）
+      node.closest('.vxe-table--fixed-left-wrapper') ||
+      // 查找固定列容器（右侧固定列）
+      node.closest('.vxe-table--fixed-right-wrapper');
+
+    // 如果指定了tableId，可以查找特定ID的表格
+    if (tableId && tableContainer) {
+      const specificTable = tableContainer.closest(
+        `[data-table-id="${tableId}"]`,
+      );
+      if (specificTable) {
+        return specificTable as HTMLElement;
+      }
+    }
+
+    return tableContainer as HTMLElement;
+  }
+
+  // 非固定列情况下，为了保证滚动跟随，找到最近的单元格或行
+  const cell =
+    node.closest('.vxe-cell') || node.closest('td') || node.closest('tr');
+  if (cell) {
+    return cell as HTMLElement;
+  }
+
+  // 兜底方案：使用元素的父节点或文档体
+  return (node.parentNode as HTMLElement) || document.body;
 }
