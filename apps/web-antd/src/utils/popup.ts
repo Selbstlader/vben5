@@ -88,7 +88,7 @@ export function useBeforeCloseDiff(props: BeforeCloseDiffProps) {
       return new Promise<boolean>((resolve) => {
         Modal.confirm({
           title: $t('pages.common.tip'),
-          content: $t('您有未保存的更改，确认要退出吗？'),
+          content: $t('pages.common.beforeCloseTip'),
           centered: true,
           okButtonProps: { danger: true },
           cancelText: $t('common.cancel'),

@@ -21,6 +21,7 @@
     "preview": "预览",
     "tip": "提示",
     "enable": "启用",
-    "disable": "禁用"
+    "disable": "禁用",
+    "beforeCloseTip": "您有未保存的更改，确认要退出吗？"
   }
 }
