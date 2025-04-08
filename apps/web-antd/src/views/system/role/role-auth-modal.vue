@@ -9,6 +9,7 @@ import { cloneDeep } from '@vben/utils';
 import { useVbenForm } from '#/adapter/form';
 import { roleDataScope, roleDeptTree, roleInfo } from '#/api/system/role';
 import { TreeSelectPanel } from '#/components/tree';
+import { defaultFormValueGetter, useBeforeCloseDiff } from '#/utils/popup';
 
 import { authModalSchemas } from './data';
 
@@ -33,9 +34,25 @@ async function setupDeptTree(id: number | string) {
   deptTree.value = resp.depts;
 }
 
+async function customFormValueGetter() {
+  const v = await defaultFormValueGetter(formApi)();
+  // 获取勾选信息
+  const menuIds = deptSelectRef.value?.[0]?.getCheckedKeys() ?? [];
+  const mixStr = v + menuIds.join(',');
+  return mixStr;
+}
+
+const { onBeforeClose, markInitialized, resetInitialized } = useBeforeCloseDiff(
+  {
+    initializedGetter: customFormValueGetter,
+    currentGetter: customFormValueGetter,
+  },
+);
+
 const [BasicModal, modalApi] = useVbenModal({
   fullscreenButton: false,
-  onCancel: handleCancel,
+  onBeforeClose,
+  onCancel: handleClosed,
   onConfirm: handleConfirm,
   onOpenChange: async (isOpen) => {
     if (!isOpen) {
@@ -48,6 +65,7 @@ const [BasicModal, modalApi] = useVbenModal({
     setupDeptTree(id);
     const record = await roleInfo(id);
     await formApi.setValues(record);
+    markInitialized();
 
     modalApi.modalLoading(false);
   },
@@ -60,7 +78,7 @@ const deptSelectRef = ref();
 
 async function handleConfirm() {
   try {
-    modalApi.modalLoading(true);
+    modalApi.lock(true);
     const { valid } = await formApi.validate();
     if (!valid) {
       return;
@@ -75,18 +93,19 @@ async function handleConfirm() {
       data.deptIds = [];
     }
     await roleDataScope(data);
+    resetInitialized();
     emit('reload');
-    await handleCancel();
+    modalApi.close();
   } catch (error) {
     console.error(error);
   } finally {
-    modalApi.modalLoading(false);
+    modalApi.lock(false);
   }
 }
 
-async function handleCancel() {
-  modalApi.close();
+async function handleClosed() {
   await formApi.resetForm();
+  resetInitialized();
 }
 
 /**
@@ -99,11 +118,7 @@ function handleCheckStrictlyChange(value: boolean) {
 </script>
 
 <template>
-  <BasicModal
-    :close-on-click-modal="false"
-    class="min-h-[600px] w-[550px]"
-    title="分配权限"
-  >
+  <BasicModal class="min-h-[600px] w-[550px]" title="分配权限">
     <BasicForm>
       <template #deptIds="slotProps">
         <TreeSelectPanel
