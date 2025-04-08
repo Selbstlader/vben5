@@ -1,3 +1,6 @@
+<!--
+TODO: 这个页面要优化逻辑
+-->
 <script setup lang="ts">
 import type { MenuOption } from '#/api/system/menu/model';
 
@@ -11,6 +14,7 @@ import { useVbenForm } from '#/adapter/form';
 import { menuTreeSelect, roleMenuTreeSelect } from '#/api/system/menu';
 import { roleAdd, roleInfo, roleUpdate } from '#/api/system/role';
 import { MenuSelectTable } from '#/components/tree';
+import { defaultFormValueGetter, useBeforeCloseDiff } from '#/utils/popup';
 
 import { drawerSchema } from './data';
 
@@ -62,14 +66,31 @@ async function setupMenuTree(id?: number | string) {
   }
 }
 
+async function customFormValueGetter() {
+  const v = await defaultFormValueGetter(formApi)();
+  // 获取勾选信息
+  const menuIds = menuSelectRef.value?.getCheckedKeys?.() ?? [];
+  const mixStr = v + menuIds.join(',');
+  return mixStr;
+}
+
+const { onBeforeClose, markInitialized, resetInitialized } = useBeforeCloseDiff(
+  {
+    initializedGetter: customFormValueGetter,
+    currentGetter: customFormValueGetter,
+  },
+);
+
 const [BasicDrawer, drawerApi] = useVbenDrawer({
-  onCancel: handleCancel,
+  onBeforeClose,
+  onClosed: handleClosed,
   onConfirm: handleConfirm,
   async onOpenChange(isOpen) {
     if (!isOpen) {
       return null;
     }
     drawerApi.drawerLoading(true);
+
     const { id } = drawerApi.getData() as { id?: number | string };
     isUpdate.value = !!id;
 
@@ -79,6 +100,7 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
     }
     // init菜单 注意顺序要放在赋值record之后 内部watch会依赖record
     await setupMenuTree(id);
+    await markInitialized();
 
     drawerApi.drawerLoading(false);
   },
@@ -87,7 +109,8 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
 const menuSelectRef = ref<InstanceType<typeof MenuSelectTable>>();
 async function handleConfirm() {
   try {
-    drawerApi.drawerLoading(true);
+    drawerApi.lock(true);
+
     const { valid } = await formApi.validate();
     if (!valid) {
       return;
@@ -99,17 +122,18 @@ async function handleConfirm() {
     data.menuIds = menuIds;
     await (isUpdate.value ? roleUpdate(data) : roleAdd(data));
     emit('reload');
-    await handleCancel();
+    resetInitialized();
+    drawerApi.close();
   } catch (error) {
     console.error(error);
   } finally {
-    drawerApi.drawerLoading(false);
+    drawerApi.lock(false);
   }
 }
 
-async function handleCancel() {
-  drawerApi.close();
+async function handleClosed() {
   await formApi.resetForm();
+  resetInitialized();
 }
 
 /**
@@ -122,7 +146,7 @@ function handleMenuCheckStrictlyChange(value: boolean) {
 </script>
 
 <template>
-  <BasicDrawer :close-on-click-modal="false" :title="title" class="w-[800px]">
+  <BasicDrawer :title="title" class="w-[800px]">
     <BasicForm>
       <template #menuIds="slotProps">
         <div class="h-[600px] w-full">
