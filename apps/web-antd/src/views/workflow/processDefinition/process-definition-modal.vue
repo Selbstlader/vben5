@@ -12,6 +12,7 @@ import {
   workflowDefinitionInfo,
   workflowDefinitionUpdate,
 } from '#/api/workflow/definition';
+import { defaultFormValueGetter, useBeforeCloseDiff } from '#/utils/popup';
 
 import { modalSchema } from './data';
 
@@ -65,8 +66,16 @@ async function setupCategorySelect() {
   ]);
 }
 
+const { onBeforeClose, markInitialized, resetInitialized } = useBeforeCloseDiff(
+  {
+    initializedGetter: defaultFormValueGetter(formApi),
+    currentGetter: defaultFormValueGetter(formApi),
+  },
+);
+
 const [BasicDrawer, modalApi] = useVbenModal({
-  onCancel: handleCancel,
+  onBeforeClose,
+  onCancel: handleClosed,
   onConfirm: handleConfirm,
   async onOpenChange(isOpen) {
     if (!isOpen) {
@@ -83,6 +92,7 @@ const [BasicDrawer, modalApi] = useVbenModal({
       const record = await workflowDefinitionInfo(id);
       await formApi.setValues(record);
     }
+    await markInitialized();
 
     modalApi.modalLoading(false);
   },
@@ -90,7 +100,7 @@ const [BasicDrawer, modalApi] = useVbenModal({
 
 async function handleConfirm() {
   try {
-    modalApi.modalLoading(true);
+    modalApi.lock(true);
     const { valid } = await formApi.validate();
     if (!valid) {
       return;
@@ -103,17 +113,18 @@ async function handleConfirm() {
       await workflowDefinitionAdd(data);
       emit('reload', 'add');
     }
-    await handleCancel();
+    resetInitialized();
+    modalApi.close();
   } catch (error) {
     console.error(error);
   } finally {
-    modalApi.modalLoading(false);
+    modalApi.lock(false);
   }
 }
 
-async function handleCancel() {
-  modalApi.close();
+async function handleClosed() {
   await formApi.resetForm();
+  resetInitialized();
 }
 </script>
 
