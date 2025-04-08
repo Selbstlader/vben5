@@ -9,6 +9,7 @@ import { useVbenForm } from '#/adapter/form';
 import { tenantAdd, tenantInfo, tenantUpdate } from '#/api/system/tenant';
 import { packageSelectList } from '#/api/system/tenant-package';
 import { useTenantStore } from '#/store/tenant';
+import { defaultFormValueGetter, useBeforeCloseDiff } from '#/utils/popup';
 
 import { drawerSchema } from './data';
 
@@ -51,22 +52,33 @@ async function setupPackageSelect() {
   ]);
 }
 
+const { onBeforeClose, markInitialized, resetInitialized } = useBeforeCloseDiff(
+  {
+    initializedGetter: defaultFormValueGetter(formApi),
+    currentGetter: defaultFormValueGetter(formApi),
+  },
+);
+
 const [BasicDrawer, drawerApi] = useVbenDrawer({
-  onCancel: handleCancel,
+  onBeforeClose,
+  onClosed: handleClosed,
   onConfirm: handleConfirm,
   async onOpenChange(isOpen) {
     if (!isOpen) {
       return null;
     }
     drawerApi.drawerLoading(true);
+
     const { id } = drawerApi.getData() as { id?: number | string };
     isUpdate.value = !!id;
     // 初始化
     await setupPackageSelect();
+
     if (isUpdate.value && id) {
       const record = await tenantInfo(id);
       await formApi.setValues(record);
     }
+
     formApi.updateSchema([
       {
         fieldName: 'packageId',
@@ -75,6 +87,8 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
         },
       },
     ]);
+    await markInitialized();
+
     drawerApi.drawerLoading(false);
   },
 });
@@ -82,32 +96,33 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
 const tenantStore = useTenantStore();
 async function handleConfirm() {
   try {
-    drawerApi.drawerLoading(true);
+    drawerApi.lock(true);
     const { valid } = await formApi.validate();
     if (!valid) {
       return;
     }
     const data = cloneDeep(await formApi.getValues());
     await (isUpdate.value ? tenantUpdate(data) : tenantAdd(data));
+    resetInitialized();
     emit('reload');
-    await handleCancel();
+    drawerApi.close();
     // 重新加载租户信息
     tenantStore.initTenant();
   } catch (error) {
     console.error(error);
   } finally {
-    drawerApi.drawerLoading(false);
+    drawerApi.lock(false);
   }
 }
 
-async function handleCancel() {
-  drawerApi.close();
+async function handleClosed() {
   await formApi.resetForm();
+  resetInitialized();
 }
 </script>
 
 <template>
-  <BasicDrawer :close-on-click-modal="false" :title="title" class="w-[600px]">
+  <BasicDrawer :title="title" class="w-[600px]">
     <BasicForm />
   </BasicDrawer>
 </template>
