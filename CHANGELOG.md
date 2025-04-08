@@ -1,5 +1,10 @@
 # 1.3.1
 
+**REFACTOR**
+
+- 所有Modal/Drawer表单关闭前会进行表单数据对比来弹出提示框
+- 字典项颜色选择从`原生input type=color`改为`vue3-colorpicker`组件
+
 **BUG FIX**
 
 - getVxePopupContainer逻辑调整 解决表格固定高度展开不全的问题
