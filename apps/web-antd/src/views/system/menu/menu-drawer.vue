@@ -12,6 +12,7 @@ import {
 
 import { useVbenForm } from '#/adapter/form';
 import { menuAdd, menuInfo, menuList, menuUpdate } from '#/api/system/menu';
+import { defaultFormValueGetter, useBeforeCloseDiff } from '#/utils/popup';
 
 import { drawerSchema } from './data';
 
@@ -88,14 +89,23 @@ async function setupMenuSelect() {
   ]);
 }
 
+const { onBeforeClose, markInitialized, resetInitialized } = useBeforeCloseDiff(
+  {
+    initializedGetter: defaultFormValueGetter(formApi),
+    currentGetter: defaultFormValueGetter(formApi),
+  },
+);
+
 const [BasicDrawer, drawerApi] = useVbenDrawer({
-  onCancel: handleCancel,
+  onBeforeClose,
+  onClosed: handleClosed,
   onConfirm: handleConfirm,
   async onOpenChange(isOpen) {
     if (!isOpen) {
       return null;
     }
     drawerApi.drawerLoading(true);
+
     const { id, update } = drawerApi.getData() as ModalProps;
     isUpdate.value = update;
 
@@ -108,36 +118,39 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
         await formApi.setValues(record);
       }
     }
+    await markInitialized();
+
     drawerApi.drawerLoading(false);
   },
 });
 
 async function handleConfirm() {
   try {
-    drawerApi.drawerLoading(true);
+    drawerApi.lock(true);
     const { valid } = await formApi.validate();
     if (!valid) {
       return;
     }
     const data = cloneDeep(await formApi.getValues());
     await (isUpdate.value ? menuUpdate(data) : menuAdd(data));
+    resetInitialized();
     emit('reload');
-    await handleCancel();
+    drawerApi.close();
   } catch (error) {
     console.error(error);
   } finally {
-    drawerApi.drawerLoading(false);
+    drawerApi.lock(false);
   }
 }
 
-async function handleCancel() {
-  drawerApi.close();
+async function handleClosed() {
   await formApi.resetForm();
+  resetInitialized();
 }
 </script>
 
 <template>
-  <BasicDrawer :close-on-click-modal="false" :title="title" class="w-[600px]">
+  <BasicDrawer :title="title" class="w-[600px]">
     <BasicForm />
   </BasicDrawer>
 </template>
