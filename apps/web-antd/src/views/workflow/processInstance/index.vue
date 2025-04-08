@@ -41,7 +41,7 @@ const formOptions: VbenFormProps = {
   wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
   handleReset: async () => {
     selectedCode.value = [];
-    // eslint-disable-next-line no-use-before-define
+
     const { formApi, reload } = tableApi;
     await formApi.resetForm();
     const formValues = formApi.form.values;
@@ -68,7 +68,7 @@ async function handleTypeChange(e: RadioChangeEvent) {
       break;
     }
   }
-  // eslint-disable-next-line no-use-before-define
+
   await tableApi.reload();
 }
 
@@ -103,9 +103,11 @@ const gridOptions: VxeGridProps = {
       },
     },
   },
+  cellConfig: {
+    height: 66,
+  },
   rowConfig: {
     keyField: 'id',
-    height: 66,
   },
   id: 'workflow-definition-index',
 };

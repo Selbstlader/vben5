@@ -93,9 +93,11 @@ const gridOptions: VxeGridProps = {
       },
     },
   },
+  cellConfig: {
+    height: 100,
+  },
   rowConfig: {
     keyField: 'id',
-    height: 100,
   },
   id: 'workflow-definition-index',
 };
