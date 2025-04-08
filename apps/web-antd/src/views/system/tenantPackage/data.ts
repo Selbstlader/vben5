@@ -68,8 +68,3 @@ export const drawerSchema: FormSchemaGetter = () => [
     label: '备注',
   },
 ];
-
-// 租户管理 不可分配  只有superadmin有权限操作 分配了也没用
-export const excludeIds = [
-  6, 121, 122, 1606, 1607, 1608, 1609, 1610, 1611, 1612, 1613, 1614, 1615,
-];
