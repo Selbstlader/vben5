@@ -18,6 +18,7 @@ import { pick } from 'lodash-es';
 import { noticeAdd, noticeInfo, noticeUpdate } from '#/api/system/notice';
 import { Tinymce } from '#/components/tinymce';
 import { getDictOptions } from '#/utils/dict';
+import { useBeforeCloseDiff } from '#/utils/popup';
 
 const emit = defineEmits<{ reload: [] }>();
 
@@ -74,17 +75,29 @@ const { validate, validateInfos, resetFields } = Form.useForm(
   formRules,
 );
 
+function customFormValueGetter() {
+  return JSON.stringify(formData.value);
+}
+
+const { onBeforeClose, markInitialized, resetInitialized } = useBeforeCloseDiff(
+  {
+    initializedGetter: customFormValueGetter,
+    currentGetter: customFormValueGetter,
+  },
+);
+
 const [BasicModal, modalApi] = useVbenModal({
   class: 'w-[800px]',
   fullscreenButton: true,
-  closeOnClickModal: false,
-  onClosed: handleCancel,
+  onBeforeClose,
+  onClosed: handleClosed,
   onConfirm: handleConfirm,
   onOpenChange: async (isOpen) => {
     if (!isOpen) {
       return null;
     }
     modalApi.modalLoading(true);
+
     const { id } = modalApi.getData() as { id?: number | string };
     isUpdate.value = !!id;
     if (isUpdate.value && id) {
@@ -93,30 +106,33 @@ const [BasicModal, modalApi] = useVbenModal({
       const filterRecord = pick(record, Object.keys(defaultValues));
       formData.value = filterRecord;
     }
+    await markInitialized();
+
     modalApi.modalLoading(false);
   },
 });
 
 async function handleConfirm() {
   try {
-    modalApi.modalLoading(true);
+    modalApi.lock(true);
     await validate();
     // 可能会做数据处理 使用cloneDeep深拷贝
     const data = cloneDeep(formData.value);
     await (isUpdate.value ? noticeUpdate(data) : noticeAdd(data));
+    resetInitialized();
     emit('reload');
-    await handleCancel();
+    modalApi.close();
   } catch (error) {
     console.error(error);
   } finally {
-    modalApi.modalLoading(false);
+    modalApi.lock(false);
   }
 }
 
-async function handleCancel() {
-  modalApi.close();
+async function handleClosed() {
   formData.value = defaultValues;
   resetFields();
+  resetInitialized();
 }
 </script>
 
