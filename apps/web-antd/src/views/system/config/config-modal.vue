@@ -26,11 +26,12 @@ const [BasicForm, formApi] = useVbenForm({
   showDefaultActions: false,
 });
 
-const { onBeforeClose, updateInitialized, setSubmitted, resetInitialized } =
-  useBeforeCloseDiff({
+const { onBeforeClose, markInitialized, resetInitialized } = useBeforeCloseDiff(
+  {
     initializedGetter: defaultFormValueGetter(formApi),
     currentGetter: defaultFormValueGetter(formApi),
-  });
+  },
+);
 
 const [BasicModal, modalApi] = useVbenModal({
   fullscreenButton: false,
@@ -50,7 +51,7 @@ const [BasicModal, modalApi] = useVbenModal({
       const record = await configInfo(id);
       await formApi.setValues(record);
     }
-    await updateInitialized();
+    await markInitialized();
 
     modalApi.modalLoading(false);
   },
@@ -65,7 +66,7 @@ async function handleConfirm() {
     }
     const data = cloneDeep(await formApi.getValues());
     await (isUpdate.value ? configUpdate(data) : configAdd(data));
-    setSubmitted();
+    resetInitialized();
     emit('reload');
     modalApi.close();
   } catch (error) {

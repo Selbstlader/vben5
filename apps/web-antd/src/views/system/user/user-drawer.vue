@@ -135,11 +135,12 @@ async function loadDefaultPassword(update: boolean) {
   }
 }
 
-const { onBeforeClose, updateInitialized, setSubmitted, resetInitialized } =
-  useBeforeCloseDiff({
+const { onBeforeClose, markInitialized, resetInitialized } = useBeforeCloseDiff(
+  {
     initializedGetter: defaultFormValueGetter(formApi),
     currentGetter: defaultFormValueGetter(formApi),
-  });
+  },
+);
 
 const [BasicDrawer, drawerApi] = useVbenDrawer({
   onBeforeClose,
@@ -208,7 +209,7 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
         setupPostOptions(user.deptId),
       ]);
     }
-    await updateInitialized();
+    await markInitialized();
 
     drawerApi.drawerLoading(false);
   },
@@ -223,7 +224,7 @@ async function handleConfirm() {
     }
     const data = cloneDeep(await formApi.getValues());
     await (isUpdate.value ? userUpdate(data) : userAdd(data));
-    setSubmitted();
+    resetInitialized();
     emit('reload');
     drawerApi.close();
   } catch (error) {

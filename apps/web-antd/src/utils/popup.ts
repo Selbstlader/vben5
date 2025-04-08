@@ -29,48 +29,52 @@ interface BeforeCloseDiffProps {
 }
 
 /**
- * @deprecated 注意为实验性功能 可能有api变动/被移除
+ * 用于Drawer/Modal使用 判断表单是否有变动来决定是否弹窗提示
  * @param props props
  * @returns hook
- *
- * 待解决问题: 网速慢情况直接关闭 会导致数据不一致问题
- * 但是使用api.lock会导致在报错情况无法关闭(因为目前代码没有finally)
  */
 export function useBeforeCloseDiff(props: BeforeCloseDiffProps) {
   const { initializedGetter, currentGetter, compare } = props;
+  /**
+   * 记录初始值 json
+   */
   const initialized = ref<string>('');
+  /**
+   * 是否已经初始化了 通过这个值判断是否需要进行对比 为false直接关闭 不弹窗
+   */
   const isInitialized = ref(false);
-  const isSubmitted = ref(false);
 
-  async function updateInitialized(data?: string) {
+  /**
+   * 标记是否已经完成初始化 后续需要进行对比
+   * @param data 自定义初始化数据 可选
+   */
+  async function markInitialized(data?: string) {
     initialized.value = data || (await initializedGetter());
     isInitialized.value = true;
   }
 
+  /**
+   * 重置初始化状态 需要在closed前调用 或者打开窗口时
+   */
   function resetInitialized() {
     initialized.value = '';
     isInitialized.value = false;
   }
 
-  function setSubmitted() {
-    isSubmitted.value = true;
-  }
-
+  /**
+   * 提供给useVbenForm/useVbenDrawer使用
+   * @returns 是否允许关闭
+   */
   async function onBeforeClose(): Promise<boolean> {
     // 如果还未初始化，直接允许关闭
     if (!isInitialized.value) {
       return true;
     }
-    // 如果已经提交过，直接允许关闭
-    if (isSubmitted.value) {
-      // 重置状态
-      isSubmitted.value = false;
-      return true;
-    }
 
     try {
+      // 获取当前表单数据
       const current = await currentGetter();
-
+      // 自定义比较的情况
       if (isFunction(compare) && compare(initialized.value, current)) {
         return true;
       } else {
@@ -104,8 +108,7 @@ export function useBeforeCloseDiff(props: BeforeCloseDiffProps) {
 
   return {
     onBeforeClose,
-    updateInitialized,
-    setSubmitted,
+    markInitialized,
     resetInitialized,
   };
 }
