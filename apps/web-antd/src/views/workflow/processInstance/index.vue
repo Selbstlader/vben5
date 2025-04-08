@@ -103,6 +103,9 @@ const gridOptions: VxeGridProps = {
       },
     },
   },
+  headerCellConfig: {
+    height: 44,
+  },
   cellConfig: {
     height: 66,
   },
