@@ -17,6 +17,7 @@ import {
   categoryList,
   categoryUpdate,
 } from '#/api/workflow/category';
+import { defaultFormValueGetter, useBeforeCloseDiff } from '#/utils/popup';
 
 import { modalSchema } from './data';
 
@@ -65,9 +66,17 @@ async function setupCategorySelect() {
   ]);
 }
 
+const { onBeforeClose, markInitialized, resetInitialized } = useBeforeCloseDiff(
+  {
+    initializedGetter: defaultFormValueGetter(formApi),
+    currentGetter: defaultFormValueGetter(formApi),
+  },
+);
+
 const [BasicModal, modalApi] = useVbenModal({
   fullscreenButton: false,
-  onCancel: handleCancel,
+  onBeforeClose,
+  onClosed: handleClosed,
   onConfirm: handleConfirm,
   onOpenChange: async (isOpen) => {
     if (!isOpen) {
@@ -89,6 +98,7 @@ const [BasicModal, modalApi] = useVbenModal({
       await formApi.setValues({ parentId });
     }
     await setupCategorySelect();
+    await markInitialized();
 
     modalApi.modalLoading(false);
   },
@@ -96,7 +106,7 @@ const [BasicModal, modalApi] = useVbenModal({
 
 async function handleConfirm() {
   try {
-    modalApi.modalLoading(true);
+    modalApi.lock(true);
     const { valid } = await formApi.validate();
     if (!valid) {
       return;
@@ -104,27 +114,24 @@ async function handleConfirm() {
     // getValues获取为一个readonly的对象 需要修改必须先深拷贝一次
     const data = cloneDeep(await formApi.getValues());
     await (isUpdate.value ? categoryUpdate(data) : categoryAdd(data));
+    resetInitialized();
     emit('reload');
-    await handleCancel();
+    modalApi.close();
   } catch (error) {
     console.error(error);
   } finally {
-    modalApi.modalLoading(false);
+    modalApi.lock(false);
   }
 }
 
-async function handleCancel() {
-  modalApi.close();
+async function handleClosed() {
   await formApi.resetForm();
+  resetInitialized();
 }
 </script>
 
 <template>
-  <BasicModal
-    :close-on-click-modal="false"
-    :title="title"
-    class="min-h-[500px]"
-  >
+  <BasicModal :title="title" class="min-h-[500px]">
     <BasicForm />
   </BasicModal>
 </template>
