@@ -67,7 +67,7 @@ const { onBeforeClose, markInitialized, resetInitialized } = useBeforeCloseDiff(
 
 const [BasicDrawer, drawerApi] = useVbenDrawer({
   onBeforeClose,
-  onCancel: handleClosed,
+  onClosed: handleClosed,
   onConfirm: handleConfirm,
   async onOpenChange(isOpen) {
     if (!isOpen) {
