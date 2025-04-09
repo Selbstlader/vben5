@@ -22,9 +22,19 @@ import { $t } from '@vben/locales';
 
 import { notification } from 'ant-design-vue';
 
-import { Tinymce as RichTextarea } from '#/components/tinymce';
-import { FileUpload, ImageUpload } from '#/components/upload';
 import { FileUploadOld, ImageUploadOld } from '#/components/upload-old';
+
+const RichTextarea = defineAsyncComponent(() =>
+  import('#/components/tinymce/index').then((res) => res.Tinymce),
+);
+
+const FileUpload = defineAsyncComponent(() =>
+  import('#/components/upload').then((res) => res.FileUpload),
+);
+
+const ImageUpload = defineAsyncComponent(() =>
+  import('#/components/upload').then((res) => res.ImageUpload),
+);
 
 const AutoComplete = defineAsyncComponent(
   () => import('ant-design-vue/es/auto-complete'),
