@@ -4,6 +4,7 @@
 
 - 所有Modal/Drawer表单关闭前会进行表单数据对比来弹出提示框
 - 字典项颜色选择从`原生input type=color`改为`vue3-colorpicker`组件
+- 全局Header: ClientID 更改大小写 [spring的问题导致](https://gitee.com/dapppp/ruoyi-plus-vben5/issues/IC0BDS)
 
 **BUG FIX**
 
