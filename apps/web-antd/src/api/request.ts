@@ -93,9 +93,12 @@ function createRequestClient(baseURL: string) {
       const language = preferences.app.locale.replace('-', '_');
       config.headers['Accept-Language'] = language;
       config.headers['Content-Language'] = language;
-      // 添加全局clientId
-      config.headers.clientId = clientId;
-
+      /**
+       * 添加全局clientId
+       * 关于header的clientId被错误绑定到实体类
+       * https://gitee.com/dapppp/ruoyi-plus-vben5/issues/IC0BDS
+       */
+      config.headers.ClientID = clientId;
       /**
        * 格式化get/delete参数
        * 如果包含自定义的paramsSerializer则不走此逻辑
