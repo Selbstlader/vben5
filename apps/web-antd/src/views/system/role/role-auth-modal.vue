@@ -52,7 +52,7 @@ const { onBeforeClose, markInitialized, resetInitialized } = useBeforeCloseDiff(
 const [BasicModal, modalApi] = useVbenModal({
   fullscreenButton: false,
   onBeforeClose,
-  onCancel: handleClosed,
+  onClosed: handleClosed,
   onConfirm: handleConfirm,
   onOpenChange: async (isOpen) => {
     if (!isOpen) {
