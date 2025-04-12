@@ -226,7 +226,11 @@ function handleAssignRole(record: Role) {
                 </MenuItem>
               </Menu>
             </template>
-            <a-button size="small" type="link">
+            <a-button
+              size="small"
+              type="link"
+              v-access:code="'system:role:edit'"
+            >
               {{ $t('pages.common.more') }}
             </a-button>
           </Dropdown>
