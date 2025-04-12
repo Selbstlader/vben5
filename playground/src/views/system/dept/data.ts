@@ -94,8 +94,9 @@ export function useColumns(
     },
     {
       field: 'createTime',
+      resizable: false,
       title: $t('system.dept.createTime'),
-      width: 180,
+      width: 'auto',
     },
     {
       field: 'remark',

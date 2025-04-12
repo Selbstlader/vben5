@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import type { PropType } from 'vue';
+
 import type { CategoryTree } from '#/api/workflow/category/model';
 
-import { onMounted, type PropType, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 
 import { SyncOutlined } from '@ant-design/icons-vue';
 import { InputSearch, Skeleton, Tree } from 'ant-design-vue';

@@ -39,11 +39,13 @@ export const columns: VxeGridProps['columns'] = [
   {
     field: 'orderNum',
     title: '排序',
-    width: 180,
+    resizable: false,
+    width: 'auto',
   },
   {
     field: 'status',
-    width: 180,
+    resizable: false,
+    width: 'auto',
     title: '状态',
     slots: {
       default: ({ row }) => {

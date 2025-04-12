@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import type { VxeGridProps } from '#/adapter/vxe-table';
+
 import { Page, useVbenModal } from '@vben/common-ui';
 
 import { Space } from 'ant-design-vue';
 
-import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
+import { useVbenVxeGrid } from '#/adapter/vxe-table';
 
 import { sseList } from './api';
 import sendMsgModal from './send-msg-modal.vue';
@@ -31,7 +33,8 @@ const gridOptions: VxeGridProps = {
       fixed: 'right',
       slots: { default: 'action' },
       title: '操作',
-      width: 180,
+      resizable: false,
+      width: 'auto',
     },
   ],
   height: 'auto',

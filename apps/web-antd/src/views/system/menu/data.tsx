@@ -145,7 +145,8 @@ export const columns: VxeGridProps['columns'] = [
     fixed: 'right',
     slots: { default: 'action' },
     title: '操作',
-    width: 200,
+    resizable: false,
+    width: 'auto',
   },
 ];
 
