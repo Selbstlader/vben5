@@ -75,7 +75,7 @@ const { onBeforeClose, markInitialized, resetInitialized } = useBeforeCloseDiff(
 
 const [BasicDrawer, modalApi] = useVbenModal({
   onBeforeClose,
-  onCancel: handleClosed,
+  onClosed: handleClosed,
   onConfirm: handleConfirm,
   async onOpenChange(isOpen) {
     if (!isOpen) {
