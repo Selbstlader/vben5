@@ -77,7 +77,7 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
 
     const { dictCode, dictType } = drawerApi.getData() as DrawerProps;
     isUpdate.value = !!dictCode;
-    formApi.setFieldValue('dictType', dictType);
+    await formApi.setFieldValue('dictType', dictType);
 
     if (dictCode && isUpdate.value) {
       const record = await dictDetailInfo(dictCode);
