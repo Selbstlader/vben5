@@ -2,6 +2,11 @@ import type { RouteRecordStringComponent } from '@vben/types';
 
 import { $t } from '@vben/locales';
 
+const {
+  version,
+  // vite inject-metadata 插件注入的全局变量
+} = __VBEN_ADMIN_METADATA__ || {};
+
 /**
  * 该文件放非后台返回的路由 比如个人中心 等需要跳转显示的页面
  */
@@ -134,8 +139,8 @@ export const localMenuList: RouteRecordStringComponent[] = [
           icon: 'lucide:book-open-text',
           keepAlive: true,
           title: '更新记录',
-          badge: '1.3.0',
-          badgeVariants: '#CC0033',
+          badge: `当前: ${version}`,
+          badgeVariants: 'bg-primary',
         },
       },
     ],
