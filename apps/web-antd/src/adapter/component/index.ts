@@ -9,7 +9,6 @@ import type { BaseFormComponentType } from '@vben/common-ui';
 import type { Recordable } from '@vben/types';
 
 import {
-  computed,
   defineAsyncComponent,
   defineComponent,
   getCurrentInstance,
@@ -91,15 +90,10 @@ const withDefaultPlaceholder = <T extends Component>(
     inheritAttrs: false,
     name: component.name,
     setup: (props: any, { attrs, expose, slots }) => {
-      /**
-       * 需要使用computed 否则后续updateSchema更新的placeholder无法显示(响应式问题)
-       */
-      const placeholder = computed(
-        () =>
-          props?.placeholder ||
-          attrs?.placeholder ||
-          $t(`ui.placeholder.${type}`),
-      );
+      const placeholder =
+        props?.placeholder ||
+        attrs?.placeholder ||
+        $t(`ui.placeholder.${type}`);
 
       // 透传组件暴露的方法
       const innerRef = ref();
@@ -118,7 +112,7 @@ const withDefaultPlaceholder = <T extends Component>(
           component,
           {
             ...componentProps,
-            placeholder: placeholder.value,
+            placeholder,
             ...props,
             ...attrs,
             ref: innerRef,
