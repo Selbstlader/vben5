@@ -27,6 +27,7 @@ import { categoryTree } from '#/api/workflow/category';
 import { pageByTaskWait } from '#/api/workflow/task';
 
 import { ApprovalCard, ApprovalPanel, CopyComponent } from '../components';
+import { bottomOffset } from './constant';
 
 const emptyImage = Empty.PRESENTED_IMAGE_SIMPLE;
 
@@ -100,7 +101,7 @@ const handleScroll = debounce(async (e: Event) => {
   // e.target.scrollHeight 是元素的总高度。
   const { scrollTop, clientHeight, scrollHeight } = e.target as HTMLElement;
   // 判断是否滚动到底部
-  const isBottom = scrollTop + clientHeight >= scrollHeight;
+  const isBottom = scrollTop + clientHeight >= scrollHeight - bottomOffset;
 
   // 滚动到底部且没有加载完成
   if (isBottom && !isLoadComplete.value) {
