@@ -20,7 +20,7 @@ import {
 } from '@vben/icons';
 
 import { useClipboard } from '@vueuse/core';
-import { Skeleton, Tree } from 'ant-design-vue';
+import { Alert, Skeleton, Tree } from 'ant-design-vue';
 
 import { previewCode } from '#/api/tool/gen';
 
@@ -185,6 +185,11 @@ const { copy } = useClipboard({ legacy: true });
             </div>
           </template>
         </Tree>
+        <Alert
+          class="mt-2"
+          show-icon
+          message="👆显示的名称为模板的文件名，非最终下载文件名..."
+        />
       </div>
       <CodeMirror
         v-model="codeContent"
