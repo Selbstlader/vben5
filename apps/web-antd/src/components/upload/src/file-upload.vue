@@ -98,7 +98,7 @@ Upload.Dragger只会影响样式
           {{ $t('component.upload.upload') }}
         </a-button>
       </div>
-      <div v-if="enableDragUpload && innerFileList?.length < maxCount">
+      <div v-if="enableDragUpload">
         <p class="ant-upload-drag-icon">
           <InboxOutlined />
         </p>
