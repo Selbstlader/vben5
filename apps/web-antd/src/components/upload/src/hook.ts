@@ -160,6 +160,8 @@ export function useUpload(
     return undefined;
   }
 
+  // 用来标识是否为上传 这样在watch内部不需要请求api
+  let isUpload = false;
   function handleChange(info: UploadChangeParam) {
     /**
      * 移除当前文件
@@ -199,7 +201,8 @@ export function useUpload(
         currentFile.fileName = transformFilename(cb);
         currentFile.name = transformFilename(cb);
         currentFile.thumbUrl = transformThumbUrl(cb);
-
+        // 标记为上传 watch根据值做处理
+        isUpload = true;
         // ossID添加 单个文件会被当做string
         if (props.maxCount === 1) {
           bindValue.value = ossId;
@@ -321,6 +324,14 @@ export function useUpload(
       if (value.length === 0) {
         return;
       }
+
+      // 上传完毕 不需要调用获取信息接口
+      if (isUpload) {
+        // 清理 使下一次状态可用
+        isUpload = false;
+        return;
+      }
+
       const resp = await ossInfo(value);
       function transformFile(info: OssFile) {
         const cb = { type: 'info', response: info } as const;
