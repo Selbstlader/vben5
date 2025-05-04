@@ -4,7 +4,8 @@ import type { UserInfo } from '@vben/types';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { DEFAULT_HOME_PATH, LOGIN_PATH } from '@vben/constants';
+import { LOGIN_PATH } from '@vben/constants';
+import { preferences } from '@vben/preferences';
 import { resetAllStores, useAccessStore, useUserStore } from '@vben/stores';
 
 import { notification } from 'ant-design-vue';
@@ -55,7 +56,9 @@ export const useAuthStore = defineStore('auth', () => {
       if (accessStore.loginExpired) {
         accessStore.setLoginExpired(false);
       } else {
-        onSuccess ? await onSuccess?.() : await router.push(DEFAULT_HOME_PATH);
+        onSuccess
+          ? await onSuccess?.()
+          : await router.push(preferences.app.defaultHomePath);
       }
 
       if (userInfo?.realName) {
