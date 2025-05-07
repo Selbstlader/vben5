@@ -14,15 +14,18 @@ export const columns: VxeGridProps['columns'] = [
   {
     title: '套餐名称',
     field: 'packageName',
+    minWidth: 160,
   },
   {
     title: '备注',
     field: 'remark',
+    minWidth: 180,
   },
   {
     title: '状态',
     field: 'status',
     slots: { default: 'status' },
+    minWidth: 100,
   },
   {
     field: 'action',

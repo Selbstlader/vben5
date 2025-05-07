@@ -35,18 +35,22 @@ export const columns: VxeGridProps['columns'] = [
   {
     title: '租户编号',
     field: 'tenantId',
+    minWidth: 120,
   },
   {
     title: '租户名称',
     field: 'companyName',
+    minWidth: 240,
   },
   {
     title: '联系人',
     field: 'contactUserName',
+    minWidth: 120,
   },
   {
     title: '联系电话',
     field: 'contactPhone',
+    minWidth: 160,
   },
   {
     title: '到期时间',
@@ -57,11 +61,13 @@ export const columns: VxeGridProps['columns'] = [
       }
       return cellValue;
     },
+    minWidth: 160,
   },
   {
     title: '租户状态',
     field: 'status',
     slots: { default: 'status' },
+    minWidth: 100,
   },
   {
     field: 'action',

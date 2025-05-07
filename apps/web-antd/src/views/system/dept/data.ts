@@ -30,32 +30,36 @@ export const columns: VxeGridProps['columns'] = [
     field: 'deptName',
     title: '部门名称',
     treeNode: true,
-    width: 200,
+    resizable: false,
+    minWidth: 220,
   },
   {
     field: 'deptCategory',
     title: '类别编码',
+    resizable: false,
+    minWidth: 120,
   },
   {
     field: 'orderNum',
     title: '排序',
     resizable: false,
-    width: 'auto',
+    width: 80,
   },
   {
     field: 'status',
     resizable: false,
-    width: 'auto',
     title: '状态',
     slots: {
       default: ({ row }) => {
         return renderDict(row.status, DictEnum.SYS_NORMAL_DISABLE);
       },
     },
+    width: 120,
   },
   {
     field: 'createTime',
     title: '创建时间',
+    minWidth: 160,
   },
   {
     field: 'action',

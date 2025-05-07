@@ -111,10 +111,12 @@ export const columns: VxeGridProps['columns'] = [
   {
     title: '权限标识',
     field: 'perms',
+    minWidth: 200,
   },
   {
     title: '组件路径',
     field: 'component',
+    minWidth: 200,
   },
   {
     title: '状态',
@@ -139,6 +141,7 @@ export const columns: VxeGridProps['columns'] = [
   {
     title: '创建时间',
     field: 'createTime',
+    minWidth: 160,
   },
   {
     field: 'action',

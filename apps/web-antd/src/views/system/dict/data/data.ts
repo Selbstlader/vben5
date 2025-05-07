@@ -23,22 +23,27 @@ export const columns: VxeGridProps['columns'] = [
         return renderDictTag(dictValue, [row]);
       },
     },
+    minWidth: 120,
   },
   {
     title: '字典键值',
     field: 'dictValue',
+    minWidth: 100,
   },
   {
     title: '字典排序',
     field: 'dictSort',
+    minWidth: 80,
   },
   {
     title: '备注',
     field: 'remark',
+    minWidth: 120,
   },
   {
     title: '创建时间',
     field: 'createTime',
+    minWidth: 160,
   },
   {
     field: 'action',

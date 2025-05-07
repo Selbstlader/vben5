@@ -34,6 +34,7 @@ export const columns: VxeGridProps['columns'] = [
   {
     title: '公告标题',
     field: 'noticeTitle',
+    minWidth: 220,
   },
   {
     title: '公告类型',
@@ -63,6 +64,7 @@ export const columns: VxeGridProps['columns'] = [
   {
     title: '创建时间',
     field: 'createTime',
+    minWidth: 160,
   },
   {
     field: 'action',

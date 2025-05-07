@@ -19,14 +19,17 @@ export const columns: VxeGridProps['columns'] = [
     field: 'categoryName',
     title: '分类名称',
     treeNode: true,
+    minWidth: 200,
   },
   {
     field: 'orderNum',
     title: '排序',
+    minWidth: 80,
   },
   {
     field: 'createTime',
     title: '创建时间',
+    minWidth: 160,
   },
   {
     field: 'action',
