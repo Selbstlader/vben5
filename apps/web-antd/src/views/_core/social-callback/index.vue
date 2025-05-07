@@ -4,7 +4,8 @@ import type { AuthApi } from '#/api';
 import { onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import { DEFAULT_HOME_PATH, DEFAULT_TENANT_ID } from '@vben/constants';
+import { DEFAULT_TENANT_ID } from '@vben/constants';
+import { preferences } from '@vben/preferences';
 import { useAccessStore } from '@vben/stores';
 
 import { message } from 'ant-design-vue';
@@ -70,7 +71,7 @@ onMounted(async () => {
     // 500 你还没有绑定第三方账号，绑定后才可以登录！
   } finally {
     setTimeout(() => {
-      router.push(DEFAULT_HOME_PATH);
+      router.push(preferences.app.defaultHomePath);
     }, 1500);
   }
 });
