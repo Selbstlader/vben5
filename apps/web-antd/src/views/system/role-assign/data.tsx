@@ -19,22 +19,18 @@ export const columns: VxeGridProps['columns'] = [
   {
     title: '用户账号',
     field: 'userName',
-    minWidth: 120,
   },
   {
     title: '用户昵称',
     field: 'nickName',
-    minWidth: 120,
   },
   {
     title: '邮箱',
     field: 'email',
-    minWidth: 180,
   },
   {
     title: '手机号',
     field: 'phonenumber',
-    minWidth: 160,
   },
   {
     field: 'action',

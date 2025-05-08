@@ -40,23 +40,19 @@ export const columns: VxeGridProps['columns'] = [
   {
     title: '配置名称',
     field: 'configKey',
-    minWidth: 120,
   },
   {
     title: '访问站点',
     field: 'endpoint',
     showOverflow: true,
-    minWidth: 220,
   },
   {
     title: '桶名称',
     field: 'bucketName',
-    minWidth: 140,
   },
   {
     title: '域',
     field: 'region',
-    minWidth: 140,
   },
   {
     title: '权限桶类型',
@@ -72,7 +68,6 @@ export const columns: VxeGridProps['columns'] = [
         return '未知类型';
       },
     },
-    minWidth: 120,
   },
   {
     title: '是否默认',
@@ -80,7 +75,6 @@ export const columns: VxeGridProps['columns'] = [
     slots: {
       default: 'status',
     },
-    minWidth: 120,
   },
   {
     field: 'action',

@@ -39,17 +39,14 @@ export const columns: VxeGridProps['columns'] = [
   {
     title: '参数名称',
     field: 'configName',
-    minWidth: 160,
   },
   {
     title: '参数KEY',
     field: 'configKey',
-    minWidth: 160,
   },
   {
     title: '参数Value',
     field: 'configValue',
-    minWidth: 200,
   },
   {
     title: '系统内置',
@@ -64,12 +61,10 @@ export const columns: VxeGridProps['columns'] = [
   {
     title: '备注',
     field: 'remark',
-    minWidth: 120,
   },
   {
     title: '创建时间',
     field: 'createTime',
-    minWidth: 160,
   },
   {
     field: 'action',
