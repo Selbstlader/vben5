@@ -1,3 +1,13 @@
+# 1.3.4
+
+**BUG FIX**
+
+- 文件上传多次触发导致数据不一致 https://gitee.com/dapppp/ruoyi-plus-vben5/issues/IC3BK6
+
+**PREFORMANCE**
+
+- 浏览器返回按钮/手势操作时 弹窗不会被关闭(keepAlive导致)
+
 # 1.3.3
 
 **BUG FIX**
