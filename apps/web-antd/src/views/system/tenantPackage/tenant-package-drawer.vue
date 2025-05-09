@@ -85,6 +85,7 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
   onBeforeClose,
   onClosed: handleClosed,
   onConfirm: handleConfirm,
+  destroyOnClose: true,
   async onOpenChange(isOpen) {
     if (!isOpen) {
       return null;
