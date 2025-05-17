@@ -124,7 +124,7 @@ VITE_PORT=5666
 # 打包路径
 VITE_BASE=/
 # 是否开启 Nitro Mock服务，true 为开启，false 为关闭
-VITE_NITRO_MOCK=false
+VITE_NITRO_MOCK=true
 # 是否打开 devtools，true 为打开，false 为关闭
 VITE_DEVTOOLS=false
 # 是否注入全局loading

@@ -64,7 +64,7 @@ function convertRoutes(
       } else {
         // console.error(`route component is invalid: ${pageKey}`, route);
         // route.component = pageMap['/_core/fallback/not-found.vue'];
-        console.error(`未找到对应组件: /views${component}.vue`);
+        console.error(`未找到对应组件: ${pageKey}`);
         // 默认为404页面
         route.component = layoutMap.NotFoundComponent;
       }
@@ -78,10 +78,22 @@ function normalizeViewPath(path: string): string {
   // 去除相对路径前缀
   const normalizedPath = path.replace(/^(\.\/|\.\.\/)+/, '');
 
-  // 确保路径以 '/' 开头
-  const viewPath = normalizedPath.startsWith('/')
-    ? normalizedPath
-    : `/${normalizedPath}`;
+  // 修复路径格式，移除组件路径中多余的斜杠
+  let viewPath = normalizedPath;
+
+  // 处理以//开头的路径 (双斜杠问题)
+  if (viewPath.startsWith('//')) {
+    viewPath = viewPath.slice(1); // 去掉一个/
+  }
+
+  // 处理/views开头的路径，后端可能已经添加了/views前缀
+  if (viewPath.includes('/views/')) {
+    // 将/views/xxx转为/xxx
+    viewPath = viewPath.replace(/^\/views/, '');
+  } else if (!viewPath.startsWith('/')) {
+    // 确保路径以 '/' 开头
+    viewPath = `/${viewPath}`;
+  }
 
   // 这里耦合了vben-admin的目录结构
   return viewPath.replace(/^\/views/, '');

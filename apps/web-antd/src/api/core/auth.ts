@@ -81,7 +81,7 @@ export async function loginApi(data: AuthApi.LoginParams) {
     '/auth/login',
     { ...data, clientId },
     {
-      encrypt: true,
+      encrypt: false,
     },
   );
 }

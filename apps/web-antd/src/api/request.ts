@@ -28,7 +28,10 @@ import {
 } from '#/utils/encryption/crypto';
 import * as encryptUtil from '#/utils/encryption/jsencrypt';
 
-const { apiURL, clientId, enableEncrypt } = useAppConfig(
+const apiURL = 'http://localhost:3000/api';
+
+// 获取应用配置
+const { clientId, enableEncrypt } = useAppConfig(
   import.meta.env,
   import.meta.env.PROD,
 );
@@ -39,10 +42,10 @@ const { apiURL, clientId, enableEncrypt } = useAppConfig(
  */
 let isLogoutProcessing = false;
 
-function createRequestClient(baseURL: string) {
+function createRequestClient(_baseURL: string) {
   const client = new RequestClient({
     // 后端地址
-    baseURL,
+    baseURL: apiURL,
     // 消息提示类型
     errorMessageMode: 'message',
     // 是否返回原生响应 比如：需要获取响应头时使用该属性

@@ -80,9 +80,8 @@ function backMenuToVbenMenu(
      * menu.path为''(根目录路由) 则不拼接
      */
     if (parentPath && menu.path) {
-      menu.path = `${parentPath}/${menu.path}`;
+      menu.path = `${parentPath}${menu.path}`;
     }
-
     // 创建vben路由对象
     const vbenRoute: RouteRecordStringComponent = {
       component: menu.component,
@@ -92,11 +91,15 @@ function backMenuToVbenMenu(
         hideInMenu: menu.hidden,
         icon: menu.meta?.icon,
         keepAlive: !menu.meta?.noCache,
-        title: menu.meta?.title,
+        title: menu.meta?.title
+          ? $t(mapMenuTitle(menu.meta.title))
+          : menu.meta?.title,
       },
       name: menu.name,
       path: menu.path,
     };
+
+    console.log('menu.meta?.title', menu.meta?.title);
 
     // 添加路由参数信息
     if (menu.query) {
@@ -182,6 +185,7 @@ function backMenuToVbenMenu(
     // 添加
     resultList.push(vbenRoute);
   });
+  console.log('resultList', JSON.stringify(resultList));
   return resultList;
 }
 
@@ -221,3 +225,46 @@ async function generateAccess(options: GenerateMenuAndRoutesOptions) {
 }
 
 export { generateAccess };
+
+/**
+ * 映射菜单标题键名
+ */
+function mapMenuTitle(title: string): string {
+  console.log('title', title);
+
+  // 特殊处理键名映射关系
+  const titleMap: Record<string, string> = {
+    'system.title': 'menu.system.root',
+    'system.menu.title': 'menu.system.menu',
+    'system.dept.title': 'menu.system.dept',
+    'system.user.title': 'menu.system.user',
+    'system.role.title': 'menu.system.role',
+    'system.roleAssign.title': 'menu.system.role',
+    'system.post.title': 'menu.system.post',
+    'system.dict.title': 'menu.system.dict',
+    'system.config.title': 'menu.system.config',
+    'system.notice.title': 'menu.system.notice',
+    'system.oss.title': 'menu.system.oss',
+    'system.ossConfig.title': 'menu.system.oss',
+    'system.tenant.title': 'menu.tenant.root',
+    'system.tenantPackage.title': 'menu.tenant.package',
+    'system.client.title': 'menu.system.client',
+    'monitor.title': 'menu.monitor.root',
+    'monitor.online.title': 'menu.monitor.online',
+    'monitor.operlog.title': 'menu.monitor.operlog',
+    'monitor.logininfor.title': 'menu.monitor.log.login',
+    'monitor.cache.title': 'menu.monitor.cache',
+    'monitor.admin.title': 'menu.monitor.admin',
+    'monitor.snailjob.title': 'menu.monitor.job',
+    'tool.title': 'menu.tool.root',
+    'tool.gen.title': 'menu.tool.gen',
+    'workflow.title': 'menu.workflow.root',
+    'workflow.category.title': 'menu.workflow.category',
+    'workflow.processDefinition.title': 'menu.workflow.define',
+    'workflow.processInstance.title': 'menu.workflow.monitor.instance',
+    'workflow.task.title': 'menu.workflow.monitor.todo',
+    'workflow.leave.title': 'menu.workflow.form',
+  };
+
+  return titleMap[title] || title;
+}

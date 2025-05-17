@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, h, onMounted, watch } from 'vue';
+import { computed, h, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { AuthenticationLoginExpiredModal } from '@vben/common-ui';
@@ -106,7 +106,7 @@ async function handleLogout() {
 }
 
 const notifyStore = useNotifyStore();
-onMounted(() => notifyStore.startListeningMessage());
+// onMounted(() => notifyStore.startListeningMessage());
 
 function handleViewAll() {
   message.warning('暂未开放');
